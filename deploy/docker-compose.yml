@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  echo-demo:
+    container_name: echo-demo
+    image: hub.gitlab.nixdev.co/golang-general/echo-demo-app:staging
+    ports:
+      - 9379:80
+    depends_on:
+      - mysql
+    volumes:
+      - ./.env:/app/.env
+    restart: on-failure
+  mysql:
+    container_name: echo-demo-mysql
+    restart: on-failure
+    image: mysql:8
+    env_file:
+      - ./.env
+    ports:
+      - 9378:3306
