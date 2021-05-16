@@ -4,7 +4,6 @@ import (
 	s "echo-demo-project/server"
 	"echo-demo-project/server/handlers"
 	"echo-demo-project/services/token"
-	"fmt"
 
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -20,7 +19,6 @@ func ConfigureRoutes(server *s.Server) {
 	server.Echo.Use(middleware.CORS())
 
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
-
 
 	appRoute := server.Echo.Group("/api/v1")
 
@@ -40,6 +38,4 @@ func ConfigureRoutes(server *s.Server) {
 	}
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount)
-
-	fmt.Println(server.Config.Auth.AccessSecret)
 }

@@ -20,12 +20,13 @@ RUN ls -l
 RUN git config --global http.sslVerify true &&\
     go get -v github.com/swaggo/swag/cmd/swag &&\
     $GOPATH/bin/swag init -g cmd/main.go &&\
-    go mod download &&\
-    go build -o account-api .
+    go mod download
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o  account-api .
 
 FROM alpine
 
 WORKDIR /app
 COPY --from=build /go/src/api/account-api /app/account-api
-
+RUN chmod +x /app/account-api
 CMD ["./account-api"]

@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -13,7 +14,11 @@ type Config struct {
 }
 
 func NewConfig() *Config {
-	err := godotenv.Load("D:\\Workspace\\medilane\\medilane-account-api\\.env")
+	configPath := os.Getenv("CONFIG_FILE_PATH")
+	if configPath == "" {
+		configPath = "/app/.env"
+	}
+	err := godotenv.Load(configPath)
 	if err != nil {
 		log.Println("Error loading .env file")
 	}

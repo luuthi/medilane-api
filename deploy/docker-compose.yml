@@ -2,7 +2,7 @@ version: "3.7"
 services:
   echo-demo:
     container_name: echo-demo
-    image: hub.gitlab.nixdev.co/golang-general/echo-demo-app:staging
+    image: registry.gitlab.com/medilane-group/account-api:latest
     ports:
       - 9379:80
     depends_on:
