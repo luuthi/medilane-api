@@ -1,4 +1,4 @@
-package user
+package account
 
 import (
 	"golang.org/x/crypto/bcrypt"
@@ -6,7 +6,7 @@ import (
 	"medilane-api/packages/accounts/requests"
 )
 
-func (userService *Service) Register(request *requests.RegisterRequest) error {
+func (userService *Service) CreateUser(request *requests.RegisterRequest) error {
 	encryptedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(request.Password),
 		bcrypt.DefaultCost,
@@ -15,12 +15,14 @@ func (userService *Service) Register(request *requests.RegisterRequest) error {
 		return err
 	}
 
-	user := builders2.NewUserBuilder().SetEmail(request.Email).
+	user := builders2.NewUserBuilder().
+		SetEmail(request.Email).
 		SetName(request.Username).
 		SetPassword(string(encryptedPassword)).
 		SetFullName(request.FullName).
 		SetStatus(false).
 		SetType(request.Type).
+		SetIsAdmin(request.IsAdmin).
 		Build()
 
 	return userService.DB.Create(&user).Error

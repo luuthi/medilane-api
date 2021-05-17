@@ -24,7 +24,10 @@ func Init(cfg *config.Config) *gorm.DB {
 		panic(err.Error())
 	}
 
+	// seed user, role, permission
 	userSeeder := seeders.NewUserSeeder(db)
+	userSeeder.SetPermission()
+	userSeeder.SetRole()
 	userSeeder.SetUsers()
 
 	return db

@@ -47,8 +47,8 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 	}
 
 	user := models2.User{}
-	userRepository := repositories2.NewUserRepository(authHandler.server.DB)
-	userRepository.GetUserByUsername(&user, loginRequest.Username)
+	AccountRepository := repositories2.NewAccountRepository(authHandler.server.DB)
+	AccountRepository.GetUserByUsername(&user, loginRequest.Username)
 
 	if user.ID == 0 || (bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password)) != nil) {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid credentials")

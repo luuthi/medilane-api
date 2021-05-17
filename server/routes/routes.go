@@ -28,6 +28,7 @@ func ConfigureRoutes(server *s.Server) {
 	authHandler := handlers2.NewAuthHandler(server)
 	registerHandler := handlers2.NewRegisterHandler(server)
 	accountHandler := handlers2.NewAccountHandler(server)
+	permissionHandler := handlers2.NewPermissionHandler(server)
 
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 
@@ -49,6 +50,11 @@ func ConfigureRoutes(server *s.Server) {
 	}
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount)
+
+	// permission api
+	perm := appRoute.Group("/permission")
+	perm.Use(middleware.JWTWithConfig(config))
+	perm.POST("/find", permissionHandler.SearchPermission)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {

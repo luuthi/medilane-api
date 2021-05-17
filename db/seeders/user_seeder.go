@@ -16,6 +16,104 @@ func NewUserSeeder(db *gorm.DB) *UserSeeder {
 	return &UserSeeder{DB: db}
 }
 
+func (userSeeder *UserSeeder) SetPermission() {
+	permissions := map[int]map[string]interface{}{
+		1: {
+			"permission_name": "read:user",
+			"description":     "Read data user",
+		},
+		2: {
+			"permission_name": "create:user",
+			"description":     "Create data user",
+		},
+		3: {
+			"permission_name": "edit:user",
+			"description":     "Edit data user",
+		},
+		4: {
+			"permission_name": "delete:user",
+			"description":     "Delete data user",
+		},
+		5: {
+			"permission_name": "read:role",
+			"description":     "Read data role",
+		},
+		6: {
+			"permission_name": "create:role",
+			"description":     "Create data role",
+		},
+		7: {
+			"permission_name": "edit:role",
+			"description":     "Edit data role",
+		},
+		8: {
+			"permission_name": "delete:role",
+			"description":     "Delete data role",
+		},
+		9: {
+			"permission_name": "read:permission",
+			"description":     "Read data permission",
+		},
+		10: {
+			"permission_name": "create:permission",
+			"description":     "Create data permission",
+		},
+		11: {
+			"permission_name": "edit:permission",
+			"description":     "Edit data permission",
+		},
+		12: {
+			"permission_name": "delete:permission",
+			"description":     "Delete data permission",
+		},
+	}
+
+	if !userSeeder.DB.HasTable(&models2.Permission{}) {
+		userSeeder.DB.CreateTable(&models2.Permission{})
+		for key, value := range permissions {
+			permission := models2.Permission{}
+			userSeeder.DB.First(&permission, key)
+			if permission.ID == 0 {
+				permission.ID = uint(key)
+				permission.PermissionName = value["permission_name"].(string)
+				permission.Description = value["description"].(string)
+				userSeeder.DB.Create(&permission)
+			}
+		}
+	}
+}
+
+func (userSeeder *UserSeeder) SetRole() {
+	roles := map[int]map[string]interface{}{
+		1: {
+			"role_name":   "permission_manage",
+			"description": "Manage permissions",
+		},
+		2: {
+			"role_name":   "user_manage",
+			"description": "Manage roles",
+		},
+		3: {
+			"role_name":   "role_manage",
+			"description": "Manage users",
+		},
+	}
+
+	if !userSeeder.DB.HasTable(&models2.Role{}) {
+		userSeeder.DB.CreateTable(&models2.Role{})
+		for key, value := range roles {
+			role := models2.Role{}
+			userSeeder.DB.First(&role, key)
+			if role.ID == 0 {
+				role.ID = uint(key)
+				role.RoleName = value["role_name"].(string)
+				role.Description = value["description"].(string)
+				userSeeder.DB.Create(&role)
+			}
+		}
+	}
+}
+
 func (userSeeder *UserSeeder) SetUsers() {
 	users := map[int]map[string]interface{}{
 		1: {

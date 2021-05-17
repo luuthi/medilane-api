@@ -25,7 +25,7 @@ type RegisterRequest struct {
 	BasicAuth
 	Email    string `json:"email" validate:"required" example:"john.doe@gmail.com"`
 	FullName string `json:"fullName" validate:"required" example:"John Doe"`
-	IsAdmin  string `json:"is_admin" validate:"required" example:"true" `
+	IsAdmin  bool   `json:"is_admin" validate:"required" example:"true" `
 	Type     string `json:"type"  validate:"required" example:"staff/user/supplier/manufacturer"`
 }
 

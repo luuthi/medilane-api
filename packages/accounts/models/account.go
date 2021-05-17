@@ -26,14 +26,14 @@ type User struct {
 type Role struct {
 	CommonModelFields
 
-	RoleName    string `json:"role_name" gorm:"type:varchar(200);"`
-	Description string `json:"description" gorm:"type:varchar(200);"`
-	Permissions []Permission
+	RoleName    string       `json:"role_name" gorm:"type:varchar(200);unique;not null"`
+	Description string       `json:"description" gorm:"type:varchar(200);"`
+	Permissions []Permission `json:"permissions"`
 }
 
 type Permission struct {
 	CommonModelFields
 
-	PermissionName string `json:"permission_name" gorm:"type:varchar(200);"`
+	PermissionName string `json:"permission_name" gorm:"type:varchar(200);unique;not null"`
 	Description    string `json:"description" gorm:"type:varchar(200);"`
 }

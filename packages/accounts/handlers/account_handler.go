@@ -36,11 +36,10 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 		return err
 	}
 
-	accHandler.server.Logger.Info("test log logrus")
-	c.Logger().Info("test log echo")
+	accHandler.server.Logger.Info("search account")
 	var accounts []models2.User
 
-	accountRepo := repositories2.NewUserRepository(accHandler.server.DB)
+	accountRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	accountRepo.GetAccounts(&accounts, searchRequest)
 
 	return responses.SearchResponse(c, http.StatusOK, "", accounts)

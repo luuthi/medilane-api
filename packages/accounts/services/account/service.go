@@ -1,4 +1,4 @@
-package user
+package account
 
 import (
 	"github.com/jinzhu/gorm"
@@ -6,7 +6,7 @@ import (
 )
 
 type ServiceWrapper interface {
-	Register(request *requests.RegisterRequest) error
+	CreateUser(request *requests.RegisterRequest) error
 }
 
 type Service struct {
