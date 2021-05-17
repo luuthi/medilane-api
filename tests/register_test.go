@@ -1,12 +1,12 @@
 package tests
 
 import (
-	"echo-demo-project/requests"
-	"echo-demo-project/server"
-	"echo-demo-project/server/handlers"
-	"echo-demo-project/tests/helpers"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	handlers2 "medilane-api/packages/accounts/handlers"
+	"medilane-api/requests"
+	"medilane-api/server"
+	"medilane-api/tests/helpers"
 	"net/http"
 	"testing"
 )
@@ -17,7 +17,7 @@ func TestWalkRegister(t *testing.T) {
 		Url:    "/register",
 	}
 	handlerFunc := func(s *server.Server, c echo.Context) error {
-		return handlers.NewRegisterHandler(s).Register(c)
+		return handlers2.NewRegisterHandler(s).Register(c)
 	}
 
 	cases := []helpers.TestCase{
@@ -46,7 +46,7 @@ func TestWalkRegister(t *testing.T) {
 					Email:    "name@test.com",
 					Password: "password",
 				},
-				Name:     "",
+				Name: "",
 			},
 			handlerFunc,
 			nil,
@@ -63,7 +63,7 @@ func TestWalkRegister(t *testing.T) {
 					Email:    "name@test.com",
 					Password: "passw",
 				},
-				Name:     "name",
+				Name: "name",
 			},
 			handlerFunc,
 			nil,
@@ -80,7 +80,7 @@ func TestWalkRegister(t *testing.T) {
 					Email:    "duplicated@test.com",
 					Password: "password",
 				},
-				Name:     "Another Name",
+				Name: "Another Name",
 			},
 			handlerFunc,
 			&helpers.QueryMock{

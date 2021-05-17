@@ -1,15 +1,15 @@
 package helpers
 
 import (
-	"echo-demo-project/config"
-	"echo-demo-project/server"
 	"github.com/labstack/echo/v4"
+	"medilane-api/config"
+	"medilane-api/server"
 )
 
 func NewServer() *server.Server {
 	s := &server.Server{
-		Echo: echo.New(),
-		DB:   Init(),
+		Echo:   echo.New(),
+		DB:     Init(),
 		Config: config.NewConfig(),
 	}
 

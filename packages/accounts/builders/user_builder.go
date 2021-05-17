@@ -1,6 +1,8 @@
 package builders
 
-import "echo-demo-project/models"
+import (
+	models2 "medilane-api/packages/accounts/models"
+)
 
 type UserBuilder struct {
 	email    string
@@ -52,8 +54,8 @@ func (userBuilder *UserBuilder) SetIsAdmin(isAdmin bool) (u *UserBuilder) {
 	return userBuilder
 }
 
-func (userBuilder *UserBuilder) Build() models.User {
-	user := models.User{
+func (userBuilder *UserBuilder) Build() models2.User {
+	user := models2.User{
 		Email:    userBuilder.email,
 		Username: userBuilder.username,
 		Password: userBuilder.password,

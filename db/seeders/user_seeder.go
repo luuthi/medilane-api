@@ -1,9 +1,9 @@
 package seeders
 
 import (
-	"echo-demo-project/models"
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	models2 "medilane-api/packages/accounts/models"
 
 	"github.com/jinzhu/gorm"
 )
@@ -38,11 +38,11 @@ func (userSeeder *UserSeeder) SetUsers() {
 		},
 	}
 
-	if !userSeeder.DB.HasTable(&models.User{}) {
-		userSeeder.DB.CreateTable(&models.User{})
+	if !userSeeder.DB.HasTable(&models2.User{}) {
+		userSeeder.DB.CreateTable(&models2.User{})
 
 		for key, value := range users {
-			user := models.User{}
+			user := models2.User{}
 			userSeeder.DB.First(&user, key)
 			encryptedPassword, err := bcrypt.GenerateFromPassword(
 				[]byte(value["password"].(string)),

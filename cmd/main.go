@@ -1,10 +1,10 @@
 package main
 
 import (
-	application "echo-demo-project"
-	"echo-demo-project/config"
-	"echo-demo-project/docs"
 	"fmt"
+	application "medilane-api"
+	"medilane-api/config"
+	"medilane-api/docs"
 )
 
 // @title Medilane account api
@@ -26,5 +26,5 @@ func main() {
 
 	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.ExposePort)
 
-	application.Start(cfg)
+	application.Start(&cfg)
 }

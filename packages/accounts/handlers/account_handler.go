@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"echo-demo-project/models"
-	"echo-demo-project/repositories"
-	"echo-demo-project/requests"
-	"echo-demo-project/responses"
-	s "echo-demo-project/server"
 	"github.com/labstack/echo/v4"
+	models2 "medilane-api/packages/accounts/models"
+	repositories2 "medilane-api/packages/accounts/repositories"
+	"medilane-api/packages/accounts/requests"
+	"medilane-api/responses"
+	s "medilane-api/server"
 	"net/http"
 )
 
@@ -36,9 +36,11 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 		return err
 	}
 
-	var accounts []models.User
+	accHandler.server.Logger.Info("test log logrus")
+	c.Logger().Info("test log echo")
+	var accounts []models2.User
 
-	accountRepo := repositories.NewUserRepository(accHandler.server.DB)
+	accountRepo := repositories2.NewUserRepository(accHandler.server.DB)
 	accountRepo.GetAccounts(&accounts, searchRequest)
 
 	return responses.SearchResponse(c, http.StatusOK, "", accounts)

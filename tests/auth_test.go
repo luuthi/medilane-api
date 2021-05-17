@@ -1,14 +1,6 @@
 package tests
 
 import (
-	"echo-demo-project/config"
-	"echo-demo-project/models"
-	"echo-demo-project/requests"
-	"echo-demo-project/responses"
-	"echo-demo-project/server"
-	"echo-demo-project/server/handlers"
-	"echo-demo-project/services/token"
-	"echo-demo-project/tests/helpers"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +8,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
+	"medilane-api/config"
+	handlers2 "medilane-api/packages/accounts/handlers"
+	models2 "medilane-api/packages/accounts/models"
+	responses2 "medilane-api/packages/accounts/responses"
+	token2 "medilane-api/packages/accounts/services/token"
+	"medilane-api/requests"
+	"medilane-api/server"
+	"medilane-api/tests/helpers"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -27,7 +27,7 @@ func TestWalkAuth(t *testing.T) {
 		Url:    "/login",
 	}
 	handlerFunc := func(s *server.Server, c echo.Context) error {
-		return handlers.NewAuthHandler(s).Login(c)
+		return handlers2.NewAuthHandler(s).Login(c)
 	}
 
 	encryptedPassword, _ := bcrypt.GenerateFromPassword([]byte("password"), bcrypt.DefaultCost)
@@ -36,13 +36,13 @@ func TestWalkAuth(t *testing.T) {
 		Reply: helpers.MockReply{{"id": helpers.UserId, "email": "name@test.com", "name": "User Name", "password": encryptedPassword}},
 	}
 
-	cases := []helpers.TestCase {
+	cases := []helpers.TestCase{
 		{
 			"Auth success",
 			request,
 			requests.LoginRequest{
 				BasicAuth: requests.BasicAuth{
-					Username:    "name@test.com",
+					Username: "name@test.com",
 					Password: "password",
 				},
 			},
@@ -58,7 +58,7 @@ func TestWalkAuth(t *testing.T) {
 			request,
 			requests.LoginRequest{
 				BasicAuth: requests.BasicAuth{
-					Username:    "name@test.com",
+					Username: "name@test.com",
 					Password: "incorrectPassword",
 				},
 			},
@@ -74,7 +74,7 @@ func TestWalkAuth(t *testing.T) {
 			request,
 			requests.LoginRequest{
 				BasicAuth: requests.BasicAuth{
-					Username:    "user.not.exists@test.com",
+					Username: "user.not.exists@test.com",
 					Password: "password",
 				},
 			},
@@ -111,27 +111,27 @@ func TestWalkRefresh(t *testing.T) {
 		Url:    "/refresh",
 	}
 	handlerFunc := func(s *server.Server, c echo.Context) error {
-		return handlers.NewAuthHandler(s).RefreshToken(c)
+		return handlers2.NewAuthHandler(s).RefreshToken(c)
 	}
 
-	tokenService := token.NewTokenService(config.NewConfig())
+	tokenService := token2.NewTokenService(config.NewConfig())
 
-	validUser := models.User{Email: "name@test.com"}
+	validUser := models2.User{Email: "name@test.com"}
 	validUser.ID = helpers.UserId
 	validToken, _ := tokenService.CreateRefreshToken(&validUser)
 
-	notExistUser := models.User{Email: "user.not.exists@test.com"}
+	notExistUser := models2.User{Email: "user.not.exists@test.com"}
 	notExistUser.ID = helpers.UserId + 1
 	notExistToken, _ := tokenService.CreateRefreshToken(&notExistUser)
 
-	invalidToken := validToken[1:len(validToken)-1]
+	invalidToken := validToken[1 : len(validToken)-1]
 
 	commonMock := &helpers.QueryMock{
 		Query: `SELECT * FROM "users"  WHERE "users"."deleted_at" IS NULL AND (("users"."id" = 1))`,
 		Reply: helpers.MockReply{{"id": helpers.UserId, "name": "User Name"}},
 	}
 
-	cases := []helpers.TestCase {
+	cases := []helpers.TestCase{
 		{
 			"Refresh success",
 			request,
@@ -194,7 +194,7 @@ func TestWalkRefresh(t *testing.T) {
 func assertTokenResponse(t *testing.T, recorder *httptest.ResponseRecorder) {
 	t.Helper()
 
-	var authResponse responses.LoginResponse
+	var authResponse responses2.LoginResponse
 	_ = json.Unmarshal([]byte(recorder.Body.String()), &authResponse)
 
 	assert.Equal(t, float64(helpers.UserId), getUserIdFromToken(authResponse.AccessToken))

@@ -1,13 +1,14 @@
 package handlers
 
 import (
-	"echo-demo-project/models"
-	"echo-demo-project/repositories"
-	"echo-demo-project/requests"
-	"echo-demo-project/responses"
-	s "echo-demo-project/server"
-	tokenservice "echo-demo-project/services/token"
 	"fmt"
+	models2 "medilane-api/packages/accounts/models"
+	repositories2 "medilane-api/packages/accounts/repositories"
+	"medilane-api/packages/accounts/requests"
+	responses2 "medilane-api/packages/accounts/responses"
+	tokenService "medilane-api/packages/accounts/services/token"
+	"medilane-api/responses"
+	s "medilane-api/server"
 	"net/http"
 
 	jwtGo "github.com/dgrijalva/jwt-go"
@@ -45,24 +46,24 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "Required fields are empty or not valid")
 	}
 
-	user := models.User{}
-	userRepository := repositories.NewUserRepository(authHandler.server.DB)
+	user := models2.User{}
+	userRepository := repositories2.NewUserRepository(authHandler.server.DB)
 	userRepository.GetUserByUsername(&user, loginRequest.Username)
 
 	if user.ID == 0 || (bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password)) != nil) {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid credentials")
 	}
 
-	tokenService := tokenservice.NewTokenService(authHandler.server.Config)
-	accessToken, exp, err := tokenService.CreateAccessToken(&user)
+	tokenServ := tokenService.NewTokenService(authHandler.server.Config)
+	accessToken, exp, err := tokenServ.CreateAccessToken(&user)
 	if err != nil {
 		return err
 	}
-	refreshToken, err := tokenService.CreateRefreshToken(&user)
+	refreshToken, err := tokenServ.CreateRefreshToken(&user)
 	if err != nil {
 		return err
 	}
-	res := responses.NewLoginResponse(accessToken, refreshToken, exp, user)
+	res := responses2.NewLoginResponse(accessToken, refreshToken, exp, user)
 
 	return responses.Response(c, http.StatusOK, res)
 }
@@ -101,23 +102,23 @@ func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid token")
 	}
 
-	user := new(models.User)
+	user := new(models2.User)
 	authHandler.server.DB.First(&user, int(claims["id"].(float64)))
 
 	if user.ID == 0 {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "User not found")
 	}
 
-	tokenService := tokenservice.NewTokenService(authHandler.server.Config)
-	accessToken, exp, err := tokenService.CreateAccessToken(user)
+	tokenServ := tokenService.NewTokenService(authHandler.server.Config)
+	accessToken, exp, err := tokenServ.CreateAccessToken(user)
 	if err != nil {
 		return err
 	}
-	refreshToken, err := tokenService.CreateRefreshToken(user)
+	refreshToken, err := tokenServ.CreateRefreshToken(user)
 	if err != nil {
 		return err
 	}
-	res := responses.NewLoginResponse(accessToken, refreshToken, exp, *user)
+	res := responses2.NewLoginResponse(accessToken, refreshToken, exp, *user)
 
 	return responses.Response(c, http.StatusOK, res)
 }

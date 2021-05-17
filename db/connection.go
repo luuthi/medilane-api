@@ -1,9 +1,9 @@
 package db
 
 import (
-	"echo-demo-project/config"
-	"echo-demo-project/db/seeders"
 	"fmt"
+	"medilane-api/config"
+	"medilane-api/db/seeders"
 
 	_ "github.com/go-sql-driver/mysql" // nolint
 	"github.com/jinzhu/gorm"

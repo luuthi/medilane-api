@@ -1,10 +1,9 @@
 package user
 
 import (
-	"echo-demo-project/requests"
-	"echo-demo-project/server/builders"
-
 	"golang.org/x/crypto/bcrypt"
+	builders2 "medilane-api/packages/accounts/builders"
+	"medilane-api/packages/accounts/requests"
 )
 
 func (userService *Service) Register(request *requests.RegisterRequest) error {
@@ -16,7 +15,7 @@ func (userService *Service) Register(request *requests.RegisterRequest) error {
 		return err
 	}
 
-	user := builders.NewUserBuilder().SetEmail(request.Email).
+	user := builders2.NewUserBuilder().SetEmail(request.Email).
 		SetName(request.Username).
 		SetPassword(string(encryptedPassword)).
 		SetFullName(request.FullName).

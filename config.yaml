@@ -1,0 +1,36 @@
+HTTP:
+  #The application host name
+  HOST: localhost
+  #The application port to get access from the docker container
+  PORT: 8001
+  EXPOSE_PORT: 8001
+
+#Parameters for getting the access to the database
+DATABASE:
+  DB_USER: medilane
+  DB_PASSWORD: 123qweA@
+  DB_DRIVER: mysql
+  DB_NAME: medilane
+  DB_HOST: 192.168.67.128
+  DB_PORT: 3306
+
+#Secret keys for the access token and refresh token signing
+AUTH:
+  ACCESS_SECRET: m3DiL4ne5ecR3tK3i
+  REFRESH_SECRET: m3DiL4ne5ecR3tK3i
+
+LOGGER:
+  FILE_OUT: ./logs/action.log
+  LEVEL: debug
+  FORMAT_TEXT: true
+  DISABLE_CALLER: false
+  SHOW_CALLER: false
+  DISABLE_LOG_FILE: false
+  DISABLE_CONSOLE_LOG: false
+  DISABLE_ROTATE: false
+  ROTATE:
+    MAX_SIZE: 10
+    MAX_BACKUPS: 5
+    MAX_DAYS: 5
+    COMPRESS: true
+    LOCAL_TIME: true

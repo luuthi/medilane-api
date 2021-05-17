@@ -1,9 +1,8 @@
 package user
 
 import (
-	"echo-demo-project/requests"
-
 	"github.com/jinzhu/gorm"
+	"medilane-api/packages/accounts/requests"
 )
 
 type ServiceWrapper interface {

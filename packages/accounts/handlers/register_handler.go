@@ -1,12 +1,12 @@
 package handlers
 
 import (
-	"echo-demo-project/models"
-	"echo-demo-project/repositories"
-	"echo-demo-project/requests"
-	"echo-demo-project/responses"
-	s "echo-demo-project/server"
-	"echo-demo-project/services/user"
+	models2 "medilane-api/packages/accounts/models"
+	repositories2 "medilane-api/packages/accounts/repositories"
+	"medilane-api/packages/accounts/requests"
+	user2 "medilane-api/packages/accounts/services/user"
+	"medilane-api/responses"
+	s "medilane-api/server"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -43,15 +43,15 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "Required fields are empty or not valid")
 	}
 
-	existUser := models.User{}
-	userRepository := repositories.NewUserRepository(registerHandler.server.DB)
+	existUser := models2.User{}
+	userRepository := repositories2.NewUserRepository(registerHandler.server.DB)
 	userRepository.GetUserByEmail(&existUser, registerRequest.Email)
 
 	if existUser.ID != 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "User already exists")
 	}
 
-	userService := user.NewUserService(registerHandler.server.DB)
+	userService := user2.NewUserService(registerHandler.server.DB)
 	if err := userService.Register(registerRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Server error")
 	}

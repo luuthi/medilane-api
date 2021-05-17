@@ -1,14 +1,14 @@
 package tests
 
 import (
-	"echo-demo-project/requests"
-	"echo-demo-project/server"
-	"echo-demo-project/server/handlers"
-	"echo-demo-project/services/token"
-	"echo-demo-project/tests/helpers"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	token2 "medilane-api/packages/accounts/services/token"
+	"medilane-api/requests"
+	"medilane-api/server"
+	"medilane-api/server/handlers"
+	"medilane-api/tests/helpers"
 	"net/http"
 	"testing"
 )
@@ -54,7 +54,7 @@ func TestWalkPostsCrud(t *testing.T) {
 		return handlers.NewPostHandlers(s).DeletePost(c)
 	}
 
-	claims := &token.JwtCustomClaims{
+	claims := &token2.JwtCustomClaims{
 		Name: "user",
 		ID:   helpers.UserId,
 	}
@@ -65,7 +65,7 @@ func TestWalkPostsCrud(t *testing.T) {
 		Reply: helpers.MockReply{{"id": 1, "title": "title", "content": "content", "username": "Username"}},
 	}
 
-	cases := []helpers.TestCase {
+	cases := []helpers.TestCase{
 		{
 			"Create post success",
 			requestCreate,

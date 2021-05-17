@@ -1,31 +1,35 @@
 package config
 
 import (
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
+	"medilane-api/logger"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	Auth AuthConfig
-	DB   DBConfig
-	HTTP HTTPConfig
+	Auth   AuthConfig           `yaml:"AUTH"`
+	DB     DBConfig             `yaml:"DATABASE"`
+	HTTP   HTTPConfig           `yaml:"HTTP"`
+	Logger logger.ConfigLogging `yaml:"LOGGER"`
 }
 
-func NewConfig() *Config {
+func NewConfig() Config {
 	configPath := os.Getenv("CONFIG_FILE_PATH")
 	if configPath == "" {
-		configPath = "/app/.env"
+		configPath = "/app/config.yaml"
 	}
-	err := godotenv.Load(configPath)
+	//err := godotenv.Load(configPath)
+	yamlFile, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	var conf Config
+	err = yaml.Unmarshal(yamlFile, &conf)
 	if err != nil {
 		log.Println("Error loading .env file")
 	}
 
-	return &Config{
-		Auth: LoadAuthConfig(),
-		DB:   LoadDBConfig(),
-		HTTP: LoadHTTPConfig(),
-	}
+	return conf
 }

@@ -1,17 +1,17 @@
 package helpers
 
 import (
-	"echo-demo-project/server"
 	"encoding/json"
 	"github.com/labstack/echo/v4"
 	mocket "github.com/selvatico/go-mocket"
+	"medilane-api/server"
 	"net/http/httptest"
 	"strings"
 )
 
 const UserId = 1
 
-type TestCase struct{
+type TestCase struct {
 	TestName    string
 	Request     Request
 	RequestBody interface{}

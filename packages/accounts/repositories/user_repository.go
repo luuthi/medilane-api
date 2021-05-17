@@ -1,18 +1,18 @@
 package repositories
 
 import (
-	"echo-demo-project/models"
-	"echo-demo-project/requests"
 	"fmt"
+	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/packages/accounts/requests"
 	"strings"
 
 	"github.com/jinzhu/gorm"
 )
 
 type UserRepositoryQ interface {
-	GetUserByEmail(user *models.User, email string)
-	GetUserByUsername(user *models.User, email string)
-	GetAccounts(users []*models.User, filter requests.SearchAccountRequest)
+	GetUserByEmail(user *models2.User, email string)
+	GetUserByUsername(user *models2.User, email string)
+	GetAccounts(users []*models2.User, filter requests.SearchAccountRequest)
 }
 
 type UserRepository struct {
@@ -23,15 +23,15 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
 
-func (userRepository *UserRepository) GetUserByEmail(user *models.User, email string) {
+func (userRepository *UserRepository) GetUserByEmail(user *models2.User, email string) {
 	userRepository.DB.Where("email = ?", email).Find(user)
 }
 
-func (userRepository *UserRepository) GetUserByUsername(user *models.User, email string) {
+func (userRepository *UserRepository) GetUserByUsername(user *models2.User, email string) {
 	userRepository.DB.Where("username = ?", email).Find(user)
 }
 
-func (userRepository *UserRepository) GetAccounts(users *[]models.User, filter *requests.SearchAccountRequest) {
+func (userRepository *UserRepository) GetAccounts(users *[]models2.User, filter *requests.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
