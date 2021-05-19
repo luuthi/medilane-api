@@ -1,69 +1,137 @@
 package builders
 
 import (
-	models2 "medilane-api/packages/accounts/models"
+	models2 "medilane-api/packages/medicines/models"
 )
 
-type UserBuilder struct {
-	email    string
-	username string
-	password string
-	fullName string
-	status   bool
-	type_    string
-	id       string
-	isAdmin  bool
+type MedicineBuilder struct {
+	id                     uint
+	Code                   string
+	Name                   string
+	RegistrationNo         string
+	Content                string
+	GlobalManufacturerName string
+	PackagingSize          string
+	Unit                   string
+	ActiveElement          string
+	Image                  string
+	Description            string
+	DoNotUse               string
+	DrugInteractions       string
+	Storage                string
+	Overdose               string
+	Barcode                string
+	Status                 string
 }
 
-func NewUserBuilder() *UserBuilder {
-	return &UserBuilder{}
+func NewMedicineBuilder() *MedicineBuilder {
+	return &MedicineBuilder{}
 }
 
-func (userBuilder *UserBuilder) SetEmail(email string) (u *UserBuilder) {
-	userBuilder.email = email
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetID(id uint) (u *MedicineBuilder) {
+	medicineBuilder.id = id
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) SetName(name string) (u *UserBuilder) {
-	userBuilder.username = name
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetCode(Code string) (u *MedicineBuilder) {
+	medicineBuilder.Code = Code
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) SetPassword(password string) (u *UserBuilder) {
-	userBuilder.password = password
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetName(Name string) (u *MedicineBuilder) {
+	medicineBuilder.Name = Name
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) SetFullName(fullName string) (u *UserBuilder) {
-	userBuilder.fullName = fullName
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetRegistrationNo(RegistrationNo string) (u *MedicineBuilder) {
+	medicineBuilder.RegistrationNo = RegistrationNo
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) SetStatus(status bool) (u *UserBuilder) {
-	userBuilder.status = status
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetContent(Content string) (u *MedicineBuilder) {
+	medicineBuilder.Content = Content
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) SetType(type_ string) (u *UserBuilder) {
-	userBuilder.type_ = type_
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetGlobalManufacturerName(GlobalManufacturerName string) (u *MedicineBuilder) {
+	medicineBuilder.GlobalManufacturerName = GlobalManufacturerName
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) SetIsAdmin(isAdmin bool) (u *UserBuilder) {
-	userBuilder.isAdmin = isAdmin
-	return userBuilder
+func (medicineBuilder *MedicineBuilder) SetPackagingSize(PackagingSize string) (u *MedicineBuilder) {
+	medicineBuilder.PackagingSize = PackagingSize
+	return medicineBuilder
 }
 
-func (userBuilder *UserBuilder) Build() models2.User {
-	user := models2.User{
-		Email:    userBuilder.email,
-		Username: userBuilder.username,
-		Password: userBuilder.password,
-		FullName: userBuilder.fullName,
-		Status:   userBuilder.status,
-		Type:     userBuilder.type_,
-		IsAdmin:  userBuilder.isAdmin,
+func (medicineBuilder *MedicineBuilder) SetUnit(Unit string) (u *MedicineBuilder) {
+	medicineBuilder.Unit = Unit
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetActiveElement(ActiveElement string) (u *MedicineBuilder) {
+	medicineBuilder.ActiveElement = ActiveElement
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetImage(Image string) (u *MedicineBuilder) {
+	medicineBuilder.Image = Image
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetDescription(Description string) (u *MedicineBuilder) {
+	medicineBuilder.Description = Description
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetDoNotUse(DoNotUse string) (u *MedicineBuilder) {
+	medicineBuilder.DoNotUse = DoNotUse
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetDrugInteractions(DrugInteractions string) (u *MedicineBuilder) {
+	medicineBuilder.DrugInteractions = DrugInteractions
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetOverdose(Overdose string) (u *MedicineBuilder) {
+	medicineBuilder.Overdose = Overdose
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetBarcode(Barcode string) (u *MedicineBuilder) {
+	medicineBuilder.Barcode = Barcode
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetStatus(Status string) (u *MedicineBuilder) {
+	medicineBuilder.Status = Status
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) SetStorage(Storage string) (u *MedicineBuilder) {
+	medicineBuilder.Storage = Storage
+	return medicineBuilder
+}
+
+func (medicineBuilder *MedicineBuilder) Build() models2.Medicine {
+	medicine := models2.Medicine{
+		Code:                   medicineBuilder.Code,
+		Name:                   medicineBuilder.Name,
+		RegistrationNo:         medicineBuilder.RegistrationNo,
+		Content:                medicineBuilder.Content,
+		GlobalManufacturerName: medicineBuilder.GlobalManufacturerName,
+		PackagingSize:          medicineBuilder.PackagingSize,
+		Unit:                   medicineBuilder.Unit,
+		ActiveElement:          medicineBuilder.ActiveElement,
+		Image:                  medicineBuilder.Image,
+		Description:            medicineBuilder.Description,
+		DoNotUse:               medicineBuilder.DoNotUse,
+		DrugInteractions:       medicineBuilder.DrugInteractions,
+		Storage:                medicineBuilder.Storage,
+		Overdose:               medicineBuilder.Overdose,
+		Barcode:                medicineBuilder.Barcode,
+		Status:                 medicineBuilder.Status,
 	}
 
-	return user
+	return medicine
 }
