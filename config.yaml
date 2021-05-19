@@ -7,11 +7,11 @@ HTTP:
 
 #Parameters for getting the access to the database
 DATABASE:
-  DB_USER: medilane
-  DB_PASSWORD: 123qweA@
+  DB_USER: root
+  DB_PASSWORD: 123457
   DB_DRIVER: mysql
   DB_NAME: medilane
-  DB_HOST: 192.168.67.128
+  DB_HOST: 127.0.0.1
   DB_PORT: 3306
 
 #Secret keys for the access token and refresh token signing
