@@ -35,34 +35,24 @@ func (medicineRepository *MedicineRepository) GetMedicines(medicine *[]models2.M
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
-	if filter.Username != "" {
-		spec = append(spec, "username LIKE ?")
-		values = append(values, fmt.Sprintf("%%%s%%", filter.Username))
+	if filter.Name != "" {
+		spec = append(spec, "Name LIKE ?")
+		values = append(values, filter.Name)
 	}
 
-	if filter.FullName != "" {
-		spec = append(spec, "full_name LIKE ?")
-		values = append(values, filter.FullName)
-	}
-
-	if filter.Email != "" {
-		spec = append(spec, "email LIKE ?")
-		values = append(values, filter.Email)
+	if filter.Code != "" {
+		spec = append(spec, "Code = ?")
+		values = append(values, filter.Code)
 	}
 
 	if filter.Status != "" {
-		spec = append(spec, "status = ?")
+		spec = append(spec, "Status = ?")
 		values = append(values, filter.Status)
 	}
 
-	if filter.Type != "" {
-		spec = append(spec, "type = ?")
-		values = append(values, filter.Type)
-	}
-
-	if filter.IsAdmin != "" {
-		spec = append(spec, "is_admin = ?")
-		values = append(values, filter.IsAdmin)
+	if filter.Barcode != "" {
+		spec = append(spec, "Barcode = ?")
+		values = append(values, filter.Barcode)
 	}
 
 	if filter.Sort.SortField == "" {

@@ -36,8 +36,7 @@ func (medicineHandler *MedicineHandler) SearchMedicine(c echo.Context) error {
 		return err
 	}
 
-	medicineHandler.server.Logger.Info("test log logrus")
-	c.Logger().Info("test log echo")
+	medicineHandler.server.Logger.Info("Search medicine")
 	var medicines []models2.Medicine
 
 	medicineRepo := repositories2.NewMedicineRepository(medicineHandler.server.DB)
