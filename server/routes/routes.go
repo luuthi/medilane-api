@@ -6,6 +6,7 @@ import (
 	log2 "github.com/labstack/gommon/log"
 	handlers2 "medilane-api/packages/accounts/handlers"
 	token2 "medilane-api/packages/accounts/services/token"
+	handlersMedicine "medilane-api/packages/medicines/handlers"
 	s "medilane-api/server"
 	"net/http"
 	"time"
@@ -28,6 +29,7 @@ func ConfigureRoutes(server *s.Server) {
 	authHandler := handlers2.NewAuthHandler(server)
 	registerHandler := handlers2.NewRegisterHandler(server)
 	accountHandler := handlers2.NewAccountHandler(server)
+	medicineHandler := handlersMedicine.NewMedicineHandler(server)
 
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 
@@ -49,6 +51,11 @@ func ConfigureRoutes(server *s.Server) {
 	}
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount)
+
+	// medicines api
+	medi := appRoute.Group("/medicine")
+	medi.Use(middleware.JWTWithConfig(config))
+	medi.POST("/find", medicineHandler.SearchMedicine)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {
