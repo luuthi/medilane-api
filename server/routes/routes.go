@@ -29,6 +29,7 @@ func ConfigureRoutes(server *s.Server) {
 	registerHandler := handlers2.NewRegisterHandler(server)
 	accountHandler := handlers2.NewAccountHandler(server)
 	permissionHandler := handlers2.NewPermissionHandler(server)
+	roleHandler := handlers2.NewRoleHandler(server)
 
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 
@@ -55,6 +56,17 @@ func ConfigureRoutes(server *s.Server) {
 	perm := appRoute.Group("/permission")
 	perm.Use(middleware.JWTWithConfig(config))
 	perm.POST("/find", permissionHandler.SearchPermission)
+	perm.POST("", permissionHandler.CreatePermission)
+	perm.PUT("/:id", permissionHandler.EditPermission)
+	perm.DELETE("/:id", permissionHandler.DeletePermission)
+
+	// role api
+	role := appRoute.Group("/role")
+	role.Use(middleware.JWTWithConfig(config))
+	role.POST("/find", roleHandler.SearchRole)
+	role.POST("", roleHandler.CreateRole)
+	role.PUT("/:id", roleHandler.EditRole)
+	role.DELETE("/:id", roleHandler.DeleteRole)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {

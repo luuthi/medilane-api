@@ -51,7 +51,7 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "User already exists")
 	}
 
-	userService := user2.NewUserService(registerHandler.server.DB)
+	userService := user2.NewAccountService(registerHandler.server.DB)
 	if err := userService.CreateUser(registerRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Server error")
 	}

@@ -23,7 +23,6 @@ func (rr SearchPermissionRequest) Validate() error {
 type PermissionRequest struct {
 	PermissionName string `json:"permission_name"  validate:"required" example:"read:user"`
 	Description    string `json:"description" example:"Permission read data user"`
-	ID             uint   `json:"id" example:"1"`
 }
 
 func (rr PermissionRequest) Validate() error {

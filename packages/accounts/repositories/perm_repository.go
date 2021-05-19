@@ -10,6 +10,7 @@ import (
 
 type PermissionRepositoryQ interface {
 	GetPermissions(perms []*models.Permission, filter requests.SearchPermissionRequest)
+	GetPermissionByID(perm *models.Permission, id uint)
 }
 
 type PermissionRepository struct {
@@ -42,4 +43,8 @@ func (permRepo *PermissionRepository) GetPermissions(perms *[]models.Permission,
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&perms)
+}
+
+func (permRepo *PermissionRepository) GetPermissionByID(perm *models.Permission, id uint) {
+	permRepo.DB.First(&perm, id)
 }

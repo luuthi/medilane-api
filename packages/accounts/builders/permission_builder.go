@@ -28,9 +28,13 @@ func (permBuilder *PermissionBuilder) SetID(id uint) (p *PermissionBuilder) {
 }
 
 func (permBuilder *PermissionBuilder) Build() models2.Permission {
+	common := models2.CommonModelFields{
+		ID: permBuilder.id,
+	}
 	perm := models2.Permission{
-		PermissionName: permBuilder.permissionName,
-		Description:    permBuilder.description,
+		PermissionName:    permBuilder.permissionName,
+		Description:       permBuilder.description,
+		CommonModelFields: common,
 	}
 
 	return perm
