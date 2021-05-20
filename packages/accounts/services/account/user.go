@@ -6,7 +6,7 @@ import (
 	"medilane-api/packages/accounts/requests"
 )
 
-func (userService *Service) CreateUser(request *requests.RegisterRequest) error {
+func (userService *Service) CreateUser(request *requests.AccountRequest) error {
 	encryptedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(request.Password),
 		bcrypt.DefaultCost,
