@@ -30,3 +30,11 @@ type Medicine struct {
 	Barcode                string `json:"Barcode" gorm:"type:varchar(500)"`
 	Status                 string `json:"Status" gorm:"type:varchar(500)"`
 }
+
+type Category struct {
+	CommonModelFields
+
+	Name  string `json:"Name" gorm:"type:varchar(200);not null"`
+	Slug  string `json:"Slug" gorm:"type:varchar(500)"`
+	Image string `json:"Image" gorm:"type:varchar(500)"`
+}

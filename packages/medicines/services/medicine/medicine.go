@@ -55,7 +55,7 @@ func (medicineService *Service) EditMedicine(request *requests.MedicineRequest, 
 	return medicineService.DB.Table(TblMedicine).Save(&medicine).Error
 }
 
-func (medicineService *Service) DeleteRole(id uint) error {
+func (medicineService *Service) DeleteMedicine(id uint) error {
 	medicine := builders2.NewMedicineBuilder().
 		SetID(id).
 		Build()
