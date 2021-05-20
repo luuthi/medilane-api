@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	handlers2 "medilane-api/packages/accounts/handlers"
-	"medilane-api/requests"
+	"medilane-api/packages/accounts/requests"
 	"medilane-api/server"
 	"medilane-api/tests/helpers"
 	"net/http"
@@ -24,12 +24,12 @@ func TestWalkRegister(t *testing.T) {
 		{
 			"Register user success",
 			request,
-			requests.RegisterRequest{
+			requests.AccountRequest{
 				BasicAuth: requests.BasicAuth{
-					Email:    "name@test.com",
+					Username: "name@test.com",
 					Password: "password",
 				},
-				Name: "name",
+				FullName: "name",
 			},
 			handlerFunc,
 			nil,
@@ -41,12 +41,12 @@ func TestWalkRegister(t *testing.T) {
 		{
 			"Register user with empty name",
 			request,
-			requests.RegisterRequest{
+			requests.AccountRequest{
 				BasicAuth: requests.BasicAuth{
-					Email:    "name@test.com",
+					Username: "name@test.com",
 					Password: "password",
 				},
-				Name: "",
+				FullName: "",
 			},
 			handlerFunc,
 			nil,
@@ -58,12 +58,12 @@ func TestWalkRegister(t *testing.T) {
 		{
 			"Register user with too short password",
 			request,
-			requests.RegisterRequest{
+			requests.AccountRequest{
 				BasicAuth: requests.BasicAuth{
-					Email:    "name@test.com",
+					Username: "name@test.com",
 					Password: "passw",
 				},
-				Name: "name",
+				FullName: "name",
 			},
 			handlerFunc,
 			nil,
@@ -75,12 +75,12 @@ func TestWalkRegister(t *testing.T) {
 		{
 			"Register user with duplicated email",
 			request,
-			requests.RegisterRequest{
+			requests.AccountRequest{
 				BasicAuth: requests.BasicAuth{
-					Email:    "duplicated@test.com",
+					Username: "duplicated@test.com",
 					Password: "password",
 				},
-				Name: "Another Name",
+				FullName: "Another Name",
 			},
 			handlerFunc,
 			&helpers.QueryMock{

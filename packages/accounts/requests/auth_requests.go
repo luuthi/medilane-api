@@ -21,7 +21,7 @@ type LoginRequest struct {
 	BasicAuth
 }
 
-type RegisterRequest struct {
+type AccountRequest struct {
 	BasicAuth
 	Email    string `json:"email" validate:"required" example:"john.doe@gmail.com"`
 	FullName string `json:"fullName" validate:"required" example:"John Doe"`
@@ -29,7 +29,7 @@ type RegisterRequest struct {
 	Type     string `json:"type"  validate:"required" example:"staff/user/supplier/manufacturer"`
 }
 
-func (rr RegisterRequest) Validate() error {
+func (rr AccountRequest) Validate() error {
 	err := rr.BasicAuth.Validate()
 	if err != nil {
 		return err
