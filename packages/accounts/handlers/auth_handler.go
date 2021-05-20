@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"fmt"
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/requests"
 	responses2 "medilane-api/packages/accounts/responses"
@@ -46,7 +46,7 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "Required fields are empty or not valid")
 	}
 
-	user := models2.User{}
+	user := models.User{}
 	AccountRepository := repositories2.NewAccountRepository(authHandler.server.DB)
 	AccountRepository.GetUserByUsername(&user, loginRequest.Username)
 
@@ -102,7 +102,7 @@ func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid token")
 	}
 
-	user := new(models2.User)
+	user := new(models.User)
 	authHandler.server.DB.First(&user, int(claims["id"].(float64)))
 
 	if user.ID == 0 {

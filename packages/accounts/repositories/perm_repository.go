@@ -3,14 +3,14 @@ package repositories
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"medilane-api/packages/accounts/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/requests"
 	"strings"
 )
 
 type PermissionRepositoryQ interface {
-	GetPermissions(perms []*models.Permission, filter requests.SearchPermissionRequest)
-	GetPermissionByID(perm *models.Permission, id uint)
+	GetPermissions(perms []*models2.Permission, filter requests.SearchPermissionRequest)
+	GetPermissionByID(perm *models2.Permission, id uint)
 }
 
 type PermissionRepository struct {
@@ -21,7 +21,7 @@ func NewPermissionRepository(db *gorm.DB) *PermissionRepository {
 	return &PermissionRepository{DB: db}
 }
 
-func (permRepo *PermissionRepository) GetPermissions(perms *[]models.Permission, filter requests.SearchPermissionRequest) {
+func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission, filter requests.SearchPermissionRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -45,6 +45,6 @@ func (permRepo *PermissionRepository) GetPermissions(perms *[]models.Permission,
 		Find(&perms)
 }
 
-func (permRepo *PermissionRepository) GetPermissionByID(perm *models.Permission, id uint) {
+func (permRepo *PermissionRepository) GetPermissionByID(perm *models2.Permission, id uint) {
 	permRepo.DB.First(&perm, id)
 }

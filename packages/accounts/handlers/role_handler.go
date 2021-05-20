@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"medilane-api/packages/accounts/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/account"
@@ -42,7 +42,7 @@ func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 	}
 
 	roleHandler.server.Logger.Info("search role")
-	var roles []models.Role
+	var roles []models2.Role
 
 	roleRepo := repositories.NewRoleRepository(roleHandler.server.DB)
 	roleRepo.GetRoles(&roles, searchReq)
@@ -109,7 +109,7 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	var existedRole models.Role
+	var existedRole models2.Role
 	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)
 	permRepo.GetRoleByID(&existedRole, id)
 	if existedRole.RoleName == "" {

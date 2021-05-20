@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"fmt"
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/models"
 	"medilane-api/packages/accounts/requests"
 	"strings"
 
@@ -10,9 +10,9 @@ import (
 )
 
 type AccountRepositoryQ interface {
-	GetUserByEmail(user *models2.User, email string)
-	GetUserByUsername(user *models2.User, email string)
-	GetAccounts(users []*models2.User, filter requests.SearchAccountRequest)
+	GetUserByEmail(user *models.User, email string)
+	GetUserByUsername(user *models.User, email string)
+	GetAccounts(users []*models.User, filter requests.SearchAccountRequest)
 }
 
 type AccountRepository struct {
@@ -23,15 +23,15 @@ func NewAccountRepository(db *gorm.DB) *AccountRepository {
 	return &AccountRepository{DB: db}
 }
 
-func (AccountRepository *AccountRepository) GetUserByEmail(user *models2.User, email string) {
+func (AccountRepository *AccountRepository) GetUserByEmail(user *models.User, email string) {
 	AccountRepository.DB.Where("email = ?", email).Find(user)
 }
 
-func (AccountRepository *AccountRepository) GetUserByUsername(user *models2.User, email string) {
+func (AccountRepository *AccountRepository) GetUserByUsername(user *models.User, email string) {
 	AccountRepository.DB.Where("username = ?", email).Find(user)
 }
 
-func (AccountRepository *AccountRepository) GetAccounts(users *[]models2.User, filter *requests.SearchAccountRequest) {
+func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

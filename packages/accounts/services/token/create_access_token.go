@@ -1,13 +1,13 @@
 package token
 
 import (
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/models"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-func (tokenService *Service) CreateAccessToken(user *models2.User) (accessToken string, exp int64, err error) {
+func (tokenService *Service) CreateAccessToken(user *models.User) (accessToken string, exp int64, err error) {
 	exp = time.Now().Add(time.Hour * ExpireCount).Unix()
 	claims := &JwtCustomClaims{
 		user.Username,

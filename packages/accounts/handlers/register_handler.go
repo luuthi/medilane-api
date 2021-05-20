@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/requests"
 	user2 "medilane-api/packages/accounts/services/account"
@@ -43,7 +43,7 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "Required fields are empty or not valid")
 	}
 
-	existUser := models2.User{}
+	existUser := models.User{}
 	AccountRepository := repositories2.NewAccountRepository(registerHandler.server.DB)
 	AccountRepository.GetUserByEmail(&existUser, accRequest.Email)
 

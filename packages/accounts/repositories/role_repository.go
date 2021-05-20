@@ -3,14 +3,14 @@ package repositories
 import (
 	"fmt"
 	"github.com/jinzhu/gorm"
-	"medilane-api/packages/accounts/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/requests"
 	"strings"
 )
 
 type RoleRepositoryQ interface {
-	GetRoles(perms []*models.Role, filter requests.SearchRoleRequest)
-	GetRoleByID(perm *models.Role, id uint)
+	GetRoles(perms []*models2.Role, filter requests.SearchRoleRequest)
+	GetRoleByID(perm *models2.Role, id uint)
 }
 
 type RoleRepository struct {
@@ -21,7 +21,7 @@ func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{DB: db}
 }
 
-func (roleRepo *RoleRepository) GetRoles(perms *[]models.Role, filter requests.SearchRoleRequest) {
+func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests.SearchRoleRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -45,6 +45,6 @@ func (roleRepo *RoleRepository) GetRoles(perms *[]models.Role, filter requests.S
 		Find(&perms)
 }
 
-func (roleRepo *RoleRepository) GetRoleByID(perm *models.Role, id uint) {
+func (roleRepo *RoleRepository) GetRoleByID(perm *models2.Role, id uint) {
 	roleRepo.DB.First(&perm, id)
 }

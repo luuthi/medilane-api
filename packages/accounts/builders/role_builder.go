@@ -1,6 +1,8 @@
 package builders
 
-import models2 "medilane-api/packages/accounts/models"
+import (
+	"medilane-api/models"
+)
 
 type RoleBuilder struct {
 	roleName    string
@@ -27,11 +29,11 @@ func (roleBuilder *RoleBuilder) SetID(id uint) (r *RoleBuilder) {
 	return roleBuilder
 }
 
-func (roleBuilder *RoleBuilder) Build() models2.Role {
-	common := models2.CommonModelFields{
+func (roleBuilder *RoleBuilder) Build() models.Role {
+	common := models.CommonModelFields{
 		ID: roleBuilder.id,
 	}
-	role := models2.Role{
+	role := models.Role{
 		RoleName:          roleBuilder.roleName,
 		Description:       roleBuilder.description,
 		CommonModelFields: common,

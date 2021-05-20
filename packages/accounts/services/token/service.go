@@ -1,10 +1,9 @@
 package token
 
 import (
-	"medilane-api/config"
-	models2 "medilane-api/packages/accounts/models"
-
 	"github.com/dgrijalva/jwt-go"
+	"medilane-api/config"
+	"medilane-api/models"
 )
 
 const ExpireCount = 2
@@ -22,8 +21,8 @@ type JwtCustomRefreshClaims struct {
 }
 
 type ServiceWrapper interface {
-	CreateAccessToken(user *models2.User) (accessToken string, exp int64, err error)
-	CreateRefreshToken(user *models2.User) (t string, err error)
+	CreateAccessToken(user *models.User) (accessToken string, exp int64, err error)
+	CreateRefreshToken(user *models.User) (t string, err error)
 }
 
 type Service struct {

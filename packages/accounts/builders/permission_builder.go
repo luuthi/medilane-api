@@ -1,6 +1,8 @@
 package builders
 
-import models2 "medilane-api/packages/accounts/models"
+import (
+	"medilane-api/models"
+)
 
 type PermissionBuilder struct {
 	permissionName string
@@ -27,11 +29,11 @@ func (permBuilder *PermissionBuilder) SetID(id uint) (p *PermissionBuilder) {
 	return permBuilder
 }
 
-func (permBuilder *PermissionBuilder) Build() models2.Permission {
-	common := models2.CommonModelFields{
+func (permBuilder *PermissionBuilder) Build() models.Permission {
+	common := models.CommonModelFields{
 		ID: permBuilder.id,
 	}
-	perm := models2.Permission{
+	perm := models.Permission{
 		PermissionName:    permBuilder.permissionName,
 		Description:       permBuilder.description,
 		CommonModelFields: common,

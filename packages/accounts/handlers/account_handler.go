@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/labstack/echo/v4"
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/requests"
 	"medilane-api/responses"
@@ -37,7 +37,7 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 	}
 
 	accHandler.server.Logger.Info("search account")
-	var accounts []models2.User
+	var accounts []models.User
 
 	accountRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	accountRepo.GetAccounts(&accounts, searchRequest)

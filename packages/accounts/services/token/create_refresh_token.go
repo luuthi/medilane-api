@@ -1,13 +1,13 @@
 package token
 
 import (
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/models"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
 
-func (tokenService *Service) CreateRefreshToken(user *models2.User) (t string, err error) {
+func (tokenService *Service) CreateRefreshToken(user *models.User) (t string, err error) {
 	claimsRefresh := &JwtCustomRefreshClaims{
 		ID: user.ID,
 		StandardClaims: jwt.StandardClaims{

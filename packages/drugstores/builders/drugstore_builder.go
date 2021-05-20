@@ -1,9 +1,11 @@
 package builders
 
-import models2 "medilane-api/packages/drugstores/models"
+import (
+	"medilane-api/models"
+)
 
 type DrugStoreBuilder struct {
-	store_name    string
+	store_name string
 }
 
 func NewDrugStoreBuilder() *DrugStoreBuilder {
@@ -15,9 +17,9 @@ func (drugStoreBuilder *DrugStoreBuilder) SetStoreName(store_name string) (u *Dr
 	return drugStoreBuilder
 }
 
-func (drugStoreBuilder *DrugStoreBuilder) Build() models2.DrugStore {
-	drugstore := models2.DrugStore{
-		StoreName:    drugStoreBuilder.store_name,
+func (drugStoreBuilder *DrugStoreBuilder) Build() models.DrugStore {
+	drugstore := models.DrugStore{
+		StoreName: drugStoreBuilder.store_name,
 	}
 
 	return drugstore

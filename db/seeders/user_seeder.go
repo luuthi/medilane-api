@@ -1,11 +1,10 @@
 package seeders
 
 import (
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"log"
-	models2 "medilane-api/packages/accounts/models"
-
-	"github.com/jinzhu/gorm"
+	"medilane-api/models"
 )
 
 type UserSeeder struct {
@@ -68,10 +67,10 @@ func (userSeeder *UserSeeder) SetPermission() {
 		},
 	}
 
-	if !userSeeder.DB.HasTable(&models2.Permission{}) {
-		userSeeder.DB.CreateTable(&models2.Permission{})
+	if !userSeeder.DB.HasTable(&models.Permission{}) {
+		userSeeder.DB.CreateTable(&models.Permission{})
 		for key, value := range permissions {
-			permission := models2.Permission{}
+			permission := models.Permission{}
 			userSeeder.DB.First(&permission, key)
 			if permission.ID == 0 {
 				permission.ID = uint(key)
@@ -99,10 +98,10 @@ func (userSeeder *UserSeeder) SetRole() {
 		},
 	}
 
-	if !userSeeder.DB.HasTable(&models2.Role{}) {
-		userSeeder.DB.CreateTable(&models2.Role{})
+	if !userSeeder.DB.HasTable(&models.Role{}) {
+		userSeeder.DB.CreateTable(&models.Role{})
 		for key, value := range roles {
-			role := models2.Role{}
+			role := models.Role{}
 			userSeeder.DB.First(&role, key)
 			if role.ID == 0 {
 				role.ID = uint(key)
@@ -136,11 +135,11 @@ func (userSeeder *UserSeeder) SetUsers() {
 		},
 	}
 
-	if !userSeeder.DB.HasTable(&models2.User{}) {
-		userSeeder.DB.CreateTable(&models2.User{})
+	if !userSeeder.DB.HasTable(&models.User{}) {
+		userSeeder.DB.CreateTable(&models.User{})
 
 		for key, value := range users {
-			user := models2.User{}
+			user := models.User{}
 			userSeeder.DB.First(&user, key)
 			encryptedPassword, err := bcrypt.GenerateFromPassword(
 				[]byte(value["password"].(string)),

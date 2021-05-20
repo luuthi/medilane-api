@@ -15,7 +15,7 @@ type Config struct {
 	Logger logger.ConfigLogging `yaml:"LOGGER"`
 }
 
-func NewConfig() Config {
+func NewConfig() *Config {
 	configPath := os.Getenv("CONFIG_FILE_PATH")
 	if configPath == "" {
 		configPath = "/app/config.yaml"
@@ -31,5 +31,5 @@ func NewConfig() Config {
 		log.Println("Error loading .env file")
 	}
 
-	return conf
+	return &conf
 }

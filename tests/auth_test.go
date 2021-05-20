@@ -9,11 +9,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/crypto/bcrypt"
 	"medilane-api/config"
+	"medilane-api/models"
 	handlers2 "medilane-api/packages/accounts/handlers"
-	models2 "medilane-api/packages/accounts/models"
+	"medilane-api/packages/accounts/requests"
 	responses2 "medilane-api/packages/accounts/responses"
 	token2 "medilane-api/packages/accounts/services/token"
-	"medilane-api/requests"
 	"medilane-api/server"
 	"medilane-api/tests/helpers"
 	"net/http"
@@ -116,11 +116,11 @@ func TestWalkRefresh(t *testing.T) {
 
 	tokenService := token2.NewTokenService(config.NewConfig())
 
-	validUser := models2.User{Email: "name@test.com"}
+	validUser := models.User{Email: "name@test.com"}
 	validUser.ID = helpers.UserId
 	validToken, _ := tokenService.CreateRefreshToken(&validUser)
 
-	notExistUser := models2.User{Email: "user.not.exists@test.com"}
+	notExistUser := models.User{Email: "user.not.exists@test.com"}
 	notExistUser.ID = helpers.UserId + 1
 	notExistToken, _ := tokenService.CreateRefreshToken(&notExistUser)
 

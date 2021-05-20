@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"medilane-api/packages/accounts/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/account"
@@ -42,7 +42,7 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 	}
 
 	permHandler.server.Logger.Info("search permission")
-	var permissions []models.Permission
+	var permissions []models2.Permission
 
 	permissionRepo := repositories.NewPermissionRepository(permHandler.server.DB)
 	permissionRepo.GetPermissions(&permissions, searchReq)
@@ -108,7 +108,7 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	var existedPerm models.Permission
+	var existedPerm models2.Permission
 	permRepo := repositories.NewPermissionRepository(permHandler.server.DB)
 	permRepo.GetPermissionByID(&existedPerm, id)
 	if existedPerm.PermissionName == "" {
