@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	log2 "github.com/labstack/gommon/log"
-	"medilane-api/packages/accounts/routes"
+	accRoute "medilane-api/packages/accounts/routes"
 	s "medilane-api/server"
 	"net/http"
 	"time"
@@ -26,7 +26,7 @@ func ConfigureRoutes(server *s.Server) {
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 	appRoute := server.Echo.Group("/api/v1")
 
-	routes.ConfigureAccountRoutes(appRoute, server)
+	accRoute.ConfigureAccountRoutes(appRoute, server)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {
