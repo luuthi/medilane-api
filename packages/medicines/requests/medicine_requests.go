@@ -15,6 +15,15 @@ type SearchMedicineRequest struct {
 	Sort   SortOption `json:"sort"`
 }
 
+type SearchCategoryRequest struct {
+	Slug string `json:"Slug" example:"slug"`
+	Name string `json:"Name" example:"name"`
+
+	Limit  int64      `json:"limit" example:"10"`
+	Offset int64      `json:"offset" example:"0"`
+	Sort   SortOption `json:"sort"`
+}
+
 type MedicineRequest struct {
 	Code                   string `json:"Code" example:"MD01"`
 	Name                   string `json:"Name" example:"name"`
@@ -33,12 +42,24 @@ type MedicineRequest struct {
 	Status                 string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
 }
 
+type CategoryRequest struct {
+	Slug string `json:"Slug" example:"slug"`
+	Name string `json:"Name" example:"name"`
+}
+
 type SortOption struct {
 	SortField     string `json:"sort_field"`
 	SortDirection string `json:"sort_direction"`
 }
 
 func (rr SearchMedicineRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Limit, validation.Min(0)),
+		validation.Field(&rr.Offset, validation.Min(0)),
+	)
+}
+
+func (rr SearchCategoryRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
