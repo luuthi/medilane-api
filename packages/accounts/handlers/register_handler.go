@@ -4,7 +4,7 @@ import (
 	models2 "medilane-api/packages/accounts/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/requests"
-	user2 "medilane-api/packages/accounts/services/user"
+	user2 "medilane-api/packages/accounts/services/account"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -44,15 +44,15 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 	}
 
 	existUser := models2.User{}
-	userRepository := repositories2.NewUserRepository(registerHandler.server.DB)
-	userRepository.GetUserByEmail(&existUser, registerRequest.Email)
+	AccountRepository := repositories2.NewAccountRepository(registerHandler.server.DB)
+	AccountRepository.GetUserByEmail(&existUser, registerRequest.Email)
 
 	if existUser.ID != 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "User already exists")
 	}
 
-	userService := user2.NewUserService(registerHandler.server.DB)
-	if err := userService.Register(registerRequest); err != nil {
+	userService := user2.NewAccountService(registerHandler.server.DB)
+	if err := userService.CreateUser(registerRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Server error")
 	}
 

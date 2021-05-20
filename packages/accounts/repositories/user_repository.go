@@ -9,29 +9,29 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type UserRepositoryQ interface {
+type AccountRepositoryQ interface {
 	GetUserByEmail(user *models2.User, email string)
 	GetUserByUsername(user *models2.User, email string)
 	GetAccounts(users []*models2.User, filter requests.SearchAccountRequest)
 }
 
-type UserRepository struct {
+type AccountRepository struct {
 	DB *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) *UserRepository {
-	return &UserRepository{DB: db}
+func NewAccountRepository(db *gorm.DB) *AccountRepository {
+	return &AccountRepository{DB: db}
 }
 
-func (userRepository *UserRepository) GetUserByEmail(user *models2.User, email string) {
-	userRepository.DB.Where("email = ?", email).Find(user)
+func (AccountRepository *AccountRepository) GetUserByEmail(user *models2.User, email string) {
+	AccountRepository.DB.Where("email = ?", email).Find(user)
 }
 
-func (userRepository *UserRepository) GetUserByUsername(user *models2.User, email string) {
-	userRepository.DB.Where("username = ?", email).Find(user)
+func (AccountRepository *AccountRepository) GetUserByUsername(user *models2.User, email string) {
+	AccountRepository.DB.Where("username = ?", email).Find(user)
 }
 
-func (userRepository *UserRepository) GetAccounts(users *[]models2.User, filter *requests.SearchAccountRequest) {
+func (AccountRepository *AccountRepository) GetAccounts(users *[]models2.User, filter *requests.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -73,7 +73,7 @@ func (userRepository *UserRepository) GetAccounts(users *[]models2.User, filter 
 		filter.Sort.SortDirection = "desc"
 	}
 
-	userRepository.DB.Where(strings.Join(spec, " AND "), values...).
+	AccountRepository.DB.Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

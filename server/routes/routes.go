@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	log2 "github.com/labstack/gommon/log"
-	handlers2 "medilane-api/packages/accounts/handlers"
-	token2 "medilane-api/packages/accounts/services/token"
+	accRoute "medilane-api/packages/accounts/routes"
 	s "medilane-api/server"
 	"net/http"
 	"time"
@@ -24,31 +23,10 @@ func ConfigureRoutes(server *s.Server) {
 
 	server.Echo.Use(middleware.CORS())
 
-	// handler
-	authHandler := handlers2.NewAuthHandler(server)
-	registerHandler := handlers2.NewRegisterHandler(server)
-	accountHandler := handlers2.NewAccountHandler(server)
-
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
-
 	appRoute := server.Echo.Group("/api/v1")
 
-	// login api
-	appRoute.POST("/login", authHandler.Login)
-
-	// auth api
-	auth := appRoute.Group("")
-	auth.POST("/register", registerHandler.Register)
-	auth.POST("/refresh", authHandler.RefreshToken)
-
-	// account api
-	acc := appRoute.Group("/account")
-	config := middleware.JWTConfig{
-		Claims:     &token2.JwtCustomClaims{},
-		SigningKey: []byte(server.Config.Auth.AccessSecret),
-	}
-	acc.Use(middleware.JWTWithConfig(config))
-	acc.POST("/find", accountHandler.SearchAccount)
+	accRoute.ConfigureAccountRoutes(appRoute, server)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {
