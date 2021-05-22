@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"medilane-api/packages/medicines/models"
-	models2 "medilane-api/packages/medicines/models"
+	"medilane-api/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
 	"medilane-api/packages/medicines/requests"
@@ -33,7 +33,7 @@ func NewCategoryHandler(server *s.Server) *CategoryHandler {
 // @Param params body requests.SearchCategoryRequest true "Filter Category"
 // @Success 200 {object} responses.DataSearch
 // @Failure 401 {object} responses.Error
-// @Router /Category/find [post]
+// @Router /category/find [post]
 // @Security BearerAuth
 func (CategoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 	searchRequest := new(requests.SearchCategoryRequest)
@@ -60,7 +60,7 @@ func (CategoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 // @Param params body requests.CategoryRequest true "Filter Category"
 // @Success 201 {object} responses.Data
 // @Failure 401 {object} responses.Error
-// @Router /Category [post]
+// @Router /category [post]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) CreateCategory(c echo.Context) error {
 	var medi requests.CategoryRequest

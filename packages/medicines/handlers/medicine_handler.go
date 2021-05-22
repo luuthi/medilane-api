@@ -3,8 +3,8 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"medilane-api/packages/medicines/models"
-	models2 "medilane-api/packages/medicines/models"
+	"medilane-api/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
 	"medilane-api/packages/medicines/requests"
@@ -133,7 +133,7 @@ func (medicineHandler *MedicineHandler) EditMedicine(c echo.Context) error {
 // @Param id path uint true "id Medicine"
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
-// @Router /Medicine/{id} [delete]
+// @Router /medicine/{id} [delete]
 // @Security BearerAuth
 func (permHandler *MedicineHandler) DeleteMedicine(c echo.Context) error {
 	var paramUrl uint64

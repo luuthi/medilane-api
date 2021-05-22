@@ -1,7 +1,7 @@
 package builders
 
 import (
-	models2 "medilane-api/packages/medicines/models"
+	models2 "medilane-api/models"
 )
 
 type MedicineBuilder struct {

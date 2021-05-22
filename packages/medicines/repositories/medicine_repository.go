@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"fmt"
-	models2 "medilane-api/packages/medicines/models"
+	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/requests"
 	"strings"
 

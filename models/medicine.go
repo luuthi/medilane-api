@@ -1,15 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
-type CommonModelFields struct {
-	ID        uint      `json:"id" gorm:"primary_key"`
-	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime:milli"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime:milli"`
-}
-
 type Medicine struct {
 	CommonModelFields
 
@@ -37,4 +27,40 @@ type Category struct {
 	Name  string `json:"Name" gorm:"type:varchar(200);not null"`
 	Slug  string `json:"Slug" gorm:"type:varchar(500)"`
 	Image string `json:"Image" gorm:"type:varchar(500)"`
+}
+
+type MedicineCategory struct {
+	CommonModelFields
+
+	Medicine Medicine `gorm:"foreignKey:Medicine.ID"`
+	Category Category `gorm:"foreignKey:Category.ID"`
+}
+
+type Tag struct {
+	CommonModelFields
+
+	Name string `json:"Name" gorm:"type:varchar(200);not null"`
+	Slug string `json:"Slug" gorm:"type:varchar(500)"`
+}
+
+type MedicineTag struct {
+	CommonModelFields
+
+	Medicine Medicine `gorm:"foreignKey:Medicine.ID"`
+	Tag      Tag      `gorm:"foreignKey:Tag.ID"`
+}
+
+type VariantValue struct {
+	CommonModelFields
+
+	ConvertValue string   `json:"ConvertValue" gorm:"type:varchar(200);not null"`
+	Operator     string   `json:"Operator" gorm:"type:varchar(200)"`
+	Medicine     Medicine `gorm:"foreignKey:Medicine.ID"`
+	Variant      Variant  `gorm:"foreignKey:Variant.ID"`
+}
+
+type Variant struct {
+	CommonModelFields
+
+	Name string `json:"Name" gorm:"type:varchar(200);not null"`
 }
