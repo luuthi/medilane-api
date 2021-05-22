@@ -27,7 +27,7 @@ func (medicineRepository *MedicineRepository) GetMedicineByCode(medicine *models
 	medicineRepository.DB.Where("Code = ?", Code).Find(medicine)
 }
 
-func (medicineRepository *MedicineRepository) GetMedicineById(medicine *models2.Medicine, id int16) {
+func (medicineRepository *MedicineRepository) GetMedicineById(medicine *models2.Medicine, id uint) {
 	medicineRepository.DB.Where("id = ?", id).Find(medicine)
 }
 
