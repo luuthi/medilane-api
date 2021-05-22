@@ -2,17 +2,23 @@ package medicine
 
 import (
 	"github.com/jinzhu/gorm"
-	"medilane-api/packages/accounts/requests"
+	"medilane-api/packages/medicines/requests"
 )
 
 type ServiceWrapper interface {
-	Register(request *requests.RegisterRequest) error
+	CreateMedicine(request *requests.MedicineRequest) error
+	EditMedicine(request *requests.MedicineRequest) error
+	DeleteMedicine(id uint) error
+
+	CreateCategory(request *requests.CategoryRequest) error
+	EditCategory(request *requests.CategoryRequest) error
+	DeleteCategory(id uint) error
 }
 
 type Service struct {
 	DB *gorm.DB
 }
 
-func NewUserService(db *gorm.DB) *Service {
+func NewMedicineService(db *gorm.DB) *Service {
 	return &Service{DB: db}
 }

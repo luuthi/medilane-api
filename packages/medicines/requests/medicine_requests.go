@@ -59,9 +59,21 @@ func (rr SearchMedicineRequest) Validate() error {
 	)
 }
 
+func (rr MedicineRequest) Validate() error {
+	return validation.ValidateStruct(&rr)//validation.Field(&rr.Limit, validation.Min(0)),
+	//validation.Field(&rr.Offset, validation.Min(0)),
+
+}
+
 func (rr SearchCategoryRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
 	)
+}
+
+func (rr CategoryRequest) Validate() error {
+	return validation.ValidateStruct(&rr)//validation.Field(&rr.Limit, validation.Min(0)),
+	//validation.Field(&rr.Offset, validation.Min(0)),
+
 }
