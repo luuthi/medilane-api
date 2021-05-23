@@ -11,8 +11,8 @@ type SearchAccountRequest struct {
 	Status   string     `json:"status" example:"true"`
 	Type     string     `json:"type" example:"staff/user/supplier/manufacturer"`
 	IsAdmin  string     `json:"is_admin" example:"true"`
-	Limit    int64      `json:"limit" example:"10"`
-	Offset   int64      `json:"offset" example:"0"`
+	Limit    int        `json:"limit" example:"10"`
+	Offset   int        `json:"offset" example:"0"`
 	Sort     SortOption `json:"sort"`
 }
 

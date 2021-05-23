@@ -8,8 +8,8 @@ import (
 
 type SearchPermissionRequest struct {
 	PermissionName string     `json:"permission_name" example:"read:user"`
-	Limit          int64      `json:"limit" example:"10"`
-	Offset         int64      `json:"offset" example:"0"`
+	Limit          int        `json:"limit" example:"10"`
+	Offset         int        `json:"offset" example:"0"`
 	Sort           SortOption `json:"sort"`
 }
 

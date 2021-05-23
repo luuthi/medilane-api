@@ -7,66 +7,59 @@ import (
 type DrugStore struct {
 	CommonModelFields
 
-	StoreName   string    `json:"store_name" gorm:"type:varchar(200);not null"`
-	PhoneNumber string    `json:"phone_number" gorm:"type:varchar(200)"`
-	Manager     string    `json:"manager" gorm:"type:varchar(200)"`
-	TaxNumber   string    `json:"tax_number" gorm:"type:varchar(200)"`
-	LicenseFile string    `json:"license_file" gorm:"type:varchar(200)"`
-	Status      string    `json:"status" gorm:"type:varchar(200)"`
-	CaringStaff string    `json:"caring_staff" gorm:"type:varchar(200)"`
-	Type        string    `json:"type" gorm:"type:varchar(200)"`
-	ApproveTime time.Time `json:"approve_time"`
-	ApproveBy   string    `json:"approve_by" gorm:"type:varchar(200)"`
+	StoreName      string       `json:"StoreName" gorm:"type:varchar(200);not null"`
+	PhoneNumber    string       `json:"Phone" gorm:"type:varchar(200)"`
+	Representative User         `json:"Representative" gorm:"-"`
+	CaringStaff    User         `json:"Staff" gorm:"-"`
+	ApproveBy      User         `json:"ApproveBy" gorm:"-"`
+	TaxNumber      string       `json:"TaxNumber" gorm:"type:varchar(200)"`
+	LicenseFile    string       `json:"LicenseFile" gorm:"type:varchar(200)"`
+	Status         string       `json:"Status" gorm:"type:varchar(200)"`
+	Type           string       `json:"Type" gorm:"type:varchar(200)"`
+	ApproveTime    time.Time    `json:"ApproveTime"`
+	Users          []*User      `gorm:"many2many:drug_store_user"`
+	ChildStores    []*DrugStore `gorm:"-"`
+	Vouchers       []*Voucher   `gorm:"-"`
+	AddressID      uint
+	Address        *Address        `gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Orders         []*Order        `gorm:"foreignKey:DrugStoreID"`
+	OrdersStore    []*OrderStore   `gorm:"foreignKey:DrugStoreID"`
+	Products       []*ProductStore `gorm:"many2many:drug_store_product"`
 }
 
-type DrugStoreAccount struct {
-	Relationship string    `json:"phone_number" gorm:"type:varchar(200)"`
-	DrugStore    DrugStore `gorm:"foreignKey:DrugStore.ID"`
+type DrugStoreUser struct {
+	DrugStoreID  uint   `gorm:"primaryKey"`
+	UserID       uint   `gorm:"primaryKey"`
+	Relationship string `json:"Relationship" gorm:"type:varchar(200)"`
+	User         *User
+	DrugStore    *DrugStore
+}
+
+func (*DrugStoreUser) TableName() string {
+	return "drug_store_user"
 }
 
 type DrugStoreRelationship struct {
-	ChildStore  DrugStore `gorm:"foreignKey:DrugStore.ID"`
-	ParentStore DrugStore `gorm:"foreignKey:DrugStore.ID"`
+	ParentStoreID uint       `gorm:"primaryKey"`
+	ChildStoreID  uint       `gorm:"primaryKey"`
+	ParentStore   *DrugStore `gorm:"foreignKey:ParentStoreID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	ChildStore    *DrugStore `gorm:"foreignKey:ChildStoreID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+func (*DrugStoreRelationship) TableName() string {
+	return "drug_store_relationship"
 }
 
 type DrugStoreProduct struct {
-	CommonModelFields
-
-	Quantity int `json:"quantity" gorm:"type:integer(8);not null"`
+	DrugStoreID    uint `gorm:"primaryKey"`
+	ProductStoreID uint `gorm:"primaryKey"`
+	Quantity       int  `json:"Quantity" gorm:"type:integer(8);not null"`
+	ProductStore   *ProductStore
+	DrugStore      *DrugStore
+	VariantID      uint     `json:"VariantID"`
+	Variant        *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
-type Consignment struct {
-	CommonModelFields
-
-	Code string `json:"code" gorm:"type:varchar(200);not null"`
-}
-
-type DrugStoreConsignment struct {
-	CommonModelFields
-
-	Quantity         int              `json:"quantity" gorm:"type:integer(8);not null"`
-	Consignment      Consignment      `gorm:"foreignKey:Consignment.ID"`
-	DrugStoreProduct DrugStoreProduct `gorm:"foreignKey:DrugStoreProduct.ID"`
-}
-
-type DeliveryReceiptBill struct {
-	CommonModelFields
-
-	OrderCode string    `json:"order-code" gorm:"type:varchar(200);not null"`
-	Type      string    `json:"type" gorm:"type:varchar(200)"`
-	Discount  float32   `json:"discount" gorm:"type:float(8)"`
-	SubTotal  float32   `json:"sub-total" gorm:"type:float(8)"`
-	Total     float32   `json:"total" gorm:"type:float(8)"`
-	Vat       float32   `json:"vat" gorm:"type:float(8)"`
-	Note      string    `json:"note" gorm:"type:varchar(200)"`
-	Status    string    `json:"status" gorm:"type:varchar(200)"`
-	DrugStore DrugStore `gorm:"foreignKey:DrugStore.ID"`
-}
-
-type DeliveryReceiptBillDetail struct {
-	CommonModelFields
-
-	Cost     float32 `json:"cost" gorm:"type:float(8)"`
-	Quantity int     `json:"quantity" gorm:"type:integer(8);not null"`
-	Discount float32 `json:"discount" gorm:"type:float(8)"`
+func (*DrugStoreProduct) TableName() string {
+	return "drug_store_product"
 }

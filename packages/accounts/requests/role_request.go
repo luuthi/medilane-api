@@ -4,8 +4,8 @@ import validation "github.com/go-ozzo/ozzo-validation"
 
 type SearchRoleRequest struct {
 	RoleName string     `json:"role_name" example:"role_manage"`
-	Limit    int64      `json:"limit" example:"10"`
-	Offset   int64      `json:"offset" example:"0"`
+	Limit    int        `json:"limit" example:"10"`
+	Offset   int        `json:"offset" example:"0"`
 	Sort     SortOption `json:"sort"`
 }
 

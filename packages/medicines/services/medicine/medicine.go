@@ -9,8 +9,8 @@ const (
 	TblMedicine = "medicines"
 )
 
-func (medicineService *Service) CreateMedicine(request *requests.MedicineRequest) error {
-	medicine := builders2.NewMedicineBuilder().SetCode(request.Code).
+func (productService *Service) CreateProduct(request *requests.ProductRequest) error {
+	medicine := builders2.NewProductBuilder().SetCode(request.Code).
 		SetName(request.Code).
 		SetBarcode(request.Name).
 		SetRegistrationNo(request.RegistrationNo).
@@ -29,11 +29,11 @@ func (medicineService *Service) CreateMedicine(request *requests.MedicineRequest
 		SetStatus(request.Status).
 		Build()
 
-	return medicineService.DB.Create(&medicine).Error
+	return productService.DB.Create(&medicine).Error
 }
 
-func (medicineService *Service) EditMedicine(request *requests.MedicineRequest, id uint) error {
-	medicine := builders2.NewMedicineBuilder().
+func (productService *Service) EditProduct(request *requests.ProductRequest, id uint) error {
+	product := builders2.NewProductBuilder().
 		SetID(id).
 		SetName(request.Code).
 		SetBarcode(request.Name).
@@ -52,12 +52,12 @@ func (medicineService *Service) EditMedicine(request *requests.MedicineRequest, 
 		SetBarcode(request.Barcode).
 		SetStatus(request.Status).
 		Build()
-	return medicineService.DB.Table(TblMedicine).Save(&medicine).Error
+	return productService.DB.Table(TblMedicine).Save(&product).Error
 }
 
-func (medicineService *Service) DeleteMedicine(id uint) error {
-	medicine := builders2.NewMedicineBuilder().
+func (productService *Service) DeleteMedicine(id uint) error {
+	medicine := builders2.NewProductBuilder().
 		SetID(id).
 		Build()
-	return medicineService.DB.Table(TblMedicine).Delete(&medicine).Error
+	return productService.DB.Table(TblMedicine).Delete(&medicine).Error
 }

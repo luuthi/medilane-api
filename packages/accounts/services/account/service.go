@@ -1,7 +1,7 @@
 package account
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	"medilane-api/packages/accounts/requests"
 )
 

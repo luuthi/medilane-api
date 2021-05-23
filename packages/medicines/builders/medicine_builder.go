@@ -4,7 +4,7 @@ import (
 	models2 "medilane-api/models"
 )
 
-type MedicineBuilder struct {
+type ProductBuilder struct {
 	id                     uint
 	Code                   string
 	Name                   string
@@ -14,7 +14,7 @@ type MedicineBuilder struct {
 	PackagingSize          string
 	Unit                   string
 	ActiveElement          string
-	Image                  string
+	Avatar                 string
 	Description            string
 	DoNotUse               string
 	DrugInteractions       string
@@ -24,113 +24,113 @@ type MedicineBuilder struct {
 	Status                 string
 }
 
-func NewMedicineBuilder() *MedicineBuilder {
-	return &MedicineBuilder{}
+func NewProductBuilder() *ProductBuilder {
+	return &ProductBuilder{}
 }
 
-func (medicineBuilder *MedicineBuilder) SetID(id uint) (u *MedicineBuilder) {
-	medicineBuilder.id = id
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetID(id uint) (u *ProductBuilder) {
+	productBuilder.id = id
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetCode(Code string) (u *MedicineBuilder) {
-	medicineBuilder.Code = Code
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetCode(Code string) (u *ProductBuilder) {
+	productBuilder.Code = Code
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetName(Name string) (u *MedicineBuilder) {
-	medicineBuilder.Name = Name
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetName(Name string) (u *ProductBuilder) {
+	productBuilder.Name = Name
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetRegistrationNo(RegistrationNo string) (u *MedicineBuilder) {
-	medicineBuilder.RegistrationNo = RegistrationNo
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetRegistrationNo(RegistrationNo string) (u *ProductBuilder) {
+	productBuilder.RegistrationNo = RegistrationNo
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetContent(Content string) (u *MedicineBuilder) {
-	medicineBuilder.Content = Content
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetContent(Content string) (u *ProductBuilder) {
+	productBuilder.Content = Content
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetGlobalManufacturerName(GlobalManufacturerName string) (u *MedicineBuilder) {
-	medicineBuilder.GlobalManufacturerName = GlobalManufacturerName
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetGlobalManufacturerName(GlobalManufacturerName string) (u *ProductBuilder) {
+	productBuilder.GlobalManufacturerName = GlobalManufacturerName
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetPackagingSize(PackagingSize string) (u *MedicineBuilder) {
-	medicineBuilder.PackagingSize = PackagingSize
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetPackagingSize(PackagingSize string) (u *ProductBuilder) {
+	productBuilder.PackagingSize = PackagingSize
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetUnit(Unit string) (u *MedicineBuilder) {
-	medicineBuilder.Unit = Unit
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetUnit(Unit string) (u *ProductBuilder) {
+	productBuilder.Unit = Unit
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetActiveElement(ActiveElement string) (u *MedicineBuilder) {
-	medicineBuilder.ActiveElement = ActiveElement
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetActiveElement(ActiveElement string) (u *ProductBuilder) {
+	productBuilder.ActiveElement = ActiveElement
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetImage(Image string) (u *MedicineBuilder) {
-	medicineBuilder.Image = Image
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetImage(Avatar string) (u *ProductBuilder) {
+	productBuilder.Avatar = Avatar
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetDescription(Description string) (u *MedicineBuilder) {
-	medicineBuilder.Description = Description
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetDescription(Description string) (u *ProductBuilder) {
+	productBuilder.Description = Description
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetDoNotUse(DoNotUse string) (u *MedicineBuilder) {
-	medicineBuilder.DoNotUse = DoNotUse
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetDoNotUse(DoNotUse string) (u *ProductBuilder) {
+	productBuilder.DoNotUse = DoNotUse
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetDrugInteractions(DrugInteractions string) (u *MedicineBuilder) {
-	medicineBuilder.DrugInteractions = DrugInteractions
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetDrugInteractions(DrugInteractions string) (u *ProductBuilder) {
+	productBuilder.DrugInteractions = DrugInteractions
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetOverdose(Overdose string) (u *MedicineBuilder) {
-	medicineBuilder.Overdose = Overdose
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetOverdose(Overdose string) (u *ProductBuilder) {
+	productBuilder.Overdose = Overdose
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetBarcode(Barcode string) (u *MedicineBuilder) {
-	medicineBuilder.Barcode = Barcode
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetBarcode(Barcode string) (u *ProductBuilder) {
+	productBuilder.Barcode = Barcode
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetStatus(Status string) (u *MedicineBuilder) {
-	medicineBuilder.Status = Status
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetStatus(Status string) (u *ProductBuilder) {
+	productBuilder.Status = Status
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) SetStorage(Storage string) (u *MedicineBuilder) {
-	medicineBuilder.Storage = Storage
-	return medicineBuilder
+func (productBuilder *ProductBuilder) SetStorage(Storage string) (u *ProductBuilder) {
+	productBuilder.Storage = Storage
+	return productBuilder
 }
 
-func (medicineBuilder *MedicineBuilder) Build() models2.Medicine {
-	medicine := models2.Medicine{
-		Code:                   medicineBuilder.Code,
-		Name:                   medicineBuilder.Name,
-		RegistrationNo:         medicineBuilder.RegistrationNo,
-		Content:                medicineBuilder.Content,
-		GlobalManufacturerName: medicineBuilder.GlobalManufacturerName,
-		PackagingSize:          medicineBuilder.PackagingSize,
-		Unit:                   medicineBuilder.Unit,
-		ActiveElement:          medicineBuilder.ActiveElement,
-		Image:                  medicineBuilder.Image,
-		Description:            medicineBuilder.Description,
-		DoNotUse:               medicineBuilder.DoNotUse,
-		DrugInteractions:       medicineBuilder.DrugInteractions,
-		Storage:                medicineBuilder.Storage,
-		Overdose:               medicineBuilder.Overdose,
-		Barcode:                medicineBuilder.Barcode,
-		Status:                 medicineBuilder.Status,
+func (productBuilder *ProductBuilder) Build() models2.Product {
+	medicine := models2.Product{
+		Code:                   productBuilder.Code,
+		Name:                   productBuilder.Name,
+		RegistrationNo:         productBuilder.RegistrationNo,
+		Content:                productBuilder.Content,
+		GlobalManufacturerName: productBuilder.GlobalManufacturerName,
+		PackagingSize:          productBuilder.PackagingSize,
+		Unit:                   productBuilder.Unit,
+		ActiveElement:          productBuilder.ActiveElement,
+		Avatar:                 productBuilder.Avatar,
+		Description:            productBuilder.Description,
+		DoNotUse:               productBuilder.DoNotUse,
+		DrugInteractions:       productBuilder.DrugInteractions,
+		Storage:                productBuilder.Storage,
+		Overdose:               productBuilder.Overdose,
+		Barcode:                productBuilder.Barcode,
+		Status:                 productBuilder.Status,
 	}
 
 	return medicine
