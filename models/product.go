@@ -3,28 +3,29 @@ package models
 type Product struct {
 	CommonModelFields
 
-	Code                   string    `json:"Code" gorm:"varchar(100);not null"`
-	Name                   string    `json:"Name" gorm:"varchar(255);not null"`
-	RegistrationNo         string    `json:"RegistrationNo" gorm:"varchar(255);not null"`
-	Content                string    `json:"Content" gorm:"varchar(500);not null"`
-	Description            string    `json:"Description" gorm:"varchar(500);not null"`
-	IndicationsOfTheDrug   string    `json:"IndicationsOfTheDrug" gorm:"varchar(500);not null"`
-	GlobalManufacturerName string    `json:"GlobalManufacturerName" gorm:"varchar(500);not null"`
-	Direction              string    `json:"Direction" gorm:"varchar(500);not null"`
-	DoNotUse               string    `json:"DoNotUse" gorm:"varchar(500);not null"`
-	DrugInteractions       string    `json:"DrugInteractions" gorm:"varchar(500);not null"`
-	Storage                string    `json:"Storage" gorm:"varchar(500);not null"`
-	Overdose               string    `json:"Overdose" gorm:"varchar(500);not null"`
-	PackagingSize          string    `json:"PackagingSize" gorm:"varchar(255);not null"`
-	Unit                   string    `json:"Unit" gorm:"varchar(255);not null"`
-	Barcode                string    `json:"Barcode" gorm:"varchar(255);not null"`
-	Status                 string    `json:"Status" gorm:"varchar(100);not null"`
-	ActiveElement          string    `json:"ActiveElement" gorm:"varchar(255);not null"`
-	Avatar                 string    `json:"Avatar" gorm:"varchar(255);not null"`
-	BasePrice              float64   `json:"BasePrice" gorm:"varchar(255);not null"`
-	Manufacturer           string    `json:"Manufacturer" gorm:"varchar(255);not null"`
-	Variants               []Variant `json:"Variants" gorm:"many2many:product_variant"`
-	Images                 []Image   `json:"Images" gorm:"many2many:product_image"`
+	Code                   string     `json:"Code" gorm:"varchar(100);not null"`
+	Name                   string     `json:"Name" gorm:"varchar(255);not null"`
+	RegistrationNo         string     `json:"RegistrationNo" gorm:"varchar(255);not null"`
+	Content                string     `json:"Content" gorm:"varchar(500);not null"`
+	Description            string     `json:"Description" gorm:"varchar(500);not null"`
+	IndicationsOfTheDrug   string     `json:"IndicationsOfTheDrug" gorm:"varchar(500);not null"`
+	GlobalManufacturerName string     `json:"GlobalManufacturerName" gorm:"varchar(500);not null"`
+	Direction              string     `json:"Direction" gorm:"varchar(500);not null"`
+	DoNotUse               string     `json:"DoNotUse" gorm:"varchar(500);not null"`
+	DrugInteractions       string     `json:"DrugInteractions" gorm:"varchar(500);not null"`
+	Storage                string     `json:"Storage" gorm:"varchar(500);not null"`
+	Overdose               string     `json:"Overdose" gorm:"varchar(500);not null"`
+	PackagingSize          string     `json:"PackagingSize" gorm:"varchar(255);not null"`
+	Unit                   string     `json:"Unit" gorm:"varchar(255);not null"`
+	Barcode                string     `json:"Barcode" gorm:"varchar(255);not null"`
+	Status                 string     `json:"Status" gorm:"varchar(100);not null"`
+	ActiveElement          string     `json:"ActiveElement" gorm:"varchar(255);not null"`
+	Avatar                 string     `json:"Avatar" gorm:"varchar(255);not null"`
+	BasePrice              float64    `json:"BasePrice" gorm:"varchar(255);not null"`
+	Manufacturer           string     `json:"Manufacturer" gorm:"varchar(255);not null"`
+	Variants               []*Variant `json:"Variants" gorm:"many2many:product_variant"`
+	Images                 []*Image   `json:"Images" gorm:"many2many:product_image"`
+	Tags                   []*Tag     `json:"Tags" gorm:"many2many:product_tag"`
 }
 
 type ProductStore struct {
@@ -52,6 +53,7 @@ type ProductStore struct {
 	Manufacturer           string     `json:"Manufacturer" gorm:"type:varchar(255);"`
 	Variants               []*Variant `json:"Variants" gorm:"many2many:product_store_variant"`
 	Images                 []*Image   `json:"Images" gorm:"many2many:product_store_image"`
+	Tags                   []*Tag     `json:"Tags" gorm:"many2many:product_store_tag"`
 }
 
 // Variant
@@ -94,6 +96,8 @@ type Category struct {
 	CommonModelFields
 
 	Name          string         `json:"Name" gorm:"type:varchar(500);"`
+	Slug          string         `json:"Slug" gorm:"type:varchar(500);"`
+	Image         string         `json:"Image" gorm:"type:varchar(500);"`
 	Products      []Product      `json:"Products" gorm:"many2many:category_products"`
 	ProductsStore []ProductStore `json:"ProductsStore" gorm:"many2many:category_products_store"`
 }
@@ -149,4 +153,35 @@ type ProductStoreImage struct {
 
 func (*ProductStoreImage) TableName() string {
 	return "product_store_image"
+}
+
+// Tag
+
+type Tag struct {
+	CommonModelFields
+
+	Name string `json:"Name" gorm:"type:varchar(100)"`
+	Slug string `json:"Slug" gorm:"type:varchar(100)"`
+}
+
+type ProductTag struct {
+	ProductID uint `gorm:"primaryKey"`
+	TagID     uint `gorm:"primaryKey"`
+	Tag       *Tag
+	Product   *Product
+}
+
+func (*ProductTag) TableName() string {
+	return "product_tag"
+}
+
+type ProductStoreTag struct {
+	ProductStoreID uint `gorm:"primaryKey"`
+	TagID          uint `gorm:"primaryKey"`
+	Tag            *Tag
+	ProductStore   *ProductStore
+}
+
+func (*ProductStoreTag) TableName() string {
+	return "product_store_tag"
 }

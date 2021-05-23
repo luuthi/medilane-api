@@ -6,32 +6,32 @@ import (
 	"medilane-api/packages/medicines/requests"
 	"strings"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
-type MedicinesRepositoryQ interface {
-	GetMedicineByCode(medicine *models2.Medicine, Code string)
-	GetMedicineById(medicine *models2.Medicine, id int16)
-	GetMedicines(medicine []*models2.Medicine, filter requests.SearchMedicineRequest)
+type ProductsRepositoryQ interface {
+	GetProductByCode(Product *models2.Product, Code string)
+	GetProductById(Product *models2.Product, id int16)
+	GetProducts(medicine []*models2.Product, filter requests.SearchProductRequest)
 }
 
-type MedicineRepository struct {
+type ProductRepository struct {
 	DB *gorm.DB
 }
 
-func NewMedicineRepository(db *gorm.DB) *MedicineRepository {
-	return &MedicineRepository{DB: db}
+func NewProductRepository(db *gorm.DB) *ProductRepository {
+	return &ProductRepository{DB: db}
 }
 
-func (medicineRepository *MedicineRepository) GetMedicineByCode(medicine *models2.Medicine, Code string) {
+func (medicineRepository *ProductRepository) GetProductByCode(medicine *models2.Product, Code string) {
 	medicineRepository.DB.Where("Code = ?", Code).Find(medicine)
 }
 
-func (medicineRepository *MedicineRepository) GetMedicineById(medicine *models2.Medicine, id uint) {
+func (medicineRepository *ProductRepository) GetMedicineById(medicine *models2.Product, id uint) {
 	medicineRepository.DB.Where("id = ?", id).Find(medicine)
 }
 
-func (medicineRepository *MedicineRepository) GetMedicines(medicine *[]models2.Medicine, filter *requests.SearchMedicineRequest) {
+func (medicineRepository *ProductRepository) GetMedicines(medicine *[]models2.Product, filter *requests.SearchProductRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

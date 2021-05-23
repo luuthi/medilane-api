@@ -15,15 +15,15 @@ import (
 	"strconv"
 )
 
-type MedicineHandler struct {
+type ProductHandler struct {
 	server *s.Server
 }
 
-func NewMedicineHandler(server *s.Server) *MedicineHandler {
-	return &MedicineHandler{server: server}
+func NewProductHandler(server *s.Server) *ProductHandler {
+	return &ProductHandler{server: server}
 }
 
-// SearchMedicine Search medicine godoc
+// SearchProduct Search Product godoc
 // @Summary Search medicine in system
 // @Description Perform search medicine
 // @ID search-medicine
@@ -35,22 +35,22 @@ func NewMedicineHandler(server *s.Server) *MedicineHandler {
 // @Failure 401 {object} responses.Error
 // @Router /medicine/find [post]
 // @Security BearerAuth
-func (medicineHandler *MedicineHandler) SearchMedicine(c echo.Context) error {
-	searchRequest := new(requests.SearchMedicineRequest)
+func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
+	searchRequest := new(requests.SearchProductRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
 	}
 
-	medicineHandler.server.Logger.Info("Search medicine")
-	var medicines []models2.Medicine
+	productHandler.server.Logger.Info("Search medicine")
+	var medicines []models2.Product
 
-	medicineRepo := repositories2.NewMedicineRepository(medicineHandler.server.DB)
+	medicineRepo := repositories2.NewProductRepository(productHandler.server.DB)
 	medicineRepo.GetMedicines(&medicines, searchRequest)
 
 	return responses.SearchResponse(c, http.StatusOK, "", medicines)
 }
 
-// CreateMedicine Create Medicine godoc
+// CreateProduct Create Medicine godoc
 // @Summary Create medicine in system
 // @Description Perform create medicine
 // @ID create-medicine
@@ -62,8 +62,8 @@ func (medicineHandler *MedicineHandler) SearchMedicine(c echo.Context) error {
 // @Failure 401 {object} responses.Error
 // @Router /medicine [post]
 // @Security BearerAuth
-func (medicineHandler *MedicineHandler) CreateMedicine(c echo.Context) error {
-	var medi requests.MedicineRequest
+func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
+	var medi requests.ProductRequest
 	if err := c.Bind(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -72,14 +72,14 @@ func (medicineHandler *MedicineHandler) CreateMedicine(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	medicineService := medicine.NewMedicineService(medicineHandler.server.DB)
-	if err := medicineService.CreateMedicine(&medi); err != nil {
+	medicineService := medicine.NewProductService(productHandler.server.DB)
+	if err := medicineService.CreateProduct(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert medicine: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusCreated, "Medicine created!")
 }
 
-// EditMedicine Edit medicine godoc
+// EditProduct Edit medicine godoc
 // @Summary Edit medicine in system
 // @Description Perform edit medicine
 // @ID edit-medicine
@@ -92,7 +92,7 @@ func (medicineHandler *MedicineHandler) CreateMedicine(c echo.Context) error {
 // @Failure 401 {object} responses.Error
 // @Router /medicine/{id} [put]
 // @Security BearerAuth
-func (medicineHandler *MedicineHandler) EditMedicine(c echo.Context) error {
+func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -100,7 +100,7 @@ func (medicineHandler *MedicineHandler) EditMedicine(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var medi requests.MedicineRequest
+	var medi requests.ProductRequest
 	if err := c.Bind(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -109,21 +109,21 @@ func (medicineHandler *MedicineHandler) EditMedicine(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	var existedMedi models.Medicine
-	medicineRepo := repositories.NewMedicineRepository(medicineHandler.server.DB)
-	medicineRepo.GetMedicineById(&existedMedi, id)
-	if existedMedi.Code == "" {
+	var existedProduct models.Product
+	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
+	medicineRepo.GetMedicineById(&existedProduct, id)
+	if existedProduct.Code == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found medicine with ID: %v", string(id)))
 	}
 
-	mediService := medicine.NewMedicineService(medicineHandler.server.DB)
-	if err := mediService.EditMedicine(&medi, id); err != nil {
+	mediService := medicine.NewProductService(productHandler.server.DB)
+	if err := mediService.EditProduct(&medi, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update medicine: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Medicine updated!")
 }
 
-// DeleteMedicine Delete Medicine godoc
+// DeleteProduct Delete Medicine godoc
 // @Summary Delete medicine in system
 // @Description Perform delete medicine
 // @ID delete-medicine
@@ -135,7 +135,7 @@ func (medicineHandler *MedicineHandler) EditMedicine(c echo.Context) error {
 // @Failure 401 {object} responses.Error
 // @Router /medicine/{id} [delete]
 // @Security BearerAuth
-func (permHandler *MedicineHandler) DeleteMedicine(c echo.Context) error {
+func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -143,7 +143,7 @@ func (permHandler *MedicineHandler) DeleteMedicine(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	mediService := medicine.NewMedicineService(permHandler.server.DB)
+	mediService := medicine.NewProductService(productHandler.server.DB)
 	if err := mediService.DeleteMedicine(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Medicine: %v", err.Error()))
 	}

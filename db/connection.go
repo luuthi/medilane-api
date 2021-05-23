@@ -43,9 +43,11 @@ func Init(cfg *config.Config) *gorm.DB {
 	_ = db.AutoMigrate(&models.Area{})
 
 	_ = db.SetupJoinTable(&models.Product{}, "Variants", &models.VariantValue{})
+	_ = db.SetupJoinTable(&models.Product{}, "Tags", &models.ProductTag{})
 	_ = db.SetupJoinTable(&models.Product{}, "Images", &models.ProductImage{})
 	_ = db.SetupJoinTable(&models.ProductStore{}, "Variants", &models.VariantStoreValue{})
 	_ = db.SetupJoinTable(&models.ProductStore{}, "Images", &models.ProductStoreImage{})
+	_ = db.SetupJoinTable(&models.ProductStore{}, "Tags", &models.ProductStoreTag{})
 	_ = db.AutoMigrate(&models.Image{})
 	_ = db.AutoMigrate(&models.Product{})
 	_ = db.AutoMigrate(&models.ProductStore{})

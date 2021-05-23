@@ -72,7 +72,7 @@ func (categoryHandler *CategoryHandler) CreateCategory(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	categoryService := medicine.NewMedicineService(categoryHandler.server.DB)
+	categoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := categoryService.CreateCategory(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert Category: %v", err.Error()))
 	}
@@ -116,7 +116,7 @@ func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found Category with ID: %v", string(id)))
 	}
 
-	mediService := medicine.NewMedicineService(categoryHandler.server.DB)
+	mediService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := mediService.EditCategory(&category, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update Category: %v", err.Error()))
 	}
@@ -143,7 +143,7 @@ func (categoryHandler *CategoryHandler) DeleteCategory(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	categoryService := medicine.NewMedicineService(categoryHandler.server.DB)
+	categoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := categoryService.DeleteCategory(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Category: %v", err.Error()))
 	}

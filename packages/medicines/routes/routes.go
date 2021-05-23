@@ -11,7 +11,7 @@ import (
 func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// handler
-	medicineHandler := handlers2.NewMedicineHandler(server)
+	medicineHandler := handlers2.NewProductHandler(server)
 
 	// account api
 	medicine := appRoute.Group("/medicine")
@@ -20,8 +20,8 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 		SigningKey: []byte(server.Config.Auth.AccessSecret),
 	}
 	medicine.Use(middleware.JWTWithConfig(config))
-	medicine.POST("/find", medicineHandler.SearchMedicine)
-	medicine.POST("/create", medicineHandler.SearchMedicine)
-	medicine.PUT("/edit/:id", medicineHandler.SearchMedicine)
-	medicine.DELETE("/delete/:id", medicineHandler.SearchMedicine)
+	medicine.POST("/find", medicineHandler.SearchProduct)
+	medicine.POST("/create", medicineHandler.SearchProduct)
+	medicine.PUT("/edit/:id", medicineHandler.SearchProduct)
+	medicine.DELETE("/delete/:id", medicineHandler.SearchProduct)
 }
