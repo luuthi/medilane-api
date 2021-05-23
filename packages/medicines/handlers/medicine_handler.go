@@ -41,11 +41,11 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 		return err
 	}
 
-	productHandler.server.Logger.Info("Search medicine")
+	productHandler.server.Logger.Info("Search product")
 	var medicines []models2.Product
 
 	medicineRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	medicineRepo.GetMedicines(&medicines, searchRequest)
+	medicineRepo.GetProducts(&medicines, searchRequest)
 
 	return responses.SearchResponse(c, http.StatusOK, "", medicines)
 }
@@ -111,7 +111,7 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 
 	var existedProduct models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
-	medicineRepo.GetMedicineById(&existedProduct, id)
+	medicineRepo.GetProductById(&existedProduct, id)
 	if existedProduct.Code == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found medicine with ID: %v", string(id)))
 	}

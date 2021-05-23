@@ -4,18 +4,18 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 )
 
-type SearchMedicineRequest struct {
+type SearchProductRequest struct {
 	Code    string `json:"Code" example:"MD01"`
 	Name    string `json:"Name" example:"name"`
 	Barcode string `json:"Barcode"  example:"example"`
 	Status  string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
 
-	Limit  int64      `json:"limit" example:"10"`
-	Offset int64      `json:"offset" example:"0"`
+	Limit  int        `json:"limit" example:"10"`
+	Offset int        `json:"offset" example:"0"`
 	Sort   SortOption `json:"sort"`
 }
 
-type MedicineRequest struct {
+type ProductRequest struct {
 	Code                   string `json:"Code" example:"MD01"`
 	Name                   string `json:"Name" example:"name"`
 	RegistrationNo         string `json:"RegistrationNo" example:"example"`
@@ -31,6 +31,12 @@ type MedicineRequest struct {
 	Overdose               string `json:"Overdose"  example:"example"`
 	Barcode                string `json:"Barcode"  example:"example"`
 	Status                 string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+
+	IndicationsOfTheDrug string  `json:"IndicationsOfTheDrug" example:"example"`
+	Direction            string  `json:"Direction" example:"example"`
+	Avatar               string  `json:"Avatar" example:"example"`
+	BasePrice            float64 `json:"BasePrice" example:"example"`
+	Manufacturer         string  `json:"Manufacturer" example:"example"`
 }
 
 type SortOption struct {
@@ -38,14 +44,14 @@ type SortOption struct {
 	SortDirection string `json:"sort_direction"`
 }
 
-func (rr SearchMedicineRequest) Validate() error {
+func (rr SearchProductRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
 	)
 }
 
-func (rr MedicineRequest) Validate() error {
+func (rr ProductRequest) Validate() error {
 	return validation.ValidateStruct(&rr) //validation.Field(&rr.Limit, validation.Min(0)),
 	//validation.Field(&rr.Offset, validation.Min(0)),
 

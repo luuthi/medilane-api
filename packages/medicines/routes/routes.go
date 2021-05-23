@@ -11,7 +11,7 @@ import (
 func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// handler
-	medicineHandler := handlers2.NewMedicineHandler(server)
+	medicineHandler := handlers2.NewProductHandler(server)
 	categoryHandler := handlers2.NewCategoryHandler(server)
 	tagHandler := handlers2.NewTagHandler(server)
 	variantHandler := handlers2.NewVariantHandler(server)
@@ -22,12 +22,12 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	}
 
 	// medicine api
-	medicine := appRoute.Group("/medicine")
+	medicine := appRoute.Group("/product")
 	medicine.Use(middleware.JWTWithConfig(config))
-	medicine.POST("/find", medicineHandler.SearchMedicine)
-	medicine.POST("/create", medicineHandler.CreateMedicine)
-	medicine.PUT("/edit/:id", medicineHandler.EditMedicine)
-	medicine.DELETE("/delete/:id", medicineHandler.DeleteMedicine)
+	medicine.POST("/find", medicineHandler.SearchProduct)
+	medicine.POST("/create", medicineHandler.CreateProduct)
+	medicine.PUT("/edit/:id", medicineHandler.EditProduct)
+	medicine.DELETE("/delete/:id", medicineHandler.DeleteProduct)
 
 	// medicine api
 	category := appRoute.Group("/category")
