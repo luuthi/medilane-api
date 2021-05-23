@@ -23,8 +23,8 @@ func NewCategoryRepository(db *gorm.DB) *CategoryRepository {
 	return &CategoryRepository{DB: db}
 }
 
-func (categoryRepository *CategoryRepository) GetCategoryBySlug(category *models2.Category, Code string) {
-	categoryRepository.DB.Where("Code = ?", Code).Find(category)
+func (categoryRepository *CategoryRepository) GetCategoryBySlug(category *models2.Category, Slug string) {
+	categoryRepository.DB.Where("Slug = ?", Slug).Find(category)
 }
 
 func (categoryRepository *CategoryRepository) GetCategoryById(category *models2.Category, id uint) {

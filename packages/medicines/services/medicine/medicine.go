@@ -27,6 +27,11 @@ func (productService *Service) CreateProduct(request *requests.ProductRequest) e
 		SetOverdose(request.Overdose).
 		SetBarcode(request.Barcode).
 		SetStatus(request.Status).
+		SetIndicationsOfTheDrug(request.IndicationsOfTheDrug).
+		SetDirection(request.Direction).
+		SetAvatar(request.Avatar).
+		SetBasePrice(request.BasePrice).
+		SetManufacturer(request.Manufacturer).
 		Build()
 
 	return productService.DB.Create(&medicine).Error
@@ -51,6 +56,11 @@ func (productService *Service) EditProduct(request *requests.ProductRequest, id 
 		SetOverdose(request.Overdose).
 		SetBarcode(request.Barcode).
 		SetStatus(request.Status).
+		SetIndicationsOfTheDrug(request.IndicationsOfTheDrug).
+		SetDirection(request.Direction).
+		SetAvatar(request.Avatar).
+		SetBasePrice(request.BasePrice).
+		SetManufacturer(request.Manufacturer).
 		Build()
 	return productService.DB.Table(TblMedicine).Save(&product).Error
 }

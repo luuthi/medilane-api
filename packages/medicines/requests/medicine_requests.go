@@ -15,15 +15,6 @@ type SearchProductRequest struct {
 	Sort   SortOption `json:"sort"`
 }
 
-type SearchCategoryRequest struct {
-	Slug string `json:"Slug" example:"slug"`
-	Name string `json:"Name" example:"name"`
-
-	Limit  int        `json:"limit" example:"10"`
-	Offset int        `json:"offset" example:"0"`
-	Sort   SortOption `json:"sort"`
-}
-
 type ProductRequest struct {
 	Code                   string `json:"Code" example:"MD01"`
 	Name                   string `json:"Name" example:"name"`
@@ -40,11 +31,12 @@ type ProductRequest struct {
 	Overdose               string `json:"Overdose"  example:"example"`
 	Barcode                string `json:"Barcode"  example:"example"`
 	Status                 string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-}
 
-type CategoryRequest struct {
-	Slug string `json:"Slug" example:"slug"`
-	Name string `json:"Name" example:"name"`
+	IndicationsOfTheDrug string  `json:"IndicationsOfTheDrug" example:"example"`
+	Direction            string  `json:"Direction" example:"example"`
+	Avatar               string  `json:"Avatar" example:"example"`
+	BasePrice            float64 `json:"BasePrice" example:"example"`
+	Manufacturer         string  `json:"Manufacturer" example:"example"`
 }
 
 type SortOption struct {
@@ -60,19 +52,6 @@ func (rr SearchProductRequest) Validate() error {
 }
 
 func (rr ProductRequest) Validate() error {
-	return validation.ValidateStruct(&rr) //validation.Field(&rr.Limit, validation.Min(0)),
-	//validation.Field(&rr.Offset, validation.Min(0)),
-
-}
-
-func (rr SearchCategoryRequest) Validate() error {
-	return validation.ValidateStruct(&rr,
-		validation.Field(&rr.Limit, validation.Min(0)),
-		validation.Field(&rr.Offset, validation.Min(0)),
-	)
-}
-
-func (rr CategoryRequest) Validate() error {
 	return validation.ValidateStruct(&rr) //validation.Field(&rr.Limit, validation.Min(0)),
 	//validation.Field(&rr.Offset, validation.Min(0)),
 

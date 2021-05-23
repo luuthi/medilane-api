@@ -9,26 +9,26 @@ const (
 	TblCategory = "categories"
 )
 
-func (productService *Service) CreateCategory(request *requests.CategoryRequest) error {
-	medicine := builders2.NewCategoryBuilder().SetSlug(request.Slug).
+func (categoryService *Service) CreateCategory(request *requests.CategoryRequest) error {
+	category := builders2.NewCategoryBuilder().SetSlug(request.Slug).
 		SetName(request.Name).
 		Build()
 
-	return productService.DB.Create(&medicine).Error
+	return categoryService.DB.Create(&category).Error
 }
 
-func (productService *Service) EditCategory(request *requests.CategoryRequest, id uint) error {
-	medicine := builders2.NewCategoryBuilder().
+func (categoryService *Service) EditCategory(request *requests.CategoryRequest, id uint) error {
+	category := builders2.NewCategoryBuilder().
 		SetID(id).
 		SetName(request.Name).
 		SetSlug(request.Slug).
 		Build()
-	return productService.DB.Table(TblCategory).Save(&medicine).Error
+	return categoryService.DB.Table(TblCategory).Save(&category).Error
 }
 
-func (productService *Service) DeleteCategory(id uint) error {
-	category := builders2.NewProductBuilder().
+func (categoryService *Service) DeleteCategory(id uint) error {
+	category := builders2.NewCategoryBuilder().
 		SetID(id).
 		Build()
-	return productService.DB.Table(TblCategory).Delete(&category).Error
+	return categoryService.DB.Table(TblCategory).Delete(&category).Error
 }

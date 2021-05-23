@@ -27,11 +27,11 @@ func (medicineRepository *ProductRepository) GetProductByCode(medicine *models2.
 	medicineRepository.DB.Where("Code = ?", Code).Find(medicine)
 }
 
-func (medicineRepository *ProductRepository) GetMedicineById(medicine *models2.Product, id uint) {
+func (medicineRepository *ProductRepository) GetProductById(medicine *models2.Product, id uint) {
 	medicineRepository.DB.Where("id = ?", id).Find(medicine)
 }
 
-func (medicineRepository *ProductRepository) GetMedicines(medicine *[]models2.Product, filter *requests.SearchProductRequest) {
+func (medicineRepository *ProductRepository) GetProducts(medicine *[]models2.Product, filter *requests.SearchProductRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

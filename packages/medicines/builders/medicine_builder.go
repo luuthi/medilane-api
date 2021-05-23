@@ -22,6 +22,10 @@ type ProductBuilder struct {
 	Overdose               string
 	Barcode                string
 	Status                 string
+	IndicationsOfTheDrug   string
+	Direction              string
+	BasePrice              float64
+	Manufacturer           string
 }
 
 func NewProductBuilder() *ProductBuilder {
@@ -110,6 +114,31 @@ func (productBuilder *ProductBuilder) SetStatus(Status string) (u *ProductBuilde
 
 func (productBuilder *ProductBuilder) SetStorage(Storage string) (u *ProductBuilder) {
 	productBuilder.Storage = Storage
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetIndicationsOfTheDrug(IndicationsOfTheDrug string) (u *ProductBuilder) {
+	productBuilder.IndicationsOfTheDrug = IndicationsOfTheDrug
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetDirection(Direction string) (u *ProductBuilder) {
+	productBuilder.Direction = Direction
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetAvatar(Avatar string) (u *ProductBuilder) {
+	productBuilder.Avatar = Avatar
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetBasePrice(BasePrice float64) (u *ProductBuilder) {
+	productBuilder.BasePrice = BasePrice
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetManufacturer(Manufacturer string) (u *ProductBuilder) {
+	productBuilder.Storage = Manufacturer
 	return productBuilder
 }
 
