@@ -26,5 +26,5 @@ func main() {
 
 	docs.SwaggerInfo.Host = fmt.Sprintf("%s:%s", cfg.HTTP.Host, cfg.HTTP.ExposePort)
 
-	application.Start(&cfg)
+	application.Start(cfg)
 }

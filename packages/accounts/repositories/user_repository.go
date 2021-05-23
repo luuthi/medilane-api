@@ -2,11 +2,10 @@ package repositories
 
 import (
 	"fmt"
+	"gorm.io/gorm"
 	"medilane-api/models"
 	"medilane-api/packages/accounts/requests"
 	"strings"
-
-	"github.com/jinzhu/gorm"
 )
 
 type AccountRepositoryQ interface {
