@@ -7,6 +7,7 @@ import (
 type CategoryBuilder struct {
 	id    uint
 	Slug  string
+	Note  string
 	Name  string
 	Image string
 }
@@ -22,6 +23,11 @@ func (categoryBuilder *CategoryBuilder) SetID(id uint) (u *CategoryBuilder) {
 
 func (categoryBuilder *CategoryBuilder) SetSlug(Slug string) (u *CategoryBuilder) {
 	categoryBuilder.Slug = Slug
+	return categoryBuilder
+}
+
+func (categoryBuilder *CategoryBuilder) SetNote(Note string) (u *CategoryBuilder) {
+	categoryBuilder.Note = Note
 	return categoryBuilder
 }
 

@@ -25,6 +25,7 @@ type Category struct {
 	CommonModelFields
 
 	Name  string `json:"Name" gorm:"type:varchar(200);not null"`
+	Note  string `json:"Note" gorm:"type:varchar(500)"`
 	Slug  string `json:"Slug" gorm:"type:varchar(500)"`
 	Image string `json:"Image" gorm:"type:varchar(500)"`
 }
