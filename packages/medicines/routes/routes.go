@@ -12,16 +12,44 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// handler
 	medicineHandler := handlers2.NewMedicineHandler(server)
+	categoryHandler := handlers2.NewCategoryHandler(server)
+	tagHandler := handlers2.NewTagHandler(server)
+	variantHandler := handlers2.NewVariantHandler(server)
 
-	// account api
-	medicine := appRoute.Group("/medicine")
 	config := middleware.JWTConfig{
 		Claims:     &token2.JwtCustomClaims{},
 		SigningKey: []byte(server.Config.Auth.AccessSecret),
 	}
+
+	// medicine api
+	medicine := appRoute.Group("/medicine")
 	medicine.Use(middleware.JWTWithConfig(config))
 	medicine.POST("/find", medicineHandler.SearchMedicine)
-	medicine.POST("/create", medicineHandler.SearchMedicine)
-	medicine.PUT("/edit/:id", medicineHandler.SearchMedicine)
-	medicine.DELETE("/delete/:id", medicineHandler.SearchMedicine)
+	medicine.POST("/create", medicineHandler.CreateMedicine)
+	medicine.PUT("/edit/:id", medicineHandler.EditMedicine)
+	medicine.DELETE("/delete/:id", medicineHandler.DeleteMedicine)
+
+	// medicine api
+	category := appRoute.Group("/category")
+	category.Use(middleware.JWTWithConfig(config))
+	category.POST("/find", categoryHandler.SearchCategory)
+	category.POST("/create", categoryHandler.CreateCategory)
+	category.PUT("/edit/:id", categoryHandler.EditCategory)
+	category.DELETE("/delete/:id", categoryHandler.DeleteCategory)
+
+	// medicine api
+	tag := appRoute.Group("/tag")
+	tag.Use(middleware.JWTWithConfig(config))
+	tag.POST("/find", tagHandler.SearchTag)
+	tag.POST("/create", tagHandler.CreateTag)
+	tag.PUT("/edit/:id", tagHandler.EditTag)
+	tag.DELETE("/delete/:id", tagHandler.DeleteTag)
+
+	// variant api
+	variant := appRoute.Group("/variant")
+	variant.Use(middleware.JWTWithConfig(config))
+	variant.POST("/find", variantHandler.SearchVariant)
+	variant.POST("/create", variantHandler.CreateVariant)
+	variant.PUT("/edit/:id", variantHandler.EditVariant)
+	variant.DELETE("/delete/:id", variantHandler.DeleteVariant)
 }
