@@ -2,11 +2,11 @@ package server
 
 import (
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"medilane-api/config"
 	"medilane-api/db"
 	"medilane-api/logger"
 
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo/v4"
 )
 

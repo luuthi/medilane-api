@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/requests"
 	"strings"
