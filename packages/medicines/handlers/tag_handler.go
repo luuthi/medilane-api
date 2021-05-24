@@ -72,7 +72,7 @@ func (tagHandler *TagHandler) CreateTag(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	tagService := medicine.NewMedicineService(tagHandler.server.DB)
+	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.CreateTag(&tag); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert Tag: %v", err.Error()))
 	}
@@ -116,7 +116,7 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found Tag with ID: %v", string(id)))
 	}
 
-	tagService := medicine.NewMedicineService(tagHandler.server.DB)
+	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.EditTag(&tag, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update Tag: %v", err.Error()))
 	}
@@ -143,7 +143,7 @@ func (tagHandler *TagHandler) DeleteTag(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	tagService := medicine.NewMedicineService(tagHandler.server.DB)
+	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.DeleteTag(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Tag: %v", err.Error()))
 	}

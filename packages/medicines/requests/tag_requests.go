@@ -8,8 +8,8 @@ type SearchTagRequest struct {
 	Slug string `json:"Slug" example:"slug"`
 	Name string `json:"Name" example:"name"`
 
-	Limit  int64      `json:"limit" example:"10"`
-	Offset int64      `json:"offset" example:"0"`
+	Limit  int        `json:"limit" example:"10"`
+	Offset int        `json:"offset" example:"0"`
 	Sort   SortOption `json:"sort"`
 }
 

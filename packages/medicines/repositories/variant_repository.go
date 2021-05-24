@@ -6,7 +6,7 @@ import (
 	"medilane-api/packages/medicines/requests"
 	"strings"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type VariantRepositoryQ interface {

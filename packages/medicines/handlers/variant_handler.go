@@ -72,7 +72,7 @@ func (variantHandler *VariantHandler) CreateVariant(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	variantService := medicine.NewMedicineService(variantHandler.server.DB)
+	variantService := medicine.NewProductService(variantHandler.server.DB)
 	if err := variantService.CreateVariant(&variant); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert Variant: %v", err.Error()))
 	}
@@ -116,7 +116,7 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found Variant with ID: %v", string(id)))
 	}
 
-	variantService := medicine.NewMedicineService(variantHandler.server.DB)
+	variantService := medicine.NewProductService(variantHandler.server.DB)
 	if err := variantService.EditVariant(&variant, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update Variant: %v", err.Error()))
 	}
@@ -143,7 +143,7 @@ func (variantHandler *VariantHandler) DeleteVariant(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	variantService := medicine.NewMedicineService(variantHandler.server.DB)
+	variantService := medicine.NewProductService(variantHandler.server.DB)
 	if err := variantService.DeleteVariant(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Variant: %v", err.Error()))
 	}
