@@ -8,6 +8,7 @@ type RoleBuilder struct {
 	roleName    string
 	description string
 	id          uint
+	perms       []*models.Permission
 }
 
 func NewRoleBuilder() *RoleBuilder {
@@ -29,14 +30,25 @@ func (roleBuilder *RoleBuilder) SetID(id uint) (r *RoleBuilder) {
 	return roleBuilder
 }
 
-func (roleBuilder *RoleBuilder) Build() models.Role {
+func (roleBuilder *RoleBuilder) SetPermissions(ids []uint) (r *RoleBuilder) {
+	var permissions []*models.Permission
+	permBuilder := NewPermissionBuilder()
+	for _, v := range ids {
+		permissions = append(permissions, permBuilder.SetID(v).Build())
+	}
+	roleBuilder.perms = permissions
+	return roleBuilder
+}
+
+func (roleBuilder *RoleBuilder) Build() *models.Role {
 	common := models.CommonModelFields{
 		ID: roleBuilder.id,
 	}
-	role := models.Role{
+	role := &models.Role{
 		RoleName:          roleBuilder.roleName,
 		Description:       roleBuilder.description,
 		CommonModelFields: common,
+		Permissions:       roleBuilder.perms,
 	}
 
 	return role

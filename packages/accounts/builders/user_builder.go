@@ -5,14 +5,16 @@ import (
 )
 
 type UserBuilder struct {
-	email    string
-	username string
-	password string
-	fullName string
-	status   bool
-	type_    string
-	id       string
-	isAdmin  bool
+	email     string
+	username  string
+	password  string
+	fullName  string
+	status    bool
+	type_     string
+	id        string
+	isAdmin   bool
+	roles     []*models.Role
+	drugStore *models.DrugStore
 }
 
 func NewUserBuilder() *UserBuilder {
@@ -54,6 +56,21 @@ func (userBuilder *UserBuilder) SetIsAdmin(isAdmin bool) (u *UserBuilder) {
 	return userBuilder
 }
 
+func (userBuilder *UserBuilder) SetDrugStore(drugStore *models.DrugStore) (u *UserBuilder) {
+	userBuilder.drugStore = drugStore
+	return userBuilder
+}
+
+func (userBuilder *UserBuilder) SetRoles(ids []uint) (u *UserBuilder) {
+	var roles []*models.Role
+	roleBuilder := NewRoleBuilder()
+	for _, v := range ids {
+		roles = append(roles, roleBuilder.SetID(v).Build())
+	}
+	userBuilder.roles = roles
+	return userBuilder
+}
+
 func (userBuilder *UserBuilder) Build() models.User {
 	user := models.User{
 		Email:    userBuilder.email,
@@ -63,7 +80,44 @@ func (userBuilder *UserBuilder) Build() models.User {
 		Status:   userBuilder.status,
 		Type:     userBuilder.type_,
 		IsAdmin:  userBuilder.isAdmin,
+		Roles:    userBuilder.roles,
 	}
 
 	return user
+}
+
+// UserDrugStoreBuilder builder
+type UserDrugStoreBuilder struct {
+	DrugStoreID  uint
+	UserId       uint
+	Relationship string
+}
+
+func NewUserDrugStoreBuilder() *UserDrugStoreBuilder {
+	return &UserDrugStoreBuilder{}
+}
+
+func (UDBuilder *UserDrugStoreBuilder) SetDrugStoreId(DrugStoreID uint) (u *UserDrugStoreBuilder) {
+	UDBuilder.DrugStoreID = DrugStoreID
+	return UDBuilder
+}
+
+func (UDBuilder *UserDrugStoreBuilder) SetUser(UserId uint) (u *UserDrugStoreBuilder) {
+	UDBuilder.UserId = UserId
+	return UDBuilder
+}
+
+func (UDBuilder *UserDrugStoreBuilder) SetRelationship(Relationship string) (u *UserDrugStoreBuilder) {
+	UDBuilder.Relationship = Relationship
+	return UDBuilder
+}
+
+func (UDBuilder *UserDrugStoreBuilder) Build() models.DrugStoreUser {
+	ud := models.DrugStoreUser{
+		DrugStoreID:  UDBuilder.DrugStoreID,
+		UserID:       UDBuilder.UserId,
+		Relationship: UDBuilder.Relationship,
+	}
+
+	return ud
 }

@@ -6,7 +6,7 @@ require (
 	github.com/ShkrutDenis/go-migrations v1.2.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
-	github.com/denisenkom/go-mssqldb v0.0.0-20200206145737-bbfc9a55622e // indirect
+	github.com/dgraph-io/badger/v3 v3.2011.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-openapi/swag v0.19.15 // indirect

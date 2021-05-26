@@ -7,6 +7,7 @@ import (
 	user2 "medilane-api/packages/accounts/services/account"
 	"medilane-api/responses"
 	s "medilane-api/server"
+	"medilane-api/utils"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -27,13 +28,13 @@ func NewRegisterHandler(server *s.Server) *RegisterHandler {
 // @Tags User Actions
 // @Accept json
 // @Produce json
-// @Param params body requests.AccountRequest true "User's email, user's password"
+// @Param params body requests.RegisterRequest true "User's email, user's password"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /register [post]
 // @Security BearerAuth
 func (registerHandler *RegisterHandler) Register(c echo.Context) error {
-	accRequest := new(requests.AccountRequest)
+	accRequest := new(requests.RegisterRequest)
 
 	if err := c.Bind(accRequest); err != nil {
 		return err
@@ -52,8 +53,19 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 	}
 
 	userService := user2.NewAccountService(registerHandler.server.DB)
-	if err := userService.CreateUser(accRequest); err != nil {
-		return responses.ErrorResponse(c, http.StatusInternalServerError, "Server error")
+
+	rs, newDrugStore := userService.CreateDrugstore(&accRequest.DrugStore)
+	if err := rs; err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert drugstore")
+	}
+
+	rs1, newUser := userService.CreateUser(accRequest)
+	if err := rs1; err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user")
+	}
+
+	if err := userService.CreateDrugstoreUser(newDrugStore.ID, newUser.ID, utils.MANAGER.String()); err != nil {
+		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user drugstore")
 	}
 
 	return responses.MessageResponse(c, http.StatusCreated, "User successfully created")

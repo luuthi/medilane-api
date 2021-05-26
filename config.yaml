@@ -5,13 +5,15 @@ HTTP:
   PORT: 8001
   EXPOSE_PORT: 8001
 
+MIGRATE_DB: true
+
 #Parameters for getting the access to the database
 DATABASE:
   DB_USER: medilane
   DB_PASSWORD: 123qweA@
   DB_DRIVER: mysql
   DB_NAME: medilane
-  DB_HOST: 66.42.56.107
+  DB_HOST: 192.168.67.128 #66.42.56.107
   DB_PORT: 3306
 
 #Secret keys for the access token and refresh token signing

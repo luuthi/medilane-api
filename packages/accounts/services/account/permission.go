@@ -11,7 +11,7 @@ func (userService *Service) CreatePermission(request *requests.PermissionRequest
 		SetName(request.PermissionName).
 		SetDescription(request.Description).
 		Build()
-	return userService.DB.Table(utils.TblPermission).Create(&perm).Error
+	return userService.DB.Table(utils.TblPermission).Create(perm).Error
 }
 
 func (userService *Service) EditPermission(request *requests.PermissionRequest, id uint) error {
@@ -20,12 +20,12 @@ func (userService *Service) EditPermission(request *requests.PermissionRequest, 
 		SetName(request.PermissionName).
 		SetDescription(request.Description).
 		Build()
-	return userService.DB.Table(utils.TblPermission).Save(&perm).Error
+	return userService.DB.Table(utils.TblPermission).Save(perm).Error
 }
 
 func (userService *Service) DeletePermission(id uint) error {
 	perm := builders.NewPermissionBuilder().
 		SetID(id).
 		Build()
-	return userService.DB.Table(utils.TblPermission).Delete(&perm).Error
+	return userService.DB.Table(utils.TblPermission).Delete(perm).Error
 }

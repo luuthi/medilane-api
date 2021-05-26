@@ -6,7 +6,8 @@ import (
 )
 
 type ServiceWrapper interface {
-	CreateUser(request *requests.AccountRequest) error
+	CreateUser(request *requests.RegisterRequest) error
+	CreateDrugstore(request *requests.DrugsStoreRequest) error
 
 	// permission
 

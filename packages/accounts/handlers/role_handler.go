@@ -32,7 +32,7 @@ func NewRoleHandler(server *s.Server) *RoleHandler {
 // @Produce json
 // @Param params body requests.SearchRoleRequest true "Filter role"
 // @Success 200 {object} responses.DataSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /role/find [post]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
@@ -58,7 +58,7 @@ func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 // @Produce json
 // @Param params body requests.RoleRequest true "Filter role"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /role [post]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
@@ -72,7 +72,8 @@ func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 	}
 
 	roleService := account.NewAccountService(roleHandler.server.DB)
-	if err := roleService.CreateRole(&role); err != nil {
+	rs := roleService.CreateRole(&role)
+	if err := rs.Error; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert role: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusCreated, "Role created!")
@@ -89,7 +90,7 @@ func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 // @Param params body requests.RoleRequest true "body role"
 // @Param id path uint true "id role"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /role/{id} [put]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
@@ -127,12 +128,12 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 // @Summary Delete role in system
 // @Description Perform delete role
 // @ID delete-permission
-// @Tags Permission Management
+// @Tags Role Management
 // @Accept json
 // @Produce json
 // @Param id path uint true "id role"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /role/{id} [delete]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) DeleteRole(c echo.Context) error {

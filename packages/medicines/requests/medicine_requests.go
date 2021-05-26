@@ -35,8 +35,8 @@ type ProductRequest struct {
 	IndicationsOfTheDrug string  `json:"IndicationsOfTheDrug" example:"example"`
 	Direction            string  `json:"Direction" example:"example"`
 	Avatar               string  `json:"Avatar" example:"example"`
-	BasePrice            float64 `json:"BasePrice" example:"example"`
-	Manufacturer         string  `json:"Manufacturer" example:"example"`
+	BasePrice            float64 `json:"BasePrice" example:"1"`
+	Manufacturer         string  `json:"Manufacturer" example:"abc"`
 }
 
 type SortOption struct {

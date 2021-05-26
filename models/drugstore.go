@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type DrugStore struct {
 	CommonModelFields
 
@@ -16,12 +12,12 @@ type DrugStore struct {
 	LicenseFile    string       `json:"LicenseFile" gorm:"type:varchar(200)"`
 	Status         string       `json:"Status" gorm:"type:varchar(200)"`
 	Type           string       `json:"Type" gorm:"type:varchar(200)"`
-	ApproveTime    time.Time    `json:"ApproveTime"`
+	ApproveTime    int64        `json:"ApproveTime"`
 	Users          []*User      `gorm:"many2many:drug_store_user"`
 	ChildStores    []*DrugStore `gorm:"-"`
 	Vouchers       []*Voucher   `gorm:"-"`
 	AddressID      uint
-	Address        *Address        `gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Address        *Address        `gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Orders         []*Order        `gorm:"foreignKey:DrugStoreID"`
 	OrdersStore    []*OrderStore   `gorm:"foreignKey:DrugStoreID"`
 	Products       []*ProductStore `gorm:"many2many:drug_store_product"`

@@ -30,7 +30,7 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 // @Tags Medicine Management
 // @Accept json
 // @Produce json
-// @Param params body requests.SearchMedicineRequest true "Filter medicine"
+// @Param params body requests.SearchProductRequest true "Filter medicine"
 // @Success 200 {object} responses.DataSearch
 // @Failure 401 {object} responses.Error
 // @Router /medicine/find [post]
@@ -57,7 +57,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 // @Tags Medicine Management
 // @Accept json
 // @Produce json
-// @Param params body requests.MedicineRequest true "Filter medicine"
+// @Param params body requests.ProductRequest true "Filter medicine"
 // @Success 201 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /medicine [post]
@@ -86,7 +86,7 @@ func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 // @Tags Medicine Management
 // @Accept json
 // @Produce json
-// @Param params body requests.MedicineRequest true "body medicine"
+// @Param params body requests.ProductRequest true "body medicine"
 // @Param id path uint true "id Medicine"
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error

@@ -59,7 +59,7 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, fi
 		values = append(values, filter.Type)
 	}
 
-	if filter.IsAdmin != "" {
+	if filter.IsAdmin != nil {
 		spec = append(spec, "is_admin = ?")
 		values = append(values, filter.IsAdmin)
 	}
@@ -73,6 +73,7 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, fi
 	}
 
 	AccountRepository.DB.Where(strings.Join(spec, " AND "), values...).
+		Preload("Roles").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
