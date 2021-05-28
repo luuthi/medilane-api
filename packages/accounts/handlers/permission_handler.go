@@ -32,7 +32,7 @@ func NewPermissionHandler(server *s.Server) *PermissionHandler {
 // @Produce json
 // @Param params body requests.SearchPermissionRequest true "Filter permission"
 // @Success 200 {object} responses.DataSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /permission/find [post]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
@@ -56,9 +56,9 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 // @Tags Permission Management
 // @Accept json
 // @Produce json
-// @Param params body requests.PermissionRequest true "Filter permission"
+// @Param params body requests.PermissionRequest true "Create permission"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /permission [post]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
@@ -88,7 +88,7 @@ func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
 // @Param params body requests.PermissionRequest true "body permission"
 // @Param id path uint true "id permission"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /permission/{id} [put]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
@@ -131,7 +131,7 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id permission"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /permission/{id} [delete]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) DeletePermission(c echo.Context) error {

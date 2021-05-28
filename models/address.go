@@ -19,6 +19,7 @@ type Address struct {
 type Area struct {
 	CommonModelFields
 
-	Name string `json:"Name" gorm:"type:varchar(200)"`
-	Note string `json:"Note" gorm:"type:varchar(200)"`
+	Name      string    `json:"Name" gorm:"type:varchar(200)"`
+	Note      string    `json:"Note" gorm:"type:varchar(200)"`
+	Addresses []Address `json:"Addresses"`
 }

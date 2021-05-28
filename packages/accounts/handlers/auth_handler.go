@@ -59,6 +59,11 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+
+	//authHandler.server.MemDB.Update(func(txn *badger.Txn) error {
+	//
+	//})
+	//
 	refreshToken, err := tokenServ.CreateRefreshToken(&user)
 	if err != nil {
 		return err

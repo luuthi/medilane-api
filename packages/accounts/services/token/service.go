@@ -6,7 +6,7 @@ import (
 	"medilane-api/models"
 )
 
-const ExpireCount = 2
+const ExpireCount = 12
 const ExpireRefreshCount = 168
 
 type JwtCustomClaims struct {

@@ -39,6 +39,7 @@ func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests.
 	}
 
 	roleRepo.DB.Where(strings.Join(spec, " AND "), values...).
+		Preload("Permissions").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

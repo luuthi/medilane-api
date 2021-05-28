@@ -9,10 +9,11 @@ import (
 )
 
 type Config struct {
-	Auth   AuthConfig           `yaml:"AUTH"`
-	DB     DBConfig             `yaml:"DATABASE"`
-	HTTP   HTTPConfig           `yaml:"HTTP"`
-	Logger logger.ConfigLogging `yaml:"LOGGER"`
+	Auth    AuthConfig           `yaml:"AUTH"`
+	DB      DBConfig             `yaml:"DATABASE"`
+	HTTP    HTTPConfig           `yaml:"HTTP"`
+	Logger  logger.ConfigLogging `yaml:"LOGGER"`
+	MIGRATE bool                 `yaml:"MIGRATE_DB"`
 }
 
 func NewConfig() *Config {
@@ -28,7 +29,7 @@ func NewConfig() *Config {
 	var conf Config
 	err = yaml.Unmarshal(yamlFile, &conf)
 	if err != nil {
-		log.Println("Error loading .env file")
+		log.Println("Error loading yaml file")
 	}
 
 	return &conf
