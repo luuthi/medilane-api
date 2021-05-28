@@ -6,6 +6,7 @@ const (
 	TblPermission = "permission"
 	TblArea       = "area"
 	TblAddress    = "address"
+	TblDrugstore = "drug_store"
 )
 
 type UserDrugStoreRelationShip int
