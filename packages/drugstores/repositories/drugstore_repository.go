@@ -63,3 +63,7 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(drugStores *[]mode
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&drugStores)
 }
+
+func (DrugStoreRepository *DrugStoreRepository) GetDrugstoreByID(perm *models.DrugStore, id uint) {
+	DrugStoreRepository.DB.First(&perm, id)
+}

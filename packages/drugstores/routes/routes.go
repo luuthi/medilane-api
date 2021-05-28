@@ -20,7 +20,6 @@ func ConfigureDrugStoreRoutes(appRoute *echo.Group, server *s.Server) {
 	//drugstore.Use(middleware.JWTWithConfig(config))
 	drugstore.POST("/find", drugStoreHandler.SearchDrugStore)
 	drugstore.POST("", drugStoreHandler.CreateDrugStore)
-	//role.POST("", roleHandler.CreateRole)
-	//role.PUT("/:id", roleHandler.EditRole)
+	drugstore.PUT("/:id", drugStoreHandler.EditDrugstore)
 	//role.DELETE("/:id", roleHandler.DeleteRole)
 }

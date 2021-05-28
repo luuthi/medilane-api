@@ -13,10 +13,16 @@ type DrugStoreBuilder struct {
 	type_ string
 	approveTime int64
 	addressId uint
+	id uint
 }
 
 func NewDrugStoreBuilder() *DrugStoreBuilder {
 	return &DrugStoreBuilder{}
+}
+
+func (drugStoreBuilder *DrugStoreBuilder) SetID(id uint) (r *DrugStoreBuilder) {
+	drugStoreBuilder.id = id
+	return drugStoreBuilder
 }
 
 func (drugStoreBuilder *DrugStoreBuilder) SetStoreName(storeName string) (u *DrugStoreBuilder) {
@@ -60,6 +66,10 @@ func (drugStoreBuilder *DrugStoreBuilder) SetAddressId(addressId uint) (u *DrugS
 }
 
 func (drugStoreBuilder *DrugStoreBuilder) Build() models.DrugStore {
+	common := models.CommonModelFields{
+		ID: drugStoreBuilder.id,
+	}
+
 	drugstore := models.DrugStore{
 		StoreName: drugStoreBuilder.storeName,
 		PhoneNumber: drugStoreBuilder.phoneNumber,
@@ -69,6 +79,7 @@ func (drugStoreBuilder *DrugStoreBuilder) Build() models.DrugStore {
 		Type: drugStoreBuilder.type_,
 		ApproveTime: drugStoreBuilder.approveTime,
 		AddressID: drugStoreBuilder.addressId,
+		CommonModelFields: common,
 	}
 
 	return drugstore

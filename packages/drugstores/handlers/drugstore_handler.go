@@ -10,6 +10,7 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
+	"strconv"
 )
 
 type DrugStoreHandler struct {
@@ -73,4 +74,47 @@ func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error 
 	}
 	return responses.MessageResponse(c, http.StatusCreated, "Drugstore created!")
 
+}
+
+// EditDrugstore Edit drugstore godoc
+// @Summary Edit drugstore in system
+// @Description Perform edit drugstore
+// @ID edit-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Param params body requests.EditDrugStoreRequest true "body drugstore"
+// @Param id path uint true "id drugstore"
+// @Success 200 {object} responses.Data
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/{id} [put]
+func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id drugstore: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var drugstore requests.EditDrugStoreRequest
+	if err := c.Bind(&drugstore); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := drugstore.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	var existedDrugstore models.DrugStore
+	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if existedDrugstore.StoreName == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %v", string(id)))
+	}
+
+	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
+	if err := drugstoreService.EditDrugstore(&drugstore, id); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update drugstore: %v", err.Error()))
+	}
+	return responses.MessageResponse(c, http.StatusOK, "Drugstore updated!")
 }
