@@ -64,7 +64,7 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user")
 	}
 
-	if err := userService.CreateDrugstoreUser(newDrugStore.ID, newUser.ID, utils.MANAGER.String()); err != nil {
+	if err := userService.CreateDrugstoreUser(newDrugStore.ID, newUser.ID, utils.Manager.String()); err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user drugstore")
 	}
 

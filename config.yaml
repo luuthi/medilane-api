@@ -5,7 +5,7 @@ HTTP:
   PORT: 8001
   EXPOSE_PORT: 8001
 
-MIGRATE_DB: true
+MIGRATE_DB: false
 
 #Parameters for getting the access to the database
 DATABASE:

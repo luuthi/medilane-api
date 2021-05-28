@@ -11,11 +11,11 @@ const (
 type UserDrugStoreRelationShip int
 
 const (
-	MANAGER UserDrugStoreRelationShip = iota + 1
-	STAFF
-	CARINGSTAFF
+	Manager UserDrugStoreRelationShip = iota + 1
+	Staff
+	Caring_staff
 )
 
 func (a UserDrugStoreRelationShip) String() string {
-	return [...]string{"MANAGER", "STAFF", "CARINGSTAFF"}[a]
+	return [...]string{"manager", "staff", "caring_staff"}[a]
 }
