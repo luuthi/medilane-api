@@ -33,9 +33,16 @@ func (drugstoreService *Service) EditDrugstore(request *requests.EditDrugStoreRe
 		SetTaxNumber(request.TaxNumber).
 		SetLicenseFile(request.LicenseFile).
 		SetStatus(request.Status).
-		SetType(request.Type).
 		SetApproveTime(request.ApproveTime).
 		SetAddressId(request.AddressID).
 		Build()
 	return drugstoreService.DB.Table(utils.TblDrugstore).Updates(&drugstore).Error
 }
+
+func (drugstoreService *Service) DeleteDrugstore(id uint) error {
+	drugstore := builders.NewDrugStoreBuilder().
+		SetID(id).
+		Build()
+	return drugstoreService.DB.Table(utils.TblDrugstore).Delete(&drugstore).Error
+}
+

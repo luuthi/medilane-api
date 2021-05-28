@@ -32,6 +32,7 @@ func NewDrugStoreHandler(server *s.Server) *DrugStoreHandler {
 // @Success 200 {object} responses.DataSearch
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/find [post]
+// @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error {
 	searchRequest := new(requests.SearchDrugStoreRequest)
 	if err := c.Bind(searchRequest); err != nil {
@@ -58,6 +59,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 // @Success 201 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /drugstore [post]
+// @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error {
 	var drugstore requests.DrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
@@ -88,6 +90,7 @@ func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error 
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/{id} [put]
+// @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
@@ -117,4 +120,31 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update drugstore: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Drugstore updated!")
+}
+
+// DeleteDrugstore Delete drugstore godoc
+// @Summary Delete drugstore in system
+// @Description Perform drugstore role
+// @ID delete-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id drugstore"
+// @Success 200 {object} responses.Data
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/{id} [delete]
+// @Security BearerAuth
+func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
+	if err := drugstoreService.DeleteDrugstore(id); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete role: %v", err.Error()))
+	}
+	return responses.MessageResponse(c, http.StatusOK, "Drugstore deleted!")
 }

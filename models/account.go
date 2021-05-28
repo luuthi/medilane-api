@@ -1,13 +1,9 @@
 package models
 
-import (
-	"time"
-)
-
 type CommonModelFields struct {
 	ID        uint      `json:"id" gorm:"primary_key"`
-	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime:milli"`
-	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime:milli"`
+	CreatedAt int64	`json:"created_at" gorm:"autoCreateTime:milli"`
+	UpdatedAt int64 `json:"updated_at" gorm:"autoUpdateTime:milli"`
 }
 
 type User struct {

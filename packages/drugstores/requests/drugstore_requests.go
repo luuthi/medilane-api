@@ -52,7 +52,6 @@ type EditDrugStoreRequest struct {
 	PhoneNumber string     `json:"PhoneNumber"  example:"0988272123"`
 	TaxNumber    string     `json:"TaxNumber" example:"12341231"`
 	LicenseFile   string     `json:"LicenseFile" example:"image.img"`
-	Type  string     `json:"Type" example:"drugstore"`
 	AddressID   uint        `json:"AddressID" example:"1"`
 	Status   string        `json:"Status" example:"active"`
 	ApproveTime   int64        `json:"ApproveTime" example:"1622128376"`
@@ -61,7 +60,6 @@ type EditDrugStoreRequest struct {
 func (rr EditDrugStoreRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.StoreName, validation.Required),
-		validation.Field(&rr.Type, validation.In(string(models.DRUGSTORE), string(models.DRUGSTORES))),
 		validation.Field(&rr.Status, validation.In(string(models.NEW), string(models.ACTIVE), string(models.CANCEL))),
 	)
 }
