@@ -2,16 +2,16 @@ package address
 
 import (
 	"gorm.io/gorm"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 )
 
 type ServiceWrapper interface {
-	CreateArea(request *requests.AreaRequest) error
-	EditArea(request *requests.AreaRequest) error
+	CreateArea(request *requests2.AreaRequest) error
+	EditArea(request *requests2.AreaRequest) error
 	DeleteArea(id uint) error
 
-	CreateAddress(request *requests.AddressRequest) error
-	EditAddress(request *requests.AddressRequest) error
+	CreateAddress(request *requests2.AddressRequest) error
+	EditAddress(request *requests2.AddressRequest) error
 	DeleteAddress(id uint) error
 }
 

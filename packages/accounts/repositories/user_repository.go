@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"medilane-api/models"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 )
 
 type AccountRepositoryQ interface {
 	GetUserByEmail(user *models.User, email string)
 	GetUserByUsername(user *models.User, email string)
-	GetAccounts(users []*models.User, filter requests.SearchAccountRequest)
+	GetAccounts(users []*models.User, filter requests2.SearchAccountRequest)
 }
 
 type AccountRepository struct {
@@ -30,7 +30,7 @@ func (AccountRepository *AccountRepository) GetUserByUsername(user *models.User,
 	AccountRepository.DB.Where("username = ?", email).Find(user)
 }
 
-func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests.SearchAccountRequest) {
+func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests2.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

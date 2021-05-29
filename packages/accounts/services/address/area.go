@@ -2,11 +2,11 @@ package address
 
 import (
 	"medilane-api/packages/accounts/builders"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 )
 
-func (addressService *Service) CreateArea(request *requests.AreaRequest) error {
+func (addressService *Service) CreateArea(request *requests2.AreaRequest) error {
 	area := builders.NewAreaBuilder().
 		SetName(request.Name).
 		SetNote(request.Note).
@@ -14,7 +14,7 @@ func (addressService *Service) CreateArea(request *requests.AreaRequest) error {
 	return addressService.DB.Table(utils.TblArea).Create(&area).Error
 }
 
-func (addressService *Service) EditArea(request *requests.AreaRequest, id uint) error {
+func (addressService *Service) EditArea(request *requests2.AreaRequest, id uint) error {
 	zone := builders.NewAreaBuilder().
 		SetID(id).
 		SetName(request.Name).

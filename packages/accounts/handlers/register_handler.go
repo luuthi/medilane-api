@@ -3,8 +3,8 @@ package handlers
 import (
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	user2 "medilane-api/packages/accounts/services/account"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"medilane-api/utils"
@@ -34,7 +34,7 @@ func NewRegisterHandler(server *s.Server) *RegisterHandler {
 // @Router /register [post]
 // @Security BearerAuth
 func (registerHandler *RegisterHandler) Register(c echo.Context) error {
-	accRequest := new(requests.RegisterRequest)
+	accRequest := new(requests2.RegisterRequest)
 
 	if err := c.Bind(accRequest); err != nil {
 		return err

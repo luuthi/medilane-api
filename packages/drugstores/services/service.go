@@ -2,11 +2,11 @@ package services
 
 import (
 	"gorm.io/gorm"
-	"medilane-api/packages/drugstores/requests"
+	requests2 "medilane-api/requests"
 )
 
 type ServiceWrapper interface {
-	CreateUser(request *requests.DrugStoreRequest) error
+	CreateUser(request *requests2.DrugStoreRequest) error
 }
 
 type Service struct {
@@ -16,4 +16,3 @@ type Service struct {
 func NewDrugStoreService(db *gorm.DB) *Service {
 	return &Service{DB: db}
 }
-

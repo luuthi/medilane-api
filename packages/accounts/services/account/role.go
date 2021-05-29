@@ -3,11 +3,11 @@ package account
 import (
 	"gorm.io/gorm"
 	"medilane-api/packages/accounts/builders"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 )
 
-func (userService *Service) CreateRole(request *requests.RoleRequest) *gorm.DB {
+func (userService *Service) CreateRole(request *requests2.RoleRequest) *gorm.DB {
 	role := builders.NewRoleBuilder().
 		SetName(request.RoleName).
 		SetDescription(request.Description).
@@ -16,7 +16,7 @@ func (userService *Service) CreateRole(request *requests.RoleRequest) *gorm.DB {
 	return userService.DB.Table(utils.TblRole).Create(role)
 }
 
-func (userService *Service) EditRole(request *requests.RoleRequest, id uint) error {
+func (userService *Service) EditRole(request *requests2.RoleRequest, id uint) error {
 	role := builders.NewRoleBuilder().
 		SetID(id).
 		SetName(request.RoleName).

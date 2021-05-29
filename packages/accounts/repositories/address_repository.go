@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	models2 "medilane-api/models"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 	"strings"
 )
 
 type AddressRepositoryQ interface {
-	GetAddresses(perms []*models2.Address, filter requests.SearchAddressRequest)
+	GetAddresses(perms []*models2.Address, filter requests2.SearchAddressRequest)
 	GetAddressByID(perm *models2.Address, id uint)
 	GetAddressByArea(perm []*models2.Address, id uint)
 }
@@ -23,7 +23,7 @@ func NewAddressRepository(db *gorm.DB) *AddressRepository {
 	return &AddressRepository{DB: db}
 }
 
-func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address, filter requests.SearchAddressRequest) {
+func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address, filter requests2.SearchAddressRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

@@ -39,11 +39,6 @@ type ProductRequest struct {
 	Manufacturer         string  `json:"Manufacturer" example:"abc"`
 }
 
-type SortOption struct {
-	SortField     string `json:"sort_field"`
-	SortDirection string `json:"sort_direction"`
-}
-
 func (rr SearchProductRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),

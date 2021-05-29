@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/account"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -33,7 +33,7 @@ func NewAccountHandler(server *s.Server) *AccountHandler {
 // @Router /account/find [post]
 // @Security BearerAuth
 func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
-	searchRequest := new(requests.SearchAccountRequest)
+	searchRequest := new(requests2.SearchAccountRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 // @Router /account [post]
 // @Security BearerAuth
 func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
-	var acc requests.RegisterRequest
+	var acc requests2.RegisterRequest
 	if err := c.Bind(&acc); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

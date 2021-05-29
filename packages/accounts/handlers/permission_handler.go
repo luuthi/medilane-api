@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/account"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewPermissionHandler(server *s.Server) *PermissionHandler {
 // @Router /permission/find [post]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
-	var searchReq requests.SearchPermissionRequest
+	var searchReq requests2.SearchPermissionRequest
 	if err := c.Bind(&searchReq); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -62,7 +62,7 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 // @Router /permission [post]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
-	var perm requests.PermissionRequest
+	var perm requests2.PermissionRequest
 	if err := c.Bind(&perm); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -99,7 +99,7 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var perm requests.PermissionRequest
+	var perm requests2.PermissionRequest
 	if err := c.Bind(&perm); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

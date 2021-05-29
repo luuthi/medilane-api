@@ -2,7 +2,7 @@ package builders
 
 import (
 	"medilane-api/models"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 )
 
 type DrugStoreBuilder struct {
@@ -55,7 +55,7 @@ func (storeBuilder *DrugStoreBuilder) SetApproveTime(ApproveTime int64) (u *Drug
 	return storeBuilder
 }
 
-func (storeBuilder *DrugStoreBuilder) SetAddress(Address *requests.AddressRequest) (u *DrugStoreBuilder) {
+func (storeBuilder *DrugStoreBuilder) SetAddress(Address *requests2.AddressRequest) (u *DrugStoreBuilder) {
 	addModel := models.Address{
 		Street:      Address.Address,
 		Province:    Address.Province,

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	models2 "medilane-api/models"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 	"strings"
 )
 
 type AreaRepositoryQ interface {
-	GetAreas(perms []*models2.Area, filter requests.SearchAreaRequest)
+	GetAreas(perms []*models2.Area, filter requests2.SearchAreaRequest)
 	GetAreaByID(perm *models2.Area, id uint)
 }
 
@@ -22,7 +22,7 @@ func NewAreaRepository(db *gorm.DB) *AreaRepository {
 	return &AreaRepository{DB: db}
 }
 
-func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, filter requests.SearchAreaRequest) {
+func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, filter requests2.SearchAreaRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
