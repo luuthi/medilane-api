@@ -60,3 +60,15 @@ func (rr EditDrugStoreRequest) Validate() error {
 		validation.Field(&rr.Status, validation.In(string(models.NEW), string(models.ACTIVE), string(models.CANCEL))),
 	)
 }
+
+type ConnectiveDrugStoreRequest struct {
+	ParentStoreId uint `json:"ParentStoreId" example:"1"`
+	ChildStoreId uint `json:"ChildStoreId" example:"1"`
+}
+
+func (rr ConnectiveDrugStoreRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.ChildStoreId, validation.Required),
+		validation.Field(&rr.ParentStoreId, validation.Required),
+	)
+}
