@@ -3,11 +3,11 @@ package services
 import (
 	"medilane-api/packages/drugstores/builders"
 	"medilane-api/packages/drugstores/models"
-	"medilane-api/packages/drugstores/requests"
+	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 )
 
-func (drugstoreService *Service) CreateDrugStore(request *requests.DrugStoreRequest) error {
+func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreRequest) error {
 	drugstore := builders.NewDrugStoreBuilder().
 		SetStoreName(request.StoreName).
 		SetPhoneNumber(request.PhoneNumber).
@@ -19,13 +19,13 @@ func (drugstoreService *Service) CreateDrugStore(request *requests.DrugStoreRequ
 		Build()
 
 	if request.AddressID == 0 {
-		return drugstoreService.DB.Table(utils.TblDrugstore).Omit( "address_id").Create(&drugstore).Error
+		return drugstoreService.DB.Table(utils.TblDrugstore).Omit("address_id").Create(&drugstore).Error
 	}
 
 	return drugstoreService.DB.Table(utils.TblDrugstore).Create(&drugstore).Error
 }
 
-func (drugstoreService *Service) EditDrugstore(request *requests.EditDrugStoreRequest, id uint) error {
+func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreRequest, id uint) error {
 	drugstore := builders.NewDrugStoreBuilder().
 		SetID(id).
 		SetStoreName(request.StoreName).
@@ -45,4 +45,3 @@ func (drugstoreService *Service) DeleteDrugstore(id uint) error {
 		Build()
 	return drugstoreService.DB.Table(utils.TblDrugstore).Delete(&drugstore).Error
 }
-

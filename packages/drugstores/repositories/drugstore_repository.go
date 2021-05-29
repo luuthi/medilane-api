@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"medilane-api/models"
-	"medilane-api/packages/drugstores/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 )
 
 type DrugStoreRepositoryQ interface {
-	GetDrugStores(drugStores []*models.DrugStore, filter requests.SearchDrugStoreRequest)
+	GetDrugStores(drugStores []*models.DrugStore, filter requests2.SearchDrugStoreRequest)
 }
 
 type DrugStoreRepository struct {
@@ -20,7 +20,7 @@ func NewDrugStoreRepository(db *gorm.DB) *DrugStoreRepository {
 	return &DrugStoreRepository{DB: db}
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(drugStores *[]models.DrugStore, filter *requests.SearchDrugStoreRequest) {
+func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(drugStores *[]models.DrugStore, filter *requests2.SearchDrugStoreRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

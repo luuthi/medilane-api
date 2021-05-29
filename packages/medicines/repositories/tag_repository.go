@@ -3,7 +3,7 @@ package repositories
 import (
 	"fmt"
 	models2 "medilane-api/models"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ import (
 type TagRepositoryQ interface {
 	GetTagBySlug(tag *models2.Tag, Slug string)
 	GetTagById(tag *models2.Tag, id int16)
-	GetTags(tag []*models2.Tag, filter requests.SearchTagRequest)
+	GetTags(tag []*models2.Tag, filter requests2.SearchTagRequest)
 }
 
 type TagRepository struct {
@@ -31,7 +31,7 @@ func (tagRepository *TagRepository) GetTagById(tag *models2.Tag, id uint) {
 	tagRepository.DB.Where("id = ?", id).Find(tag)
 }
 
-func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, filter *requests.SearchTagRequest) {
+func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, filter *requests2.SearchTagRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

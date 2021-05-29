@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/address"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewAddressHandler(server *s.Server) *AddressHandler {
 // @Router /address/find [post]
 // @Security BearerAuth
 func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
-	var searchReq requests.SearchAddressRequest
+	var searchReq requests2.SearchAddressRequest
 	if err := c.Bind(&searchReq); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -62,7 +62,7 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 // @Router /address [post]
 // @Security BearerAuth
 func (addHandler *AddressHandler) CreateAddress(c echo.Context) error {
-	var addr requests.AddressRequest
+	var addr requests2.AddressRequest
 	if err := c.Bind(&addr); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -98,7 +98,7 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var addr requests.AddressRequest
+	var addr requests2.AddressRequest
 	if err := c.Bind(&addr); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

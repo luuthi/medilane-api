@@ -2,14 +2,14 @@ package medicine
 
 import (
 	builders2 "medilane-api/packages/medicines/builders"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 )
 
 const (
 	TblTag = "tag"
 )
 
-func (tagService *Service) CreateTag(request *requests.TagRequest) error {
+func (tagService *Service) CreateTag(request *requests2.TagRequest) error {
 	tag := builders2.NewTagBuilder().SetSlug(request.Slug).
 		SetName(request.Name).
 		Build()
@@ -17,7 +17,7 @@ func (tagService *Service) CreateTag(request *requests.TagRequest) error {
 	return tagService.DB.Create(&tag).Error
 }
 
-func (tagService *Service) EditTag(request *requests.TagRequest, id uint) error {
+func (tagService *Service) EditTag(request *requests2.TagRequest, id uint) error {
 	tag := builders2.NewTagBuilder().
 		SetID(id).
 		SetName(request.Name).

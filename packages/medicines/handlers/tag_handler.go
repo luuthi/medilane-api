@@ -7,8 +7,8 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
-	"medilane-api/packages/medicines/requests"
 	"medilane-api/packages/medicines/services/medicine"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewTagHandler(server *s.Server) *TagHandler {
 // @Router /tag/find [post]
 // @Security BearerAuth
 func (tagHandler *TagHandler) SearchTag(c echo.Context) error {
-	searchRequest := new(requests.SearchTagRequest)
+	searchRequest := new(requests2.SearchTagRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (tagHandler *TagHandler) SearchTag(c echo.Context) error {
 // @Router /tag [post]
 // @Security BearerAuth
 func (tagHandler *TagHandler) CreateTag(c echo.Context) error {
-	var tag requests.TagRequest
+	var tag requests2.TagRequest
 	if err := c.Bind(&tag); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -100,7 +100,7 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var tag requests.TagRequest
+	var tag requests2.TagRequest
 	if err := c.Bind(&tag); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/drugstores/repositories"
-	"medilane-api/packages/drugstores/requests"
 	drugServices "medilane-api/packages/drugstores/services"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -34,7 +34,7 @@ func NewDrugStoreHandler(server *s.Server) *DrugStoreHandler {
 // @Router /drugstore/find [post]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error {
-	searchRequest := new(requests.SearchDrugStoreRequest)
+	searchRequest := new(requests2.SearchDrugStoreRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 // @Router /drugstore [post]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error {
-	var drugstore requests.DrugStoreRequest
+	var drugstore requests2.DrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -99,7 +99,7 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var drugstore requests.EditDrugStoreRequest
+	var drugstore requests2.EditDrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

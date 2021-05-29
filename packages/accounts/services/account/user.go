@@ -4,11 +4,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"medilane-api/models"
 	builders2 "medilane-api/packages/accounts/builders"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"time"
 )
 
-func (userService *Service) CreateUser(request *requests.RegisterRequest) (error, *models.User) {
+func (userService *Service) CreateUser(request *requests2.RegisterRequest) (error, *models.User) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(request.Password),
 		bcrypt.DefaultCost,
@@ -31,7 +31,7 @@ func (userService *Service) CreateUser(request *requests.RegisterRequest) (error
 	rs := userService.DB.Create(&user)
 	return rs.Error, &user
 }
-func (userService *Service) CreateDrugstore(request *requests.DrugsStoreRequest) (error, *models.DrugStore) {
+func (userService *Service) CreateDrugstore(request *requests2.DrugStoreRequest) (error, *models.DrugStore) {
 	store := builders2.NewDrugStoreBuilder().
 		SetStoreName(request.StoreName).
 		SetLicenseFile(request.LicenseFile).
@@ -56,7 +56,7 @@ func (userService *Service) CreateDrugstoreUser(storeID, userId uint, relationsh
 	return userService.DB.Create(&ud).Error
 }
 
-func (userService *Service) EditUser(request *requests.EditAccountRequest) error {
+func (userService *Service) EditUser(request *requests2.EditAccountRequest) error {
 	user := builders2.NewUserBuilder().
 		SetEmail(request.Email).
 		SetFullName(request.FullName).

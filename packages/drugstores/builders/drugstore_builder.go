@@ -2,18 +2,20 @@ package builders
 
 import (
 	"medilane-api/models"
+	requests2 "medilane-api/requests"
 )
 
 type DrugStoreBuilder struct {
-	storeName string
+	storeName   string
 	phoneNumber string
-	taxNumber string
+	taxNumber   string
 	licenseFile string
-	status string
-	type_ string
+	status      string
+	type_       string
 	approveTime int64
-	addressId uint
-	id uint
+	addressId   uint
+	id          uint
+	Address     *models.Address
 }
 
 func NewDrugStoreBuilder() *DrugStoreBuilder {
@@ -65,21 +67,39 @@ func (drugStoreBuilder *DrugStoreBuilder) SetAddressId(addressId uint) (u *DrugS
 	return drugStoreBuilder
 }
 
+func (drugStoreBuilder *DrugStoreBuilder) SetAddress(Address *requests2.AddressRequest) (u *DrugStoreBuilder) {
+	addModel := models.Address{
+		Street:      Address.Address,
+		Province:    Address.Province,
+		District:    Address.District,
+		Ward:        Address.Ward,
+		Country:     Address.Country,
+		IsDefault:   false,
+		Phone:       Address.Phone,
+		ContactName: Address.ContactName,
+		Coordinates: Address.Coordinates,
+		AreaID:      Address.AreaID,
+	}
+	drugStoreBuilder.Address = &addModel
+	return drugStoreBuilder
+}
+
 func (drugStoreBuilder *DrugStoreBuilder) Build() models.DrugStore {
 	common := models.CommonModelFields{
 		ID: drugStoreBuilder.id,
 	}
 
 	drugstore := models.DrugStore{
-		StoreName: drugStoreBuilder.storeName,
-		PhoneNumber: drugStoreBuilder.phoneNumber,
-		TaxNumber: drugStoreBuilder.taxNumber,
-		LicenseFile: drugStoreBuilder.licenseFile,
-		Status: drugStoreBuilder.status,
-		Type: drugStoreBuilder.type_,
-		ApproveTime: drugStoreBuilder.approveTime,
-		AddressID: drugStoreBuilder.addressId,
+		StoreName:         drugStoreBuilder.storeName,
+		PhoneNumber:       drugStoreBuilder.phoneNumber,
+		TaxNumber:         drugStoreBuilder.taxNumber,
+		LicenseFile:       drugStoreBuilder.licenseFile,
+		Status:            drugStoreBuilder.status,
+		Type:              drugStoreBuilder.type_,
+		ApproveTime:       drugStoreBuilder.approveTime,
+		AddressID:         drugStoreBuilder.addressId,
 		CommonModelFields: common,
+		Address:           drugStoreBuilder.Address,
 	}
 
 	return drugstore

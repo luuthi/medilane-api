@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/account"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewRoleHandler(server *s.Server) *RoleHandler {
 // @Router /role/find [post]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
-	var searchReq requests.SearchRoleRequest
+	var searchReq requests2.SearchRoleRequest
 	if err := c.Bind(&searchReq); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -62,7 +62,7 @@ func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 // @Router /role [post]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
-	var role requests.RoleRequest
+	var role requests2.RoleRequest
 	if err := c.Bind(&role); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -101,7 +101,7 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var role requests.RoleRequest
+	var role requests2.RoleRequest
 	if err := c.Bind(&role); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

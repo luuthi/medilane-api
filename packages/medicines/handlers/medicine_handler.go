@@ -7,8 +7,8 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
-	"medilane-api/packages/medicines/requests"
 	"medilane-api/packages/medicines/services/medicine"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 // @Router /medicine/find [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
-	searchRequest := new(requests.SearchProductRequest)
+	searchRequest := new(requests2.SearchProductRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 // @Router /medicine [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
-	var medi requests.ProductRequest
+	var medi requests2.ProductRequest
 	if err := c.Bind(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -100,7 +100,7 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var medi requests.ProductRequest
+	var medi requests2.ProductRequest
 	if err := c.Bind(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

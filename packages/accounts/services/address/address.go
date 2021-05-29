@@ -5,11 +5,11 @@ import (
 	"gorm.io/gorm"
 	"medilane-api/models"
 	"medilane-api/packages/accounts/builders"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 )
 
-func (addressService *Service) CreateAddress(request *requests.AddressRequest) *gorm.DB {
+func (addressService *Service) CreateAddress(request *requests2.AddressRequest) *gorm.DB {
 	address := builders.NewAddressBuilder().
 		SetProvince(request.Province).
 		SetArea(request.AreaID).
@@ -24,7 +24,7 @@ func (addressService *Service) CreateAddress(request *requests.AddressRequest) *
 	return addressService.DB.Table(utils.TblAddress).Create(&address)
 }
 
-func (addressService *Service) EditAddress(request *requests.AddressRequest, id uint) error {
+func (addressService *Service) EditAddress(request *requests2.AddressRequest, id uint) error {
 	address := builders.NewAddressBuilder().
 		SetProvince(request.Province).
 		SetArea(request.AreaID).

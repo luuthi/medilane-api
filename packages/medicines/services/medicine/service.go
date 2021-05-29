@@ -2,24 +2,24 @@ package medicine
 
 import (
 	"gorm.io/gorm"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 )
 
 type ServiceWrapper interface {
-	CreateProduct(request *requests.ProductRequest) error
-	EditProduct(request *requests.ProductRequest) error
+	CreateProduct(request *requests2.ProductRequest) error
+	EditProduct(request *requests2.ProductRequest) error
 	DeleteProduct(id uint) error
 
-	CreateCategory(request *requests.CategoryRequest) error
-	EditCategory(request *requests.CategoryRequest) error
+	CreateCategory(request *requests2.CategoryRequest) error
+	EditCategory(request *requests2.CategoryRequest) error
 	DeleteCategory(id uint) error
 
-	CreateTag(request *requests.TagRequest) error
-	EditTag(request *requests.TagRequest) error
+	CreateTag(request *requests2.TagRequest) error
+	EditTag(request *requests2.TagRequest) error
 	DeleteTag(id uint) error
 
-	CreateVariant(request *requests.VariantRequest) error
-	EditVariant(request *requests.VariantRequest) error
+	CreateVariant(request *requests2.VariantRequest) error
+	EditVariant(request *requests2.VariantRequest) error
 	DeleteVariant(id uint) error
 }
 

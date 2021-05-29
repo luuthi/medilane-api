@@ -2,14 +2,14 @@ package medicine
 
 import (
 	builders2 "medilane-api/packages/medicines/builders"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 )
 
 const (
 	TblCategory = "categories"
 )
 
-func (categoryService *Service) CreateCategory(request *requests.CategoryRequest) error {
+func (categoryService *Service) CreateCategory(request *requests2.CategoryRequest) error {
 	category := builders2.NewCategoryBuilder().SetSlug(request.Slug).
 		SetName(request.Name).
 		Build()
@@ -17,7 +17,7 @@ func (categoryService *Service) CreateCategory(request *requests.CategoryRequest
 	return categoryService.DB.Create(&category).Error
 }
 
-func (categoryService *Service) EditCategory(request *requests.CategoryRequest, id uint) error {
+func (categoryService *Service) EditCategory(request *requests2.CategoryRequest, id uint) error {
 	category := builders2.NewCategoryBuilder().
 		SetID(id).
 		SetName(request.Name).

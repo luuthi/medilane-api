@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	models2 "medilane-api/models"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 )
 
 type RoleRepositoryQ interface {
-	GetRoles(perms []*models2.Role, filter requests.SearchRoleRequest)
+	GetRoles(perms []*models2.Role, filter requests2.SearchRoleRequest)
 	GetRoleByID(perm *models2.Role, id uint)
 }
 
@@ -21,7 +21,7 @@ func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{DB: db}
 }
 
-func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests.SearchRoleRequest) {
+func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests2.SearchRoleRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

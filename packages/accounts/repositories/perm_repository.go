@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	models2 "medilane-api/models"
-	"medilane-api/packages/accounts/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 )
 
 type PermissionRepositoryQ interface {
-	GetPermissions(perms []*models2.Permission, filter requests.SearchPermissionRequest)
+	GetPermissions(perms []*models2.Permission, filter requests2.SearchPermissionRequest)
 	GetPermissionByID(perm *models2.Permission, id uint)
 }
 
@@ -21,7 +21,7 @@ func NewPermissionRepository(db *gorm.DB) *PermissionRepository {
 	return &PermissionRepository{DB: db}
 }
 
-func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission, filter requests.SearchPermissionRequest) {
+func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission, filter requests2.SearchPermissionRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

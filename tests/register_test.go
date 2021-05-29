@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	handlers2 "medilane-api/packages/accounts/handlers"
-	"medilane-api/packages/accounts/requests"
+	requests "medilane-api/requests"
 	"medilane-api/server"
 	"medilane-api/tests/helpers"
 	"net/http"
@@ -25,7 +25,7 @@ func TestWalkRegister(t *testing.T) {
 			"Register user success",
 			request,
 			requests.AccountRequest{
-				BasicAuth: requests.BasicAuth{
+				BasicAuth: requests2.BasicAuth{
 					Username: "name@test.com",
 					Password: "password",
 				},
@@ -42,7 +42,7 @@ func TestWalkRegister(t *testing.T) {
 			"Register user with empty name",
 			request,
 			requests.AccountRequest{
-				BasicAuth: requests.BasicAuth{
+				BasicAuth: requests2.BasicAuth{
 					Username: "name@test.com",
 					Password: "password",
 				},
@@ -59,7 +59,7 @@ func TestWalkRegister(t *testing.T) {
 			"Register user with too short password",
 			request,
 			requests.AccountRequest{
-				BasicAuth: requests.BasicAuth{
+				BasicAuth: requests2.BasicAuth{
 					Username: "name@test.com",
 					Password: "passw",
 				},
@@ -76,7 +76,7 @@ func TestWalkRegister(t *testing.T) {
 			"Register user with duplicated email",
 			request,
 			requests.AccountRequest{
-				BasicAuth: requests.BasicAuth{
+				BasicAuth: requests2.BasicAuth{
 					Username: "duplicated@test.com",
 					Password: "password",
 				},

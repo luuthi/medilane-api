@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	"medilane-api/packages/accounts/services/address"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewAreaHandler(server *s.Server) *AreaHandler {
 // @Router /area/find [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
-	var searchArea requests.SearchAreaRequest
+	var searchArea requests2.SearchAreaRequest
 
 	if err := c.Bind(&searchArea); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
@@ -63,7 +63,7 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 // @Router /area [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) CreateArea(c echo.Context) error {
-	var area requests.AreaRequest
+	var area requests2.AreaRequest
 	if err := c.Bind(&area); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -100,7 +100,7 @@ func (areaHandler *AreaHandler) EditArea(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var area requests.AreaRequest
+	var area requests2.AreaRequest
 	if err := c.Bind(&area); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
