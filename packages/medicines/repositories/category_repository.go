@@ -3,7 +3,7 @@ package repositories
 import (
 	"fmt"
 	models2 "medilane-api/models"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ import (
 type CategoriesRepositoryQ interface {
 	GetCategoryBySlug(category *models2.Category, Code string)
 	GetCategoryById(category *models2.Category, id int16)
-	GetCategories(category []*models2.Category, filter requests.SearchCategoryRequest)
+	GetCategories(category []*models2.Category, filter requests2.SearchCategoryRequest)
 }
 
 type CategoryRepository struct {
@@ -31,7 +31,7 @@ func (categoryRepository *CategoryRepository) GetCategoryById(category *models2.
 	categoryRepository.DB.Where("id = ?", id).Find(category)
 }
 
-func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.Category, filter *requests.SearchCategoryRequest) {
+func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.Category, filter *requests2.SearchCategoryRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

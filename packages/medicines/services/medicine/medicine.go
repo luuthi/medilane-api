@@ -2,24 +2,17 @@ package medicine
 
 import (
 	builders2 "medilane-api/packages/medicines/builders"
-	"medilane-api/packages/medicines/requests"
-	"medilane-api/utils"
-	"strconv"
-	"strings"
+	requests2 "medilane-api/requests"
 )
 
 const (
 	TblMedicine = "medicines"
 )
 
-func (productService *Service) CreateProduct(request *requests.ProductRequest) error {
-
-	// Generate Code Product (Medicine)
-	code := strings.Join([]string{"MD", strconv.Itoa(int(utils.TimeUnixMilli()))}, "")
-
-	medicine := builders2.NewProductBuilder().SetCode(code).
-		SetName(request.Name).
-		SetBarcode(request.Barcode).
+func (productService *Service) CreateProduct(request *requests2.ProductRequest) error {
+	medicine := builders2.NewProductBuilder().SetCode(request.Code).
+		SetName(request.Code).
+		SetBarcode(request.Name).
 		SetRegistrationNo(request.RegistrationNo).
 		SetContent(request.Content).
 		SetGlobalManufacturerName(request.GlobalManufacturerName).
@@ -40,10 +33,11 @@ func (productService *Service) CreateProduct(request *requests.ProductRequest) e
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
 		Build()
+
 	return productService.DB.Create(&medicine).Error
 }
 
-func (productService *Service) EditProduct(request *requests.ProductRequest, id uint) error {
+func (productService *Service) EditProduct(request *requests2.ProductRequest, id uint) error {
 	product := builders2.NewProductBuilder().
 		SetID(id).
 		SetName(request.Code).

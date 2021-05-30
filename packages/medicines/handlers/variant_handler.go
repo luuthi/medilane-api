@@ -7,8 +7,8 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
-	"medilane-api/packages/medicines/requests"
 	"medilane-api/packages/medicines/services/medicine"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewVariantHandler(server *s.Server) *VariantHandler {
 // @Router /variant/find [post]
 // @Security BearerAuth
 func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
-	searchRequest := new(requests.SearchVariantRequest)
+	searchRequest := new(requests2.SearchVariantRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
 	}
@@ -63,7 +63,7 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 // @Router /variant [post]
 // @Security BearerAuth
 func (variantHandler *VariantHandler) CreateVariant(c echo.Context) error {
-	var variant requests.VariantRequest
+	var variant requests2.VariantRequest
 	if err := c.Bind(&variant); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -100,7 +100,7 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var variant requests.VariantRequest
+	var variant requests2.VariantRequest
 	if err := c.Bind(&variant); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}

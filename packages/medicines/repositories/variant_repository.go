@@ -3,7 +3,7 @@ package repositories
 import (
 	"fmt"
 	models2 "medilane-api/models"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 
 	"gorm.io/gorm"
@@ -11,7 +11,7 @@ import (
 
 type VariantRepositoryQ interface {
 	GetVariantById(category *models2.Variant, id int16)
-	GetVariants(category []*models2.Variant, filter requests.SearchVariantRequest)
+	GetVariants(category []*models2.Variant, filter requests2.SearchVariantRequest)
 }
 
 type VariantRepository struct {
@@ -26,7 +26,7 @@ func (variantRepository *VariantRepository) GetVariantById(category *models2.Var
 	variantRepository.DB.Where("id = ?", id).Find(category)
 }
 
-func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, filter *requests.SearchVariantRequest) {
+func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, filter *requests2.SearchVariantRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

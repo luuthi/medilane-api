@@ -11,9 +11,9 @@ import (
 	"medilane-api/config"
 	"medilane-api/models"
 	handlers2 "medilane-api/packages/accounts/handlers"
-	"medilane-api/packages/accounts/requests"
 	responses2 "medilane-api/packages/accounts/responses"
 	token2 "medilane-api/packages/accounts/services/token"
+	requests2 "medilane-api/requests"
 	"medilane-api/server"
 	"medilane-api/tests/helpers"
 	"net/http"
@@ -40,8 +40,8 @@ func TestWalkAuth(t *testing.T) {
 		{
 			"Auth success",
 			request,
-			requests.LoginRequest{
-				BasicAuth: requests.BasicAuth{
+			requests2.LoginRequest{
+				BasicAuth: requests2.BasicAuth{
 					Username: "name@test.com",
 					Password: "password",
 				},
@@ -56,8 +56,8 @@ func TestWalkAuth(t *testing.T) {
 		{
 			"Login attempt with incorrect password",
 			request,
-			requests.LoginRequest{
-				BasicAuth: requests.BasicAuth{
+			requests2.LoginRequest{
+				BasicAuth: requests2.BasicAuth{
 					Username: "name@test.com",
 					Password: "incorrectPassword",
 				},
@@ -72,8 +72,8 @@ func TestWalkAuth(t *testing.T) {
 		{
 			"Login attempt as non-existent user",
 			request,
-			requests.LoginRequest{
-				BasicAuth: requests.BasicAuth{
+			requests2.LoginRequest{
+				BasicAuth: requests2.BasicAuth{
 					Username: "user.not.exists@test.com",
 					Password: "password",
 				},
@@ -135,7 +135,7 @@ func TestWalkRefresh(t *testing.T) {
 		{
 			"Refresh success",
 			request,
-			requests.RefreshRequest{
+			requests2.RefreshRequest{
 				Token: validToken,
 			},
 			handlerFunc,
@@ -148,7 +148,7 @@ func TestWalkRefresh(t *testing.T) {
 		{
 			"Refresh token of non-existent user",
 			request,
-			requests.RefreshRequest{
+			requests2.RefreshRequest{
 				Token: notExistToken,
 			},
 			handlerFunc,
@@ -161,7 +161,7 @@ func TestWalkRefresh(t *testing.T) {
 		{
 			"Refresh invalid token",
 			request,
-			requests.RefreshRequest{
+			requests2.RefreshRequest{
 				Token: invalidToken,
 			},
 			handlerFunc,

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
-	"medilane-api/packages/accounts/requests"
 	responses2 "medilane-api/packages/accounts/responses"
 	tokenService "medilane-api/packages/accounts/services/token"
+	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
@@ -36,7 +36,7 @@ func NewAuthHandler(server *s.Server) *AuthHandler {
 // @Failure 401 {object} responses.Error
 // @Router /login [post]
 func (authHandler *AuthHandler) Login(c echo.Context) error {
-	loginRequest := new(requests.LoginRequest)
+	loginRequest := new(requests2.LoginRequest)
 
 	if err := c.Bind(loginRequest); err != nil {
 		return err
@@ -59,6 +59,11 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 	if err != nil {
 		return err
 	}
+
+	//authHandler.server.MemDB.Update(func(txn *badger.Txn) error {
+	//
+	//})
+	//
 	refreshToken, err := tokenServ.CreateRefreshToken(&user)
 	if err != nil {
 		return err
@@ -81,7 +86,7 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 // @Router /refresh [post]
 // @Security BearerAuth
 func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
-	refreshRequest := new(requests.RefreshRequest)
+	refreshRequest := new(requests2.RefreshRequest)
 	if err := c.Bind(refreshRequest); err != nil {
 		return err
 	}

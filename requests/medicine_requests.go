@@ -10,8 +10,8 @@ type SearchProductRequest struct {
 	Barcode string `json:"Barcode"  example:"example"`
 	Status  string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
 
-	Limit  int64      `json:"limit" example:"10"`
-	Offset int64      `json:"offset" example:"0"`
+	Limit  int        `json:"limit" example:"10"`
+	Offset int        `json:"offset" example:"0"`
 	Sort   SortOption `json:"sort"`
 }
 
@@ -35,16 +35,8 @@ type ProductRequest struct {
 	IndicationsOfTheDrug string  `json:"IndicationsOfTheDrug" example:"example"`
 	Direction            string  `json:"Direction" example:"example"`
 	Avatar               string  `json:"Avatar" example:"example"`
-	BasePrice            float64 `json:"BasePrice" example:"example"`
-	Manufacturer         string  `json:"Manufacturer" example:"example"`
-
-	Categories []uint `json:"Categories" example:"[1,2,3]"`
-	Variants   []uint `json:"Variants" example:"[1,2,3]"`
-}
-
-type SortOption struct {
-	SortField     string `json:"sort_field"`
-	SortDirection string `json:"sort_direction"`
+	BasePrice            float64 `json:"BasePrice" example:"1"`
+	Manufacturer         string  `json:"Manufacturer" example:"abc"`
 }
 
 func (rr SearchProductRequest) Validate() error {

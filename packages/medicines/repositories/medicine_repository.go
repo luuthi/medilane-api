@@ -3,7 +3,7 @@ package repositories
 import (
 	"fmt"
 	models2 "medilane-api/models"
-	"medilane-api/packages/medicines/requests"
+	requests2 "medilane-api/requests"
 	"strings"
 
 	"gorm.io/gorm"
@@ -12,7 +12,7 @@ import (
 type ProductsRepositoryQ interface {
 	GetProductByCode(Product *models2.Product, Code string)
 	GetProductById(Product *models2.Product, id int16)
-	GetProducts(medicine []*models2.Product, filter requests.SearchProductRequest)
+	GetProducts(medicine []*models2.Product, filter requests2.SearchProductRequest)
 }
 
 type ProductRepository struct {
@@ -31,7 +31,7 @@ func (medicineRepository *ProductRepository) GetProductById(medicine *models2.Pr
 	medicineRepository.DB.Where("id = ?", id).Find(medicine)
 }
 
-func (medicineRepository *ProductRepository) GetProducts(medicine *[]models2.Product, filter *requests.SearchProductRequest) {
+func (medicineRepository *ProductRepository) GetProducts(medicine *[]models2.Product, filter *requests2.SearchProductRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 

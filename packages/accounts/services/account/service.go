@@ -2,22 +2,24 @@ package account
 
 import (
 	"gorm.io/gorm"
-	"medilane-api/packages/accounts/requests"
+	"medilane-api/requests"
+	requests2 "medilane-api/requests"
 )
 
 type ServiceWrapper interface {
-	CreateUser(request *requests.AccountRequest) error
+	CreateUser(request *requests2.RegisterRequest) error
+	CreateDrugstore(request *requests.DrugStoreRequest) error
 
 	// permission
 
-	CreatePermission(request *requests.PermissionRequest) error
-	EditPermission(request *requests.PermissionRequest) error
+	CreatePermission(request *requests2.PermissionRequest) error
+	EditPermission(request *requests2.PermissionRequest) error
 	DeletePermission(id uint) error
 
 	//role
 
-	CreateRole(request *requests.RoleRequest) error
-	EditRole(request *requests.RoleRequest) error
+	CreateRole(request *requests2.RoleRequest) error
+	EditRole(request *requests2.RoleRequest) error
 	DeleteRole(id uint) error
 }
 

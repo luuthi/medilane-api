@@ -16,6 +16,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	accountHandler := handlers2.NewAccountHandler(server)
 	permissionHandler := handlers2.NewPermissionHandler(server)
 	roleHandler := handlers2.NewRoleHandler(server)
+	areaHandler := handlers2.NewAreaHandler(server)
 
 	// login api
 	appRoute.POST("/login", authHandler.Login)
@@ -33,6 +34,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	}
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount)
+	acc.POST("", accountHandler.CreateAccount)
 
 	// permission api
 	perm := appRoute.Group("/permission")
@@ -49,4 +51,12 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	role.POST("", roleHandler.CreateRole)
 	role.PUT("/:id", roleHandler.EditRole)
 	role.DELETE("/:id", roleHandler.DeleteRole)
+
+	// role api
+	area := appRoute.Group("/area")
+	area.Use(middleware.JWTWithConfig(config))
+	area.POST("/find", areaHandler.SearchArea)
+	area.POST("", areaHandler.CreateArea)
+	area.PUT("/:id", areaHandler.EditArea)
+	area.DELETE("/:id", areaHandler.DeleteArea)
 }

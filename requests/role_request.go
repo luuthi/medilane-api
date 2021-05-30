@@ -1,6 +1,8 @@
 package requests
 
-import validation "github.com/go-ozzo/ozzo-validation"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+)
 
 type SearchRoleRequest struct {
 	RoleName string     `json:"role_name" example:"role_manage"`
@@ -19,6 +21,7 @@ func (rr SearchRoleRequest) Validate() error {
 type RoleRequest struct {
 	RoleName    string `json:"role_name"  validate:"required" example:"user_manage"`
 	Description string `json:"description" example:"Manage user"`
+	Permissions []uint `json:"Permissions"`
 }
 
 func (rr RoleRequest) Validate() error {
