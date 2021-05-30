@@ -3,6 +3,9 @@ package medicine
 import (
 	builders2 "medilane-api/packages/medicines/builders"
 	"medilane-api/packages/medicines/requests"
+	"medilane-api/utils"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -10,9 +13,13 @@ const (
 )
 
 func (productService *Service) CreateProduct(request *requests.ProductRequest) error {
-	medicine := builders2.NewProductBuilder().SetCode(request.Code).
-		SetName(request.Code).
-		SetBarcode(request.Name).
+
+	// Generate Code Product (Medicine)
+	code := strings.Join([]string{"MD", strconv.Itoa(int(utils.TimeUnixMilli()))}, "")
+
+	medicine := builders2.NewProductBuilder().SetCode(code).
+		SetName(request.Name).
+		SetBarcode(request.Barcode).
 		SetRegistrationNo(request.RegistrationNo).
 		SetContent(request.Content).
 		SetGlobalManufacturerName(request.GlobalManufacturerName).
@@ -33,7 +40,6 @@ func (productService *Service) CreateProduct(request *requests.ProductRequest) e
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
 		Build()
-
 	return productService.DB.Create(&medicine).Error
 }
 

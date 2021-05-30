@@ -26,6 +26,8 @@ type ProductBuilder struct {
 	Direction              string
 	BasePrice              float64
 	Manufacturer           string
+
+	Category []*models2.Category
 }
 
 func NewProductBuilder() *ProductBuilder {
@@ -160,6 +162,9 @@ func (productBuilder *ProductBuilder) Build() models2.Product {
 		Overdose:               productBuilder.Overdose,
 		Barcode:                productBuilder.Barcode,
 		Status:                 productBuilder.Status,
+		Manufacturer:           productBuilder.Manufacturer,
+		Direction:              productBuilder.Direction,
+		IndicationsOfTheDrug:   productBuilder.IndicationsOfTheDrug,
 	}
 
 	return medicine
