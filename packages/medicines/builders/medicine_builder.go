@@ -26,6 +26,10 @@ type ProductBuilder struct {
 	Direction              string
 	BasePrice              float64
 	Manufacturer           string
+
+	Category []*models2.Category
+	Variants []*models2.Variant
+	Tags     []*models2.Tag
 }
 
 func NewProductBuilder() *ProductBuilder {
@@ -142,6 +146,36 @@ func (productBuilder *ProductBuilder) SetManufacturer(Manufacturer string) (u *P
 	return productBuilder
 }
 
+func (productBuilder *ProductBuilder) SetCategories(ids []uint) (r *ProductBuilder) {
+	var categories []*models2.Category
+	cateBuilder := NewCategoryBuilder()
+	for _, v := range ids {
+		categories = append(categories, cateBuilder.SetID(v).Build())
+	}
+	productBuilder.Category = categories
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetVariants(ids []uint) (r *ProductBuilder) {
+	var variants []*models2.Variant
+	variBuilder := NewVariantBuilder()
+	for _, v := range ids {
+		variants = append(variants, variBuilder.SetID(v).Build())
+	}
+	productBuilder.Variants = variants
+	return productBuilder
+}
+
+func (productBuilder *ProductBuilder) SetTags(ids []uint) (r *ProductBuilder) {
+	var tags []*models2.Tag
+	tagBuilder := NewTagBuilder()
+	for _, v := range ids {
+		tags = append(tags, tagBuilder.SetID(v).Build())
+	}
+	productBuilder.Tags = tags
+	return productBuilder
+}
+
 func (productBuilder *ProductBuilder) Build() models2.Product {
 	medicine := models2.Product{
 		Code:                   productBuilder.Code,
@@ -160,6 +194,12 @@ func (productBuilder *ProductBuilder) Build() models2.Product {
 		Overdose:               productBuilder.Overdose,
 		Barcode:                productBuilder.Barcode,
 		Status:                 productBuilder.Status,
+		Manufacturer:           productBuilder.Manufacturer,
+		Direction:              productBuilder.Direction,
+		IndicationsOfTheDrug:   productBuilder.IndicationsOfTheDrug,
+		Category:               productBuilder.Category,
+		Variants:               productBuilder.Variants,
+		Tags:                   productBuilder.Tags,
 	}
 
 	return medicine

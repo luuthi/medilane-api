@@ -26,6 +26,7 @@ type Product struct {
 	Variants               []*Variant `json:"Variants" gorm:"many2many:product_variant"`
 	Images                 []*Image   `json:"Images" gorm:"many2many:product_image"`
 	Tags                   []*Tag     `json:"Tags" gorm:"many2many:product_tag"`
+	Category               []*Category
 }
 
 type ProductStore struct {
