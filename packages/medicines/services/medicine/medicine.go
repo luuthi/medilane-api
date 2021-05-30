@@ -32,6 +32,9 @@ func (productService *Service) CreateProduct(request *requests2.ProductRequest) 
 		SetAvatar(request.Avatar).
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
+		SetCategories(request.Categories).
+		SetVariants(request.Variants).
+		SetTags(request.Tags).
 		Build()
 
 	return productService.DB.Create(&medicine).Error

@@ -41,11 +41,15 @@ func (categoryBuilder *CategoryBuilder) SetImage(Image string) (u *CategoryBuild
 	return categoryBuilder
 }
 
-func (categoryBuilder *CategoryBuilder) Build() models2.Category {
-	category := models2.Category{
-		Slug:  categoryBuilder.Slug,
-		Name:  categoryBuilder.Name,
-		Image: categoryBuilder.Image,
+func (categoryBuilder *CategoryBuilder) Build() *models2.Category {
+	common := models2.CommonModelFields{
+		ID: categoryBuilder.id,
+	}
+	category := &models2.Category{
+		Slug:              categoryBuilder.Slug,
+		Name:              categoryBuilder.Name,
+		Image:             categoryBuilder.Image,
+		CommonModelFields: common,
 	}
 	return category
 }

@@ -27,7 +27,7 @@ func NewVariantHandler(server *s.Server) *VariantHandler {
 // @Summary Search variant in system
 // @Description Perform search variant
 // @ID search-variant
-// @Variants Variant-Management
+// @Tags Variant-Management
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchVariantRequest true "Filter Variant"
@@ -54,7 +54,7 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 // @Summary Create variant in system
 // @Description Perform create variant
 // @ID create-variant
-// @Variants Variant-Management
+// @Tags Variant-Management
 // @Accept json
 // @Produce json
 // @Param params body requests.VariantRequest true "Filter Variant"
@@ -83,7 +83,7 @@ func (variantHandler *VariantHandler) CreateVariant(c echo.Context) error {
 // @Summary Edit variant in system
 // @Description Perform edit variant
 // @ID edit-variant
-// @Variants Variant-Management
+// @Tags Variant-Management
 // @Accept json
 // @Produce json
 // @Param params body requests.VariantRequest true "body Variant"
@@ -127,7 +127,7 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 // @Summary Delete variant in system
 // @Description Perform delete variant
 // @ID delete-variant
-// @Variants Variant-Management
+// @Tags Variant-Management
 // @Accept json
 // @Produce json
 // @Param id path uint true "id Variant"

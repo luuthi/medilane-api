@@ -37,6 +37,10 @@ type ProductRequest struct {
 	Avatar               string  `json:"Avatar" example:"example"`
 	BasePrice            float64 `json:"BasePrice" example:"1"`
 	Manufacturer         string  `json:"Manufacturer" example:"abc"`
+
+	Categories []uint `json:"Categories"`
+	Variants   []uint `json:"Variants"`
+	Tags       []uint `json:"Tags"`
 }
 
 func (rr SearchProductRequest) Validate() error {
