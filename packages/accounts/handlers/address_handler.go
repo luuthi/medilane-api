@@ -57,7 +57,7 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.AddressRequest true "Create address"
-// @Success 200 {object} responses.Data
+// @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /address [post]
 // @Security BearerAuth
@@ -86,6 +86,7 @@ func (addHandler *AddressHandler) CreateAddress(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.AddressRequest true "Edit address"
+// @Param id path uint true "id address"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /address/{id} [put]
@@ -118,7 +119,7 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 	if err := addressService.EditAddress(&addr, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update address: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Address updated!")
+	return responses.MessageResponse(c, http.StatusOK, "Address updated!")
 }
 
 // DeleteAddress Delete address godoc

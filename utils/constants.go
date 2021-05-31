@@ -1,12 +1,14 @@
 package utils
 
 const (
-	TblAccount    = "user"
-	TblRole       = "role"
-	TblPermission = "permission"
-	TblArea       = "area"
-	TblAddress    = "address"
-	TblDrugstore = "drug_store"
+	TblAccount        = "user"
+	TblRole           = "role"
+	TblPermission     = "permission"
+	TblUserRole       = "role_user"
+	TblRolePermission = "role_permissions"
+	TblArea           = "area"
+	TblAddress        = "address"
+	TblDrugstore      = "drug_store"
 )
 
 type UserDrugStoreRelationShip int

@@ -61,11 +61,11 @@ func (userBuilder *UserBuilder) SetDrugStore(drugStore *models.DrugStore) (u *Us
 	return userBuilder
 }
 
-func (userBuilder *UserBuilder) SetRoles(ids []uint) (u *UserBuilder) {
+func (userBuilder *UserBuilder) SetRoles(ids []string) (u *UserBuilder) {
 	var roles []*models.Role
 	roleBuilder := NewRoleBuilder()
 	for _, v := range ids {
-		roles = append(roles, roleBuilder.SetID(v).Build())
+		roles = append(roles, roleBuilder.SetName(v).Build())
 	}
 	userBuilder.roles = roles
 	return userBuilder

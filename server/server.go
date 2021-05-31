@@ -6,24 +6,27 @@ import (
 	"medilane-api/config"
 	"medilane-api/db"
 	"medilane-api/logger"
+	"medilane-api/permission"
 
 	"github.com/labstack/echo/v4"
 )
 
 type Server struct {
-	Echo   *echo.Echo
-	DB     *gorm.DB
-	Config *config.Config
-	Logger *logrus.Logger
+	Echo       *echo.Echo
+	DB         *gorm.DB
+	Config     *config.Config
+	Logger     *logrus.Logger
+	Permission *permission.Permission
 	//MemDB  *badger.DB
 }
 
 func NewServer(cfg *config.Config) *Server {
 	return &Server{
-		Echo:   echo.New(),
-		DB:     db.Init(cfg),
-		Config: cfg,
-		Logger: logger.Init(cfg.Logger),
+		Echo:       echo.New(),
+		DB:         db.Init(cfg),
+		Config:     cfg,
+		Logger:     logger.Init(cfg.Logger),
+		Permission: permission.NewPermission(),
 		//MemDB: db.InitMemDB(),
 	}
 }

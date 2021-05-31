@@ -30,11 +30,11 @@ func (roleBuilder *RoleBuilder) SetID(id uint) (r *RoleBuilder) {
 	return roleBuilder
 }
 
-func (roleBuilder *RoleBuilder) SetPermissions(ids []uint) (r *RoleBuilder) {
+func (roleBuilder *RoleBuilder) SetPermissions(ids []string) (r *RoleBuilder) {
 	var permissions []*models.Permission
 	permBuilder := NewPermissionBuilder()
 	for _, v := range ids {
-		permissions = append(permissions, permBuilder.SetID(v).Build())
+		permissions = append(permissions, permBuilder.SetName(v).Build())
 	}
 	roleBuilder.perms = permissions
 	return roleBuilder

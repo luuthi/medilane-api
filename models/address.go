@@ -3,7 +3,7 @@ package models
 type Address struct {
 	CommonModelFields
 
-	Street      string `json:"street" gorm:"type:varchar(200)"`
+	Street      string `json:"Address" gorm:"type:varchar(200)"`
 	Province    string `json:"State" gorm:"type:varchar(200)"`
 	District    string `json:"District" gorm:"type:varchar(200)"`
 	Ward        string `json:"Ward" gorm:"type:varchar(200)"`

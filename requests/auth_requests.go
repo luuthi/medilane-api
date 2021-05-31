@@ -29,7 +29,7 @@ type RegisterRequest struct {
 	FullName  string           `json:"Name" validate:"required" example:"John Doe"`
 	IsAdmin   *bool            `json:"IsAdmin" validate:"required" example:"true" `
 	Type      string           `json:"Type"  validate:"required" example:"staff/user/supplier/manufacturer"`
-	Roles     []uint           `json:"Roles"`
+	Roles     []string         `json:"Roles"`
 }
 
 func (rr RegisterRequest) Validate() error {

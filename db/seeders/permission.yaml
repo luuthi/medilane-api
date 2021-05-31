@@ -1,0 +1,162 @@
+permissions:
+  - permission_name: read:user
+    description: Permission read data user
+  - permission_name: create:user
+    description: Permission create data user
+  - permission_name: edit:user
+    description: Permission edit data user
+  - permission_name: delete:user
+    description: Permission delete data user
+
+  - permission_name: read:permission
+    description: Permission read data permission
+  - permission_name: create:permission
+    description: Permission create data permission
+  - permission_name: edit:permission
+    description: Permission edit data permission
+  - permission_name: delete:permission
+    description: Permission delete data permission
+
+  - permission_name: read:role
+    description: Permission read data role
+  - permission_name: create:role
+    description: Permission create data role
+  - permission_name: edit:role
+    description: Permission edit data role
+  - permission_name: delete:role
+    description: Permission delete data role
+
+  - permission_name: read:drugstore
+    description: Permission read data drugstore
+  - permission_name: create:drugstore
+    description: Permission create data drugstore
+  - permission_name: edit:drugstore
+    description: Permission edit data drugstore
+  - permission_name: delete:drugstore
+    description: Permission delete data drugstore
+
+  - permission_name: read:area
+    description: Permission read data area
+  - permission_name: create:area
+    description: Permission create data area
+  - permission_name: edit:area
+    description: Permission edit data area
+  - permission_name: delete:area
+    description: Permission delete data area
+
+  - permission_name: read:address
+    description: Permission read data address
+  - permission_name: create:address
+    description: Permission create data address
+  - permission_name: edit:address
+    description: Permission edit data address
+  - permission_name: delete:address
+    description: Permission delete data address
+
+  - permission_name: read:product
+    description: Permission read data product
+  - permission_name: create:product
+    description: Permission create data product
+  - permission_name: edit:product
+    description: Permission edit data product
+  - permission_name: delete:product
+    description: Permission delete data product
+
+  - permission_name: read:product_store
+    description: Permission read data product_store
+  - permission_name: create:product_store
+    description: Permission create data product_store
+  - permission_name: edit:product_store
+    description: Permission edit data product_store
+  - permission_name: delete:product_store
+    description: Permission delete data product_store
+
+  - permission_name: read:order
+    description: Permission read data order
+  - permission_name: create:order
+    description: Permission create data order
+  - permission_name: edit:order
+    description: Permission edit data order
+  - permission_name: delete:order
+    description: Permission delete data order
+
+  - permission_name: read:category
+    description: Permission read data category
+  - permission_name: create:category
+    description: Permission create data category
+  - permission_name: edit:category
+    description: Permission edit data category
+  - permission_name: delete:category
+    description: Permission delete data category
+
+  - permission_name: read:variant
+    description: Permission read data variant
+  - permission_name: create:variant
+    description: Permission create data variant
+  - permission_name: edit:variant
+    description: Permission edit data variant
+  - permission_name: delete:variant
+    description: Permission delete data variant
+
+  - permission_name: read:cart
+    description: Permission read data cart
+  - permission_name: create:cart
+    description: Permission create data cart
+  - permission_name: edit:cart
+    description: Permission edit data cart
+  - permission_name: delete:cart
+    description: Permission delete data cart
+
+  - permission_name: read:order_store
+    description: Permission read data order_store
+  - permission_name: create:order_store
+    description: Permission create data order_store
+  - permission_name: edit:order_store
+    description: Permission edit data order_store
+  - permission_name: delete:order_store
+    description: Permission delete data order_store
+
+  - permission_name: read:voucher
+    description: Permission read data voucher
+  - permission_name: create:voucher
+    description: Permission create data voucher
+  - permission_name: edit:voucher
+    description: Permission edit data voucher
+  - permission_name: delete:voucher
+    description: Permission delete data voucher
+
+  - permission_name: read:promotion
+    description: Permission read data promotion
+  - permission_name: create:promotion
+    description: Permission create data promotion
+  - permission_name: edit:promotion
+    description: Permission edit data promotion
+  - permission_name: delete:promotion
+    description: Permission delete data promotion
+
+  - permission_name: read:consignment
+    description: Permission read data consignment
+  - permission_name: create:consignment
+    description: Permission create data consignment
+  - permission_name: edit:consignment
+    description: Permission edit data consignment
+  - permission_name: delete:consignment
+    description: Permission delete data consignment
+
+  - permission_name: read:manufacture
+    description: Permission read data manufacture
+  - permission_name: create:manufacture
+    description: Permission create data manufacture
+  - permission_name: edit:manufacture
+    description: Permission edit data manufacture
+  - permission_name: delete:manufacture
+    description: Permission delete data manufacture
+
+  - permission_name: read:supllier
+    description: Permission read data suplier
+  - permission_name: create:supllier
+    description: Permission create data suplier
+  - permission_name: edit:supllier
+    description: Permission edit data suplier
+  - permission_name: delete:supllier
+    description: Permission delete data suplier
