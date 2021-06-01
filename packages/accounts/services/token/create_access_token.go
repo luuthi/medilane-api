@@ -11,7 +11,6 @@ func (tokenService *Service) CreateAccessToken(user *models.User) (accessToken s
 	exp = time.Now().Add(time.Hour * ExpireCount).Unix()
 	claims := &JwtCustomClaims{
 		user.Username,
-		user.ID,
 		jwt.StandardClaims{
 			ExpiresAt: exp,
 		},

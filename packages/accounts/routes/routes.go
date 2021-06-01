@@ -5,6 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"medilane-api/funcUtils"
 	handlers2 "medilane-api/packages/accounts/handlers"
 	token2 "medilane-api/packages/accounts/services/token"
 	s "medilane-api/server"
@@ -33,11 +34,11 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// account api
 	acc := appRoute.Group("/account")
-	//acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
-	//	return func(context echo.Context) error {
-	//		return utils.CheckPermission(context, server, handlerFunc)
-	//	}
-	//})
+	acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			return funcUtils.CheckPermission(context, server, handlerFunc)
+		}
+	})
 	config := middleware.JWTConfig{
 		Skipper:       middleware.DefaultSkipper,
 		SigningMethod: middleware.AlgorithmHS256,
@@ -56,11 +57,11 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// permission api
 	perm := appRoute.Group("/permission")
-	//acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
-	//	return func(context echo.Context) error {
-	//		return utils.CheckPermission(context, server, handlerFunc)
-	//	}
-	//})
+	acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			return funcUtils.CheckPermission(context, server, handlerFunc)
+		}
+	})
 	perm.Use(middleware.JWTWithConfig(config))
 	perm.POST("/find", permissionHandler.SearchPermission)
 	perm.POST("", permissionHandler.CreatePermission)
@@ -69,11 +70,11 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// role api
 	role := appRoute.Group("/role")
-	//acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
-	//	return func(context echo.Context) error {
-	//		return utils.CheckPermission(context, server, handlerFunc)
-	//	}
-	//})
+	acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			return funcUtils.CheckPermission(context, server, handlerFunc)
+		}
+	})
 	role.Use(middleware.JWTWithConfig(config))
 	role.POST("/find", roleHandler.SearchRole)
 	role.POST("", roleHandler.CreateRole)
@@ -82,11 +83,11 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// area api
 	area := appRoute.Group("/area")
-	//acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
-	//	return func(context echo.Context) error {
-	//		return utils.CheckPermission(context, server, handlerFunc)
-	//	}
-	//})
+	acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			return funcUtils.CheckPermission(context, server, handlerFunc)
+		}
+	})
 	area.Use(middleware.JWTWithConfig(config))
 	area.POST("/find", areaHandler.SearchArea)
 	area.POST("", areaHandler.CreateArea)
@@ -95,11 +96,11 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// address api
 	address := appRoute.Group("/address")
-	//acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
-	//	return func(context echo.Context) error {
-	//		return utils.CheckPermission(context, server, handlerFunc)
-	//	}
-	//})
+	acc.Use(func(handlerFunc echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			return funcUtils.CheckPermission(context, server, handlerFunc)
+		}
+	})
 	address.Use(middleware.JWTWithConfig(config))
 	address.POST("/find", addressHandler.SearchAddress)
 	address.POST("", addressHandler.CreateAddress)

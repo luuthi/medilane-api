@@ -50,9 +50,9 @@ func (permRepo *PermissionRepository) GetPermissionByID(perm *models2.Permission
 	permRepo.DB.First(&perm, id)
 }
 
-func (permRepo *PermissionRepository) GetPermissionByUsername(perms *[]models2.Permission, userID uint) {
+func (permRepo *PermissionRepository) GetPermissionByUsername(perms *[]models2.Permission, userName string) {
 	permRepo.DB.Table(utils.TblUserRole).Select("DISTINCT p.permission_name").
-		Joins("JOIN role_permissions rp ON rp.role_id = role_user.role_id ").
-		Joins("JOIN permission p ON p.id = rp.permission_id ").
-		Where(fmt.Sprintf("role_user.user_id = %v", userID)).Find(&perms)
+		Joins("JOIN role_permissions rp ON rp.role_role_name = role_user.role_role_name ").
+		Joins("JOIN permission p ON p.permission_name = rp.permission_permission_name ").
+		Where(fmt.Sprintf("role_user.user_username = \"%s\"", userName)).Find(&perms)
 }
