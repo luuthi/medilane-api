@@ -2,6 +2,7 @@ package requests
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
+	"medilane-api/utils"
 )
 
 type SearchProductRequest struct {
@@ -37,6 +38,15 @@ type ProductRequest struct {
 	Avatar               string  `json:"Avatar" example:"example"`
 	BasePrice            float64 `json:"BasePrice" example:"1"`
 	Manufacturer         string  `json:"Manufacturer" example:"abc"`
+
+	Categories []uint `json:"Categories"`
+	Variants   []uint `json:"Variants"`
+	Tags       []uint `json:"Tags"`
+}
+
+type ChangeStatusProductsRequest struct {
+	Status     string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	ProductsId []uint `json:"ProductsId"`
 }
 
 func (rr SearchProductRequest) Validate() error {
@@ -50,4 +60,10 @@ func (rr ProductRequest) Validate() error {
 	return validation.ValidateStruct(&rr) //validation.Field(&rr.Limit, validation.Min(0)),
 	//validation.Field(&rr.Offset, validation.Min(0)),
 
+}
+
+func (rr ChangeStatusProductsRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Status, validation.In(string(utils.SHOW), utils.HIDE, utils.APPROVE, utils.CANCEL, utils.OUTOFSTOCK)),
+	)
 }

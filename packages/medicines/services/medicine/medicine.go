@@ -32,6 +32,9 @@ func (productService *Service) CreateProduct(request *requests2.ProductRequest) 
 		SetAvatar(request.Avatar).
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
+		SetCategories(request.Categories).
+		SetVariants(request.Variants).
+		SetTags(request.Tags).
 		Build()
 
 	return productService.DB.Create(&medicine).Error
@@ -70,4 +73,12 @@ func (productService *Service) DeleteMedicine(id uint) error {
 		SetID(id).
 		Build()
 	return productService.DB.Table(TblMedicine).Delete(&medicine).Error
+}
+
+func (productService *Service) ChangeStatusProduct(id uint, status string) error {
+	product := builders2.NewProductBuilder().
+		SetID(id).
+		SetStatus(status).
+		Build()
+	return productService.DB.Table(TblMedicine).Save(&product).Error
 }

@@ -45,3 +45,12 @@ func (drugstoreService *Service) DeleteDrugstore(id uint) error {
 		Build()
 	return drugstoreService.DB.Table(utils.TblDrugstore).Delete(&drugstore).Error
 }
+
+func (drugstoreService *Service) ConnectiveDrugStore(request *requests2.ConnectiveDrugStoreRequest) error {
+	drugstoreRelationship := builders.NewDrugStoreRelationshipBuilder().
+		SetParentID(request.ParentStoreId).
+		SetChildID(request.ChildStoreId).
+		Build()
+
+	return drugstoreService.DB.Table(utils.TblDrugstoreRelationship).Create(&drugstoreRelationship).Error
+}
