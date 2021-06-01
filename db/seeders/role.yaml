@@ -1,0 +1,106 @@
+roles:
+  - role_name: author_manage
+    description:
+    permissions:
+      - read:user
+      - create:user
+      - edit:user
+      - delete:user
+      - read:permission
+      - create:permission
+      - edit:permission
+      - delete:permission
+      - read:role
+      - create:role
+      - edit:role
+      - delete:role
+  - role_name: drugstore_manage
+    description:
+    permissions:
+      - read:drugstore
+      - create:drugstore
+      - edit:drugstore
+      - delete:drugstore
+      - read:area
+      - create:area
+      - edit:area
+      - delete:area
+      - read:address
+      - create:address
+      - edit:address
+      - delete:address
+      - read:voucher
+  - role_name: product_manage
+    description:
+    permissions:
+      - read:product
+      - create:product
+      - edit:product
+      - delete:product
+      - read:category
+      - create:category
+      - edit:category
+      - delete:category
+      - read:variant
+      - create:variant
+      - edit:variant
+      - delete:variant
+  - role_name: product_store_manage
+    description:
+    permissions:
+      - read:product_store
+      - create:product_store
+      - edit:product_store
+      - delete:product_store
+  - role_name: order_manage
+    description:
+    permissions:
+      - read:order
+      - create:order
+      - edit:order
+      - delete:order
+      - read:cart
+      - create:cart
+      - edit:cart
+      - delete:cart
+  - role_name: order_store_manage
+    description:
+    permissions:
+      - read:order_store
+      - create:order_store
+      - edit:order_store
+      - delete:order_store
+  - role_name: voucher_manage
+    description:
+    permissions:
+      - read:voucher
+      - create:voucher
+      - edit:voucher
+      - delete:voucher
+  - role_name: promotion_manage
+    description:
+    permissions:
+      - read:promotion
+      - create:promotion
+      - edit:promotion
+      - delete:promotion
+  - role_name: consignment_manage
+    description:
+    permissions:
+      - read:consignment
+      - create:consignment
+      - edit:consignment
+      - delete:consignment
+  - role_name: partner_manage
+    description:
+    permissions:
+      - read:manufacture
+      - create:manufacture
+      - edit:manufacture
+      - delete:manufacture
+      - read:suplier
+      - create:suplier
+      - edit:suplier
+      - delete:suplier
+
+

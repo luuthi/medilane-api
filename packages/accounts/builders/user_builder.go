@@ -11,7 +11,7 @@ type UserBuilder struct {
 	fullName  string
 	status    bool
 	type_     string
-	id        string
+	id        uint
 	isAdmin   bool
 	roles     []*models.Role
 	drugStore *models.DrugStore
@@ -61,26 +61,35 @@ func (userBuilder *UserBuilder) SetDrugStore(drugStore *models.DrugStore) (u *Us
 	return userBuilder
 }
 
-func (userBuilder *UserBuilder) SetRoles(ids []uint) (u *UserBuilder) {
+func (userBuilder *UserBuilder) SetID(id uint) (r *UserBuilder) {
+	userBuilder.id = id
+	return userBuilder
+}
+
+func (userBuilder *UserBuilder) SetRoles(ids []string) (u *UserBuilder) {
 	var roles []*models.Role
 	roleBuilder := NewRoleBuilder()
 	for _, v := range ids {
-		roles = append(roles, roleBuilder.SetID(v).Build())
+		roles = append(roles, roleBuilder.SetName(v).Build())
 	}
 	userBuilder.roles = roles
 	return userBuilder
 }
 
 func (userBuilder *UserBuilder) Build() models.User {
+	common := models.CommonModelFields{
+		ID: userBuilder.id,
+	}
 	user := models.User{
-		Email:    userBuilder.email,
-		Username: userBuilder.username,
-		Password: userBuilder.password,
-		FullName: userBuilder.fullName,
-		Status:   userBuilder.status,
-		Type:     userBuilder.type_,
-		IsAdmin:  userBuilder.isAdmin,
-		Roles:    userBuilder.roles,
+		Email:             userBuilder.email,
+		Username:          userBuilder.username,
+		Password:          userBuilder.password,
+		FullName:          userBuilder.fullName,
+		Status:            userBuilder.status,
+		Type:              userBuilder.type_,
+		IsAdmin:           userBuilder.isAdmin,
+		Roles:             userBuilder.roles,
+		CommonModelFields: common,
 	}
 
 	return user

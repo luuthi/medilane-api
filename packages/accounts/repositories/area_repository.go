@@ -35,6 +35,7 @@ func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, filter requests2
 	}
 
 	areaRepo.DB.Table(utils.TblArea).Where(strings.Join(spec, " AND "), values...).
+		Preload("Addresses").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

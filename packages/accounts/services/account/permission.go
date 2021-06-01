@@ -20,7 +20,7 @@ func (userService *Service) EditPermission(request *requests2.PermissionRequest,
 		SetName(request.PermissionName).
 		SetDescription(request.Description).
 		Build()
-	return userService.DB.Table(utils.TblPermission).Save(perm).Error
+	return userService.DB.Table(utils.TblPermission).Updates(&perm).Error
 }
 
 func (userService *Service) DeletePermission(id uint) error {

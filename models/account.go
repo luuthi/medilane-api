@@ -9,28 +9,29 @@ type CommonModelFields struct {
 type User struct {
 	CommonModelFields
 
-	Email    string  `json:"Email" gorm:"type:varchar(200);unique;not null"`
-	Username string  `json:"Username" gorm:"type:varchar(200);unique;not null"`
-	Password string  `json:"-" gorm:"type:varchar(200);"`
-	FullName string  `json:"Name" gorm:"type:varchar(500)"`
-	Status   bool    `json:"Confirmed" gorm:"type:bool;default:true"`
-	Type     string  `json:"Type" gorm:"type:varchar(200)"`
-	IsAdmin  bool    `json:"IsAdmin" gorm:"type:bool;default:true"`
-	Roles    []*Role `json:"Roles" gorm:"many2many:role_user;ForeignKey:id;References:id"`
+	Email    string  `json:"Email" yaml:"email" gorm:"type:varchar(200);unique;not null"`
+	Username string  `json:"Username" yaml:"username" gorm:"type:varchar(200);unique;not null"`
+	Password string  `json:"-" yaml:"password" gorm:"type:varchar(200);"`
+	FullName string  `json:"Name" yaml:"full_name" gorm:"type:varchar(500)"`
+	Status   bool    `json:"Confirmed" yaml:"status" gorm:"type:bool;default:true"`
+	Type     string  `json:"Type" yaml:"type" gorm:"type:varchar(200)"`
+	IsAdmin  bool    `json:"IsAdmin" yaml:"is_admin" gorm:"type:bool;default:true"`
+	Roles    []*Role `json:"Roles" yaml:"roles" gorm:"many2many:role_user;ForeignKey:Username;References:RoleName"`
 	Carts    []*Cart `gorm:"foreignKey:UserID"`
 }
 
 type Role struct {
 	CommonModelFields
 
-	RoleName    string        `json:"RoleName" gorm:"type:varchar(200);unique;not null"`
-	Description string        `json:"Description" gorm:"type:varchar(200);"`
-	Permissions []*Permission `json:"permissions" gorm:"many2many:role_permissions;ForeignKey:id;References:id"`
+	RoleName    string        `json:"RoleName" yaml:"role_name" gorm:"type:varchar(200);unique;not null"`
+	Description string        `json:"Description" yaml:"description" gorm:"type:varchar(200);"`
+	Users       []*User       `json:"Users" yaml:"users" gorm:"many2many:role_user;ForeignKey:RoleName;References:Username"`
+	Permissions []*Permission `json:"permissions" yaml:"permissions" gorm:"many2many:role_permissions;ForeignKey:RoleName;References:PermissionName"`
 }
 
 type Permission struct {
 	CommonModelFields
 
-	PermissionName string `json:"PermissionName" gorm:"type:varchar(200);unique;not null"`
-	Description    string `json:"Description" gorm:"type:varchar(200);"`
+	PermissionName string `json:"PermissionName" yaml:"permission_name" gorm:"type:varchar(200);unique;not null"`
+	Description    string `json:"Description" yaml:"description" gorm:"type:varchar(200);"`
 }

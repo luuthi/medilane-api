@@ -21,13 +21,22 @@ func (userService *Service) EditRole(request *requests2.RoleRequest, id uint) er
 		SetID(id).
 		SetName(request.RoleName).
 		SetDescription(request.Description).
+		SetPermissions(request.Permissions).
 		Build()
-	return userService.DB.Table(utils.TblRole).Save(role).Error
+
+	perms := role.Permissions
+	err := userService.DB.Model(&role).Association("Permissions").Clear()
+	if err != nil {
+		return err
+	}
+	role.Permissions = perms
+	return userService.DB.Table(utils.TblRole).Updates(&role).Error
 }
 
-func (userService *Service) DeleteRole(id uint) error {
+func (userService *Service) DeleteRole(id uint, roleName string) error {
 	role := builders.NewRoleBuilder().
 		SetID(id).
+		SetName(roleName).
 		Build()
-	return userService.DB.Table(utils.TblRole).Delete(role).Error
+	return userService.DB.Select("Permissions", "Users").Delete(role).Error
 }

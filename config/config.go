@@ -9,11 +9,18 @@ import (
 )
 
 type Config struct {
-	Auth    AuthConfig           `yaml:"AUTH"`
-	DB      DBConfig             `yaml:"DATABASE"`
-	HTTP    HTTPConfig           `yaml:"HTTP"`
-	Logger  logger.ConfigLogging `yaml:"LOGGER"`
-	MIGRATE bool                 `yaml:"MIGRATE_DB"`
+	Auth      AuthConfig           `yaml:"AUTH"`
+	DB        DBConfig             `yaml:"DATABASE"`
+	HTTP      HTTPConfig           `yaml:"HTTP"`
+	Logger    logger.ConfigLogging `yaml:"LOGGER"`
+	MIGRATION Migration            `yaml:"MIGRATION"`
+}
+
+type Migration struct {
+	Migrate            bool   `json:"migrate" yaml:"MIGRATE_DB"`
+	InitPermissionPath string `json:"init_permission_path" yaml:"INIT_PERMISSION_PATH"`
+	InitRolePath       string `json:"init_role_path" yaml:"INIT_ROLE_PATH"`
+	InitUserPath       string `json:"init_user_path" yaml:"INIT_USER_PATH"`
 }
 
 func NewConfig() *Config {

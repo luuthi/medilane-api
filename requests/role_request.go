@@ -19,9 +19,9 @@ func (rr SearchRoleRequest) Validate() error {
 }
 
 type RoleRequest struct {
-	RoleName    string `json:"role_name"  validate:"required" example:"user_manage"`
-	Description string `json:"description" example:"Manage user"`
-	Permissions []uint `json:"Permissions"`
+	RoleName    string   `json:"role_name"  validate:"required" example:"user_manage"`
+	Description string   `json:"description" example:"Manage user"`
+	Permissions []string `json:"permission"`
 }
 
 func (rr RoleRequest) Validate() error {

@@ -3,161 +3,156 @@ package seeders
 import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/yaml.v2"
 	"gorm.io/gorm"
-	"medilane-api/models"
+	"io/ioutil"
+	"medilane-api/config"
+	"medilane-api/packages/accounts/builders"
+	"medilane-api/utils"
 )
 
 type UserSeeder struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	config *config.Config
 }
 
-func NewUserSeeder(db *gorm.DB) *UserSeeder {
-	return &UserSeeder{DB: db}
+type Permissions struct {
+	Permissions []*Permission `json:"permissions" yaml:"permissions"`
 }
 
-//
-//func (userSeeder *UserSeeder) SetPermission() {
-//	permissions := map[int]map[string]interface{}{
-//		1: {
-//			"permission_name": "read:user",
-//			"description":     "Read data user",
-//		},
-//		2: {
-//			"permission_name": "create:user",
-//			"description":     "Create data user",
-//		},
-//		3: {
-//			"permission_name": "edit:user",
-//			"description":     "Edit data user",
-//		},
-//		4: {
-//			"permission_name": "delete:user",
-//			"description":     "Delete data user",
-//		},
-//		5: {
-//			"permission_name": "read:role",
-//			"description":     "Read data role",
-//		},
-//		6: {
-//			"permission_name": "create:role",
-//			"description":     "Create data role",
-//		},
-//		7: {
-//			"permission_name": "edit:role",
-//			"description":     "Edit data role",
-//		},
-//		8: {
-//			"permission_name": "delete:role",
-//			"description":     "Delete data role",
-//		},
-//		9: {
-//			"permission_name": "read:permission",
-//			"description":     "Read data permission",
-//		},
-//		10: {
-//			"permission_name": "create:permission",
-//			"description":     "Create data permission",
-//		},
-//		11: {
-//			"permission_name": "edit:permission",
-//			"description":     "Edit data permission",
-//		},
-//		12: {
-//			"permission_name": "delete:permission",
-//			"description":     "Delete data permission",
-//		},
-//	}
-//
-//	if !userSeeder.DB.HasTable(&models.Permission{}) {
-//		userSeeder.DB.CreateTable(&models.Permission{})
-//		for key, value := range permissions {
-//			permission := models.Permission{}
-//			userSeeder.DB.First(&permission, key)
-//			if permission.ID == 0 {
-//				permission.ID = uint(key)
-//				permission.PermissionName = value["permission_name"].(string)
-//				permission.Description = value["description"].(string)
-//				userSeeder.DB.Create(&permission)
-//			}
-//		}
-//	}
-//}
-//
-//func (userSeeder *UserSeeder) SetRole() {
-//	roles := map[int]map[string]interface{}{
-//		1: {
-//			"role_name":   "permission_manage",
-//			"description": "Manage permissions",
-//		},
-//		2: {
-//			"role_name":   "user_manage",
-//			"description": "Manage roles",
-//		},
-//		3: {
-//			"role_name":   "role_manage",
-//			"description": "Manage users",
-//		},
-//	}
-//
-//	if !userSeeder.DB.HasTable(&models.Role{}) {
-//		userSeeder.DB.CreateTable(&models.Role{})
-//		for key, value := range roles {
-//			role := models.Role{}
-//			userSeeder.DB.First(&role, key)
-//			if role.ID == 0 {
-//				role.ID = uint(key)
-//				role.RoleName = value["role_name"].(string)
-//				role.Description = value["description"].(string)
-//				userSeeder.DB.Create(&role)
-//			}
-//		}
-//	}
-//}
-//
+type Permission struct {
+	PermissionName string `json:"PermissionName" yaml:"permission_name"`
+	Description    string `json:"Description" yaml:"description" `
+}
 
-func (userSeeder *UserSeeder) SetUsers() {
-	users := map[int]map[string]interface{}{
-		1: {
-			"email":     "thild@gmail.com",
-			"username":  "thild",
-			"password":  "123qweA@",
-			"full_name": "Luu Dinh Thi",
-			"status":    true,
-			"type":      "user",
-			"is_admin":  false,
-		},
-		2: {
-			"email":     "admin@gmail.com",
-			"username":  "admin",
-			"password":  "123qweA@",
-			"full_name": "Administrator",
-			"status":    true,
-			"type":      "user",
-			"is_admin":  true,
-		},
+type Roles struct {
+	Roles []*Role `json:"roles" yaml:"roles"`
+}
+
+type Role struct {
+	RoleName    string   `json:"RoleName" yaml:"role_name"`
+	Description string   `json:"Description" yaml:"description"`
+	Permissions []string `json:"permissions" yaml:"permissions"`
+}
+
+type Users struct {
+	Users []User `json:"users" yaml:"users"`
+}
+
+type User struct {
+	Email    string   `json:"Email" yaml:"email" `
+	Username string   `json:"Username" yaml:"username"`
+	Password string   `json:"Password" yaml:"password" `
+	FullName string   `json:"Name" yaml:"full_name"`
+	Status   bool     `json:"Confirmed" yaml:"status" `
+	Type     string   `json:"Type" yaml:"type" `
+	IsAdmin  bool     `json:"IsAdmin" yaml:"is_admin" `
+	Roles    []string `json:"Roles" yaml:"roles"`
+}
+
+func NewUserSeeder(db *gorm.DB, conf *config.Config) *UserSeeder {
+	return &UserSeeder{DB: db, config: conf}
+}
+
+func (userSeeder *UserSeeder) LoadInitDataPermission() (permissions *Permissions) {
+	configPath := userSeeder.config.MIGRATION.InitPermissionPath
+	if configPath == "" {
+		configPath = "/app/permissions.yaml"
+	}
+	yamlFile, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
 	}
 
-	for key, value := range users {
-		user := models.User{}
-		userSeeder.DB.First(&user, key)
+	err = yaml.Unmarshal(yamlFile, &permissions)
+	if err != nil {
+		log.Println("Error loading yaml file")
+	}
+	return
+}
+
+func (userSeeder *UserSeeder) LoadInitDataRole() (roles *Roles) {
+	configPath := userSeeder.config.MIGRATION.InitRolePath
+	if configPath == "" {
+		configPath = "/app/roles.yaml"
+	}
+	yamlFile, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+
+	err = yaml.Unmarshal(yamlFile, &roles)
+	if err != nil {
+		log.Println("Error loading yaml file")
+	}
+	return
+}
+
+func (userSeeder *UserSeeder) LoadInitDataUser() (users *Users) {
+	configPath := userSeeder.config.MIGRATION.InitUserPath
+	if configPath == "" {
+		configPath = "/app/users.yaml"
+	}
+	yamlFile, err := ioutil.ReadFile(configPath)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+
+	err = yaml.Unmarshal(yamlFile, &users)
+	if err != nil {
+		log.Println("Error loading yaml file")
+	}
+	return
+}
+
+func (userSeeder *UserSeeder) SetUsers() {
+	users := userSeeder.LoadInitDataUser()
+
+	for _, u := range users.Users {
 		encryptedPassword, err := bcrypt.GenerateFromPassword(
-			[]byte(value["password"].(string)),
+			[]byte(u.Password),
 			bcrypt.DefaultCost,
 		)
 		if err != nil {
-			log.Fatal("Error hash password")
+			continue
 		}
 
-		if user.ID == 0 {
-			user.ID = uint(key)
-			user.Email = value["email"].(string)
-			user.Username = value["username"].(string)
-			user.FullName = value["full_name"].(string)
-			user.Password = string(encryptedPassword)
-			user.IsAdmin = value["is_admin"].(bool)
-			user.Type = value["type"].(string)
-			user.Status = value["status"].(bool)
-			userSeeder.DB.Create(&user)
-		}
+		user := builders.NewUserBuilder().
+			SetEmail(u.Email).
+			SetName(u.Username).
+			SetPassword(string(encryptedPassword)).
+			SetFullName(u.FullName).
+			SetStatus(u.Status).
+			SetType(u.Type).
+			SetIsAdmin(u.IsAdmin).
+			SetRoles(u.Roles).
+			Build()
+
+		userSeeder.DB.Table(utils.TblAccount).Create(&user)
+	}
+}
+
+func (userSeeder *UserSeeder) SetRoles() {
+	roles := userSeeder.LoadInitDataRole()
+
+	for _, r := range roles.Roles {
+		role := builders.NewRoleBuilder().
+			SetName(r.RoleName).
+			SetDescription(r.Description).
+			SetPermissions(r.Permissions).
+			Build()
+		userSeeder.DB.Table(utils.TblRole).Create(&role)
+	}
+}
+
+func (userSeeder *UserSeeder) SetPermissions() {
+	perms := userSeeder.LoadInitDataPermission()
+
+	for _, p := range perms.Permissions {
+		perm := builders.NewPermissionBuilder().
+			SetName(p.PermissionName).
+			SetDescription(p.Description).
+			Build()
+		userSeeder.DB.Table(utils.TblPermission).Create(&perm)
 	}
 }

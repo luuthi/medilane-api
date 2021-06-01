@@ -76,6 +76,7 @@ func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address,
 	}
 
 	addressRepo.DB.Table(utils.TblAddress).Where(strings.Join(spec, " AND "), values...).
+		Preload("Area").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

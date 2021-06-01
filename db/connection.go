@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"github.com/dgraph-io/badger/v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -31,7 +30,7 @@ func Init(cfg *config.Config) *gorm.DB {
 		panic(err.Error())
 	}
 
-	if cfg.MIGRATE {
+	if cfg.MIGRATION.Migrate {
 		_ = db.AutoMigrate(&models.User{}, &models.Role{}, &models.Permission{})
 
 		err = db.SetupJoinTable(&models.DrugStore{}, "Users", &models.DrugStoreUser{})
@@ -75,18 +74,12 @@ func Init(cfg *config.Config) *gorm.DB {
 		_ = db.AutoMigrate(&models.Promotion{})
 	}
 
-	userSeeder := seeders.NewUserSeeder(db)
-	userSeeder.SetUsers()
-
-	return db
-}
-
-func InitMemDB() *badger.DB {
-	opts := badger.DefaultOptions("/tmp/badger").WithInMemory(true)
-	opts.IndexCacheSize = 100 << 20
-	db, err := badger.Open(opts)
-	if err != nil {
-		panic(err.Error())
+	if cfg.MIGRATION.Migrate {
+		userSeeder := seeders.NewUserSeeder(db, cfg)
+		userSeeder.SetPermissions()
+		userSeeder.SetRoles()
+		userSeeder.SetUsers()
 	}
+
 	return db
 }

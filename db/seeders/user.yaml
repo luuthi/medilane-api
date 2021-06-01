@@ -1,0 +1,33 @@
+users:
+  - email: admin@gmail.com
+    username: admin
+    password: 123qweA@
+    full_name: Administrator
+    status: true
+    type: staff
+    is_admin: true
+    roles:
+      - author_manage
+      - drugstore_manage
+      - product_manage
+      - product_store_manage
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - consignment_manage
+      - partner_manage
+  - email: medilane@gmail.com
+    username: medilane
+    password: 123qweA@
+    full_name: medilane
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+
