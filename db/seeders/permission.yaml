@@ -152,11 +152,11 @@ permissions:
   - permission_name: delete:manufacture
     description: Permission delete data manufacture
 
-  - permission_name: read:supllier
+  - permission_name: read:suplier
     description: Permission read data suplier
-  - permission_name: create:supllier
+  - permission_name: create:suplier
     description: Permission create data suplier
-  - permission_name: edit:supllier
+  - permission_name: edit:suplier
     description: Permission edit data suplier
-  - permission_name: delete:supllier
+  - permission_name: delete:suplier
     description: Permission delete data suplier

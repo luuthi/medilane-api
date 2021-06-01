@@ -144,8 +144,15 @@ func (roleHandler *RoleHandler) DeleteRole(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
+	var existedRole models2.Role
+	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)
+	permRepo.GetRoleByID(&existedRole, id)
+	if existedRole.RoleName == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found role with ID: %v", string(id)))
+	}
+
 	roleService := account.NewAccountService(roleHandler.server.DB)
-	if err := roleService.DeletePermission(id); err != nil {
+	if err := roleService.DeleteRole(id, existedRole.RoleName); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete role: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Role deleted!")

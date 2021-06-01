@@ -30,17 +30,33 @@ func (rr SearchAccountRequest) Validate() error {
 }
 
 type EditAccountRequest struct {
-	FullName string   `json:"full_name"  example:"admin"`
-	Email    string   `json:"email" example:"admin@gmail.com"`
-	Status   string   `json:"status" example:"true"`
-	Type     string   `json:"type" example:"staff/user/supplier/manufacturer"`
-	IsAdmin  *bool    `json:"is_admin" example:"true"`
-	Roles    []string `json:"roles"`
+	FullName *string   `json:"full_name"  example:"admin"`
+	Email    *string   `json:"email" example:"admin@gmail.com"`
+	Status   *bool     `json:"status" example:"true"`
+	Type     *string   `json:"type" example:"staff/user/supplier/manufacturer"`
+	IsAdmin  *bool     `json:"is_admin" example:"true"`
+	Roles    *[]string `json:"roles"`
 }
 
 func (rr EditAccountRequest) Validate() error {
+	return validation.ValidateStruct(&rr)
+}
+
+type AccountRequest struct {
+	Email    string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
+	Username string   `json:"username" validate:"required" example:"JohnDoe"`
+	Password string   `json:"password"  validate:"required" example:"123qweA@"`
+	FullName string   `json:"Name" validate:"required" example:"John Doe"`
+	IsAdmin  *bool    `json:"IsAdmin" validate:"required" example:"true" `
+	Type     string   `json:"Type"  validate:"required" example:"staff/user/supplier/manufacturer"`
+	Roles    []string `json:"Roles"`
+}
+
+func (rr AccountRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Email, validation.Required, is.Email),
+		validation.Field(&rr.Username, validation.Required, validation.Length(3, 32)),
+		validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
 		validation.Field(&rr.FullName, validation.Required),
 		validation.Field(&rr.IsAdmin, validation.Required),
 	)

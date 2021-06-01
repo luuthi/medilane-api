@@ -10,6 +10,7 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
+	"strconv"
 )
 
 type AccountHandler struct {
@@ -54,13 +55,13 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 // @Tags Account Management
 // @Accept json
 // @Produce json
-// @Param params body requests.RegisterRequest true "Create account"
+// @Param params body requests.AccountRequest true "Create account"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /account [post]
 // @Security BearerAuth
 func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
-	var acc requests2.RegisterRequest
+	var acc requests2.AccountRequest
 	if err := c.Bind(&acc); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -76,4 +77,82 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 	}
 	return responses.MessageResponse(c, http.StatusCreated, "Account created!")
 
+}
+
+// EditAccount Edit account godoc
+// @Summary Edit account in system
+// @Description Perform edit account
+// @ID edit-account
+// @Tags Account Management
+// @Accept json
+// @Produce json
+// @Param params body requests.EditAccountRequest true "body account"
+// @Param id path uint true "id account"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /account/{id} [put]
+// @Security BearerAuth
+func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var acc requests2.EditAccountRequest
+	if err := c.Bind(&acc); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := acc.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	var existedUser models.User
+	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
+	accRepo.GetUserByID(&existedUser, id)
+	if existedUser.Username == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+	}
+
+	accService := account.NewAccountService(accHandler.server.DB)
+	if err := accService.EditUser(&acc, id, existedUser.Username); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update user: %v", err.Error()))
+	}
+	return responses.MessageResponse(c, http.StatusOK, "User updated!")
+}
+
+// DeleteAccount Delete account godoc
+// @Summary Delete account in system
+// @Description Perform delete account
+// @ID delete-account
+// @Tags Account Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id account"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /account/{id} [delete]
+// @Security BearerAuth
+func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedUser models.User
+	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
+	accRepo.GetUserByID(&existedUser, id)
+	if existedUser.Username == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+	}
+
+	accService := account.NewAccountService(accHandler.server.DB)
+	if err := accService.DeleteUser(id, existedUser.Username); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
+	}
+	return responses.MessageResponse(c, http.StatusOK, "User deleted!")
 }

@@ -8,6 +8,8 @@ import (
 
 type ServiceWrapper interface {
 	CreateUser(request *requests2.RegisterRequest) error
+	EditUser(request *requests2.EditAccountRequest, id uint) error
+	DeleteUser(id uint) error
 	CreateDrugstore(request *requests.DrugStoreRequest) error
 
 	// permission

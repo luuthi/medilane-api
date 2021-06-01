@@ -25,6 +25,7 @@ type Role struct {
 
 	RoleName    string        `json:"RoleName" yaml:"role_name" gorm:"type:varchar(200);unique;not null"`
 	Description string        `json:"Description" yaml:"description" gorm:"type:varchar(200);"`
+	Users       []*User       `json:"Users" yaml:"users" gorm:"many2many:role_user;ForeignKey:RoleName;References:Username"`
 	Permissions []*Permission `json:"permissions" yaml:"permissions" gorm:"many2many:role_permissions;ForeignKey:RoleName;References:PermissionName"`
 }
 

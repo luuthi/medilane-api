@@ -5,10 +5,11 @@ import (
 	"medilane-api/models"
 	builders2 "medilane-api/packages/accounts/builders"
 	requests2 "medilane-api/requests"
+	"medilane-api/utils"
 	"time"
 )
 
-func (userService *Service) CreateUser(request *requests2.RegisterRequest) (error, *models.User) {
+func (userService *Service) CreateUser(request *requests2.AccountRequest) (error, *models.User) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(request.Password),
 		bcrypt.DefaultCost,
@@ -56,16 +57,42 @@ func (userService *Service) CreateDrugstoreUser(storeID, userId uint, relationsh
 	return userService.DB.Create(&ud).Error
 }
 
-func (userService *Service) EditUser(request *requests2.EditAccountRequest) error {
-	user := builders2.NewUserBuilder().
-		SetEmail(request.Email).
-		SetFullName(request.FullName).
-		SetStatus(false).
-		SetType(request.Type).
-		SetIsAdmin(*request.IsAdmin).
-		SetRoles(request.Roles).
-		Build()
+func (userService *Service) EditUser(request *requests2.EditAccountRequest, id uint, username string) error {
+	userBuild := builders2.NewUserBuilder().
+		SetID(id).
+		SetName(username)
 
-	rs := userService.DB.Create(&user)
+	if request.Status != nil {
+		userBuild.SetStatus(*request.Status)
+	}
+	if request.Type != nil {
+		userBuild.SetType(*request.Type)
+	}
+	if request.FullName != nil {
+		userBuild.SetFullName(*request.FullName)
+	}
+	if request.IsAdmin != nil {
+		userBuild.SetIsAdmin(*request.IsAdmin)
+	}
+	if request.Roles != nil {
+		userBuild.SetRoles(*request.Roles)
+	}
+	user := userBuild.Build()
+
+	roles := user.Roles
+	err := userService.DB.Model(&user).Association("Roles").Clear()
+	if err != nil {
+		return err
+	}
+	user.Roles = roles
+	rs := userService.DB.Table(utils.TblAccount).Updates(&user)
 	return rs.Error
+}
+
+func (userService *Service) DeleteUser(id uint, username string) error {
+	user := builders2.NewUserBuilder().
+		SetID(id).
+		SetName(username).
+		Build()
+	return userService.DB.Select("Roles").Delete(&user).Error
 }

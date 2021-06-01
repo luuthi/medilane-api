@@ -46,7 +46,7 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 
 	existUser := models.User{}
 	AccountRepository := repositories2.NewAccountRepository(registerHandler.server.DB)
-	AccountRepository.GetUserByEmail(&existUser, accRequest.Email)
+	AccountRepository.GetUserByEmail(&existUser, accRequest.AccountRequest.Email)
 
 	if existUser.ID != 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "User already exists")
@@ -59,7 +59,7 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert drugstore")
 	}
 
-	rs1, newUser := userService.CreateUser(accRequest)
+	rs1, newUser := userService.CreateUser(&accRequest.AccountRequest)
 	if err := rs1; err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user")
 	}
