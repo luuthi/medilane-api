@@ -74,3 +74,11 @@ func (productService *Service) DeleteMedicine(id uint) error {
 		Build()
 	return productService.DB.Table(TblMedicine).Delete(&medicine).Error
 }
+
+func (productService *Service) ChangeStatusProduct(id uint, status string) error {
+	product := builders2.NewProductBuilder().
+		SetID(id).
+		SetStatus(status).
+		Build()
+	return productService.DB.Table(TblMedicine).Save(&product).Error
+}

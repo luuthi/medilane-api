@@ -29,6 +29,10 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	medicine.PUT("/edit/:id", medicineHandler.EditProduct)
 	medicine.DELETE("/delete/:id", medicineHandler.DeleteProduct)
 
+	medicines := appRoute.Group("/products")
+	medicines.Use(middleware.JWTWithConfig(config))
+	medicines.POST("/status", medicineHandler.ChangeStatusProducts)
+
 	// medicine api
 	category := appRoute.Group("/category")
 	category.Use(middleware.JWTWithConfig(config))

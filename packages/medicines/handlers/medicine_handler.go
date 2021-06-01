@@ -7,6 +7,7 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
+	response2 "medilane-api/packages/medicines/responses"
 	"medilane-api/packages/medicines/services/medicine"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -148,4 +149,54 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Medicine: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Medicine deleted!")
+}
+
+// ChangeStatusProducts Change status of list product godoc
+// @Summary Change status of list product in system
+// @Description Perform Change status of list product
+// @ID change-status-products
+// @Tags Medicine Management
+// @Accept json
+// @Produce json
+// @Param params body requests.ChangeStatusProductsRequest true "body change status products"
+// @Success 201 {object} responses.Data
+// @Failure 401 {object} responses.Error
+// @Router /products/status [post]
+// @Security BearerAuth
+func (productHandler *ProductHandler) ChangeStatusProducts(c echo.Context) error {
+	var medi requests2.ChangeStatusProductsRequest
+	if err := c.Bind(&medi); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := medi.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
+
+	var listErrChangeStatus []uint
+	var listErrNotFoundProduct []uint
+	var listChangeStatusSuccess []uint
+
+	for _, v := range medi.ProductsId {
+		var product models.Product
+		productRepo.GetProductById(&product, v)
+		if product.Code == "" {
+			listErrNotFoundProduct = append(listErrNotFoundProduct, v)
+		}
+		mediService := medicine.NewProductService(productHandler.server.DB)
+		if err := mediService.ChangeStatusProduct(v, medi.Status); err != nil {
+			listErrChangeStatus = append(listErrChangeStatus, v)
+		} else {
+			listChangeStatusSuccess = append(listChangeStatusSuccess, v)
+		}
+	}
+	messageDetail := response2.MessageDetail{
+		ListProductNotFound:            listErrNotFoundProduct,
+		ListProductChangeStatusFail:    listErrChangeStatus,
+		ListProductChangeStatusSuccess: listChangeStatusSuccess,
+	}
+
+	return response2.MessageResponse(c, http.StatusOK, messageDetail)
 }
