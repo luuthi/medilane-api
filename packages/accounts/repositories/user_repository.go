@@ -23,15 +23,15 @@ func NewAccountRepository(db *gorm.DB) *AccountRepository {
 }
 
 func (AccountRepository *AccountRepository) GetUserByEmail(user *models.User, email string) {
-	AccountRepository.DB.Where("email = ?", email).Find(user)
+	AccountRepository.DB.Where("email = ?", email).Find(&user)
 }
 
 func (AccountRepository *AccountRepository) GetUserByUsername(user *models.User, email string) {
-	AccountRepository.DB.Where("username = ?", email).Find(user)
+	AccountRepository.DB.Where("username = ?", email).Find(&user)
 }
 
 func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id uint) {
-	AccountRepository.DB.Where("id = ?", id).Find(user)
+	AccountRepository.DB.Where("id = ?", id).Find(&user)
 }
 
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests2.SearchAccountRequest) {

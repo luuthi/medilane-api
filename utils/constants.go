@@ -21,6 +21,16 @@ const (
 	Caring_staff
 )
 
+type ProductStatus string
+
+const (
+	SHOW ProductStatus = "show"
+	HIDE  = "hide"
+	APPROVE  = "approve"
+	CANCEL  = "cancel"
+	OUTOFSTOCK  = "outofstock"
+)
+
 func (a UserDrugStoreRelationShip) String() string {
 	return [...]string{"manager", "staff", "caring_staff"}[a]
 }
