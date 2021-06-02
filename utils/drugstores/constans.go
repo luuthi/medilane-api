@@ -1,4 +1,4 @@
-package models
+package drugstores
 
 type DrugstoreStatus string
 

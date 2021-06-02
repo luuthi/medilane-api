@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	log2 "github.com/labstack/gommon/log"
 	accRoute "medilane-api/packages/accounts/routes"
+	drugStoreRoute "medilane-api/packages/drugstores/routes"
 	s "medilane-api/server"
 	"net/http"
 	"time"
@@ -28,7 +29,7 @@ func ConfigureRoutes(server *s.Server) {
 
 	accRoute.ConfigureAccountRoutes(appRoute, server)
 	//mediRoute.ConfigureAccountRoutes(appRoute, server)
-	//drugStoreRoute.ConfigureDrugStoreRoutes(appRoute, server)
+	drugStoreRoute.ConfigureDrugStoreRoutes(appRoute, server)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {

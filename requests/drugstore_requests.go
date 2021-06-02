@@ -2,7 +2,7 @@ package requests
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
-	"medilane-api/packages/drugstores/models"
+	"medilane-api/utils/drugstores"
 )
 
 type SearchDrugStoreRequest struct {
@@ -31,7 +31,7 @@ type DrugStoreRequest struct {
 	PhoneNumber string         `json:"Phone" validate:"required" example:"0314232344"`
 	TaxNumber   string         `json:"TaxNumber" validate:"required" example:"01293123233"`
 	LicenseFile string         `json:"LicenseFile" validate:"required" example:"asdasdasdasd"`
-	Type        string         `json:"Type" validate:"required" example:"drugstore"`
+	Type        string         `json:"Type" validate:"required" example:"drugstores"`
 	DrugStoreID uint           `json:"DrugStoreID"`
 	AddressID   uint           `json:"AddressID"`
 	Address     AddressRequest `json:"Address"`
@@ -40,7 +40,7 @@ type DrugStoreRequest struct {
 func (rr DrugStoreRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.StoreName, validation.Required),
-		validation.Field(&rr.Type, validation.In(string(models.DRUGSTORE), string(models.DRUGSTORES))),
+		validation.Field(&rr.Type, validation.In(drugstores.DRUGSTORES)),
 	)
 }
 
@@ -57,7 +57,7 @@ type EditDrugStoreRequest struct {
 func (rr EditDrugStoreRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.StoreName, validation.Required),
-		validation.Field(&rr.Status, validation.In(string(models.NEW), string(models.ACTIVE), string(models.CANCEL))),
+		validation.Field(&rr.Status, validation.In(string(drugstores.NEW), string(drugstores.ACTIVE), string(drugstores.CANCEL))),
 	)
 }
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"medilane-api/models"
-	models2 "medilane-api/packages/drugstores/models"
 	repositories2 "medilane-api/packages/drugstores/repositories"
 	drugServices "medilane-api/packages/drugstores/services"
 	requests2 "medilane-api/requests"
@@ -183,14 +182,6 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 
 	if childStore.StoreName == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ChildStoreId))
-	}
-
-	if parentStore.Type != models2.DRUGSTORES {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't parent store", drugstore.ParentStoreId))
-	}
-
-	if childStore.Type != string(models2.DRUGSTORE) {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't child store", drugstore.ChildStoreId))
 	}
 
 	drugstoreRelationshipService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
