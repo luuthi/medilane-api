@@ -9,6 +9,7 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
+	"medilane-api/utils/drugstores"
 	"net/http"
 	"strconv"
 )
@@ -182,6 +183,18 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 
 	if childStore.StoreName == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ChildStoreId))
+	}
+
+	if parentStore.Type != drugstores.DRUGSTORES {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))
+	}
+
+	if childStore.Type != drugstores.DRUGSTORES {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))
+	}
+
+	if parentStore.ID == childStore.ID {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't connective drugstores same id"))
 	}
 
 	drugstoreRelationshipService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
