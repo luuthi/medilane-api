@@ -2,9 +2,9 @@ package services
 
 import (
 	"medilane-api/packages/drugstores/builders"
-	"medilane-api/packages/drugstores/models"
 	requests2 "medilane-api/requests"
 	"medilane-api/utils"
+	"medilane-api/utils/drugstores"
 )
 
 func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreRequest) error {
@@ -13,7 +13,7 @@ func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreReq
 		SetPhoneNumber(request.PhoneNumber).
 		SetTaxNumber(request.TaxNumber).
 		SetLicenseFile(request.LicenseFile).
-		SetStatus(string(models.NEW)).
+		SetStatus(string(drugstores.NEW)).
 		SetType(request.Type).
 		SetAddressId(request.AddressID).
 		Build()
