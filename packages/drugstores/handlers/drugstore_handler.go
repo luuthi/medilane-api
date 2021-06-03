@@ -199,6 +199,19 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't connective drugstores same id"))
 	}
 
+	typeStore, _ := checkTypeOfDrugStoreInRelationship(drugstore.ChildStoreId, drugStoreHandler.server.DB)
+	if typeStore == string(drugstores.PARENT) {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't connective 2 drugstore is parent"))
+	}
+
+	var childStoreRelationship models.DrugStoreRelationship
+	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(drugStoreHandler.server.DB)
+	storeRelationshipRepo.GetDrugstoreChildByID(&childStoreRelationship, drugstore.ChildStoreId)
+
+	if childStoreRelationship.ChildStoreID != 0 {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("The store is already in the relationship"))
+	}
+
 	drugstoreRelationshipService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreRelationshipService.ConnectiveDrugStore(&drugstore); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when connective drug store: %v", err.Error()))
@@ -206,7 +219,6 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 
 	return responses.MessageResponse(c, http.StatusCreated, "Connective drugstore successfully!")
 }
-
 
 // GetListConnectiveDrugStore Get list connective drugstore godoc
 // @Summary Get list connective drugstore in system
@@ -240,10 +252,10 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 	var relationshipStores []models.DrugStore
 	if typeOfStoreInRelationship == string(drugstores.PARENT) {
 		var drugstore models.DrugStore
-		relationshipStores =  permRepo.GetListChildStoreOfParent(&drugstore, id)
+		relationshipStores = permRepo.GetListChildStoreOfParent(&drugstore, id)
 	} else if typeOfStoreInRelationship == string(drugstores.CHILD) {
 		var drugstore models.DrugStore
-		relationshipStores =  permRepo.GetListRelationshipStore(&drugstore, parentStoreId, id)
+		relationshipStores = permRepo.GetListRelationshipStore(&drugstore, parentStoreId, id)
 	}
 
 	res := responses2.NewGetRelationshipResponse(relationshipStores)
