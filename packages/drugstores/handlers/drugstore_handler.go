@@ -3,8 +3,10 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/drugstores/repositories"
+	responses2 "medilane-api/packages/drugstores/responses"
 	drugServices "medilane-api/packages/drugstores/services"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -203,4 +205,65 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 	}
 
 	return responses.MessageResponse(c, http.StatusCreated, "Connective drugstore successfully!")
+}
+
+
+// GetListConnectiveDrugStore Get list connective drugstore godoc
+// @Summary Get list connective drugstore in system
+// @Description Perform Get list connective drugstore
+// @ID get-list-connective-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id drugstore"
+// @Success 201 {object} responses.Data
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/connective/{id} [get]
+// @Security BearerAuth
+func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	// check exist drugstore
+	var existedDrugstore models.DrugStore
+	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if existedDrugstore.StoreName == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", id))
+	}
+
+	typeOfStoreInRelationship, parentStoreId := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
+	var relationshipStores []models.DrugStore
+	if typeOfStoreInRelationship == string(drugstores.PARENT) {
+		var drugstore models.DrugStore
+		relationshipStores =  permRepo.GetListChildStoreOfParent(&drugstore, id)
+	} else if typeOfStoreInRelationship == string(drugstores.CHILD) {
+		var drugstore models.DrugStore
+		relationshipStores =  permRepo.GetListRelationshipStore(&drugstore, parentStoreId, id)
+	}
+
+	res := responses2.NewGetRelationshipResponse(relationshipStores)
+
+	return responses.Response(c, http.StatusOK, res)
+}
+
+func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
+	var parentStore models.DrugStoreRelationship
+	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(db)
+	storeRelationshipRepo.GetDrugstoreParentByID(&parentStore, id)
+	if parentStore.ParentStoreID != 0 {
+		return string(drugstores.PARENT), 0
+	}
+
+	var childStore models.DrugStoreRelationship
+	storeRelationshipRepo.GetDrugstoreChildByID(&childStore, id)
+	if childStore.ChildStoreID != 0 {
+		return string(drugstores.CHILD), childStore.ParentStoreID
+	}
+
+	return string(drugstores.NONE), 0
 }

@@ -15,3 +15,11 @@ const (
 	DRUGSTORES = "drugstores"
 )
 
+type DrugStoreTypeInRelationship string
+
+const (
+	PARENT DrugStoreTypeInRelationship = "parent"
+	CHILD DrugStoreTypeInRelationship = "child"
+	NONE DrugStoreTypeInRelationship = "none"
+)
+

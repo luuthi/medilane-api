@@ -67,3 +67,39 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(drugStores *[]mode
 func (DrugStoreRepository *DrugStoreRepository) GetDrugstoreByID(perm *models.DrugStore, id uint) {
 	DrugStoreRepository.DB.First(&perm, id)
 }
+
+func (DrugStoreRepository *DrugStoreRepository) GetListChildStoreOfParent(perm *models.DrugStore, id uint) []models.DrugStore {
+	var drugstores []models.DrugStore
+	rows, _ := DrugStoreRepository.DB.Model(&perm).
+		Select("*").
+		Joins("inner join drug_store_relationship " +
+			"on drug_store_relationship.child_store_id = drug_store.id").
+		Where("drug_store_relationship.parent_store_id = ?", id).
+		Rows()
+	defer rows.Close()
+	for rows.Next() {
+		var drugstore models.DrugStore
+		DrugStoreRepository.DB.ScanRows(rows, &drugstore)
+		drugstores = append(drugstores, drugstore)
+	}
+	return drugstores
+}
+
+func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(perm *models.DrugStore, parentStoreId uint, childStoreId uint) []models.DrugStore {
+	var drugstores []models.DrugStore
+	rows, _ := DrugStoreRepository.DB.Model(&perm).
+		Select("*").
+		Joins("inner join drug_store_relationship " +
+			"on drug_store_relationship.child_store_id = drug_store.id").
+		Where("drug_store_relationship.parent_store_id = ?", parentStoreId).
+		Rows()
+	defer rows.Close()
+	for rows.Next() {
+		var drugstore models.DrugStore
+		DrugStoreRepository.DB.ScanRows(rows, &drugstore)
+		if drugstore.ID != childStoreId {
+			drugstores = append(drugstores, drugstore)
+		}
+	}
+	return drugstores
+}
