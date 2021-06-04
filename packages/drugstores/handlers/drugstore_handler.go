@@ -263,6 +263,39 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 	return responses.Response(c, http.StatusOK, res)
 }
 
+// GetTypeConnectiveDrugStore Get type connective drugstore godoc
+// @Summary Get type connective drugstore in system
+// @Description Perform Get type connective drugstore
+// @ID get-type-connective-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id drugstore"
+// @Success 201 {object} responses.Data
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/connective/type/{id} [get]
+// @Security BearerAuth
+func (drugStoreHandler *DrugStoreHandler) GetTypeConnectiveDrugStore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	// check exist drugstore
+	var existedDrugstore models.DrugStore
+	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if existedDrugstore.StoreName == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", id))
+	}
+
+	typeOfStoreInRelationship, _ := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
+
+	return responses.Response(c, http.StatusOK, typeOfStoreInRelationship)
+}
+
 func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
 	var parentStore models.DrugStoreRelationship
 	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(db)
