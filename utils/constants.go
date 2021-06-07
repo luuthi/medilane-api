@@ -7,6 +7,7 @@ const (
 	TblUserRole       = "role_user"
 	TblRolePermission = "role_permissions"
 	TblArea       = "area"
+	TblAreaCost       = "area_cost"
 	TblAddress    = "address"
 	TblDrugstore = "drug_store"
 	TblDrugstoreRelationship = "drug_store_relationship"

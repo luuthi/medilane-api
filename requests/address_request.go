@@ -71,3 +71,14 @@ func (rr SearchAreaRequest) Validate() error {
 		validation.Field(&rr.Offset, validation.Min(0)),
 	)
 }
+
+type SetCostProductsOfArea struct {
+	Cost float32 `json:"Cost"`
+	ProductsId []uint `json:"ProductsId"`
+}
+
+func (rr SetCostProductsOfArea) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Cost, validation.Min(0)),
+	)
+}
