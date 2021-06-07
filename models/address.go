@@ -22,4 +22,17 @@ type Area struct {
 	Name      string    `json:"Name" gorm:"type:varchar(200)"`
 	Note      string    `json:"Note" gorm:"type:varchar(200)"`
 	Addresses []Address `json:"Addresses"`
+	Products  []*Product `gorm:"many2many:area_cost"`
+}
+
+type AreaCost struct {
+	AreaId    uint    `gorm:"primaryKey"`
+	ProductId uint    `gorm:"primaryKey"`
+	Cost      float32 `json:"Cost" gorm:"type:double"`
+	Area      *Area
+	Product   *Product
+}
+
+func (*AreaCost) TableName() string {
+	return "area_cost"
 }
