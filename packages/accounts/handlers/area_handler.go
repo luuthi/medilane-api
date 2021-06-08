@@ -157,7 +157,7 @@ func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
 // @Tags Area Management
 // @Accept json
 // @Produce json
-// @Param params body requests.SetCostProductsOfArea true "set cost products of area"
+// @Param params body requests.SetCostProductsOfAreaRequest true "set cost products of area"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /area/{id}/cost [post]
@@ -172,7 +172,7 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 
 	print(id)
 
-	var areaCost requests2.SetCostProductsOfArea
+	var areaCost requests2.SetCostProductsOfAreaRequest
 	if err := c.Bind(&areaCost); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -191,7 +191,7 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 
 	areaService := address.NewAddressService(areaHandler.server.DB)
 
-	for _, v := range areaCost.ProductsId {
+	for _, v := range areaCost.Products {
 		if err := areaService.SetCostProductOfArea(id, v, areaCost.Cost); err != nil {
 			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when set cost of product with id: %d", v))
 		}
