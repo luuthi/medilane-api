@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
+	"medilane-api/utils"
 	"strings"
 )
 
@@ -32,6 +33,12 @@ func (AccountRepository *AccountRepository) GetUserByUsername(user *models.User,
 
 func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id uint) {
 	AccountRepository.DB.Where("id = ?", id).Find(&user)
+}
+
+func (AccountRepository *AccountRepository) GetDrugStoreByUSer(store *models.DrugStore, userName string) {
+	AccountRepository.DB.Table(utils.TblDrugstore).Select("drug_store.* ").
+		Joins(" JOIN drug_store_user du ON du.drug_store_id = drug_store.id ").
+		Where(fmt.Sprintf("du.user_username = \"%s\"", userName)).Find(&store)
 }
 
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests2.SearchAccountRequest) {

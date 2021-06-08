@@ -21,7 +21,7 @@ type Product struct {
 	Status                 string      `json:"Status" gorm:"varchar(100);not null"`
 	ActiveElement          string      `json:"ActiveElement" gorm:"varchar(255);not null"`
 	Avatar                 string      `json:"Avatar" gorm:"varchar(255);not null"`
-	BasePrice              float64     `json:"BasePrice" gorm:"varchar(255);not null"`
+	BasePrice              float64     `json:"BasePrice" gorm:"float(8);not null"`
 	Manufacturer           string      `json:"Manufacturer" gorm:"varchar(255);not null"`
 	Variants               []*Variant  `json:"Variants" gorm:"many2many:product_variant"`
 	Images                 []*Image    `json:"Images" gorm:"many2many:product_image"`
@@ -50,7 +50,7 @@ type ProductStore struct {
 	Status                 string      `json:"Status" gorm:"type:varchar(100);"`
 	ActiveElement          string      `json:"ActiveElement" gorm:"type:varchar(255);"`
 	Avatar                 string      `json:"Avatar" gorm:"type:varchar(255);"`
-	BasePrice              float64     `json:"BasePrice" gorm:"type:varchar(255);"`
+	BasePrice              float64     `json:"BasePrice" gorm:"type:float(8);"`
 	Manufacturer           string      `json:"Manufacturer" gorm:"type:varchar(255);"`
 	Variants               []*Variant  `json:"Variants" gorm:"many2many:product_store_variant"`
 	Images                 []*Image    `json:"Images" gorm:"many2many:product_store_image"`

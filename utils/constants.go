@@ -1,16 +1,16 @@
 package utils
 
 const (
-	TblAccount    = "user"
-	TblRole       = "role"
-	TblPermission = "permission"
-	TblUserRole       = "role_user"
-	TblRolePermission = "role_permissions"
-	TblArea       = "area"
-	TblAddress    = "address"
-	TblDrugstore = "drug_store"
+	TblAccount               = "user"
+	TblRole                  = "role"
+	TblPermission            = "permission"
+	TblUserRole              = "role_user"
+	TblRolePermission        = "role_permissions"
+	TblArea                  = "area"
+	TblAddress               = "address"
+	TblDrugstore             = "drug_store"
+	TblDrugstoreUser         = "drug_store_user"
 	TblDrugstoreRelationship = "drug_store_relationship"
-
 )
 
 type UserDrugStoreRelationShip int
@@ -24,11 +24,11 @@ const (
 type ProductStatus string
 
 const (
-	SHOW ProductStatus = "show"
-	HIDE  = "hide"
-	APPROVE  = "approve"
-	CANCEL  = "cancel"
-	OUTOFSTOCK  = "outofstock"
+	SHOW       ProductStatus = "show"
+	HIDE                     = "hide"
+	APPROVE                  = "approve"
+	CANCEL                   = "cancel"
+	OUTOFSTOCK               = "outofstock"
 )
 
 func (a UserDrugStoreRelationShip) String() string {
