@@ -79,6 +79,7 @@ type CostProductOfArea struct {
 
 type SetCostProductsOfAreaRequest struct {
 	Products []CostProductOfArea `json:"Products"`
+	AreaId uint `json:"AreaId"`
 }
 
 func (rr CostProductOfArea) Validate() error {

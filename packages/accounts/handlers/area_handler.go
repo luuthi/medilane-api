@@ -160,40 +160,37 @@ func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
 // @Param params body requests.SetCostProductsOfAreaRequest true "set cost products of area"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
-// @Router /area/{id}/cost [post]
+// @Router /area/cost [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id area: %v", err.Error()))
-	}
-	id := uint(paramUrl)
-
-	print(id)
-
 	var areaCost requests2.SetCostProductsOfAreaRequest
 	if err := c.Bind(&areaCost); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	if err := areaCost.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
-	}
+	//if err := areaCost.Products.Validate(); err != nil {
+	//	return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	//}
 
 	var areaInDB models2.Area
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
-	areaRepo.GetAreaByID(&areaInDB, id)
+	areaRepo.GetAreaByID(&areaInDB, areaCost.AreaId)
 
 	if areaInDB.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't fint area with id: %d", id))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't fint area with id: %d", areaCost.AreaId))
 	}
 
 	areaService := address.NewAddressService(areaHandler.server.DB)
-
+	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
 	for _, v := range areaCost.Products {
-		if err := areaService.SetCostProductOfArea(id, v, areaCost.Cost); err != nil {
-			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when set cost of product with id: %d", v))
+		var areaCostExits models2.AreaCost
+		areaCostRepo.GetAreaCostByID(&areaCostExits, areaCost.AreaId, v.ProductId)
+
+		if areaCostExits.AreaId == 0 {
+			if err := areaService.SetCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost); err != nil {
+			}
+		} else {
+			areaService.UpdateCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost)
 		}
 	}
 

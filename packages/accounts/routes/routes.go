@@ -91,7 +91,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.Use(middleware.JWTWithConfig(config))
 	area.POST("/find", areaHandler.SearchArea)
 	area.POST("", areaHandler.CreateArea)
-	area.POST("/:id/cost", areaHandler.SetCostProductsOfArea)
+	area.POST("/cost", areaHandler.SetCostProductsOfArea)
 	area.PUT("/:id", areaHandler.EditArea)
 	area.DELETE("/:id", areaHandler.DeleteArea)
 
