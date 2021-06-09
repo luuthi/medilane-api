@@ -52,6 +52,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount)
 	acc.POST("", accountHandler.CreateAccount)
+	acc.POST("/:id/drugstore", accountHandler.AssignStaffForDrugStore)
 	acc.PUT("/:id", accountHandler.EditAccount)
 	acc.DELETE("/:id", accountHandler.DeleteAccount)
 

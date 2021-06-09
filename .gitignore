@@ -3,3 +3,4 @@ main
 .env.testing
 /.idea
 logs
+docs

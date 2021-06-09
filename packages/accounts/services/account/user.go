@@ -96,3 +96,12 @@ func (userService *Service) DeleteUser(id uint, username string) error {
 		Build()
 	return userService.DB.Select("Roles").Delete(&user).Error
 }
+
+func (userService *Service) AssignStaffToDrugStore(staffID uint, drugStoreId uint, relationship string) error {
+	drugStoreUser := builders2.NewDrugStoreUserBuilder().
+		SetDrugStoreId(drugStoreId).
+		SetUserId(staffID).
+		SetRelationship(relationship).
+		Build()
+	return userService.DB.Table(utils.TblDrugstoreUser).Create(&drugStoreUser).Error
+}

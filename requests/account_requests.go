@@ -61,3 +61,16 @@ func (rr AccountRequest) Validate() error {
 		validation.Field(&rr.IsAdmin, validation.Required),
 	)
 }
+
+type StaffRelationship struct {
+	DrugStoreId uint `json:"DrugStoresId"`
+	Relationship string `json:"Relationship"`
+}
+
+type AssignStaffRequest struct {
+	AssignDetail []StaffRelationship `json:"AssignDetail"`
+}
+
+func (rr AssignStaffRequest) Validate() error {
+	return validation.ValidateStruct(&rr)
+}

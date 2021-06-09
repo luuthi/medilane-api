@@ -156,3 +156,49 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 	}
 	return responses.MessageResponse(c, http.StatusOK, "User deleted!")
 }
+
+// AssignStaffForDrugStore Assign staff for drugstore godoc
+// @Summary assign staff for drugstore in system
+// @Description Perform assign staff for drugstore
+// @ID assign-staff-for-drugstore
+// @Tags Account Management
+// @Accept json
+// @Produce json
+// @Param params body requests.AssignStaffRequest true "body account"
+// @Param id path uint true "id account"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /account/{id}/drugstore [post]
+// @Security BearerAuth
+func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id user: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var acc requests2.AssignStaffRequest
+	if err := c.Bind(&acc); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := acc.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	var existedUser models.User
+	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
+	accRepo.GetUserByID(&existedUser, id)
+	if existedUser.Username == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+	}
+
+	userService := account.NewAccountService(accHandler.server.DB)
+
+	for _,v := range acc.AssignDetail {
+		userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "Assign staff to drugstore successfully!")
+}
