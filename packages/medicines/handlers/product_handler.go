@@ -24,17 +24,17 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 	return &ProductHandler{server: server}
 }
 
-// SearchProduct Search Product godoc
-// @Summary Search medicine in system
-// @Description Perform search medicine
-// @ID search-medicine
-// @Tags Medicine Management
+// SearchProduct Search product godoc
+// @Summary Search product in system
+// @Description Perform search product
+// @ID search-product
+// @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param params body requests.SearchProductRequest true "Filter medicine"
+// @Param params body requests.SearchProductRequest true "Filter product"
 // @Success 200 {object} responses.DataSearch
 // @Failure 401 {object} responses.Error
-// @Router /medicine/find [post]
+// @Router /product/find [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	searchRequest := new(requests2.SearchProductRequest)
@@ -45,23 +45,23 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	productHandler.server.Logger.Info("Search product")
 	var medicines []models2.Product
 
-	medicineRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	medicineRepo.GetProducts(&medicines, searchRequest)
+	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
+	productRepo.GetProducts(&medicines, searchRequest)
 
 	return responses.SearchResponse(c, http.StatusOK, "", medicines)
 }
 
-// CreateProduct Create Medicine godoc
-// @Summary Create medicine in system
-// @Description Perform create medicine
-// @ID create-medicine
-// @Tags Medicine Management
+// CreateProduct Create product godoc
+// @Summary Create product in system
+// @Description Perform create product
+// @ID create-product
+// @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param params body requests.ProductRequest true "Filter medicine"
+// @Param params body requests.ProductRequest true "Filter product"
 // @Success 201 {object} responses.Data
 // @Failure 401 {object} responses.Error
-// @Router /medicine [post]
+// @Router /product [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 	var medi requests2.ProductRequest
@@ -73,25 +73,25 @@ func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	medicineService := medicine.NewProductService(productHandler.server.DB)
-	if err := medicineService.CreateProduct(&medi); err != nil {
+	productService := medicine.NewProductService(productHandler.server.DB)
+	if err := productService.CreateProduct(&medi); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert medicine: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusCreated, "Medicine created!")
 }
 
-// EditProduct Edit medicine godoc
-// @Summary Edit medicine in system
-// @Description Perform edit medicine
-// @ID edit-medicine
-// @Tags Medicine Management
+// EditProduct Edit product godoc
+// @Summary Edit product in system
+// @Description Perform edit product
+// @ID edit-product
+// @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param params body requests.ProductRequest true "body medicine"
-// @Param id path uint true "id Medicine"
+// @Param params body requests.ProductRequest true "body product"
+// @Param id path uint true "id product"
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
-// @Router /medicine/{id} [put]
+// @Router /product/{id} [put]
 // @Security BearerAuth
 func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	var paramUrl uint64
@@ -101,12 +101,12 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var medi requests2.ProductRequest
-	if err := c.Bind(&medi); err != nil {
+	var pro requests2.ProductRequest
+	if err := c.Bind(&pro); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	if err := medi.Validate(); err != nil {
+	if err := pro.Validate(); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
@@ -117,24 +117,24 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found medicine with ID: %v", string(id)))
 	}
 
-	mediService := medicine.NewProductService(productHandler.server.DB)
-	if err := mediService.EditProduct(&medi, id); err != nil {
+	productService := medicine.NewProductService(productHandler.server.DB)
+	if err := productService.EditProduct(&pro, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update medicine: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Medicine updated!")
 }
 
-// DeleteProduct Delete Medicine godoc
-// @Summary Delete medicine in system
-// @Description Perform delete medicine
-// @ID delete-medicine
-// @Tags Medicine Management
+// DeleteProduct Delete product godoc
+// @Summary Delete product in system
+// @Description Perform delete product
+// @ID delete-product
+// @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id Medicine"
+// @Param id path uint true "id product"
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
-// @Router /medicine/{id} [delete]
+// @Router /product/{id} [delete]
 // @Security BearerAuth
 func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 	var paramUrl uint64
@@ -144,8 +144,8 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	mediService := medicine.NewProductService(productHandler.server.DB)
-	if err := mediService.DeleteMedicine(id); err != nil {
+	productService := medicine.NewProductService(productHandler.server.DB)
+	if err := productService.DeleteMedicine(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Medicine: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Medicine deleted!")
