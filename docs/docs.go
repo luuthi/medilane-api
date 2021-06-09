@@ -589,6 +589,239 @@ var doc = `{
                 }
             }
         },
+        "/area/{id}/cost": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform set cost products of area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Area Management"
+                ],
+                "summary": "Set cost products of area in system",
+                "operationId": "set-cost-products-of-area",
+                "parameters": [
+                    {
+                        "description": "set cost products of area",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SetCostProductsOfArea"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/category": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create Category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category-Management"
+                ],
+                "summary": "Create category in system",
+                "operationId": "create-category",
+                "parameters": [
+                    {
+                        "description": "Filter Category",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search Category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category-Management"
+                ],
+                "summary": "Search category in system",
+                "operationId": "search-category",
+                "parameters": [
+                    {
+                        "description": "Filter Category",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/category/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit Category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category-Management"
+                ],
+                "summary": "Edit category in system",
+                "operationId": "edit-category",
+                "parameters": [
+                    {
+                        "description": "body Category",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CategoryRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id Category",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete Category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Category-Management"
+                ],
+                "summary": "Delete category in system",
+                "operationId": "delete-category",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id Category",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/drugstore": {
             "post": {
                 "security": [
@@ -610,13 +843,147 @@ var doc = `{
                 "operationId": "create-drugstore",
                 "parameters": [
                     {
-                        "description": "Filter role",
+                        "description": "Filter drugstore",
                         "name": "params",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/requests.DrugStoreRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/drugstore/connective": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform connective drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Connective drugstore in system",
+                "operationId": "connective-drugstore",
+                "parameters": [
+                    {
+                        "description": "Filter role",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ConnectiveDrugStoreRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/drugstore/connective/type/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform Get type connective drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Get type connective drugstore in system",
+                "operationId": "get-type-connective-drugstore",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id drugstore",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/drugstore/connective/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform Get list connective drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Get list connective drugstore in system",
+                "operationId": "get-list-connective-drugstore",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id drugstore",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -656,7 +1023,7 @@ var doc = `{
                 "operationId": "search-drugstore",
                 "parameters": [
                     {
-                        "description": "User's credentials",
+                        "description": "Drugstore's credentials",
                         "name": "params",
                         "in": "body",
                         "required": true,
@@ -665,6 +1032,41 @@ var doc = `{
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/drugstore/statistic-new": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform statistic new drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Statistic new drugstore in system",
+                "operationId": "statistic-new-drugstore",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -765,6 +1167,50 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/drugstore/{id}/accounts": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search account in drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Search account in drugstore in system",
+                "operationId": "search-account-drugstore",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id of drugstore",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
                         }
                     },
                     "401": {
@@ -1184,6 +1630,52 @@ var doc = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/products/status": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform Change status of list product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Medicine Management"
+                ],
+                "summary": "Change status of list product in system",
+                "operationId": "change-status-products",
+                "parameters": [
+                    {
+                        "description": "body change status products",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ChangeStatusProductsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -1671,6 +2163,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Variant-Management"
+                ],
                 "summary": "Create variant in system",
                 "operationId": "create-variant",
                 "parameters": [
@@ -1714,6 +2209,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Variant-Management"
+                ],
                 "summary": "Search variant in system",
                 "operationId": "search-variant",
                 "parameters": [
@@ -1756,6 +2254,9 @@ var doc = `{
                 ],
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "Variant-Management"
                 ],
                 "summary": "Edit variant in system",
                 "operationId": "edit-variant",
@@ -1805,6 +2306,9 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "Variant-Management"
+                ],
                 "summary": "Delete variant in system",
                 "operationId": "delete-variant",
                 "parameters": [
@@ -1834,6 +2338,86 @@ var doc = `{
         }
     },
     "definitions": {
+        "models.Address": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "type": "string"
+                },
+                "Area": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Area"
+                },
+                "AreaID": {
+                    "type": "integer"
+                },
+                "ContactName": {
+                    "type": "string"
+                },
+                "Coordinates": {
+                    "type": "string"
+                },
+                "Country": {
+                    "type": "string"
+                },
+                "District": {
+                    "type": "string"
+                },
+                "IsDefault": {
+                    "type": "boolean"
+                },
+                "Phone": {
+                    "type": "string"
+                },
+                "State": {
+                    "type": "string"
+                },
+                "Ward": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Area": {
+            "type": "object",
+            "properties": {
+                "Addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Cart": {
             "type": "object",
             "properties": {
@@ -1897,10 +2481,357 @@ var doc = `{
                 }
             }
         },
+        "models.Category": {
+            "type": "object",
+            "properties": {
+                "Image": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
+                    }
+                },
+                "ProductsStore": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProductStore"
+                    }
+                },
+                "Slug": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.DrugStore": {
+            "type": "object",
+            "properties": {
+                "ApproveBy": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "ApproveTime": {
+                    "type": "integer"
+                },
+                "LicenseFile": {
+                    "type": "string"
+                },
+                "Phone": {
+                    "type": "string"
+                },
+                "Representative": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "Staff": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "StoreName": {
+                    "type": "string"
+                },
+                "TaxNumber": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Address"
+                },
+                "addressID": {
+                    "type": "integer"
+                },
+                "childStores": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DrugStore"
+                    }
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Order"
+                    }
+                },
+                "ordersStore": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderStore"
+                    }
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProductStore"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                },
+                "vouchers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Voucher"
+                    }
+                }
+            }
+        },
         "models.Image": {
             "type": "object",
             "properties": {
                 "Url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Order": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Address"
+                },
+                "AddressID": {
+                    "type": "integer"
+                },
+                "Discount": {
+                    "type": "number"
+                },
+                "DrugStoreID": {
+                    "type": "integer"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "OrderCode": {
+                    "type": "string"
+                },
+                "PaymentMethod": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.PaymentMethod"
+                },
+                "PaymentMethodID": {
+                    "type": "integer"
+                },
+                "ShippingFee": {
+                    "type": "number"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "SubTotal": {
+                    "type": "number"
+                },
+                "Total": {
+                    "type": "number"
+                },
+                "UserApprove": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "UserApproveID": {
+                    "type": "integer"
+                },
+                "UserOrder": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "UserOrderID": {
+                    "type": "integer"
+                },
+                "Vat": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orderDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderDetail"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderDetail": {
+            "type": "object",
+            "properties": {
+                "Cost": {
+                    "type": "number"
+                },
+                "Discount": {
+                    "type": "number"
+                },
+                "OrderID": {
+                    "type": "integer"
+                },
+                "Product": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Product"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "Quantity": {
+                    "type": "integer"
+                },
+                "Variant": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Variant"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderStore": {
+            "type": "object",
+            "properties": {
+                "Discount": {
+                    "type": "number"
+                },
+                "DrugStoreID": {
+                    "type": "integer"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "OrderCode": {
+                    "type": "string"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "SubTotal": {
+                    "type": "number"
+                },
+                "Total": {
+                    "type": "number"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Vat": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orderStoreDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderStoreDetail"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderStoreDetail": {
+            "type": "object",
+            "properties": {
+                "Cost": {
+                    "type": "number"
+                },
+                "Discount": {
+                    "type": "number"
+                },
+                "OrderStoreID": {
+                    "type": "integer"
+                },
+                "Product": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Product"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "Quantity": {
+                    "type": "integer"
+                },
+                "Variant": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Variant"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.PaymentMethod": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
                     "type": "string"
                 },
                 "created_at": {
@@ -1948,6 +2879,110 @@ var doc = `{
                 },
                 "BasePrice": {
                     "type": "number"
+                },
+                "Category": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Category"
+                    }
+                },
+                "Code": {
+                    "type": "string"
+                },
+                "Content": {
+                    "type": "string"
+                },
+                "Description": {
+                    "type": "string"
+                },
+                "Direction": {
+                    "type": "string"
+                },
+                "DoNotUse": {
+                    "type": "string"
+                },
+                "DrugInteractions": {
+                    "type": "string"
+                },
+                "GlobalManufacturerName": {
+                    "type": "string"
+                },
+                "Images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Image"
+                    }
+                },
+                "IndicationsOfTheDrug": {
+                    "type": "string"
+                },
+                "Manufacturer": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Overdose": {
+                    "type": "string"
+                },
+                "PackagingSize": {
+                    "type": "string"
+                },
+                "RegistrationNo": {
+                    "type": "string"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "Storage": {
+                    "type": "string"
+                },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Tag"
+                    }
+                },
+                "Unit": {
+                    "type": "string"
+                },
+                "Variants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Variant"
+                    }
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ProductStore": {
+            "type": "object",
+            "properties": {
+                "ActiveElement": {
+                    "type": "string"
+                },
+                "Avatar": {
+                    "type": "string"
+                },
+                "Barcode": {
+                    "type": "string"
+                },
+                "BasePrice": {
+                    "type": "number"
+                },
+                "Category": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Category"
+                    }
                 },
                 "Code": {
                     "type": "string"
@@ -2035,6 +3070,12 @@ var doc = `{
                 "RoleName": {
                     "type": "string"
                 },
+                "Users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                },
                 "created_at": {
                     "type": "integer"
                 },
@@ -2108,6 +3149,12 @@ var doc = `{
                 "created_at": {
                     "type": "integer"
                 },
+                "drugStores": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DrugStore"
+                    }
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2121,6 +3168,32 @@ var doc = `{
             "properties": {
                 "Name": {
                     "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Voucher": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": "number"
                 },
                 "created_at": {
                     "type": "integer"
@@ -2249,6 +3322,51 @@ var doc = `{
                 }
             }
         },
+        "requests.CategoryRequest": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string",
+                    "example": "name"
+                },
+                "Note": {
+                    "type": "string",
+                    "example": "note"
+                },
+                "Slug": {
+                    "type": "string",
+                    "example": "slug"
+                }
+            }
+        },
+        "requests.ChangeStatusProductsRequest": {
+            "type": "object",
+            "properties": {
+                "ProductsId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "Status": {
+                    "type": "string",
+                    "example": "show/hide/approve/cancel/outofstock"
+                }
+            }
+        },
+        "requests.ConnectiveDrugStoreRequest": {
+            "type": "object",
+            "properties": {
+                "ChildStoreId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "ParentStoreId": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
         "requests.DrugStoreRequest": {
             "type": "object",
             "required": [
@@ -2287,7 +3405,7 @@ var doc = `{
                 },
                 "Type": {
                     "type": "string",
-                    "example": "drugstore"
+                    "example": "drugstores"
                 }
             }
         },
@@ -2407,6 +3525,12 @@ var doc = `{
                     "type": "number",
                     "example": 1
                 },
+                "Categories": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "Code": {
                     "type": "string",
                     "example": "MD01"
@@ -2467,9 +3591,21 @@ var doc = `{
                     "type": "string",
                     "example": "example"
                 },
+                "Tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
                 "Unit": {
                     "type": "string",
                     "example": "example"
+                },
+                "Variants": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -2487,48 +3623,14 @@ var doc = `{
         },
         "requests.RegisterRequest": {
             "type": "object",
-            "required": [
-                "IsAdmin",
-                "Name",
-                "Type",
-                "email",
-                "password",
-                "username"
-            ],
             "properties": {
+                "AccountRequest": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.AccountRequest"
+                },
                 "Drugstore": {
                     "type": "object",
                     "$ref": "#/definitions/requests.DrugStoreRequest"
-                },
-                "IsAdmin": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "Name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "Roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "Type": {
-                    "type": "string",
-                    "example": "staff/user/supplier/manufacturer"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "john.doe@gmail.com"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "123qweA@"
-                },
-                "username": {
-                    "type": "string",
-                    "example": "JohnDoe"
                 }
             }
         },
@@ -2647,6 +3749,31 @@ var doc = `{
         "requests.SearchAreaRequest": {
             "type": "object",
             "properties": {
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "sort": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SearchCategoryRequest": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string",
+                    "example": "name"
+                },
+                "Slug": {
+                    "type": "string",
+                    "example": "slug"
+                },
                 "limit": {
                     "type": "integer",
                     "example": 10
@@ -2828,6 +3955,20 @@ var doc = `{
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SetCostProductsOfArea": {
+            "type": "object",
+            "properties": {
+                "Cost": {
+                    "type": "number"
+                },
+                "ProductsId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },

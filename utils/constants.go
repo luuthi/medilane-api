@@ -1,18 +1,27 @@
 package utils
 
 const (
-	TblAccount    = "user"
-	TblRole       = "role"
-	TblPermission = "permission"
-	TblUserRole       = "role_user"
-	TblRolePermission = "role_permissions"
-	TblArea       = "area"
-	TblAddress    = "address"
-	TblAreaCost       = "area_cost"
-	TblDrugstore = "drug_store"
+	TblAccount               = "user"
+	TblRole                  = "role"
+	TblPermission            = "permission"
+	TblUserRole              = "role_user"
+	TblRolePermission        = "role_permissions"
+	TblArea                  = "area"
+	TblAddress               = "address"
+	TblAreaCost              = "area_cost"
+	TblDrugstore             = "drug_store"
 	TblDrugstoreUser         = "drug_store_user"
 	TblDrugstoreRelationship = "drug_store_relationship"
+)
 
+type AccountType string
+
+const (
+	SUPER_ADMIN  AccountType = "super_admin"
+	STAFF                    = "staff"
+	USER                     = "user"
+	SUPPLIER                 = "supplier"
+	MANUFACTURER             = "manufacturer"
 )
 
 type UserDrugStoreRelationShip int

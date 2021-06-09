@@ -40,7 +40,7 @@ type DrugStoreRequest struct {
 func (rr DrugStoreRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.StoreName, validation.Required),
-		validation.Field(&rr.Type, validation.In(drugstores.DRUGSTORES)),
+		validation.Field(&rr.Type, validation.In(string(drugstores.DRUGSTORES), string(drugstores.DRUGSTORE))),
 	)
 }
 
@@ -63,7 +63,7 @@ func (rr EditDrugStoreRequest) Validate() error {
 
 type ConnectiveDrugStoreRequest struct {
 	ParentStoreId uint `json:"ParentStoreId" example:"1"`
-	ChildStoreId uint `json:"ChildStoreId" example:"1"`
+	ChildStoreId  uint `json:"ChildStoreId" example:"1"`
 }
 
 func (rr ConnectiveDrugStoreRequest) Validate() error {

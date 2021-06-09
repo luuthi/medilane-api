@@ -35,10 +35,10 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 	AccountRepository.DB.Where("id = ?", id).Find(&user)
 }
 
-func (AccountRepository *AccountRepository) GetDrugStoreByUSer(store *models.DrugStore, userName string) {
+func (AccountRepository *AccountRepository) GetDrugStoreByUSer(store *models.DrugStore, userID uint) {
 	AccountRepository.DB.Table(utils.TblDrugstore).Select("drug_store.* ").
 		Joins(" JOIN drug_store_user du ON du.drug_store_id = drug_store.id ").
-		Where(fmt.Sprintf("du.user_username = \"%s\"", userName)).Find(&store)
+		Where(fmt.Sprintf("du.user_id = \"%v\"", userID)).Find(&store)
 }
 
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests2.SearchAccountRequest) {

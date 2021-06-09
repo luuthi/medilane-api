@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	user2 "medilane-api/packages/accounts/services/account"
@@ -41,7 +42,7 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 	}
 
 	if err := accRequest.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, "Required fields are empty or not valid")
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("request data not valid: %v", err.Error()))
 	}
 
 	existUser := models.User{}
