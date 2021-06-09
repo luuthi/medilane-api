@@ -3,10 +3,7 @@ package medicine
 import (
 	builders2 "medilane-api/packages/medicines/builders"
 	requests2 "medilane-api/requests"
-)
-
-const (
-	TblTag = "tag"
+	"medilane-api/utils"
 )
 
 func (tagService *Service) CreateTag(request *requests2.TagRequest) error {
@@ -23,12 +20,12 @@ func (tagService *Service) EditTag(request *requests2.TagRequest, id uint) error
 		SetName(request.Name).
 		SetSlug(request.Slug).
 		Build()
-	return tagService.DB.Table(TblTag).Save(&tag).Error
+	return tagService.DB.Table(utils.TblTag).Save(&tag).Error
 }
 
 func (tagService *Service) DeleteTag(id uint) error {
 	tag := builders2.NewTagBuilder().
 		SetID(id).
 		Build()
-	return tagService.DB.Table(TblTag).Delete(&tag).Error
+	return tagService.DB.Table(utils.TblTag).Delete(&tag).Error
 }

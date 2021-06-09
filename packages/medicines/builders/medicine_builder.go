@@ -177,7 +177,7 @@ func (productBuilder *ProductBuilder) SetTags(ids []uint) (r *ProductBuilder) {
 }
 
 func (productBuilder *ProductBuilder) Build() models2.Product {
-	medicine := models2.Product{
+	product := models2.Product{
 		Code:                   productBuilder.Code,
 		Name:                   productBuilder.Name,
 		RegistrationNo:         productBuilder.RegistrationNo,
@@ -202,5 +202,5 @@ func (productBuilder *ProductBuilder) Build() models2.Product {
 		Tags:                   productBuilder.Tags,
 	}
 
-	return medicine
+	return product
 }
