@@ -12,7 +12,7 @@ import (
 type ProductsRepositoryQ interface {
 	GetProductByCode(Product *models2.Product, Code string)
 	GetProductById(Product *models2.Product, id int16)
-	GetProducts(medicine []*models2.Product, filter requests2.SearchProductRequest)
+	GetProducts(product []*models2.Product, filter requests2.SearchProductRequest)
 }
 
 type ProductRepository struct {
@@ -23,15 +23,15 @@ func NewProductRepository(db *gorm.DB) *ProductRepository {
 	return &ProductRepository{DB: db}
 }
 
-func (medicineRepository *ProductRepository) GetProductByCode(medicine *models2.Product, Code string) {
-	medicineRepository.DB.Where("Code = ?", Code).Find(medicine)
+func (productRepository *ProductRepository) GetProductByCode(product *models2.Product, Code string) {
+	productRepository.DB.Where("Code = ?", Code).Find(product)
 }
 
-func (medicineRepository *ProductRepository) GetProductById(medicine *models2.Product, id uint) {
-	medicineRepository.DB.Where("id = ?", id).Find(medicine)
+func (productRepository *ProductRepository) GetProductById(product *models2.Product, id uint) {
+	productRepository.DB.Where("id = ?", id).Find(product)
 }
 
-func (medicineRepository *ProductRepository) GetProducts(medicine *[]models2.Product, filter *requests2.SearchProductRequest) {
+func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, filter *requests2.SearchProductRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -63,9 +63,9 @@ func (medicineRepository *ProductRepository) GetProducts(medicine *[]models2.Pro
 		filter.Sort.SortDirection = "desc"
 	}
 
-	medicineRepository.DB.Where(strings.Join(spec, " AND "), values...).
+	productRepository.DB.Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&medicine)
+		Find(&product)
 }

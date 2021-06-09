@@ -25,16 +25,37 @@ definitions:
         type: number
       Product:
         $ref: '#/definitions/models.Product'
-        type: object
       ProductID:
         type: integer
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
-        type: object
       VariantID:
         type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Category:
+    properties:
+      Image:
+        type: string
+      Name:
+        type: string
+      Products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      ProductsStore:
+        items:
+          $ref: '#/definitions/models.ProductStore'
+        type: array
+      Slug:
+        type: string
       created_at:
         type: integer
       id:
@@ -76,6 +97,75 @@ definitions:
         type: string
       BasePrice:
         type: number
+      Category:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      Code:
+        type: string
+      Content:
+        type: string
+      Description:
+        type: string
+      Direction:
+        type: string
+      DoNotUse:
+        type: string
+      DrugInteractions:
+        type: string
+      GlobalManufacturerName:
+        type: string
+      Images:
+        items:
+          $ref: '#/definitions/models.Image'
+        type: array
+      IndicationsOfTheDrug:
+        type: string
+      Manufacturer:
+        type: string
+      Name:
+        type: string
+      Overdose:
+        type: string
+      PackagingSize:
+        type: string
+      RegistrationNo:
+        type: string
+      Status:
+        type: string
+      Storage:
+        type: string
+      Tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
+      Unit:
+        type: string
+      Variants:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.ProductStore:
+    properties:
+      ActiveElement:
+        type: string
+      Avatar:
+        type: string
+      Barcode:
+        type: string
+      BasePrice:
+        type: number
+      Category:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
       Code:
         type: string
       Content:
@@ -133,6 +223,10 @@ definitions:
         type: string
       RoleName:
         type: string
+      Users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
       created_at:
         type: integer
       id:
@@ -284,11 +378,41 @@ definitions:
     required:
     - Name
     type: object
+  requests.CategoryRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      Note:
+        example: note
+        type: string
+      Slug:
+        example: slug
+        type: string
+    type: object
+  requests.ChangeStatusProductsRequest:
+    properties:
+      ProductsId:
+        items:
+          type: integer
+        type: array
+      Status:
+        example: show/hide/approve/cancel/outofstock
+        type: string
+    type: object
+  requests.ConnectiveDrugStoreRequest:
+    properties:
+      ChildStoreId:
+        example: 1
+        type: integer
+      ParentStoreId:
+        example: 1
+        type: integer
+    type: object
   requests.DrugStoreRequest:
     properties:
       Address:
         $ref: '#/definitions/requests.AddressRequest'
-        type: object
       AddressID:
         type: integer
       DrugStoreID:
@@ -306,7 +430,7 @@ definitions:
         example: "01293123233"
         type: string
       Type:
-        example: drugstore
+        example: drugstores
         type: string
     required:
     - LicenseFile
@@ -398,6 +522,10 @@ definitions:
       BasePrice:
         example: 1
         type: number
+      Categories:
+        items:
+          type: integer
+        type: array
       Code:
         example: MD01
         type: string
@@ -443,9 +571,17 @@ definitions:
       Storage:
         example: example
         type: string
+      Tags:
+        items:
+          type: integer
+        type: array
       Unit:
         example: example
         type: string
+      Variants:
+        items:
+          type: integer
+        type: array
     type: object
   requests.RefreshRequest:
     properties:
@@ -457,38 +593,10 @@ definitions:
     type: object
   requests.RegisterRequest:
     properties:
+      AccountRequest:
+        $ref: '#/definitions/requests.AccountRequest'
       Drugstore:
         $ref: '#/definitions/requests.DrugStoreRequest'
-        type: object
-      IsAdmin:
-        example: true
-        type: boolean
-      Name:
-        example: John Doe
-        type: string
-      Roles:
-        items:
-          type: string
-        type: array
-      Type:
-        example: staff/user/supplier/manufacturer
-        type: string
-      email:
-        example: john.doe@gmail.com
-        type: string
-      password:
-        example: 123qweA@
-        type: string
-      username:
-        example: JohnDoe
-        type: string
-    required:
-    - IsAdmin
-    - Name
-    - Type
-    - email
-    - password
-    - username
     type: object
   requests.RoleRequest:
     properties:
@@ -524,7 +632,6 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
       status:
         example: "true"
         type: string
@@ -569,7 +676,6 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SearchAreaRequest:
     properties:
@@ -581,7 +687,23 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
+    type: object
+  requests.SearchCategoryRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      Slug:
+        example: slug
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
     type: object
   requests.SearchDrugStoreRequest:
     properties:
@@ -617,7 +739,6 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SearchPermissionRequest:
     properties:
@@ -632,7 +753,6 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SearchProductRequest:
     properties:
@@ -656,7 +776,6 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SearchRoleRequest:
     properties:
@@ -671,7 +790,6 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SearchTagRequest:
     properties:
@@ -689,7 +807,6 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SearchVariantRequest:
     properties:
@@ -704,7 +821,6 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
-        type: object
     type: object
   requests.SortOption:
     properties:
@@ -761,7 +877,6 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/models.User'
-        type: object
     type: object
 host: v1.api.medilane.vn
 info:
@@ -769,7 +884,6 @@ info:
     name: medilane team
     url: https://www.medilane.vn/
   description: This is openapi for account api.
-  license: {}
   title: Medilane account api
   version: "1.0"
 paths:
@@ -1130,6 +1244,125 @@ paths:
       summary: Search area in system
       tags:
       - Area Management
+  /category:
+    post:
+      consumes:
+      - application/json
+      description: Perform create Category
+      operationId: create-category
+      parameters:
+      - description: Filter Category
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create category in system
+      tags:
+      - Category-Management
+  /category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete Category
+      operationId: delete-category
+      parameters:
+      - description: id Category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete category in system
+      tags:
+      - Category-Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit Category
+      operationId: edit-category
+      parameters:
+      - description: body Category
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CategoryRequest'
+      - description: id Category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit category in system
+      tags:
+      - Category-Management
+  /category/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search Category
+      operationId: search-category
+      parameters:
+      - description: Filter Category
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search category in system
+      tags:
+      - Category-Management
   /drugstore:
     post:
       consumes:
@@ -1137,7 +1370,7 @@ paths:
       description: Perform create drugstore
       operationId: create-drugstore
       parameters:
-      - description: Filter role
+      - description: Filter drugstore
         in: body
         name: params
         required: true
@@ -1220,6 +1453,91 @@ paths:
       summary: Edit drugstore in system
       tags:
       - Drugstore Management
+  /drugstore/connective:
+    post:
+      consumes:
+      - application/json
+      description: Perform connective drugstore
+      operationId: connective-drugstore
+      parameters:
+      - description: Filter role
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ConnectiveDrugStoreRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Connective drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/connective/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Perform Get list connective drugstore
+      operationId: get-list-connective-drugstore
+      parameters:
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get list connective drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/connective/type/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Perform Get type connective drugstore
+      operationId: get-type-connective-drugstore
+      parameters:
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get type connective drugstore in system
+      tags:
+      - Drugstore Management
   /drugstore/find:
     post:
       consumes:
@@ -1227,7 +1545,7 @@ paths:
       description: Perform search drugstores
       operationId: search-drugstore
       parameters:
-      - description: User's credentials
+      - description: Drugstore's credentials
         in: body
         name: params
         required: true
@@ -1514,6 +1832,35 @@ paths:
       summary: Search permission in system
       tags:
       - Permission Management
+  /products/status:
+    post:
+      consumes:
+      - application/json
+      description: Perform Change status of list product
+      operationId: change-status-products
+      parameters:
+      - description: body change status products
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ChangeStatusProductsRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Change status of list product in system
+      tags:
+      - Medicine Management
   /refresh:
     post:
       consumes:
@@ -1837,6 +2184,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Create variant in system
+      tags:
+      - Variant-Management
   /variant/{id}:
     delete:
       consumes:
@@ -1863,6 +2212,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete variant in system
+      tags:
+      - Variant-Management
     put:
       consumes:
       - application/json
@@ -1894,6 +2245,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Edit variant in system
+      tags:
+      - Variant-Management
   /variant/find:
     post:
       consumes:
@@ -1921,6 +2274,8 @@ paths:
       security:
       - BearerAuth: []
       summary: Search variant in system
+      tags:
+      - Variant-Management
 securityDefinitions:
   BearerAuth:
     in: header

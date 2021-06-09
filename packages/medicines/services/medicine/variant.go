@@ -3,10 +3,7 @@ package medicine
 import (
 	builders2 "medilane-api/packages/medicines/builders"
 	requests2 "medilane-api/requests"
-)
-
-const (
-	TblVariant = "variant"
+	"medilane-api/utils"
 )
 
 func (variantService *Service) CreateVariant(request *requests2.VariantRequest) error {
@@ -21,12 +18,12 @@ func (variantService *Service) EditVariant(request *requests2.VariantRequest, id
 		SetID(id).
 		SetName(request.Name).
 		Build()
-	return variantService.DB.Table(TblVariant).Save(&variant).Error
+	return variantService.DB.Table(utils.TblVariant).Save(&variant).Error
 }
 
 func (variantService *Service) DeleteVariant(id uint) error {
 	variant := builders2.NewTagBuilder().
 		SetID(id).
 		Build()
-	return variantService.DB.Table(TblVariant).Delete(&variant).Error
+	return variantService.DB.Table(utils.TblVariant).Delete(&variant).Error
 }
