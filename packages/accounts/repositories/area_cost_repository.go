@@ -21,3 +21,7 @@ func (AreaCostRepository *AreaCostRepository) GetAreaCostByID(area *models2.Area
 	AreaCostRepository.DB.Table(utils.TblAreaCost).Where("area_id = ? AND product_id = ?", areaId, productId).First(&area)
 }
 
+func (AreaCostRepository *AreaCostRepository) GetProductsOfArea(areas *[]models2.AreaCost, areaId uint) {
+	AreaCostRepository.DB.Table(utils.TblAreaCost).Where("area_id = ?", areaId).Find(&areas)
+}
+

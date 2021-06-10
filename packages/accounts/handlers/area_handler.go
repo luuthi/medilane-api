@@ -163,8 +163,8 @@ func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
 // @Router /area/cost [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
-	var areaCost requests2.SetCostProductsOfAreaRequest
-	if err := c.Bind(&areaCost); err != nil {
+	var bodyRequest requests2.SetCostProductsOfAreaRequest
+	if err := c.Bind(&bodyRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
@@ -174,25 +174,29 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 
 	var areaInDB models2.Area
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
-	areaRepo.GetAreaByID(&areaInDB, areaCost.AreaId)
+	areaRepo.GetAreaByID(&areaInDB, bodyRequest.AreaId)
 
 	if areaInDB.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't fint area with id: %d", areaCost.AreaId))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't fint area with id: %d", bodyRequest.AreaId))
 	}
 
-	areaService := address.NewAddressService(areaHandler.server.DB)
+	//areaService := address.NewAddressService(areaHandler.server.DB)
 	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
-	for _, v := range areaCost.Products {
-		var areaCostExits models2.AreaCost
-		areaCostRepo.GetAreaCostByID(&areaCostExits, areaCost.AreaId, v.ProductId)
 
-		if areaCostExits.AreaId == 0 {
-			if err := areaService.SetCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost); err != nil {
-			}
-		} else {
-			areaService.UpdateCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost)
-		}
-	}
+	var productsOfArea []models2.AreaCost
+	areaCostRepo.GetProductsOfArea(&productsOfArea, bodyRequest.AreaId)
+
+	//for _, v := range areaCost.Products {
+	//	var areaCostExits models2.AreaCost
+	//	areaCostRepo.GetAreaCostByID(&areaCostExits, areaCost.AreaId, v.ProductId)
+	//
+	//	if areaCostExits.AreaId == 0 {
+	//		if err := areaService.SetCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost); err != nil {
+	//		}
+	//	} else {
+	//		areaService.UpdateCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost)
+	//	}
+	//}
 
 	return responses.MessageResponse(c, http.StatusCreated, "Set cost products of area successfully!")
 }
