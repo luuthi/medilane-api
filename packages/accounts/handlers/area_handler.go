@@ -168,7 +168,7 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	//if err := areaCost.Products.Validate(); err != nil {
+	//if err := bodyRequest.Products.Validate(); err != nil {
 	//	return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	//}
 
@@ -180,23 +180,78 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't fint area with id: %d", bodyRequest.AreaId))
 	}
 
-	//areaService := address.NewAddressService(areaHandler.server.DB)
+	areaService := address.NewAddressService(areaHandler.server.DB)
 	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
 
 	var productsOfArea []models2.AreaCost
 	areaCostRepo.GetProductsOfArea(&productsOfArea, bodyRequest.AreaId)
 
-	//for _, v := range areaCost.Products {
-	//	var areaCostExits models2.AreaCost
-	//	areaCostRepo.GetAreaCostByID(&areaCostExits, areaCost.AreaId, v.ProductId)
-	//
-	//	if areaCostExits.AreaId == 0 {
-	//		if err := areaService.SetCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost); err != nil {
-	//		}
-	//	} else {
-	//		areaService.UpdateCostProductOfArea(areaCost.AreaId, v.ProductId, v.Cost)
-	//	}
-	//}
+	if len(productsOfArea) == 0 {
+		for _, v := range bodyRequest.Products {
+			if err := areaService.SetCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
+			}
+		}
+	} else {
+		var productsOfAreaRequest []models2.AreaCost
+		for _, v := range bodyRequest.Products {
+			productsOfAreaRequest = append(productsOfAreaRequest, models2.AreaCost{
+				AreaId:    bodyRequest.AreaId,
+				ProductId: v.ProductId,
+				Cost:      v.Cost,
+			})
+		}
+		var productsAdd []models2.AreaCost
+		var productsUpdate []models2.AreaCost
+		var productsDelete []models2.AreaCost
 
+		for _, v := range productsOfAreaRequest {
+			if checkStatusOfRecord(productsOfArea, v) == "add" {
+				productsAdd = append(productsAdd, v)
+			} else if checkStatusOfRecord(productsOfArea, v) == "update" {
+				productsUpdate = append(productsUpdate, v)
+			}
+		}
+
+		for _, v := range productsOfArea {
+			if checkDeleteReturn(productsOfAreaRequest, v) {
+				productsDelete = append(productsDelete, v)
+			}
+		}
+
+		for _, v := range productsAdd {
+			if err := areaService.SetCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
+			}
+		}
+
+		for _, v := range productsUpdate {
+			if err := areaService.UpdateCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
+			}
+		}
+
+		for _, v := range productsDelete {
+			if err := areaService.DeleteProductOfArea(bodyRequest.AreaId, v.ProductId); err != nil {
+			}
+		}
+	}
 	return responses.MessageResponse(c, http.StatusCreated, "Set cost products of area successfully!")
+}
+
+func checkStatusOfRecord(arr []models2.AreaCost, record models2.AreaCost) string {
+	for _, v := range arr {
+		if v.ProductId == record.ProductId && v.Cost != record.Cost {
+			return "update"
+		} else if v.ProductId == record.ProductId && v.Cost == record.Cost {
+			return "none"
+		}
+	}
+	return "add"
+}
+
+func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
+	for _, v := range arr {
+		if v.ProductId == record.ProductId {
+			return false
+		}
+	}
+	return true
 }

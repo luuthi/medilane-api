@@ -22,3 +22,11 @@ func (areaCostService *Service) UpdateCostProductOfArea(areaId uint, productId u
 		Build()
 	return areaCostService.DB.Table(utils.TblAreaCost).Updates(&area).Error
 }
+
+func (areaCostService *Service) DeleteProductOfArea(areaId uint, productId uint) error {
+	area := builders.NewAreaCostBuilder().
+		SetProductId(productId).
+		SetAreaId(areaId).
+		Build()
+	return areaCostService.DB.Table(utils.TblAreaCost).Delete(&area).Error
+}
