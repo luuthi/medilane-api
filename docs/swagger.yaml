@@ -1,5 +1,58 @@
 basePath: /api/v1
 definitions:
+  models.Address:
+    properties:
+      Address:
+        type: string
+      Area:
+        $ref: '#/definitions/models.Area'
+        type: object
+      AreaID:
+        type: integer
+      ContactName:
+        type: string
+      Coordinates:
+        type: string
+      Country:
+        type: string
+      District:
+        type: string
+      IsDefault:
+        type: boolean
+      Phone:
+        type: string
+      State:
+        type: string
+      Ward:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Area:
+    properties:
+      Addresses:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      Name:
+        type: string
+      Note:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      updated_at:
+        type: integer
+    type: object
   models.Cart:
     properties:
       UserID:
@@ -25,12 +78,14 @@ definitions:
         type: number
       Product:
         $ref: '#/definitions/models.Product'
+        type: object
       ProductID:
         type: integer
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
+        type: object
       VariantID:
         type: integer
       created_at:
@@ -63,9 +118,219 @@ definitions:
       updated_at:
         type: integer
     type: object
+  models.DrugStore:
+    properties:
+      ApproveBy:
+        $ref: '#/definitions/models.User'
+        type: object
+      ApproveTime:
+        type: integer
+      LicenseFile:
+        type: string
+      Phone:
+        type: string
+      Representative:
+        $ref: '#/definitions/models.User'
+        type: object
+      Staff:
+        $ref: '#/definitions/models.User'
+        type: object
+      Status:
+        type: string
+      StoreName:
+        type: string
+      TaxNumber:
+        type: string
+      Type:
+        type: string
+      address:
+        $ref: '#/definitions/models.Address'
+        type: object
+      addressID:
+        type: integer
+      childStores:
+        items:
+          $ref: '#/definitions/models.DrugStore'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      orders:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+      ordersStore:
+        items:
+          $ref: '#/definitions/models.OrderStore'
+        type: array
+      products:
+        items:
+          $ref: '#/definitions/models.ProductStore'
+        type: array
+      updated_at:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      vouchers:
+        items:
+          $ref: '#/definitions/models.Voucher'
+        type: array
+    type: object
   models.Image:
     properties:
       Url:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Order:
+    properties:
+      Address:
+        $ref: '#/definitions/models.Address'
+        type: object
+      AddressID:
+        type: integer
+      Discount:
+        type: number
+      DrugStoreID:
+        type: integer
+      Note:
+        type: string
+      OrderCode:
+        type: string
+      PaymentMethod:
+        $ref: '#/definitions/models.PaymentMethod'
+        type: object
+      PaymentMethodID:
+        type: integer
+      ShippingFee:
+        type: number
+      Status:
+        type: string
+      SubTotal:
+        type: number
+      Total:
+        type: number
+      UserApprove:
+        $ref: '#/definitions/models.User'
+        type: object
+      UserApproveID:
+        type: integer
+      UserOrder:
+        $ref: '#/definitions/models.User'
+        type: object
+      UserOrderID:
+        type: integer
+      Vat:
+        type: number
+      created_at:
+        type: integer
+      id:
+        type: integer
+      orderDetails:
+        items:
+          $ref: '#/definitions/models.OrderDetail'
+        type: array
+      updated_at:
+        type: integer
+    type: object
+  models.OrderDetail:
+    properties:
+      Cost:
+        type: number
+      Discount:
+        type: number
+      OrderID:
+        type: integer
+      Product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      ProductID:
+        type: integer
+      Quantity:
+        type: integer
+      Variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      VariantID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.OrderStore:
+    properties:
+      Discount:
+        type: number
+      DrugStoreID:
+        type: integer
+      Note:
+        type: string
+      OrderCode:
+        type: string
+      Status:
+        type: string
+      SubTotal:
+        type: number
+      Total:
+        type: number
+      Type:
+        type: string
+      Vat:
+        type: number
+      created_at:
+        type: integer
+      id:
+        type: integer
+      orderStoreDetails:
+        items:
+          $ref: '#/definitions/models.OrderStoreDetail'
+        type: array
+      updated_at:
+        type: integer
+    type: object
+  models.OrderStoreDetail:
+    properties:
+      Cost:
+        type: number
+      Discount:
+        type: number
+      OrderStoreID:
+        type: integer
+      Product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      ProductID:
+        type: integer
+      Quantity:
+        type: integer
+      Variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      VariantID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.PaymentMethod:
+    properties:
+      Name:
+        type: string
+      Note:
         type: string
       created_at:
         type: integer
@@ -275,6 +540,10 @@ definitions:
         type: array
       created_at:
         type: integer
+      drugStores:
+        items:
+          $ref: '#/definitions/models.DrugStore'
+        type: array
       id:
         type: integer
       updated_at:
@@ -284,6 +553,23 @@ definitions:
     properties:
       Name:
         type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Voucher:
+    properties:
+      Name:
+        type: string
+      Note:
+        type: string
+      Type:
+        type: string
+      Value:
+        type: number
       created_at:
         type: integer
       id:
@@ -413,6 +699,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/requests.AddressRequest'
+        type: object
       AddressID:
         type: integer
       DrugStoreID:
@@ -595,8 +882,10 @@ definitions:
     properties:
       AccountRequest:
         $ref: '#/definitions/requests.AccountRequest'
+        type: object
       Drugstore:
         $ref: '#/definitions/requests.DrugStoreRequest'
+        type: object
     type: object
   requests.RoleRequest:
     properties:
@@ -632,6 +921,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       status:
         example: "true"
         type: string
@@ -676,6 +966,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchAreaRequest:
     properties:
@@ -687,6 +978,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchCategoryRequest:
     properties:
@@ -704,6 +996,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchDrugStoreRequest:
     properties:
@@ -739,6 +1032,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchPermissionRequest:
     properties:
@@ -753,6 +1047,7 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchProductRequest:
     properties:
@@ -776,6 +1071,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchRoleRequest:
     properties:
@@ -790,6 +1086,7 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchTagRequest:
     properties:
@@ -807,6 +1104,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchVariantRequest:
     properties:
@@ -821,6 +1119,16 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SetCostProductsOfArea:
+    properties:
+      Cost:
+        type: number
+      ProductsId:
+        items:
+          type: integer
+        type: array
     type: object
   requests.SortOption:
     properties:
@@ -877,6 +1185,7 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/models.User'
+        type: object
     type: object
 host: v1.api.medilane.vn
 info:
@@ -884,6 +1193,7 @@ info:
     name: medilane team
     url: https://www.medilane.vn/
   description: This is openapi for account api.
+  license: {}
   title: Medilane account api
   version: "1.0"
 paths:
@@ -1215,6 +1525,35 @@ paths:
       summary: Edit area in system
       tags:
       - Area Management
+  /area/{id}/cost:
+    post:
+      consumes:
+      - application/json
+      description: Perform set cost products of area
+      operationId: set-cost-products-of-area
+      parameters:
+      - description: set cost products of area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SetCostProductsOfArea'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Set cost products of area in system
+      tags:
+      - Area Management
   /area/find:
     post:
       consumes:
@@ -1453,6 +1792,34 @@ paths:
       summary: Edit drugstore in system
       tags:
       - Drugstore Management
+  /drugstore/{id}/accounts:
+    get:
+      consumes:
+      - application/json
+      description: Perform search account in drugstore
+      operationId: search-account-drugstore
+      parameters:
+      - description: id of drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search account in drugstore in system
+      tags:
+      - Drugstore Management
   /drugstore/connective:
     post:
       consumes:
@@ -1565,6 +1932,28 @@ paths:
       security:
       - BearerAuth: []
       summary: Search drugstores in system
+      tags:
+      - Drugstore Management
+  /drugstore/statistic-new:
+    get:
+      consumes:
+      - application/json
+      description: Perform statistic new drugstore
+      operationId: statistic-new-drugstore
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Statistic new drugstore in system
       tags:
       - Drugstore Management
   /login:

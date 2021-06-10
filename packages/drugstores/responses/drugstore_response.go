@@ -1,6 +1,9 @@
 package responses
 
-import "medilane-api/models"
+import (
+	"medilane-api/models"
+	"time"
+)
 
 type GetRelationshipResponse struct {
 	Data []models.DrugStore `json:"data"`
@@ -10,4 +13,9 @@ func NewGetRelationshipResponse(data []models.DrugStore) *GetRelationshipRespons
 	return &GetRelationshipResponse{
 		Data: data,
 	}
+}
+
+type StatisticNewDrugStore struct {
+	CreatedDate time.Time `json:"created_date"`
+	NumberStore int64     `json:"number_store"`
 }

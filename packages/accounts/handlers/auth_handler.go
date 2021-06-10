@@ -9,6 +9,8 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
+	"medilane-api/utils"
+	"medilane-api/utils/drugstores"
 	"net/http"
 
 	jwtGo "github.com/dgrijalva/jwt-go"
@@ -52,6 +54,17 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 
 	if user.ID == 0 || (bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password)) != nil) {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid credentials")
+	}
+
+	drugStore := models.DrugStore{}
+	AccountRepository.GetDrugStoreByUSer(&drugStore, user.ID)
+
+	if drugStore.ID == 0 && user.Type != string(utils.SUPER_ADMIN) {
+		return responses.ErrorResponse(c, http.StatusForbidden, "User not in any active store")
+	}
+
+	if drugStore.Status != drugstores.ACTIVE && user.Type != string(utils.SUPER_ADMIN) {
+		return responses.ErrorResponse(c, http.StatusForbidden, "Store is not active")
 	}
 
 	tokenServ := tokenService.NewTokenService(authHandler.server.Config)

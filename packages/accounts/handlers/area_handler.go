@@ -149,3 +149,53 @@ func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Area deleted!")
 }
+
+// SetCostProductsOfArea set cost products of area godoc
+// @Summary Set cost products of area in system
+// @Description Perform set cost products of area
+// @ID set-cost-products-of-area
+// @Tags Area Management
+// @Accept json
+// @Produce json
+// @Param params body requests.SetCostProductsOfArea true "set cost products of area"
+// @Success 201 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /area/{id}/cost [post]
+// @Security BearerAuth
+func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id area: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	print(id)
+
+	var areaCost requests2.SetCostProductsOfArea
+	if err := c.Bind(&areaCost); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := areaCost.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	var areaInDB models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	areaRepo.GetAreaByID(&areaInDB, id)
+
+	if areaInDB.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't fint area with id: %d", id))
+	}
+
+	areaService := address.NewAddressService(areaHandler.server.DB)
+
+	for _, v := range areaCost.ProductsId {
+		if err := areaService.SetCostProductOfArea(id, v, areaCost.Cost); err != nil {
+			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when set cost of product with id: %d", v))
+		}
+	}
+
+	return responses.MessageResponse(c, http.StatusCreated, "Set cost products of area successfully!")
+}

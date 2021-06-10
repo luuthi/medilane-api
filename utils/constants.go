@@ -16,6 +16,16 @@ const (
 	TblDrugstoreRelationship = "drug_store_relationship"
 )
 
+type AccountType string
+
+const (
+	SUPER_ADMIN  AccountType = "super_admin"
+	STAFF                    = "staff"
+	USER                     = "user"
+	SUPPLIER                 = "supplier"
+	MANUFACTURER             = "manufacturer"
+)
+
 type UserDrugStoreRelationShip int
 
 const (

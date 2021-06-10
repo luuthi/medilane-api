@@ -22,6 +22,7 @@ var doc = `{
             "name": "medilane team",
             "url": "https://www.medilane.vn/"
         },
+        "license": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -588,6 +589,52 @@ var doc = `{
                 }
             }
         },
+        "/area/{id}/cost": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform set cost products of area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Area Management"
+                ],
+                "summary": "Set cost products of area in system",
+                "operationId": "set-cost-products-of-area",
+                "parameters": [
+                    {
+                        "description": "set cost products of area",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SetCostProductsOfArea"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/category": {
             "post": {
                 "security": [
@@ -1001,6 +1048,41 @@ var doc = `{
                 }
             }
         },
+        "/drugstore/statistic-new": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform statistic new drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Statistic new drugstore in system",
+                "operationId": "statistic-new-drugstore",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/drugstore/{id}": {
             "put": {
                 "security": [
@@ -1085,6 +1167,50 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/drugstore/{id}/accounts": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search account in drugstore",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Drugstore Management"
+                ],
+                "summary": "Search account in drugstore in system",
+                "operationId": "search-account-drugstore",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id of drugstore",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
                         }
                     },
                     "401": {
@@ -2212,6 +2338,86 @@ var doc = `{
         }
     },
     "definitions": {
+        "models.Address": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "type": "string"
+                },
+                "Area": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Area"
+                },
+                "AreaID": {
+                    "type": "integer"
+                },
+                "ContactName": {
+                    "type": "string"
+                },
+                "Coordinates": {
+                    "type": "string"
+                },
+                "Country": {
+                    "type": "string"
+                },
+                "District": {
+                    "type": "string"
+                },
+                "IsDefault": {
+                    "type": "boolean"
+                },
+                "Phone": {
+                    "type": "string"
+                },
+                "State": {
+                    "type": "string"
+                },
+                "Ward": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Area": {
+            "type": "object",
+            "properties": {
+                "Addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Product"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Cart": {
             "type": "object",
             "properties": {
@@ -2248,6 +2454,7 @@ var doc = `{
                     "type": "number"
                 },
                 "Product": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -2257,6 +2464,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "Variant": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -2308,10 +2516,322 @@ var doc = `{
                 }
             }
         },
+        "models.DrugStore": {
+            "type": "object",
+            "properties": {
+                "ApproveBy": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "ApproveTime": {
+                    "type": "integer"
+                },
+                "LicenseFile": {
+                    "type": "string"
+                },
+                "Phone": {
+                    "type": "string"
+                },
+                "Representative": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "Staff": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "StoreName": {
+                    "type": "string"
+                },
+                "TaxNumber": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "address": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Address"
+                },
+                "addressID": {
+                    "type": "integer"
+                },
+                "childStores": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DrugStore"
+                    }
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Order"
+                    }
+                },
+                "ordersStore": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderStore"
+                    }
+                },
+                "products": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProductStore"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                },
+                "vouchers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Voucher"
+                    }
+                }
+            }
+        },
         "models.Image": {
             "type": "object",
             "properties": {
                 "Url": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Order": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Address"
+                },
+                "AddressID": {
+                    "type": "integer"
+                },
+                "Discount": {
+                    "type": "number"
+                },
+                "DrugStoreID": {
+                    "type": "integer"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "OrderCode": {
+                    "type": "string"
+                },
+                "PaymentMethod": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.PaymentMethod"
+                },
+                "PaymentMethodID": {
+                    "type": "integer"
+                },
+                "ShippingFee": {
+                    "type": "number"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "SubTotal": {
+                    "type": "number"
+                },
+                "Total": {
+                    "type": "number"
+                },
+                "UserApprove": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "UserApproveID": {
+                    "type": "integer"
+                },
+                "UserOrder": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "UserOrderID": {
+                    "type": "integer"
+                },
+                "Vat": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orderDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderDetail"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderDetail": {
+            "type": "object",
+            "properties": {
+                "Cost": {
+                    "type": "number"
+                },
+                "Discount": {
+                    "type": "number"
+                },
+                "OrderID": {
+                    "type": "integer"
+                },
+                "Product": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Product"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "Quantity": {
+                    "type": "integer"
+                },
+                "Variant": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Variant"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderStore": {
+            "type": "object",
+            "properties": {
+                "Discount": {
+                    "type": "number"
+                },
+                "DrugStoreID": {
+                    "type": "integer"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "OrderCode": {
+                    "type": "string"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "SubTotal": {
+                    "type": "number"
+                },
+                "Total": {
+                    "type": "number"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Vat": {
+                    "type": "number"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orderStoreDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.OrderStoreDetail"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.OrderStoreDetail": {
+            "type": "object",
+            "properties": {
+                "Cost": {
+                    "type": "number"
+                },
+                "Discount": {
+                    "type": "number"
+                },
+                "OrderStoreID": {
+                    "type": "integer"
+                },
+                "Product": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Product"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "Quantity": {
+                    "type": "integer"
+                },
+                "Variant": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Variant"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.PaymentMethod": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
                     "type": "string"
                 },
                 "created_at": {
@@ -2629,6 +3149,12 @@ var doc = `{
                 "created_at": {
                     "type": "integer"
                 },
+                "drugStores": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.DrugStore"
+                    }
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -2642,6 +3168,32 @@ var doc = `{
             "properties": {
                 "Name": {
                     "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Voucher": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": "number"
                 },
                 "created_at": {
                     "type": "integer"
@@ -2826,6 +3378,7 @@ var doc = `{
             ],
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "AddressID": {
@@ -3072,9 +3625,11 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AccountRequest": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.AccountRequest"
                 },
                 "Drugstore": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.DrugStoreRequest"
                 }
             }
@@ -3125,6 +3680,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "status": {
@@ -3185,6 +3741,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3201,6 +3758,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3225,6 +3783,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3273,6 +3832,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3293,6 +3853,7 @@ var doc = `{
                     "example": "read:user"
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3325,6 +3886,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3345,6 +3907,7 @@ var doc = `{
                     "example": "role_manage"
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3369,6 +3932,7 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -3389,7 +3953,22 @@ var doc = `{
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SetCostProductsOfArea": {
+            "type": "object",
+            "properties": {
+                "Cost": {
+                    "type": "number"
+                },
+                "ProductsId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -3475,6 +4054,7 @@ var doc = `{
                     "type": "string"
                 },
                 "user": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 }
             }

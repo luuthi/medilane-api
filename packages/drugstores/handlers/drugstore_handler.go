@@ -31,7 +31,7 @@ func NewDrugStoreHandler(server *s.Server) *DrugStoreHandler {
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param params body requests2.SearchDrugStoreRequest true "Drugstore's credentials"
+// @Param params body requests.SearchDrugStoreRequest true "Drugstore's credentials"
 // @Success 200 {object} responses.DataSearch
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/find [post]
@@ -58,7 +58,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param params body requests2.DrugStoreRequest true "Filter drugstore"
+// @Param params body requests.DrugStoreRequest true "Filter drugstore"
 // @Success 201 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /drugstore [post]
@@ -88,7 +88,7 @@ func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error 
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param params body requests2.EditDrugStoreRequest true "body drugstore"
+// @Param params body requests.EditDrugStoreRequest true "body drugstore"
 // @Param id path uint true "id drugstore"
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
@@ -159,7 +159,7 @@ func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error 
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param params body requests2.ConnectiveDrugStoreRequest true "Filter role"
+// @Param params body requests.ConnectiveDrugStoreRequest true "Filter role"
 // @Success 201 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/connective [post]
@@ -311,4 +311,66 @@ func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
 	}
 
 	return string(drugstores.NONE), 0
+}
+
+// SearchAccountByDrugStore Search account in drugstore godoc
+// @Summary Search account in drugstore in system
+// @Description Perform search account in drugstore
+// @ID search-account-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id of drugstore"
+// @Success 200 {object} responses.DataSearch
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/{id}/accounts [get]
+// @Security BearerAuth
+func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	idStore := uint(paramUrl)
+
+	drugStoreHandler.server.Logger.Info("search account in store")
+	var accounts []models.User
+
+	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	drugStoreRepo.GetUsersByDrugstore(&accounts, idStore)
+
+	return responses.SearchResponse(c, http.StatusOK, "", accounts)
+}
+
+// StatisticNewStore Statistic new drugstore godoc
+// @Summary Statistic new drugstore in system
+// @Description Perform statistic new drugstore
+// @ID statistic-new-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.DataSearch
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/statistic-new [get]
+// @Security BearerAuth
+func (drugStoreHandler *DrugStoreHandler) StatisticNewStore(c echo.Context) error {
+	var timeFrom, timeTo uint64
+	var err error
+	timeFrom, err = strconv.ParseUint(c.QueryParam("time_from"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	timeTo, err = strconv.ParseUint(c.QueryParam("time_to"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	//idStore := uint(paramUrl)
+
+	drugStoreHandler.server.Logger.Info("search account in store")
+	var drugStore []responses2.StatisticNewDrugStore
+
+	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	drugStoreRepo.StatisticNewDrugStore(&drugStore, timeFrom, timeTo)
+
+	return responses.SearchResponse(c, http.StatusOK, "", drugStore)
 }
