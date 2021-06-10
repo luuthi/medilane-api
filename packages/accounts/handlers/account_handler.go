@@ -9,6 +9,7 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
+	"medilane-api/utils"
 	"net/http"
 	"strconv"
 )
@@ -192,6 +193,9 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	accRepo.GetUserByID(&existedUser, id)
 	if existedUser.Username == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+	}
+	if existedUser.Type != utils.STAFF {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("User isn't staff"))
 	}
 
 	userService := account.NewAccountService(accHandler.server.DB)
