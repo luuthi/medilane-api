@@ -3,6 +3,7 @@ package requests
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+	"medilane-api/utils"
 )
 
 type SearchAccountRequest struct {
@@ -59,6 +60,7 @@ func (rr AccountRequest) Validate() error {
 		validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
 		validation.Field(&rr.FullName, validation.Required),
 		validation.Field(&rr.IsAdmin, validation.Required),
+		validation.Field(&rr.Type, validation.In(string(utils.STAFF), string(utils.USER), string(utils.SUPPLIER), string(utils.MANUFACTURER))),
 	)
 }
 

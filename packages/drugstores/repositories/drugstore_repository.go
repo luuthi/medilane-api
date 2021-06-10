@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"medilane-api/models"
+	"medilane-api/packages/drugstores/responses"
 	requests2 "medilane-api/requests"
+	"medilane-api/utils"
 	"strings"
 )
 
@@ -72,7 +74,7 @@ func (DrugStoreRepository *DrugStoreRepository) GetListChildStoreOfParent(perm *
 	var drugstores []models.DrugStore
 	rows, _ := DrugStoreRepository.DB.Model(&perm).
 		Select("*").
-		Joins("inner join drug_store_relationship " +
+		Joins("inner join drug_store_relationship "+
 			"on drug_store_relationship.child_store_id = drug_store.id").
 		Where("drug_store_relationship.parent_store_id = ?", id).
 		Rows()
@@ -89,7 +91,7 @@ func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(perm *m
 	var drugstores []models.DrugStore
 	rows, _ := DrugStoreRepository.DB.Model(&perm).
 		Select("*").
-		Joins("inner join drug_store_relationship " +
+		Joins("inner join drug_store_relationship "+
 			"on drug_store_relationship.child_store_id = drug_store.id").
 		Where("drug_store_relationship.parent_store_id = ?", parentStoreId).
 		Rows()
@@ -102,4 +104,19 @@ func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(perm *m
 		}
 	}
 	return drugstores
+}
+
+func (DrugStoreRepository *DrugStoreRepository) GetUsersByDrugstore(users *[]models.User, drugStoreID uint) {
+	DrugStoreRepository.DB.Table(utils.TblAccount).Select("user.* ").
+		Preload("Roles").
+		Joins("JOIN drug_store_user du ON du.user_id = user.id ").
+		Where(fmt.Sprintf("du.drug_store_id = \"%v\"", drugStoreID)).Find(&users)
+}
+
+func (DrugStoreRepository *DrugStoreRepository) StatisticNewDrugStore(drugstore *[]responses.StatisticNewDrugStore, timeFrom, timeTo uint64) {
+	DrugStoreRepository.DB.Raw("SELECT DATE(FROM_UNIXTIME((ds.created_at / 1000))) AS created_date , "+
+		" COUNT(*) AS number_store FROM drug_store ds  "+
+		" WHERE ds.created_at > ? AND ds.created_at < ? "+
+		" GROUP BY DATE(FROM_UNIXTIME((ds.created_at / 1000)))"+
+		" ORDER BY created_date ASC", timeFrom, timeTo).Scan(&drugstore)
 }

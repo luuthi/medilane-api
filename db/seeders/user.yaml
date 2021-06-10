@@ -4,7 +4,7 @@ users:
     password: 123qweA@
     full_name: Administrator
     status: true
-    type: staff
+    type: super_admin
     is_admin: true
     roles:
       - author_manage

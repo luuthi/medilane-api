@@ -27,4 +27,6 @@ func ConfigureDrugStoreRoutes(appRoute *echo.Group, server *s.Server) {
 	drugstore.GET("/connective/type/:id", drugStoreHandler.GetTypeConnectiveDrugStore)
 	drugstore.PUT("/:id", drugStoreHandler.EditDrugstore)
 	drugstore.DELETE("/:id", drugStoreHandler.DeleteDrugstore)
+	drugstore.GET("/:id/accounts", drugStoreHandler.SearchAccountByDrugStore)
+	drugstore.GET("/statistic-new", drugStoreHandler.StatisticNewStore)
 }
