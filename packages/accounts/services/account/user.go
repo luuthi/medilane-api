@@ -106,6 +106,15 @@ func (userService *Service) AssignStaffToDrugStore(staffID uint, drugStoreId uin
 	return userService.DB.Table(utils.TblDrugstoreUser).Create(&drugStoreUser).Error
 }
 
+func (userService *Service) UpdateAssignStaffToDrugStore(staffID uint, drugStoreId uint, relationship string) error {
+	drugStoreUser := builders2.NewDrugStoreUserBuilder().
+		SetDrugStoreId(drugStoreId).
+		SetUserId(staffID).
+		SetRelationship(relationship).
+		Build()
+	return userService.DB.Table(utils.TblDrugstoreUser).Updates(&drugStoreUser).Error
+}
+
 func (userService *Service) DeleteDrugStoreAssignForStaff(drugStoreId uint, userId uint) error {
 	user := builders2.NewDrugStoreUserBuilder().
 		SetDrugStoreId(drugStoreId).
