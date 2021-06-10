@@ -378,6 +378,13 @@ definitions:
     required:
     - Name
     type: object
+  requests.AssignStaffRequest:
+    properties:
+      AssignDetail:
+        items:
+          $ref: '#/definitions/requests.StaffRelationship'
+        type: array
+    type: object
   requests.CategoryRequest:
     properties:
       Name:
@@ -407,6 +414,13 @@ definitions:
         type: integer
       ParentStoreId:
         example: 1
+        type: integer
+    type: object
+  requests.CostProductOfArea:
+    properties:
+      Cost:
+        type: number
+      ProductId:
         type: integer
     type: object
   requests.DrugStoreRequest:
@@ -822,11 +836,27 @@ definitions:
       sort:
         $ref: '#/definitions/requests.SortOption'
     type: object
+  requests.SetCostProductsOfAreaRequest:
+    properties:
+      AreaId:
+        type: integer
+      Products:
+        items:
+          $ref: '#/definitions/requests.CostProductOfArea'
+        type: array
+    type: object
   requests.SortOption:
     properties:
       sort_direction:
         type: string
       sort_field:
+        type: string
+    type: object
+  requests.StaffRelationship:
+    properties:
+      DrugStoresId:
+        type: integer
+      Relationship:
         type: string
     type: object
   requests.TagRequest:
@@ -975,6 +1005,40 @@ paths:
       security:
       - BearerAuth: []
       summary: Edit account in system
+      tags:
+      - Account Management
+  /account/{id}/drugstore:
+    post:
+      consumes:
+      - application/json
+      description: Perform assign staff for drugstore
+      operationId: assign-staff-for-drugstore
+      parameters:
+      - description: body account
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AssignStaffRequest'
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: assign staff for drugstore in system
       tags:
       - Account Management
   /account/find:
@@ -1213,6 +1277,35 @@ paths:
       security:
       - BearerAuth: []
       summary: Edit area in system
+      tags:
+      - Area Management
+  /area/cost:
+    post:
+      consumes:
+      - application/json
+      description: Perform set cost products of area
+      operationId: set-cost-products-of-area
+      parameters:
+      - description: set cost products of area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SetCostProductsOfAreaRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Set cost products of area in system
       tags:
       - Area Management
   /area/find:
@@ -1594,96 +1687,6 @@ paths:
       summary: Authenticate a user
       tags:
       - User Actions
-  /medicine:
-    post:
-      consumes:
-      - application/json
-      description: Perform create medicine
-      operationId: create-medicine
-      parameters:
-      - description: Filter medicine
-        in: body
-        name: params
-        required: true
-        schema:
-          $ref: '#/definitions/requests.ProductRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/responses.Data'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/responses.Error'
-      security:
-      - BearerAuth: []
-      summary: Create medicine in system
-      tags:
-      - Medicine Management
-  /medicine/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Perform delete medicine
-      operationId: delete-medicine
-      parameters:
-      - description: id Medicine
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.Data'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/responses.Error'
-      security:
-      - BearerAuth: []
-      summary: Delete medicine in system
-      tags:
-      - Medicine Management
-    put:
-      consumes:
-      - application/json
-      description: Perform edit medicine
-      operationId: edit-medicine
-      parameters:
-      - description: body medicine
-        in: body
-        name: params
-        required: true
-        schema:
-          $ref: '#/definitions/requests.ProductRequest'
-      - description: id Medicine
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.Data'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/responses.Error'
-      security:
-      - BearerAuth: []
-      summary: Edit medicine in system
-      tags:
-      - Medicine Management
   /medicine/find:
     post:
       consumes:
@@ -1832,6 +1835,125 @@ paths:
       summary: Search permission in system
       tags:
       - Permission Management
+  /product:
+    post:
+      consumes:
+      - application/json
+      description: Perform create product
+      operationId: create-product
+      parameters:
+      - description: Filter product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create product in system
+      tags:
+      - Product Management
+  /product/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete product
+      operationId: delete-product
+      parameters:
+      - description: id product
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete product in system
+      tags:
+      - Product Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit product
+      operationId: edit-product
+      parameters:
+      - description: body product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ProductRequest'
+      - description: id product
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit product in system
+      tags:
+      - Product Management
+  /product/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search product
+      operationId: search-product
+      parameters:
+      - description: Filter product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search product in system
+      tags:
+      - Product Management
   /products/status:
     post:
       consumes:

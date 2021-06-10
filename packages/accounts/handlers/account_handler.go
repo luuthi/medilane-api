@@ -196,8 +196,21 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 
 	userService := account.NewAccountService(accHandler.server.DB)
 
+	// delete old record
+	drugStoreUserRepo := repositories2.NewDrugStoreUserRepository(accHandler.server.DB)
+	var drugStoresAssignForUser []models.DrugStoreUser
+	drugStoreUserRepo.GetListDrugStoreAssignToStaff(&drugStoresAssignForUser, id)
+	for _,v := range drugStoresAssignForUser {
+		err := userService.DeleteDrugStoreAssignForStaff(v.DrugStoreID, id)
+		if err != nil {
+		}
+	}
+
+	// update data
 	for _,v := range acc.AssignDetail {
-		userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
+		err := userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
+		if err != nil {
+		}
 	}
 
 	return responses.MessageResponse(c, http.StatusOK, "Assign staff to drugstore successfully!")

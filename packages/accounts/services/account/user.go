@@ -105,3 +105,11 @@ func (userService *Service) AssignStaffToDrugStore(staffID uint, drugStoreId uin
 		Build()
 	return userService.DB.Table(utils.TblDrugstoreUser).Create(&drugStoreUser).Error
 }
+
+func (userService *Service) DeleteDrugStoreAssignForStaff(drugStoreId uint, userId uint) error {
+	user := builders2.NewDrugStoreUserBuilder().
+		SetDrugStoreId(drugStoreId).
+		SetUserId(userId).
+		Build()
+	return userService.DB.Table(utils.TblDrugstoreUser).Delete(&user).Error
+}
