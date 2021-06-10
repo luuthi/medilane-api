@@ -1263,52 +1263,6 @@ var doc = `{
                 }
             }
         },
-        "/medicine": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform create medicine",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Medicine Management"
-                ],
-                "summary": "Create medicine in system",
-                "operationId": "create-medicine",
-                "parameters": [
-                    {
-                        "description": "Filter medicine",
-                        "name": "params",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.ProductRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Data"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/medicine/find": {
             "post": {
                 "security": [
@@ -1344,101 +1298,6 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.DataSearch"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Error"
-                        }
-                    }
-                }
-            }
-        },
-        "/medicine/{id}": {
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform edit medicine",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Medicine Management"
-                ],
-                "summary": "Edit medicine in system",
-                "operationId": "edit-medicine",
-                "parameters": [
-                    {
-                        "description": "body medicine",
-                        "name": "params",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.ProductRequest"
-                        }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "id Medicine",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Data"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Error"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform delete medicine",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Medicine Management"
-                ],
-                "summary": "Delete medicine in system",
-                "operationId": "delete-medicine",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "id Medicine",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Data"
                         }
                     },
                     "401": {
@@ -1630,6 +1489,193 @@ var doc = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/product": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Create product in system",
+                "operationId": "create-product",
+                "parameters": [
+                    {
+                        "description": "Filter product",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Search product in system",
+                "operationId": "search-product",
+                "parameters": [
+                    {
+                        "description": "Filter product",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Edit product in system",
+                "operationId": "edit-product",
+                "parameters": [
+                    {
+                        "description": "body product",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ProductRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id product",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Delete product in system",
+                "operationId": "delete-product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id product",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
