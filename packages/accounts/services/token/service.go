@@ -10,7 +10,9 @@ const ExpireCount = 12
 const ExpireRefreshCount = 168
 
 type JwtCustomClaims struct {
-	Name string `json:"name"`
+	Name    string `json:"name"`
+	IsAdmin bool   `json:"is_admin"`
+	Type    string `json:"type"`
 	jwt.StandardClaims
 }
 
