@@ -8,7 +8,6 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"medilane-api/utils"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -55,19 +54,19 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 
 	userService := user2.NewAccountService(registerHandler.server.DB)
 
-	rs, newDrugStore := userService.CreateDrugstore(&accRequest.DrugStore)
+	rs := userService.RegisterDrugStore(accRequest)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert drugstore")
 	}
 
-	rs1, newUser := userService.CreateUser(&accRequest.AccountRequest)
-	if err := rs1; err != nil {
-		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user")
-	}
-
-	if err := userService.CreateDrugstoreUser(newDrugStore.ID, newUser.ID, utils.Manager.String()); err != nil {
-		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user drugstore")
-	}
+	//rs1, newUser := userService.CreateUser(&accRequest.AccountRequest)
+	//if err := rs1; err != nil {
+	//	return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user")
+	//}
+	//
+	//if err := userService.CreateDrugstoreUser(newDrugStore.ID, newUser.ID, utils.Manager.String()); err != nil {
+	//	return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user drugstore")
+	//}
 
 	return responses.MessageResponse(c, http.StatusCreated, "User successfully created")
 }

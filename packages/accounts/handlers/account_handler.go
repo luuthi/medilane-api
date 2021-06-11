@@ -70,11 +70,12 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	roleService := account.NewAccountService(accHandler.server.DB)
-	rs, _ := roleService.CreateUser(&acc)
+	accService := account.NewAccountService(accHandler.server.DB)
+	rs, _ := accService.CreateUser(&acc)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert account: %v", err.Error()))
 	}
+
 	return responses.MessageResponse(c, http.StatusCreated, "Account created!")
 
 }

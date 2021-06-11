@@ -44,13 +44,14 @@ func (rr EditAccountRequest) Validate() error {
 }
 
 type AccountRequest struct {
-	Email    string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
-	Username string   `json:"username" validate:"required" example:"JohnDoe"`
-	Password string   `json:"password"  validate:"required" example:"123qweA@"`
-	FullName string   `json:"Name" validate:"required" example:"John Doe"`
-	IsAdmin  *bool    `json:"IsAdmin" validate:"required" example:"true" `
-	Type     string   `json:"Type"  validate:"required" example:"staff/user/supplier/manufacturer"`
-	Roles    []string `json:"Roles"`
+	Email       string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
+	Username    string   `json:"username" validate:"required" example:"JohnDoe"`
+	Password    string   `json:"password"  validate:"required" example:"123qweA@"`
+	FullName    string   `json:"Name" validate:"required" example:"John Doe"`
+	IsAdmin     *bool    `json:"IsAdmin" validate:"required" example:"true" `
+	Type        string   `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
+	DrugStoreID *uint    `json:"DrugStoreID"`
+	Roles       []string `json:"Roles"`
 }
 
 func (rr AccountRequest) Validate() error {
