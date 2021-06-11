@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	models2 "medilane-api/models"
 	"medilane-api/utils"
@@ -23,5 +24,12 @@ func (AreaCostRepository *AreaCostRepository) GetAreaCostByID(area *models2.Area
 
 func (AreaCostRepository *AreaCostRepository) GetProductsOfArea(areas *[]models2.AreaCost, areaId uint) {
 	AreaCostRepository.DB.Table(utils.TblAreaCost).Where("area_id = ?", areaId).Find(&areas)
+}
+
+func (AreaCostRepository *AreaCostRepository) GetProductsDetailOfArea(area *models2.Area, areaId uint) {
+	AreaCostRepository.DB.Table(utils.TblArea).Select("area.* ").
+		Preload("Products").
+		Joins("JOIN area_cost du ON du.area_id = area.id ").
+		Where(fmt.Sprintf("area.id = \"%v\"", areaId)).Find(&area)
 }
 

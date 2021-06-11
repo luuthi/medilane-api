@@ -93,6 +93,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.POST("/find", areaHandler.SearchArea)
 	area.POST("", areaHandler.CreateArea)
 	area.POST("/cost", areaHandler.SetCostProductsOfArea)
+	area.GET("/:id/cost", areaHandler.GetProductsOfArea)
 	area.PUT("/:id", areaHandler.EditArea)
 	area.DELETE("/:id", areaHandler.DeleteArea)
 

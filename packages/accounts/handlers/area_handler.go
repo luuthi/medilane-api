@@ -255,3 +255,35 @@ func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
 	}
 	return true
 }
+
+// GetProductsOfArea Get products of area godoc
+// @Summary Get products of area in system
+// @Description Perform get products of area
+// @ID get-products-of-area
+// @Tags Area Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id area"
+// @Success 201 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /area/{id}/cost [get]
+// @Security BearerAuth
+func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id area: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedArea models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	areaRepo.GetAreaByID(&existedArea, id)
+	if existedArea.Name == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found area with ID: %v", string(id)))
+	}
+	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
+	areaCostRepo.GetProductsDetailOfArea(&existedArea, id)
+
+	return responses.SearchResponse(c, http.StatusOK, "", existedArea)
+}
