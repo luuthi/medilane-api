@@ -6,7 +6,7 @@ import (
 	builders2 "medilane-api/packages/accounts/builders"
 	requests2 "medilane-api/requests"
 	"medilane-api/utils"
-	"time"
+	"medilane-api/utils/drugstores"
 )
 
 func (userService *Service) CreateUser(request *requests2.AccountRequest) (error, *models.User) {
@@ -29,23 +29,106 @@ func (userService *Service) CreateUser(request *requests2.AccountRequest) (error
 		SetRoles(request.Roles).
 		Build()
 
-	rs := userService.DB.Create(&user)
-	return rs.Error, &user
+	// begin a transaction
+	tx := userService.DB.Begin()
+
+	rs := tx.Create(&user)
+
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error, nil
+	}
+
+	// if account is type user, check drugStoreId and assign for drugstore
+	ud := builders2.NewUserDrugStoreBuilder().
+		SetUser(user.ID)
+	if request.Type == utils.USER {
+		if request.DrugStoreID != nil {
+			ud.SetDrugStoreId(*request.DrugStoreID).
+				SetRelationship(utils.USER).
+				Build()
+			rs = tx.Table(utils.TblDrugstoreUser).Create(&ud)
+			//rollback if error
+			if rs.Error != nil {
+				tx.Rollback()
+				return rs.Error, nil
+			}
+		}
+	}
+
+	return tx.Commit().Error, &user
 }
-func (userService *Service) CreateDrugstore(request *requests2.DrugStoreRequest) (error, *models.DrugStore) {
+
+func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest) error {
+	drugStoreReq := request.DrugStore
 	store := builders2.NewDrugStoreBuilder().
-		SetStoreName(request.StoreName).
-		SetLicenseFile(request.LicenseFile).
-		SetPhoneNumber(request.PhoneNumber).
-		SetTaxNumber(request.TaxNumber).
-		SetStatus("pending").
-		SetType(request.Type).
-		SetApproveTime(time.Now().Unix() * 1000).
-		SetAddress(&request.Address).
+		SetStoreName(drugStoreReq.StoreName).
+		SetLicenseFile(drugStoreReq.LicenseFile).
+		SetPhoneNumber(drugStoreReq.PhoneNumber).
+		SetTaxNumber(drugStoreReq.TaxNumber).
+		SetStatus(string(drugstores.NEW)).
+		SetType(drugStoreReq.Type).
+		SetApproveTime(0).
+		SetAddress(&drugStoreReq.Address).
 		Build()
 
-	rs := userService.DB.Create(&store)
-	return rs.Error, &store
+	// begin a transaction
+	tx := userService.DB.Begin()
+
+	rs := tx.Table(utils.TblDrugstore).Create(&store)
+
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error
+	}
+
+	// create user
+	userReq := request.AccountRequest
+
+	encryptedPassword, err := bcrypt.GenerateFromPassword(
+		[]byte(userReq.Password),
+		bcrypt.DefaultCost,
+	)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	user := builders2.NewUserBuilder().
+		SetEmail(userReq.Email).
+		SetName(userReq.Username).
+		SetPassword(string(encryptedPassword)).
+		SetFullName(userReq.FullName).
+		SetStatus(false).
+		SetType(userReq.Type).
+		SetIsAdmin(*userReq.IsAdmin).
+		SetRoles(userReq.Roles).
+		Build()
+
+	rs = tx.Table(utils.TblAccount).Create(&user)
+
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error
+	}
+
+	//create relationship user with store
+	ud := builders2.NewUserDrugStoreBuilder().
+		SetUser(user.ID).
+		SetDrugStoreId(store.ID).
+		SetRelationship(utils.USER).
+		Build()
+	rs = tx.Table(utils.TblDrugstoreUser).Create(&ud)
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error
+	}
+
+	return tx.Commit().Error
 }
 
 func (userService *Service) CreateDrugstoreUser(storeID, userId uint, relationship string) error {

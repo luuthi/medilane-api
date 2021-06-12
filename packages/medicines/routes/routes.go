@@ -8,7 +8,7 @@ import (
 	s "medilane-api/server"
 )
 
-func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
+func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// handler
 	productHandler := handlers2.NewProductHandler(server)
@@ -29,9 +29,9 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	product.PUT("/edit/:id", productHandler.EditProduct)
 	product.DELETE("/delete/:id", productHandler.DeleteProduct)
 
-	medicines := appRoute.Group("/products")
-	medicines.Use(middleware.JWTWithConfig(config))
-	medicines.POST("/status", productHandler.ChangeStatusProducts)
+	products := appRoute.Group("/products")
+	products.Use(middleware.JWTWithConfig(config))
+	products.POST("/status", productHandler.ChangeStatusProducts)
 
 	// medicine api
 	category := appRoute.Group("/category")

@@ -1,4 +1,4 @@
-package funcUtils
+package funcHelpers
 
 import "time"
 
