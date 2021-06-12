@@ -65,8 +65,8 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.Use(middleware.JWTWithConfig(config))
 	area.POST("/find", areaHandler.SearchArea, funcHelpers.CheckPermission(server, []string{"read:area"}, false))
 	area.POST("", areaHandler.CreateArea, funcHelpers.CheckPermission(server, []string{"create:area"}, false))
-	area.POST("/:id/cost", areaHandler.SetCostProductsOfArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
-	area.GET("/:id/cost", areaHandler.GetProductsOfArea)
+	area.POST("/cost", areaHandler.SetCostProductsOfArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
+	area.GET("/:id/cost", areaHandler.GetProductsOfArea, funcHelpers.CheckPermission(server, []string{"read:area"}, false))
 	area.PUT("/:id", areaHandler.EditArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
 	area.DELETE("/:id", areaHandler.DeleteArea, funcHelpers.CheckPermission(server, []string{"delete:area"}, false))
 

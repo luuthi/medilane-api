@@ -282,8 +282,10 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	if existedArea.Name == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found area with ID: %v", string(id)))
 	}
-	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
-	areaCostRepo.GetProductsDetailOfArea(&existedArea, id)
 
-	return responses.SearchResponse(c, http.StatusOK, "", existedArea)
+	var productsOfArea []models2.AreaCost
+	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
+	areaCostRepo.GetProductsDetailOfArea(&productsOfArea, id)
+
+	return responses.SearchResponse(c, http.StatusOK, "", productsOfArea)
 }
