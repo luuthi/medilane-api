@@ -64,3 +64,16 @@ func (rr AccountRequest) Validate() error {
 		validation.Field(&rr.Type, validation.In(string(utils.STAFF), string(utils.USER), string(utils.SUPPLIER), string(utils.MANUFACTURER))),
 	)
 }
+
+type StaffRelationship struct {
+	DrugStoreId uint `json:"DrugStoresId"`
+	Relationship string `json:"Relationship"`
+}
+
+type AssignStaffRequest struct {
+	AssignDetail []StaffRelationship `json:"AssignDetail"`
+}
+
+func (rr AssignStaffRequest) Validate() error {
+	return validation.ValidateStruct(&rr)
+}

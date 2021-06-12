@@ -9,6 +9,7 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
+	"medilane-api/utils"
 	"net/http"
 	"strconv"
 )
@@ -156,4 +157,123 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "User deleted!")
+}
+
+// AssignStaffForDrugStore Assign staff for drugstore godoc
+// @Summary assign staff for drugstore in system
+// @Description Perform assign staff for drugstore
+// @ID assign-staff-for-drugstore
+// @Tags Account Management
+// @Accept json
+// @Produce json
+// @Param params body requests.AssignStaffRequest true "body account"
+// @Param id path uint true "id account"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /account/{id}/drugstore [post]
+// @Security BearerAuth
+func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id user: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var requestBody requests2.AssignStaffRequest
+	if err := c.Bind(&requestBody); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := requestBody.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	var existedUser models.User
+	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
+	accRepo.GetUserByID(&existedUser, id)
+	if existedUser.Username == "" {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+	}
+	if existedUser.Type != utils.STAFF {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("User isn't staff"))
+	}
+
+	userService := account.NewAccountService(accHandler.server.DB)
+	drugStoreUserRepo := repositories2.NewDrugStoreUserRepository(accHandler.server.DB)
+
+	var drugStoreUserInDB []models.DrugStoreUser
+	drugStoreUserRepo.GetListDrugStoreAssignToStaff(&drugStoreUserInDB, id)
+
+	if len(drugStoreUserInDB) == 0 {
+		for _,v := range requestBody.AssignDetail {
+			err := userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
+			if err != nil {
+			}
+		}
+	} else {
+		var drugStoreUserRequest []models.DrugStoreUser
+		for _,v := range requestBody.AssignDetail {
+			drugStoreUserRequest = append(drugStoreUserRequest, models.DrugStoreUser{
+				UserID: id,
+				DrugStoreID: v.DrugStoreId,
+				Relationship: v.Relationship,
+			})
+		}
+
+		var drugStoreUserAdd []models.DrugStoreUser
+		var drugStoreUserUpdate []models.DrugStoreUser
+		var drugStoreUserDelete []models.DrugStoreUser
+
+		for _, v := range drugStoreUserRequest {
+			if checkStatusOfRecordAcc(drugStoreUserInDB, v) == "add" {
+				drugStoreUserAdd = append(drugStoreUserAdd, v)
+			} else if checkStatusOfRecordAcc(drugStoreUserInDB, v) == "update" {
+				drugStoreUserUpdate = append(drugStoreUserUpdate, v)
+			}
+		}
+
+		for _, v := range drugStoreUserInDB {
+			if checkDeleteReturnAcc(drugStoreUserRequest, v) {
+				drugStoreUserDelete = append(drugStoreUserDelete, v)
+			}
+		}
+
+		for _,v := range drugStoreUserAdd {
+			if err := userService.AssignStaffToDrugStore(id, v.DrugStoreID, v.Relationship); err != nil {
+			}
+		}
+
+		for _,v := range drugStoreUserUpdate {
+			if err := userService.UpdateAssignStaffToDrugStore(id, v.DrugStoreID, v.Relationship); err != nil {
+			}
+		}
+
+		for _,v := range drugStoreUserDelete {
+			if err := userService.DeleteDrugStoreAssignForStaff(id, v.DrugStoreID); err != nil {
+			}
+		}
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "Assign staff to drugstore successfully!")
+}
+
+func checkStatusOfRecordAcc(arr []models.DrugStoreUser, record models.DrugStoreUser) string {
+	for _, v := range arr {
+		if v.DrugStoreID == record.DrugStoreID && v.Relationship != record.Relationship {
+			return "update"
+		} else if v.DrugStoreID == record.DrugStoreID && v.Relationship == record.Relationship {
+			return "none"
+		}
+	}
+	return "add"
+}
+
+func checkDeleteReturnAcc(arr []models.DrugStoreUser, record models.DrugStoreUser) bool {
+	for _, v := range arr {
+		if v.DrugStoreID == record.DrugStoreID {
+			return false
+		}
+	}
+	return true
 }

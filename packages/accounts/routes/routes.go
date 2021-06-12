@@ -40,6 +40,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount, funcHelpers.CheckPermission(server, []string{"read:user"}, false))
 	acc.POST("", accountHandler.CreateAccount, funcHelpers.CheckPermission(server, []string{"create:user"}, false))
+	acc.POST("/:id/drugstore", accountHandler.AssignStaffForDrugStore)
 	acc.PUT("/:id", accountHandler.EditAccount, funcHelpers.CheckPermission(server, []string{"edit:user"}, false))
 	acc.DELETE("/:id", accountHandler.DeleteAccount, funcHelpers.CheckPermission(server, []string{"delete:user"}, false))
 
@@ -64,7 +65,8 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.Use(middleware.JWTWithConfig(config))
 	area.POST("/find", areaHandler.SearchArea, funcHelpers.CheckPermission(server, []string{"read:area"}, false))
 	area.POST("", areaHandler.CreateArea, funcHelpers.CheckPermission(server, []string{"create:area"}, false))
-	area.POST("/:id/cost", areaHandler.SetCostProductsOfArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
+	area.POST("/cost", areaHandler.SetCostProductsOfArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
+	area.GET("/:id/cost", areaHandler.GetProductsOfArea, funcHelpers.CheckPermission(server, []string{"read:area"}, false))
 	area.PUT("/:id", areaHandler.EditArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
 	area.DELETE("/:id", areaHandler.DeleteArea, funcHelpers.CheckPermission(server, []string{"delete:area"}, false))
 
