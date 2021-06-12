@@ -155,7 +155,7 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Summary Change status of list product in system
 // @Description Perform Change status of list product
 // @ID change-status-products
-// @Tags Medicine Management
+// @Tags Product Management
 // @Accept json
 // @Produce json
 // @Param params body requests.ChangeStatusProductsRequest true "body change status products"
