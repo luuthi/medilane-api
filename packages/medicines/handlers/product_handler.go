@@ -75,9 +75,9 @@ func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 
 	productService := medicine.NewProductService(productHandler.server.DB)
 	if err := productService.CreateProduct(&medi); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert medicine: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert product: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Medicine created!")
+	return responses.MessageResponse(c, http.StatusCreated, "Product created!")
 }
 
 // EditProduct Edit product godoc
@@ -97,7 +97,7 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Medicine: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id product: %v", err.Error()))
 	}
 	id := uint(paramUrl)
 
@@ -119,9 +119,9 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 
 	productService := medicine.NewProductService(productHandler.server.DB)
 	if err := productService.EditProduct(&pro, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update medicine: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update product: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Medicine updated!")
+	return responses.MessageResponse(c, http.StatusOK, "Product updated!")
 }
 
 // DeleteProduct Delete product godoc
@@ -140,15 +140,15 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Medicine: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id product: %v", err.Error()))
 	}
 	id := uint(paramUrl)
 
 	productService := medicine.NewProductService(productHandler.server.DB)
 	if err := productService.DeleteMedicine(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Medicine: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete product: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Medicine deleted!")
+	return responses.MessageResponse(c, http.StatusOK, "Product deleted!")
 }
 
 // ChangeStatusProducts Change status of list product godoc
