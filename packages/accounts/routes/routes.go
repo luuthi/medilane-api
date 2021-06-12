@@ -39,7 +39,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	}
 	acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount, funcHelpers.CheckPermission(server, []string{"read:user"}, false))
-	acc.POST("", accountHandler.CreateAccount, funcHelpers.CheckPermission(server, []string{"`create`:user"}, false))
+	acc.POST("", accountHandler.CreateAccount, funcHelpers.CheckPermission(server, []string{"create:user"}, false))
 	acc.PUT("/:id", accountHandler.EditAccount, funcHelpers.CheckPermission(server, []string{"edit:user"}, false))
 	acc.DELETE("/:id", accountHandler.DeleteAccount, funcHelpers.CheckPermission(server, []string{"delete:user"}, false))
 
