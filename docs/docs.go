@@ -111,8 +111,8 @@ var doc = `{
                             "$ref": "#/definitions/responses.DataSearch"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -1729,6 +1729,425 @@ var doc = `{
                 }
             }
         },
+        "/promotion": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Create promotion in system",
+                "operationId": "create-promotion",
+                "parameters": [
+                    {
+                        "description": "Create promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.PromotionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/promotion/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Search promotion in system",
+                "operationId": "search-promotion",
+                "parameters": [
+                    {
+                        "description": "Filter promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchPromotionRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/promotion/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Edit promotion in system",
+                "operationId": "edit-promotion",
+                "parameters": [
+                    {
+                        "description": "body promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.PromotionRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Delete promotion in system",
+                "operationId": "delete-promotion",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/promotion/{id}/details": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search promotion detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Search promotion detail in system",
+                "operationId": "search-promotion-detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DataSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create multi promotion detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Create multi promotion detail in system",
+                "operationId": "create-promotion",
+                "parameters": [
+                    {
+                        "description": "Create promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.PromotionDetailRequestList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete promotion detail by promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Delete promotion detail by promotion in system",
+                "operationId": "delete-promotion-detail-by-promotion",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/promotion/{id}/details/{d_id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Edit promotion detail in system",
+                "operationId": "edit-promotion-detail",
+                "parameters": [
+                    {
+                        "description": "body promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.PromotionRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion detail",
+                        "name": "d_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete promotion detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Delete promotion detail in system",
+                "operationId": "delete-promotion-detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id promotion detail",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/refresh": {
             "post": {
                 "security": [
@@ -3263,6 +3682,9 @@ var doc = `{
                 "username"
             ],
             "properties": {
+                "DrugStoreID": {
+                    "type": "integer"
+                },
                 "IsAdmin": {
                     "type": "boolean",
                     "example": true
@@ -3279,7 +3701,7 @@ var doc = `{
                 },
                 "Type": {
                     "type": "string",
-                    "example": "staff/user/supplier/manufacturer"
+                    "example": "super_admin/staff/user/supplier/manufacturer"
                 },
                 "email": {
                     "type": "string",
@@ -3655,6 +4077,75 @@ var doc = `{
                 }
             }
         },
+        "requests.PromotionDetailRequest": {
+            "type": "object",
+            "required": [
+                "Condition",
+                "ProductID",
+                "Type",
+                "Value",
+                "VariantID",
+                "percent"
+            ],
+            "properties": {
+                "Condition": {
+                    "type": "string"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "PromotionID": {
+                    "type": "integer"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": "number"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "percent": {
+                    "type": "number"
+                }
+            }
+        },
+        "requests.PromotionDetailRequestList": {
+            "type": "object",
+            "properties": {
+                "PromotionDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.PromotionDetailRequest"
+                    }
+                }
+            }
+        },
+        "requests.PromotionRequest": {
+            "type": "object",
+            "required": [
+                "EndTime",
+                "Name",
+                "StartTime"
+            ],
+            "properties": {
+                "EndTime": {
+                    "type": "integer"
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "Khuyến mại hè"
+                },
+                "Note": {
+                    "type": "string",
+                    "example": "Khuyến mại hè nè"
+                },
+                "StartTime": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.RefreshRequest": {
             "type": "object",
             "required": [
@@ -3922,6 +4413,38 @@ var doc = `{
                 "Status": {
                     "type": "string",
                     "example": "show/hide/approve/cancel/outofstock"
+                },
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "sort": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SearchPromotionRequest": {
+            "type": "object",
+            "properties": {
+                "FromTimeEnd": {
+                    "type": "integer"
+                },
+                "FromTimeStart": {
+                    "type": "integer"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "ToTimeEnd": {
+                    "type": "integer"
+                },
+                "ToTimeStart": {
+                    "type": "integer"
                 },
                 "limit": {
                     "type": "integer",

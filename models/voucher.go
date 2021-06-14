@@ -24,21 +24,24 @@ type VoucherDetail struct {
 type Promotion struct {
 	CommonModelFields
 
-	Name      string `json:"Name" gorm:"type:varchar(200)"`
-	Note      string `json:"Note" gorm:"type:varchar(200)"`
-	StartTime int64  `json:"StartTime" gorm:"type:int(64)"`
-	EndTime   int64  `json:"EndTime" gorm:"type:int(64)"`
+	Name             string             `json:"Name" gorm:"type:varchar(200)"`
+	Note             string             `json:"Note" gorm:"type:varchar(200)"`
+	StartTime        int64              `json:"StartTime" gorm:"type:bigint(64)"`
+	EndTime          int64              `json:"EndTime" gorm:"type:bigint(64)"`
+	PromotionDetails []*PromotionDetail `gorm:"-"`
 }
 
 type PromotionDetail struct {
 	CommonModelFields
 
 	Type        string     `json:"Type" gorm:"type:varchar(200)"`
-	Percent     float64    `json:"Percent" gorm:"type:float(8)"`
+	Percent     float32    `json:"Percent" gorm:"type:float(8)"`
 	Condition   string     `json:"Condition" gorm:"type:varchar(200)"`
-	Value       float64    `json:"Value" gorm:"type:float(8)"`
+	Value       float32    `json:"Value" gorm:"type:float(8)"`
 	PromotionID uint       `json:"PromotionID"`
 	Promotion   *Promotion `json:"Promotion" gorm:"foreignKey:PromotionID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	ProductID   uint       `json:"ProductID"`
 	Product     *Product   `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	VariantID   uint       `json:"VariantID"`
+	Variant     *Variant   `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

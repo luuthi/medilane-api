@@ -4,6 +4,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"medilane-api/models"
 	builders2 "medilane-api/packages/accounts/builders"
+	builders "medilane-api/packages/drugstores/builders"
 	requests2 "medilane-api/requests"
 	"medilane-api/utils"
 	"medilane-api/utils/drugstores"
@@ -62,7 +63,7 @@ func (userService *Service) CreateUser(request *requests2.AccountRequest) (error
 
 func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest) error {
 	drugStoreReq := request.DrugStore
-	store := builders2.NewDrugStoreBuilder().
+	store := builders.NewDrugStoreBuilder().
 		SetStoreName(drugStoreReq.StoreName).
 		SetLicenseFile(drugStoreReq.LicenseFile).
 		SetPhoneNumber(drugStoreReq.PhoneNumber).

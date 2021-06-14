@@ -16,6 +16,8 @@ const (
 	TblAreaCost              = "area_cost"
 	TblDrugstoreRelationship = "drug_store_relationship"
 	TblDrugstoreUser         = "drug_store_user"
+	TblPromotion             = "promotion"
+	TblPromotionDetail       = "promotion_detail"
 )
 
 type AccountType string

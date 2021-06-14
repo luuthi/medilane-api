@@ -6,6 +6,7 @@ import (
 	log2 "github.com/labstack/gommon/log"
 	accRoute "medilane-api/packages/accounts/routes"
 	drugStoreRoute "medilane-api/packages/drugstores/routes"
+	promotionRoute "medilane-api/packages/promotion/routes"
 	s "medilane-api/server"
 	"net/http"
 	"time"
@@ -30,6 +31,8 @@ func ConfigureRoutes(server *s.Server) {
 	accRoute.ConfigureAccountRoutes(appRoute, server)
 	//mediRoute.ConfigureAccountRoutes(appRoute, server)
 	drugStoreRoute.ConfigureDrugStoreRoutes(appRoute, server)
+
+	promotionRoute.ConfigureAccountRoutes(appRoute, server)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {
