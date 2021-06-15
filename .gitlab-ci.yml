@@ -85,23 +85,7 @@ deploy staging:
     - docker
     - gitlab-org-docker
   stage: deploy
-#  before_script:
-#    - apk add --update openssh-client bash
-#    - mkdir -p ~/.ssh
-#    - echo "$STAGING_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-#    - chmod 600 ~/.ssh/id_rsa
-#    - eval "$(ssh-agent -s)"
-#    - ssh-add ~/.ssh/id_rsa
-#    - ssh-keyscan -H $STAGING_IP >> ~/.ssh/known_hosts
-#    - GOOS=linux GOARCH=386 go build -o entry  migrations/entry.go
+  before_script:
+    - echo "OK"
   script:
-#    - ssh dev@${STAGING_IP} "mkdir -p ${PROJECT_PATH}"
-#    - scp -r ${STAGING_ENV} dev@${STAGING_IP}:${PROJECT_PATH}/.env
-#    - scp -r ${MIGRATION_ENV} dev@${STAGING_IP}:${PROJECT_PATH}/.env.migration
-#    - scp -r ./deploy/docker-compose.yml dev@${STAGING_IP}:${PROJECT_PATH}/docker-compose.yml
-#    - ssh dev@$STAGING_IP "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
-#      docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:staging;
-#      docker-compose -f ${PROJECT_PATH}/docker-compose.yml up -d"
-#    - scp -r ./entry dev@${STAGING_IP}:${PROJECT_PATH}/entry
-#    - ssh dev@${STAGING_IP} "${PROJECT_PATH}/entry --env-path=${PROJECT_PATH} --env-file=.env.migration --verbose"
     - echo "OK"
