@@ -25,6 +25,9 @@ lint:
   script:
     - golangci-lint run -v
   allow_failure: true
+  only:
+    refs:
+      - develop
 
 migrations:
   image: golang:1.13.3-alpine3.10
@@ -42,6 +45,9 @@ migrations:
     - go get -v ./...
 #    - go run migrations/entry.go --env-path=./ --verbose
 #    - go run migrations/entry.go --rollback --env-path=./ --verbose
+  only:
+    refs:
+      - develop
 
 test:
   image: golang:1.13.3-alpine3.10
@@ -58,6 +64,9 @@ test:
   script:
     - go get -v ./...
 #    - go test -v ./...
+  only:
+    refs:
+      - develop
 
 build:
   tags:
@@ -69,15 +78,15 @@ build:
     - docker --version
     - docker build
       -t $CI_REGISTRY_IMAGE:staging .
+  only:
+    refs:
+      - develop
 
 deploy staging:
   image: golang:1.13.3-alpine3.10
   environment:
     name: staging
   when: manual
-  only:
-    refs:
-      - develop
   tags:
     - dind
     - docker
@@ -86,3 +95,6 @@ deploy staging:
     - echo "OK"
   script:
     - echo "OK"
+  only:
+    refs:
+      - develop
