@@ -33,7 +33,6 @@ migrations:
   tags:
     - dind
     - docker
-    - gitlab-org-docker
   stage: migrations
   before_script:
     - cp .env.testing.gitlab-ci .env
@@ -41,8 +40,8 @@ migrations:
     - $GOPATH/bin/swag init -g cmd/main.go
   script:
     - go get -v ./...
-    - go run migrations/entry.go --env-path=./ --verbose
-    - go run migrations/entry.go --rollback --env-path=./ --verbose
+#    - go run migrations/entry.go --env-path=./ --verbose
+#    - go run migrations/entry.go --rollback --env-path=./ --verbose
 
 test:
   image: golang:1.13.3-alpine3.10
@@ -51,7 +50,6 @@ test:
   tags:
     - dind
     - docker
-    - gitlab-org-docker
   stage: test
   before_script:
     - cp .env.testing.gitlab-ci .env.testing
@@ -59,13 +57,12 @@ test:
     - $GOPATH/bin/swag init -g cmd/main.go
   script:
     - go get -v ./...
-    - go test -v ./...
+#    - go test -v ./...
 
 build:
   tags:
     - dind
     - docker
-    - gitlab-org-docker
   stage: build
   script:
     - cp deploy/Dockerfile .
@@ -83,7 +80,6 @@ deploy staging:
   tags:
     - dind
     - docker
-    - gitlab-org-docker
   stage: deploy
   before_script:
     - echo "OK"
