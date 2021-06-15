@@ -8,7 +8,7 @@ variables:
   MYSQL_ROOT_PASSWORD: db_password
 
 services:
-  - docker:dind
+  - gitlab-docker-shared-runners-manager-01
 
 stages:
   - migrations
@@ -33,6 +33,7 @@ migrations:
   tags:
     - dind
     - docker
+    - gitlab-org-docker
   stage: migrations
   before_script:
     - cp .env.testing.gitlab-ci .env
@@ -50,6 +51,7 @@ test:
   tags:
     - dind
     - docker
+    - gitlab-org-docker
   stage: test
   before_script:
     - cp .env.testing.gitlab-ci .env.testing
@@ -63,6 +65,7 @@ build:
   tags:
     - dind
     - docker
+    - gitlab-org-docker
   stage: build
   script:
     - cp deploy/Dockerfile .
@@ -80,6 +83,7 @@ deploy staging:
   tags:
     - dind
     - docker
+    - gitlab-org-docker
   stage: deploy
 #  before_script:
 #    - apk add --update openssh-client bash
