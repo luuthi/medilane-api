@@ -66,6 +66,7 @@ build:
   stage: build
   script:
     - cp deploy/Dockerfile .
+    - docker --version
     - docker build
       -t $CI_REGISTRY_IMAGE:staging .
 
