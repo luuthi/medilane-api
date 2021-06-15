@@ -54,6 +54,14 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		values = append(values, fmt.Sprintf("%%%v%%", *filter.ToTimeEnd))
 	}
 
+	if filter.Sort.SortField == "" {
+		filter.Sort.SortField = "created_at"
+	}
+
+	if filter.Sort.SortDirection == "" {
+		filter.Sort.SortDirection = "desc"
+	}
+
 	promotionRepo.DB.Table(utils.TblPromotion).Where(strings.Join(spec, " AND "), values...).
 		Preload("PromotionDetails").
 		Limit(filter.Limit).
