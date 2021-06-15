@@ -57,8 +57,11 @@ func (rr SearchProductRequest) Validate() error {
 }
 
 func (rr ProductRequest) Validate() error {
-	return validation.ValidateStruct(&rr) //validation.Field(&rr.Limit, validation.Min(0)),
-	//validation.Field(&rr.Offset, validation.Min(0)),
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Name, validation.Required),
+		validation.Field(&rr.Status, validation.In(string(utils.SHOW), utils.HIDE, utils.APPROVE, utils.CANCEL, utils.OUTOFSTOCK)),
+		validation.Field(&rr.Variants, validation.Required),
+	)
 
 }
 

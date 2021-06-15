@@ -38,7 +38,7 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 
 	if filter.Name != "" {
 		spec = append(spec, "Name LIKE ?")
-		values = append(values, filter.Name)
+		values = append(values, fmt.Sprintf("%%%s%%", filter.Name))
 	}
 
 	if filter.Code != "" {
