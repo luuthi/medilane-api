@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
 	"medilane-api/config"
-	"medilane-api/db/seeders"
 	"medilane-api/models"
 )
 
@@ -75,12 +74,12 @@ func Init(cfg *config.Config) *gorm.DB {
 		_ = db.AutoMigrate(&models.Promotion{})
 	}
 
-	if cfg.MIGRATION.Migrate {
-		userSeeder := seeders.NewUserSeeder(db, cfg)
-		userSeeder.SetPermissions()
-		userSeeder.SetRoles()
-		userSeeder.SetUsers()
-	}
+	//if cfg.MIGRATION.Migrate {
+	//	userSeeder := seeders.NewUserSeeder(db, cfg)
+	//	userSeeder.SetPermissions()
+	//	userSeeder.SetRoles()
+	//	userSeeder.SetUsers()
+	//}
 
 	return db
 }

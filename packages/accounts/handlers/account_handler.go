@@ -31,7 +31,7 @@ func NewAccountHandler(server *s.Server) *AccountHandler {
 // @Produce json
 // @Param params body requests.SearchAccountRequest true "Filter account"
 // @Success 200 {object} responses.DataSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /account/find [post]
 // @Security BearerAuth
 func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
