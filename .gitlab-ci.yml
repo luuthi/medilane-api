@@ -8,7 +8,7 @@ variables:
   MYSQL_ROOT_PASSWORD: db_password
 
 services:
-  - gitlab-docker-shared-runners-manager-01
+  - docker:dind
 
 stages:
   - migrations
