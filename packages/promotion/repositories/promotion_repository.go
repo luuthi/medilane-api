@@ -63,7 +63,7 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 	}
 
 	promotionRepo.DB.Table(utils.TblPromotion).Where(strings.Join(spec, " AND "), values...).
-		Preload("PromotionDetails").
+		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
@@ -71,7 +71,7 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 }
 
 func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promotion, id uint) {
-	promotionRepo.DB.Table(utils.TblPromotion).Preload("PromotionDetails").First(&promotion, id)
+	promotionRepo.DB.Table(utils.TblPromotion).Preload(clause.Associations).First(&promotion, id)
 }
 
 func (promotionRepo *PromotionRepository) GetPromotionDetail(promotion *models.PromotionDetail, id uint) {

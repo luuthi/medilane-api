@@ -5,13 +5,19 @@ HTTP:
   PORT: 8001
   EXPOSE_PORT: 8001
 
+MIGRATION:
+  MIGRATE_DB: false
+  INIT_PERMISSION_PATH: D:\Workspace\medilane\medilane-api\db\seeders\permission.yaml
+  INIT_ROLE_PATH: D:\Workspace\medilane\medilane-api\db\seeders\role.yaml
+  INIT_USER_PATH: D:\Workspace\medilane\medilane-api\db\seeders\user.yaml
+
 #Parameters for getting the access to the database
 DATABASE:
-  DB_USER: root
-  DB_PASSWORD: 123457
+  DB_USER: medilane
+  DB_PASSWORD: 123qweA@
   DB_DRIVER: mysql
   DB_NAME: medilane
-  DB_HOST: 127.0.0.1
+  DB_HOST: 66.42.56.107 # 192.168.67.128 #
   DB_PORT: 3306
 
 #Secret keys for the access token and refresh token signing

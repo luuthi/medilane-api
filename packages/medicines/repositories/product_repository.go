@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"gorm.io/gorm/clause"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
@@ -64,6 +65,7 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	}
 
 	productRepository.DB.Where(strings.Join(spec, " AND "), values...).
+		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

@@ -35,6 +35,14 @@ func (variantRepository *VariantRepository) GetVariants(category *[]models2.Vari
 		values = append(values, filter.Name)
 	}
 
+	if filter.Sort.SortField == "" {
+		filter.Sort.SortField = "created_at"
+	}
+
+	if filter.Sort.SortDirection == "" {
+		filter.Sort.SortDirection = "desc"
+	}
+
 	variantRepository.DB.Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).

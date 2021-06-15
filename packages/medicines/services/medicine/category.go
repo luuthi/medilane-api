@@ -6,26 +6,26 @@ import (
 	"medilane-api/utils"
 )
 
-func (categoryService *Service) CreateCategory(request *requests2.CategoryRequest) error {
+func (productService *Service) CreateCategory(request *requests2.CategoryRequest) error {
 	category := builders2.NewCategoryBuilder().SetSlug(request.Slug).
 		SetName(request.Name).
 		Build()
 
-	return categoryService.DB.Create(&category).Error
+	return productService.DB.Create(&category).Error
 }
 
-func (categoryService *Service) EditCategory(request *requests2.CategoryRequest, id uint) error {
+func (productService *Service) EditCategory(request *requests2.CategoryRequest, id uint) error {
 	category := builders2.NewCategoryBuilder().
 		SetID(id).
 		SetName(request.Name).
 		SetSlug(request.Slug).
 		Build()
-	return categoryService.DB.Table(utils.TblCategory).Save(&category).Error
+	return productService.DB.Table(utils.TblCategory).Save(&category).Error
 }
 
-func (categoryService *Service) DeleteCategory(id uint) error {
+func (productService *Service) DeleteCategory(id uint) error {
 	category := builders2.NewCategoryBuilder().
 		SetID(id).
 		Build()
-	return categoryService.DB.Table(utils.TblCategory).Delete(&category).Error
+	return productService.DB.Table(utils.TblCategory).Delete(&category).Error
 }

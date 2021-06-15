@@ -45,6 +45,14 @@ func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.
 		values = append(values, filter.Slug)
 	}
 
+	if filter.Sort.SortField == "" {
+		filter.Sort.SortField = "created_at"
+	}
+
+	if filter.Sort.SortDirection == "" {
+		filter.Sort.SortDirection = "desc"
+	}
+
 	categoryRepository.DB.Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
