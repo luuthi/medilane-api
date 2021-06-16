@@ -25,6 +25,9 @@ lint:
   script:
     - golangci-lint run -v
   allow_failure: true
+  only:
+    refs:
+      - develop
 
 migrations:
   image: golang:1.13.3-alpine3.10
@@ -35,14 +38,16 @@ migrations:
     - docker
   stage: migrations
   before_script:
-    - apk add --no-cache --update git build-base openssh-client
     - cp .env.testing.gitlab-ci .env
     - go get -v github.com/swaggo/swag/cmd/swag
     - $GOPATH/bin/swag init -g cmd/main.go
   script:
     - go get -v ./...
-    - go run migrations/entry.go --env-path=./ --verbose
-    - go run migrations/entry.go --rollback --env-path=./ --verbose
+#    - go run migrations/entry.go --env-path=./ --verbose
+#    - go run migrations/entry.go --rollback --env-path=./ --verbose
+  only:
+    refs:
+      - develop
 
 test:
   image: golang:1.13.3-alpine3.10
@@ -53,57 +58,43 @@ test:
     - docker
   stage: test
   before_script:
-    - apk add --no-cache --update git build-base openssh-client
     - cp .env.testing.gitlab-ci .env.testing
     - go get -v github.com/swaggo/swag/cmd/swag
     - $GOPATH/bin/swag init -g cmd/main.go
   script:
     - go get -v ./...
-    - go test -v ./...
+#    - go test -v ./...
+  only:
+    refs:
+      - develop
 
 build:
   tags:
     - dind
     - docker
   stage: build
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - cp deploy/Dockerfile .
+    - docker --version
     - docker build
-      --build-arg WEB_PRIVATE_KEY="$WEB_PRIVATE_KEY"
-      --build-arg GIT_DOMAIN=$CI_SERVER_HOST
       -t $CI_REGISTRY_IMAGE:staging .
-    - docker push $CI_REGISTRY_IMAGE:staging
+  only:
+    refs:
+      - develop
 
 deploy staging:
   image: golang:1.13.3-alpine3.10
   environment:
     name: staging
   when: manual
-  only:
-    refs:
-      - develop
   tags:
     - dind
     - docker
   stage: deploy
   before_script:
-    - apk add --update openssh-client bash
-    - mkdir -p ~/.ssh
-    - echo "$STAGING_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - eval "$(ssh-agent -s)"
-    - ssh-add ~/.ssh/id_rsa
-    - ssh-keyscan -H $STAGING_IP >> ~/.ssh/known_hosts
-    - GOOS=linux GOARCH=386 go build -o entry  migrations/entry.go
+    - echo "OK"
   script:
-    - ssh dev@${STAGING_IP} "mkdir -p ${PROJECT_PATH}"
-    - scp -r ${STAGING_ENV} dev@${STAGING_IP}:${PROJECT_PATH}/.env
-    - scp -r ${MIGRATION_ENV} dev@${STAGING_IP}:${PROJECT_PATH}/.env.migration
-    - scp -r ./deploy/docker-compose.yml dev@${STAGING_IP}:${PROJECT_PATH}/docker-compose.yml
-    - ssh dev@$STAGING_IP "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
-      docker pull ${CI_REGISTRY}/${CI_PROJECT_PATH}:staging;
-      docker-compose -f ${PROJECT_PATH}/docker-compose.yml up -d"
-    - scp -r ./entry dev@${STAGING_IP}:${PROJECT_PATH}/entry
-    - ssh dev@${STAGING_IP} "${PROJECT_PATH}/entry --env-path=${PROJECT_PATH} --env-file=.env.migration --verbose"
+    - echo "OK"
+  only:
+    refs:
+      - develop

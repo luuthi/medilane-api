@@ -31,7 +31,7 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	//products.Use(middleware.JWTWithConfig(config))
 	products.POST("/status", productHandler.ChangeStatusProducts)
 
-	// medicine api
+	// category api
 	category := appRoute.Group("/category")
 	//category.Use(middleware.JWTWithConfig(config))
 	category.POST("/find", categoryHandler.SearchCategory)
@@ -39,7 +39,7 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	category.PUT("/:id", categoryHandler.EditCategory)
 	category.DELETE("/:id", categoryHandler.DeleteCategory)
 
-	// medicine api
+	// tag api
 	tag := appRoute.Group("/tag")
 	//tag.Use(middleware.JWTWithConfig(config))
 	tag.POST("/find", tagHandler.SearchTag)
