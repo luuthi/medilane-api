@@ -24,6 +24,8 @@ DATABASE:
 AUTH:
   ACCESS_SECRET: m3DiL4ne5ecR3tK3i
   REFRESH_SECRET: m3DiL4ne5ecR3tK3i
+  PRIVATE_KEY_PATH: D:\Workspace\medilane\medilane-api\key\private-key.pem
+  PUBLIC_KEY_PATH: D:\Workspace\medilane\medilane-api\key\public-key.pub
 
 LOGGER:
   FILE_OUT: ./logs/action.log

@@ -2,9 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"medilane-api/funcHelpers"
-	token2 "medilane-api/packages/accounts/services/token"
 	"medilane-api/packages/promotion/handlers"
 	s "medilane-api/server"
 )
@@ -13,14 +11,14 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	promotionHandler := handlers.NewPromotionHandler(server)
 
 	promotion := appRoute.Group("/promotion")
-	config := middleware.JWTConfig{
-		Skipper:       middleware.DefaultSkipper,
-		SigningMethod: middleware.AlgorithmHS256,
-		Claims:        &token2.JwtCustomClaims{},
-		AuthScheme:    "Bearer",
-		SigningKey:    []byte(server.Config.Auth.AccessSecret),
-	}
-	promotion.Use(middleware.JWTWithConfig(config))
+	//config := middleware.JWTConfig{
+	//	Skipper:       middleware.DefaultSkipper,
+	//	SigningMethod: string(jwt.SigningMethodRS256),
+	//	Claims:        &token2.JwtCustomClaims{},
+	//	AuthScheme:    "Bearer",
+	//	SigningKey:    []byte(server.Config.Auth.AccessSecret),
+	//}
+	//promotion.Use(middleware.JWTWithConfig(config))
 
 	promotion.POST("/find", promotionHandler.SearchPromotion, funcHelpers.CheckPermission(server, []string{"read:promotion"}, false))
 	promotion.POST("", promotionHandler.CreatePromotion, funcHelpers.CheckPermission(server, []string{"create:promotion"}, false))

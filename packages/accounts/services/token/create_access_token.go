@@ -1,6 +1,8 @@
 package token
 
 import (
+	"crypto/rsa"
+	"io/ioutil"
 	"medilane-api/models"
 	"time"
 
@@ -17,8 +19,11 @@ func (tokenService *Service) CreateAccessToken(user *models.User) (accessToken s
 			ExpiresAt: exp,
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, err := token.SignedString([]byte(tokenService.config.Auth.AccessSecret))
+	signKeyByte, err := ioutil.ReadFile(tokenService.config.Auth.PrivateKeyPath)
+	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+	var signKey *rsa.PrivateKey
+	signKey, err = jwt.ParseRSAPrivateKeyFromPEM(signKeyByte)
+	t, err := token.SignedString(signKey)
 	if err != nil {
 		return "", 0, err
 	}

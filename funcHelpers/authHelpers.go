@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
+	"io/ioutil"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	token2 "medilane-api/packages/accounts/services/token"
@@ -73,12 +74,21 @@ func ExtractToken(r *http.Request) string {
 
 func VerifyToken(r *http.Request, server *s.Server) (*jwt.Token, error) {
 	tokenString := ExtractToken(r)
+	verifyKeyByte, err := ioutil.ReadFile(server.Config.Auth.PublicKeyPath)
+	if err != nil {
+		return nil, err
+	}
+	verifyKey, err := jwt.ParseRSAPublicKeyFromPEM(verifyKeyByte)
+	if err != nil {
+		return nil, err
+	}
+
 	token, err := jwt.ParseWithClaims(tokenString, &token2.JwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(server.Config.Auth.AccessSecret), nil
+		return verifyKey, nil
 	})
 	if err != nil {
 		return nil, err

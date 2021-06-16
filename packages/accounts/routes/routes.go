@@ -2,10 +2,8 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"medilane-api/funcHelpers"
 	handlers2 "medilane-api/packages/accounts/handlers"
-	token2 "medilane-api/packages/accounts/services/token"
 	s "medilane-api/server"
 )
 
@@ -30,14 +28,14 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// account api
 	acc := appRoute.Group("/account")
-	config := middleware.JWTConfig{
-		Skipper:       middleware.DefaultSkipper,
-		SigningMethod: middleware.AlgorithmHS256,
-		Claims:        &token2.JwtCustomClaims{},
-		AuthScheme:    "Bearer",
-		SigningKey:    []byte(server.Config.Auth.AccessSecret),
-	}
-	acc.Use(middleware.JWTWithConfig(config))
+	//config := middleware.JWTConfig{
+	//	Skipper:       middleware.DefaultSkipper,
+	//	SigningMethod: middleware.AlgorithmHS256,
+	//	Claims:        &token2.JwtCustomClaims{},
+	//	AuthScheme:    "Bearer",
+	//	SigningKey:    []byte(server.Config.Auth.AccessSecret),
+	//}
+	//acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount, funcHelpers.CheckPermission(server, []string{"read:user"}, false))
 	acc.POST("", accountHandler.CreateAccount, funcHelpers.CheckPermission(server, []string{"create:user"}, false))
 	acc.POST("/:id/drugstore", accountHandler.AssignStaffForDrugStore)
@@ -46,7 +44,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// permission api
 	perm := appRoute.Group("/permission")
-	perm.Use(middleware.JWTWithConfig(config))
+	//perm.Use(middleware.JWTWithConfig(config))
 	perm.POST("/find", permissionHandler.SearchPermission, funcHelpers.CheckPermission(server, []string{"read:permission"}, false))
 	perm.POST("", permissionHandler.CreatePermission, funcHelpers.CheckPermission(server, []string{"create:permission"}, false))
 	perm.PUT("/:id", permissionHandler.EditPermission, funcHelpers.CheckPermission(server, []string{"edit:permission"}, false))
@@ -54,7 +52,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// role api
 	role := appRoute.Group("/role")
-	role.Use(middleware.JWTWithConfig(config))
+	//role.Use(middleware.JWTWithConfig(config))
 	role.POST("/find", roleHandler.SearchRole, funcHelpers.CheckPermission(server, []string{"read:role"}, false))
 	role.POST("", roleHandler.CreateRole, funcHelpers.CheckPermission(server, []string{"create:role"}, false))
 	role.PUT("/:id", roleHandler.EditRole, funcHelpers.CheckPermission(server, []string{"edit:role"}, false))
@@ -62,7 +60,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// area api
 	area := appRoute.Group("/area")
-	area.Use(middleware.JWTWithConfig(config))
+	//area.Use(middleware.JWTWithConfig(config))
 	area.POST("/find", areaHandler.SearchArea, funcHelpers.CheckPermission(server, []string{"read:area"}, false))
 	area.POST("", areaHandler.CreateArea, funcHelpers.CheckPermission(server, []string{"create:area"}, false))
 	area.POST("/cost", areaHandler.SetCostProductsOfArea, funcHelpers.CheckPermission(server, []string{"edit:area"}, false))
@@ -72,7 +70,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// address api
 	address := appRoute.Group("/address")
-	address.Use(middleware.JWTWithConfig(config))
+	//address.Use(middleware.JWTWithConfig(config))
 	address.POST("/find", addressHandler.SearchAddress, funcHelpers.CheckPermission(server, []string{"read:address"}, false))
 	address.POST("", addressHandler.CreateAddress, funcHelpers.CheckPermission(server, []string{"create:address"}, false))
 	address.PUT("/:id", addressHandler.EditAddress, funcHelpers.CheckPermission(server, []string{"edit:address"}, false))
