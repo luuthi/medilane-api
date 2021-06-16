@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
@@ -39,7 +40,7 @@ func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests2
 	}
 
 	roleRepo.DB.Where(strings.Join(spec, " AND "), values...).
-		Preload("Permissions").
+		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
