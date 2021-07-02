@@ -25,6 +25,8 @@ func ConfigureRoutes(server *s.Server) {
 	server.Echo.Logger.SetLevel(log2.DEBUG)
 
 	server.Echo.Use(middleware.CORS())
+	server.Echo.Use(middleware.Recover())
+	server.Echo.Use(middleware.RemoveTrailingSlash())
 
 	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
 	appRoute := server.Echo.Group("/api/v1")

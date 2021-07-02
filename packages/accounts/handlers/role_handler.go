@@ -127,7 +127,7 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 // DeleteRole Delete role godoc
 // @Summary Delete role in system
 // @Description Perform delete role
-// @ID delete-permission
+// @ID delete-role
 // @Tags Role Management
 // @Accept json
 // @Produce json

@@ -14,8 +14,6 @@ type Server struct {
 	DB     *gorm.DB
 	Config *config.Config
 	Logger *logrus.Logger
-	//Permission *permission.Permission
-	//MemDB  *badger.DB
 }
 
 func NewServer(cfg *config.Config) *Server {
@@ -24,8 +22,6 @@ func NewServer(cfg *config.Config) *Server {
 		DB:     db.Init(cfg),
 		Config: cfg,
 		Logger: logger.Init(cfg.Logger),
-		//Permission: permission.NewPermission(),
-		//MemDB: db.InitMemDB(),
 	}
 }
 

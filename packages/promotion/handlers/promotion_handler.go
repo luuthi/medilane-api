@@ -162,10 +162,11 @@ func (promoHandler *PromotionHandler) DeletePromotion(c echo.Context) error {
 // CreatePromotionPromotionDetails Create multi promotion detail godoc
 // @Summary Create multi promotion detail in system
 // @Description Perform create multi promotion detail
-// @ID create-promotion
+// @ID create-promotion-detail
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
+// @Param id path uint true "id promotion"
 // @Param params body requests.PromotionDetailRequestList true "Create promotion"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
@@ -236,7 +237,8 @@ func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error 
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id promotion detail"
+// @Param id path uint true "id promotion"
+// @Param d_id path uint true "id promotion detail"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /promotion/{id}/details/{d_id} [delete]
