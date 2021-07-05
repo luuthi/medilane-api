@@ -5,8 +5,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"medilane-api/config"
+	logger2 "medilane-api/core/logger"
 	"medilane-api/db"
-	"medilane-api/logger"
 )
 
 type Server struct {
@@ -21,7 +21,7 @@ func NewServer(cfg *config.Config) *Server {
 		Echo:   echo.New(),
 		DB:     db.Init(cfg),
 		Config: cfg,
-		Logger: logger.Init(cfg.Logger),
+		Logger: logger2.Init(cfg.Logger),
 	}
 }
 

@@ -3,13 +3,13 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	"medilane-api/packages/accounts/services/account"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"medilane-api/utils"
 	"net/http"
 	"strconv"
 )
@@ -195,7 +195,7 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	if existedUser.Username == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
 	}
-	if existedUser.Type != utils.STAFF {
+	if existedUser.Type != utils2.STAFF {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("User isn't staff"))
 	}
 
@@ -206,17 +206,17 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	drugStoreUserRepo.GetListDrugStoreAssignToStaff(&drugStoreUserInDB, id)
 
 	if len(drugStoreUserInDB) == 0 {
-		for _,v := range requestBody.AssignDetail {
+		for _, v := range requestBody.AssignDetail {
 			err := userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
 			if err != nil {
 			}
 		}
 	} else {
 		var drugStoreUserRequest []models.DrugStoreUser
-		for _,v := range requestBody.AssignDetail {
+		for _, v := range requestBody.AssignDetail {
 			drugStoreUserRequest = append(drugStoreUserRequest, models.DrugStoreUser{
-				UserID: id,
-				DrugStoreID: v.DrugStoreId,
+				UserID:       id,
+				DrugStoreID:  v.DrugStoreId,
 				Relationship: v.Relationship,
 			})
 		}
@@ -239,23 +239,52 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 			}
 		}
 
-		for _,v := range drugStoreUserAdd {
+		for _, v := range drugStoreUserAdd {
 			if err := userService.AssignStaffToDrugStore(id, v.DrugStoreID, v.Relationship); err != nil {
 			}
 		}
 
-		for _,v := range drugStoreUserUpdate {
+		for _, v := range drugStoreUserUpdate {
 			if err := userService.UpdateAssignStaffToDrugStore(id, v.DrugStoreID, v.Relationship); err != nil {
 			}
 		}
 
-		for _,v := range drugStoreUserDelete {
+		for _, v := range drugStoreUserDelete {
 			if err := userService.DeleteDrugStoreAssignForStaff(id, v.DrugStoreID); err != nil {
 			}
 		}
 	}
 
 	return responses.MessageResponse(c, http.StatusOK, "Assign staff to drugstore successfully!")
+}
+
+// GetPermissionByUsername Search permission of account godoc
+// @Summary Search all permission of account in system
+// @Description Perform search all permission of accoun
+// @ID search-permission-account
+// @Tags Account Management
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.DataSearch
+// @Failure 400 {object} responses.Error
+// @Router /account/{username}/permissions [get]
+// @Security BearerAuth
+func (accHandler *AccountHandler) GetPermissionByUsername(c echo.Context) error {
+	var username string
+	username = c.Param("username")
+
+	accHandler.server.Logger.Info("search permission of account")
+	var accounts []models.Permission
+
+	permRepo := repositories2.NewPermissionRepository(accHandler.server.DB)
+	permRepo.GetPermissionByUsername(&accounts, username)
+
+	var permissions []string
+	for _, v := range accounts {
+		permissions = append(permissions, v.PermissionName)
+	}
+
+	return responses.SearchResponse(c, http.StatusOK, "", permissions)
 }
 
 func checkStatusOfRecordAcc(arr []models.DrugStoreUser, record models.DrugStoreUser) string {

@@ -2,7 +2,7 @@ package requests
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
-	"medilane-api/utils/drugstores"
+	drugstores2 "medilane-api/core/utils/drugstores"
 )
 
 type SearchDrugStoreRequest struct {
@@ -40,7 +40,7 @@ type DrugStoreRequest struct {
 func (rr DrugStoreRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.StoreName, validation.Required),
-		validation.Field(&rr.Type, validation.In(string(drugstores.DRUGSTORES), string(drugstores.DRUGSTORE))),
+		validation.Field(&rr.Type, validation.In(string(drugstores2.DRUGSTORES), string(drugstores2.DRUGSTORE))),
 	)
 }
 
@@ -57,7 +57,7 @@ type EditDrugStoreRequest struct {
 func (rr EditDrugStoreRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.StoreName, validation.Required),
-		validation.Field(&rr.Status, validation.In(string(drugstores.NEW), string(drugstores.ACTIVE), string(drugstores.CANCEL))),
+		validation.Field(&rr.Status, validation.In(string(drugstores2.NEW), string(drugstores2.ACTIVE), string(drugstores2.CANCEL))),
 	)
 }
 

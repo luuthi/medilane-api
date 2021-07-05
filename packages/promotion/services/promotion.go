@@ -2,10 +2,10 @@ package services
 
 import (
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/promotion/builders"
 	"medilane-api/requests"
-	"medilane-api/utils"
 )
 
 type ServiceWrapper interface {
@@ -38,7 +38,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 
 	// begin a transaction
 	tx := promoService.DB.Begin()
-	rs := tx.Table(utils.TblPromotion).Create(&promotion)
+	rs := tx.Table(utils2.TblPromotion).Create(&promotion)
 	//rollback if error
 	if rs.Error != nil {
 		tx.Rollback()
@@ -60,7 +60,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 
 			promotionDetails = append(promotionDetails, promotionDetail)
 		}
-		rsDetail := tx.Table(utils.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
+		rsDetail := tx.Table(utils2.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
 		//rollback if error
 		if rsDetail.Error != nil {
 			tx.Rollback()
@@ -79,14 +79,14 @@ func (promoService *Service) EditPromotion(request *requests.PromotionRequest, i
 		SetEndTime(request.EndTime).
 		SetID(id).
 		Build()
-	return promoService.DB.Table(utils.TblPromotion).Updates(promotion).Error
+	return promoService.DB.Table(utils2.TblPromotion).Updates(promotion).Error
 }
 
 func (promoService *Service) DeletePromotion(id uint) error {
 	promotion := builders.NewPromotionBuilder().
 		SetID(id).
 		Build()
-	return promoService.DB.Table(utils.TblPromotion).Delete(promotion).Error
+	return promoService.DB.Table(utils2.TblPromotion).Delete(promotion).Error
 }
 
 func (promoService *Service) CreatePromotionDetail(request []*requests.PromotionDetailRequest) error {
@@ -105,7 +105,7 @@ func (promoService *Service) CreatePromotionDetail(request []*requests.Promotion
 
 		promotionDetails = append(promotionDetails, promotionDetail)
 	}
-	rsDetail := promoService.DB.Table(utils.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
+	rsDetail := promoService.DB.Table(utils2.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
 
 	return rsDetail.Error
 }
@@ -121,20 +121,20 @@ func (promoService *Service) EditPromotionDetail(request *requests.PromotionDeta
 		SetProductId(request.ProductID).
 		SetVariantId(request.VariantID).
 		Build()
-	return promoService.DB.Table(utils.TblPromotionDetail).Updates(&promotionDetail).Error
+	return promoService.DB.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
 }
 
 func (promoService *Service) DeletePromotionDetail(promotionDetailID uint) error {
 	promotionDetail := builders.NewPromotionDetailBuilder().
 		SetId(promotionDetailID).
 		Build()
-	return promoService.DB.Table(utils.TblPromotionDetail).Delete(promotionDetail).Error
+	return promoService.DB.Table(utils2.TblPromotionDetail).Delete(promotionDetail).Error
 }
 
 func (promoService *Service) DeletePromotionDetailByPromotion(promotionID uint) error {
 	promotionDetail := builders.NewPromotionDetailBuilder().
 		SetPromotionID(promotionID).
 		Build()
-	return promoService.DB.Table(utils.TblPromotionDetail).Where("promotion_id = ?", promotionID).Delete(promotionDetail).Error
+	return promoService.DB.Table(utils2.TblPromotionDetail).Where("promotion_id = ?", promotionID).Delete(promotionDetail).Error
 
 }

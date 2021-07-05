@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
-	"medilane-api/funcHelpers"
+	"medilane-api/core/authentication"
 	"medilane-api/packages/promotion/handlers"
 	s "medilane-api/server"
 )
@@ -20,15 +20,15 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	//}
 	//promotion.Use(middleware.JWTWithConfig(config))
 
-	promotion.POST("/find", promotionHandler.SearchPromotion, funcHelpers.CheckPermission(server, []string{"read:promotion"}, false))
-	promotion.POST("", promotionHandler.CreatePromotion, funcHelpers.CheckPermission(server, []string{"create:promotion"}, false))
-	promotion.PUT("/:id", promotionHandler.EditPromotion, funcHelpers.CheckPermission(server, []string{"edit:promotion"}, false))
-	promotion.DELETE("/:id", promotionHandler.DeletePromotion, funcHelpers.CheckPermission(server, []string{"edit:promotion"}, false))
+	promotion.POST("/find", promotionHandler.SearchPromotion, authentication.CheckPermission(server, []string{"read:promotion"}, false))
+	promotion.POST("", promotionHandler.CreatePromotion, authentication.CheckPermission(server, []string{"create:promotion"}, false))
+	promotion.PUT("/:id", promotionHandler.EditPromotion, authentication.CheckPermission(server, []string{"edit:promotion"}, false))
+	promotion.DELETE("/:id", promotionHandler.DeletePromotion, authentication.CheckPermission(server, []string{"edit:promotion"}, false))
 
-	promotion.GET("/:id/details", promotionHandler.SearchPromotionDetail, funcHelpers.CheckPermission(server, []string{"read:promotion"}, false))
-	promotion.POST("/:id/details", promotionHandler.CreatePromotionPromotionDetails, funcHelpers.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
-	promotion.PUT("/:id/details/:d_id", promotionHandler.EditPromotionDetail, funcHelpers.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
-	promotion.DELETE("/:id/details/:d_id", promotionHandler.DeletePromotionDetail, funcHelpers.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
-	promotion.DELETE("/:id/details", promotionHandler.DeletePromotionDetailByPromotion, funcHelpers.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
+	promotion.GET("/:id/details", promotionHandler.SearchPromotionDetail, authentication.CheckPermission(server, []string{"read:promotion"}, false))
+	promotion.POST("/:id/details", promotionHandler.CreatePromotionPromotionDetails, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
+	promotion.PUT("/:id/details/:d_id", promotionHandler.EditPromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
+	promotion.DELETE("/:id/details/:d_id", promotionHandler.DeletePromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
+	promotion.DELETE("/:id/details", promotionHandler.DeletePromotionDetailByPromotion, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 
 }

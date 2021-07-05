@@ -2,12 +2,12 @@ package account
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	utils2 "medilane-api/core/utils"
+	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/models"
 	builders2 "medilane-api/packages/accounts/builders"
 	builders "medilane-api/packages/drugstores/builders"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
-	"medilane-api/utils/drugstores"
 )
 
 func (userService *Service) CreateUser(request *requests2.AccountRequest) (error, *models.User) {
@@ -44,12 +44,12 @@ func (userService *Service) CreateUser(request *requests2.AccountRequest) (error
 	// if account is type user, check drugStoreId and assign for drugstore
 	ud := builders2.NewUserDrugStoreBuilder().
 		SetUser(user.ID)
-	if request.Type == utils.USER {
+	if request.Type == utils2.USER {
 		if request.DrugStoreID != nil {
 			ud.SetDrugStoreId(*request.DrugStoreID).
-				SetRelationship(utils.USER).
+				SetRelationship(utils2.USER).
 				Build()
-			rs = tx.Table(utils.TblDrugstoreUser).Create(&ud)
+			rs = tx.Table(utils2.TblDrugstoreUser).Create(&ud)
 			//rollback if error
 			if rs.Error != nil {
 				tx.Rollback()
@@ -68,7 +68,7 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 		SetLicenseFile(drugStoreReq.LicenseFile).
 		SetPhoneNumber(drugStoreReq.PhoneNumber).
 		SetTaxNumber(drugStoreReq.TaxNumber).
-		SetStatus(string(drugstores.NEW)).
+		SetStatus(string(drugstores2.NEW)).
 		SetType(drugStoreReq.Type).
 		SetApproveTime(0).
 		SetAddress(&drugStoreReq.Address).
@@ -77,7 +77,7 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 	// begin a transaction
 	tx := userService.DB.Begin()
 
-	rs := tx.Table(utils.TblDrugstore).Create(&store)
+	rs := tx.Table(utils2.TblDrugstore).Create(&store)
 
 	//rollback if error
 	if rs.Error != nil {
@@ -108,7 +108,7 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 		SetRoles(userReq.Roles).
 		Build()
 
-	rs = tx.Table(utils.TblAccount).Create(&user)
+	rs = tx.Table(utils2.TblAccount).Create(&user)
 
 	//rollback if error
 	if rs.Error != nil {
@@ -120,9 +120,9 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 	ud := builders2.NewUserDrugStoreBuilder().
 		SetUser(user.ID).
 		SetDrugStoreId(store.ID).
-		SetRelationship(utils.USER).
+		SetRelationship(utils2.USER).
 		Build()
-	rs = tx.Table(utils.TblDrugstoreUser).Create(&ud)
+	rs = tx.Table(utils2.TblDrugstoreUser).Create(&ud)
 	//rollback if error
 	if rs.Error != nil {
 		tx.Rollback()
@@ -169,7 +169,7 @@ func (userService *Service) EditUser(request *requests2.EditAccountRequest, id u
 		return err
 	}
 	user.Roles = roles
-	rs := userService.DB.Table(utils.TblAccount).Updates(&user)
+	rs := userService.DB.Table(utils2.TblAccount).Updates(&user)
 	return rs.Error
 }
 
@@ -187,7 +187,7 @@ func (userService *Service) AssignStaffToDrugStore(staffID uint, drugStoreId uin
 		SetUserId(staffID).
 		SetRelationship(relationship).
 		Build()
-	return userService.DB.Table(utils.TblDrugstoreUser).Create(&drugStoreUser).Error
+	return userService.DB.Table(utils2.TblDrugstoreUser).Create(&drugStoreUser).Error
 }
 
 func (userService *Service) UpdateAssignStaffToDrugStore(staffID uint, drugStoreId uint, relationship string) error {
@@ -196,7 +196,7 @@ func (userService *Service) UpdateAssignStaffToDrugStore(staffID uint, drugStore
 		SetUserId(staffID).
 		SetRelationship(relationship).
 		Build()
-	return userService.DB.Table(utils.TblDrugstoreUser).Updates(&drugStoreUser).Error
+	return userService.DB.Table(utils2.TblDrugstoreUser).Updates(&drugStoreUser).Error
 }
 
 func (userService *Service) DeleteDrugStoreAssignForStaff(drugStoreId uint, userId uint) error {
@@ -204,5 +204,5 @@ func (userService *Service) DeleteDrugStoreAssignForStaff(drugStoreId uint, user
 		SetDrugStoreId(drugStoreId).
 		SetUserId(userId).
 		Build()
-	return userService.DB.Table(utils.TblDrugstoreUser).Delete(&user).Error
+	return userService.DB.Table(utils2.TblDrugstoreUser).Delete(&user).Error
 }

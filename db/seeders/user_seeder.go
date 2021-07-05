@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 	"io/ioutil"
 	"medilane-api/config"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/packages/accounts/builders"
-	"medilane-api/utils"
 )
 
 type UserSeeder struct {
@@ -128,7 +128,7 @@ func (userSeeder *UserSeeder) SetUsers() {
 			SetRoles(u.Roles).
 			Build()
 
-		userSeeder.DB.Table(utils.TblAccount).Create(&user)
+		userSeeder.DB.Table(utils2.TblAccount).Create(&user)
 	}
 }
 
@@ -141,7 +141,7 @@ func (userSeeder *UserSeeder) SetRoles() {
 			SetDescription(r.Description).
 			SetPermissions(r.Permissions).
 			Build()
-		userSeeder.DB.Table(utils.TblRole).Create(&role)
+		userSeeder.DB.Table(utils2.TblRole).Create(&role)
 	}
 }
 
@@ -153,6 +153,6 @@ func (userSeeder *UserSeeder) SetPermissions() {
 			SetName(p.PermissionName).
 			SetDescription(p.Description).
 			Build()
-		userSeeder.DB.Table(utils.TblPermission).Create(&perm)
+		userSeeder.DB.Table(utils2.TblPermission).Create(&perm)
 	}
 }

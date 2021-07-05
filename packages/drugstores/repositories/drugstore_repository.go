@@ -3,10 +3,10 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/drugstores/responses"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 	"strings"
 )
 
@@ -107,7 +107,7 @@ func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(perm *m
 }
 
 func (DrugStoreRepository *DrugStoreRepository) GetUsersByDrugstore(users *[]models.User, drugStoreID uint) {
-	DrugStoreRepository.DB.Table(utils.TblAccount).Select("user.* ").
+	DrugStoreRepository.DB.Table(utils2.TblAccount).Select("user.* ").
 		Preload("Roles").
 		Joins("JOIN drug_store_user du ON du.user_id = user.id ").
 		Where(fmt.Sprintf("du.drug_store_id = \"%v\"", drugStoreID)).Find(&users)

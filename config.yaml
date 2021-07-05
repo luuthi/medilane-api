@@ -20,6 +20,11 @@ DATABASE:
   DB_HOST: 66.42.56.107 # 192.168.67.128 #
   DB_PORT: 3306
 
+REDIS:
+  URL: 66.42.56.107:6379
+  DB: 1
+  PASSWORD: 098poiA
+
 #Secret keys for the access token and refresh token signing
 AUTH:
   ACCESS_SECRET: m3DiL4ne5ecR3tK3i

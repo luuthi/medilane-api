@@ -1,16 +1,18 @@
-package funcHelpers
+package authentication
 
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
 	"io/ioutil"
-	models2 "medilane-api/models"
+	funcHelpers2 "medilane-api/core/funcHelpers"
+	"medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
-	token2 "medilane-api/packages/accounts/services/token"
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
+
 	"strings"
 )
 
@@ -25,7 +27,7 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 				})
 			}
 
-			claims, ok := token.Claims.(*token2.JwtCustomClaims)
+			claims, ok := token.Claims.(*JwtCustomClaims)
 			if !ok {
 				return context.JSON(http.StatusUnauthorized, responses.Data{
 					Code:    http.StatusUnauthorized,
@@ -38,11 +40,11 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 				return echo.NewHTTPError(http.StatusForbidden, "access denied")
 			}
 			permRepo := repositories.NewPermissionRepository(server.DB)
-			var rs []models2.Permission
+			var rs []models.Permission
 			permRepo.GetPermissionByUsername(&rs, userName)
 			var count int
 			for _, perm := range rs {
-				if StringContain(requiredScope, perm.PermissionName) {
+				if funcHelpers2.StringContain(requiredScope, perm.PermissionName) {
 					count++
 				}
 			}
@@ -55,13 +57,6 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 	}
 }
 
-//func CheckPermission(context echo.Context, server *s.Server, handlerFunc echo.HandlerFunc) error {
-//key := context.Request().Method + strings.Replace(context.Request().RequestURI, server.Permission.BaseURL, "", 1)
-//requiredScope := server.Permission.Route[key]
-//server.Logger.Infof("requiredScope: %v", requiredScope)
-
-//}
-
 func ExtractToken(r *http.Request) string {
 	bearToken := r.Header.Get("Authorization")
 	//normally Authorization the_token_xxx
@@ -73,7 +68,11 @@ func ExtractToken(r *http.Request) string {
 }
 
 func VerifyToken(r *http.Request, server *s.Server) (*jwt.Token, error) {
+	authBackend := InitJWTAuthenticationBackend(server.Config)
 	tokenString := ExtractToken(r)
+	if authBackend.IsInBlacklist(tokenString) {
+		return nil, errors.New("token expired")
+	}
 	verifyKeyByte, err := ioutil.ReadFile(server.Config.Auth.PublicKeyPath)
 	if err != nil {
 		return nil, err
@@ -83,7 +82,7 @@ func VerifyToken(r *http.Request, server *s.Server) (*jwt.Token, error) {
 		return nil, err
 	}
 
-	token, err := jwt.ParseWithClaims(tokenString, &token2.JwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &JwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		//Make sure that the token method conform to "SigningMethodHMAC"
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/requests"
-	"medilane-api/utils"
 	"strings"
 )
 
@@ -62,7 +62,7 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		filter.Sort.SortDirection = "desc"
 	}
 
-	promotionRepo.DB.Table(utils.TblPromotion).Where(strings.Join(spec, " AND "), values...).
+	promotionRepo.DB.Table(utils2.TblPromotion).Where(strings.Join(spec, " AND "), values...).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
@@ -71,13 +71,13 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 }
 
 func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promotion, id uint) {
-	promotionRepo.DB.Table(utils.TblPromotion).Preload(clause.Associations).First(&promotion, id)
+	promotionRepo.DB.Table(utils2.TblPromotion).Preload(clause.Associations).First(&promotion, id)
 }
 
 func (promotionRepo *PromotionRepository) GetPromotionDetail(promotion *models.PromotionDetail, id uint) {
-	promotionRepo.DB.Table(utils.TblPromotionDetail).Preload(clause.Associations).First(&promotion, id)
+	promotionRepo.DB.Table(utils2.TblPromotionDetail).Preload(clause.Associations).First(&promotion, id)
 }
 
 func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotionDetails []*models.PromotionDetail, promotionID uint) {
-	promotionRepo.DB.Table(utils.TblPromotionDetail).Where("promotion_id = ?", promotionID).Find(&promotionDetails)
+	promotionRepo.DB.Table(utils2.TblPromotionDetail).Where("promotion_id = ?", promotionID).Find(&promotionDetails)
 }

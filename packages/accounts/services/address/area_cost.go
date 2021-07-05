@@ -1,8 +1,8 @@
 package address
 
 import (
+	utils2 "medilane-api/core/utils"
 	"medilane-api/packages/accounts/builders"
-	"medilane-api/utils"
 )
 
 func (areaCostService *Service) SetCostProductOfArea(areaId uint, productId uint, cost float32) error {
@@ -11,7 +11,7 @@ func (areaCostService *Service) SetCostProductOfArea(areaId uint, productId uint
 		SetAreaId(areaId).
 		SetCost(cost).
 		Build()
-	return areaCostService.DB.Table(utils.TblAreaCost).Create(&area).Error
+	return areaCostService.DB.Table(utils2.TblAreaCost).Create(&area).Error
 }
 
 func (areaCostService *Service) UpdateCostProductOfArea(areaId uint, productId uint, cost float32) error {
@@ -20,7 +20,7 @@ func (areaCostService *Service) UpdateCostProductOfArea(areaId uint, productId u
 		SetAreaId(areaId).
 		SetCost(cost).
 		Build()
-	return areaCostService.DB.Table(utils.TblAreaCost).Updates(&area).Error
+	return areaCostService.DB.Table(utils2.TblAreaCost).Updates(&area).Error
 }
 
 func (areaCostService *Service) DeleteProductOfArea(areaId uint, productId uint) error {
@@ -28,5 +28,5 @@ func (areaCostService *Service) DeleteProductOfArea(areaId uint, productId uint)
 		SetProductId(productId).
 		SetAreaId(areaId).
 		Build()
-	return areaCostService.DB.Table(utils.TblAreaCost).Delete(&area).Error
+	return areaCostService.DB.Table(utils2.TblAreaCost).Delete(&area).Error
 }

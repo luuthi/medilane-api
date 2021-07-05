@@ -1,9 +1,9 @@
 package medicine
 
 import (
+	utils2 "medilane-api/core/utils"
 	builders2 "medilane-api/packages/medicines/builders"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 )
 
 func (productService *Service) CreateCategory(request *requests2.CategoryRequest) error {
@@ -20,12 +20,12 @@ func (productService *Service) EditCategory(request *requests2.CategoryRequest, 
 		SetName(request.Name).
 		SetSlug(request.Slug).
 		Build()
-	return productService.DB.Table(utils.TblCategory).Save(&category).Error
+	return productService.DB.Table(utils2.TblCategory).Save(&category).Error
 }
 
 func (productService *Service) DeleteCategory(id uint) error {
 	category := builders2.NewCategoryBuilder().
 		SetID(id).
 		Build()
-	return productService.DB.Table(utils.TblCategory).Delete(&category).Error
+	return productService.DB.Table(utils2.TblCategory).Delete(&category).Error
 }

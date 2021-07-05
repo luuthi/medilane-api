@@ -1,10 +1,10 @@
 package services
 
 import (
+	utils2 "medilane-api/core/utils"
+	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/packages/drugstores/builders"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
-	"medilane-api/utils/drugstores"
 )
 
 func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreRequest) error {
@@ -13,16 +13,16 @@ func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreReq
 		SetPhoneNumber(request.PhoneNumber).
 		SetTaxNumber(request.TaxNumber).
 		SetLicenseFile(request.LicenseFile).
-		SetStatus(string(drugstores.NEW)).
+		SetStatus(string(drugstores2.NEW)).
 		SetType(request.Type).
 		SetAddressId(request.AddressID).
 		Build()
 
 	if request.AddressID == 0 {
-		return drugstoreService.DB.Table(utils.TblDrugstore).Omit("address_id").Create(&drugstore).Error
+		return drugstoreService.DB.Table(utils2.TblDrugstore).Omit("address_id").Create(&drugstore).Error
 	}
 
-	return drugstoreService.DB.Table(utils.TblDrugstore).Create(&drugstore).Error
+	return drugstoreService.DB.Table(utils2.TblDrugstore).Create(&drugstore).Error
 }
 
 func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreRequest, id uint) error {
@@ -36,14 +36,14 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 		SetApproveTime(request.ApproveTime).
 		SetAddressId(request.AddressID).
 		Build()
-	return drugstoreService.DB.Table(utils.TblDrugstore).Updates(&drugstore).Error
+	return drugstoreService.DB.Table(utils2.TblDrugstore).Updates(&drugstore).Error
 }
 
 func (drugstoreService *Service) DeleteDrugstore(id uint) error {
 	drugstore := builders.NewDrugStoreBuilder().
 		SetID(id).
 		Build()
-	return drugstoreService.DB.Table(utils.TblDrugstore).Delete(&drugstore).Error
+	return drugstoreService.DB.Table(utils2.TblDrugstore).Delete(&drugstore).Error
 }
 
 func (drugstoreService *Service) ConnectiveDrugStore(request *requests2.ConnectiveDrugStoreRequest) error {
@@ -52,5 +52,5 @@ func (drugstoreService *Service) ConnectiveDrugStore(request *requests2.Connecti
 		SetChildID(request.ChildStoreId).
 		Build()
 
-	return drugstoreService.DB.Table(utils.TblDrugstoreRelationship).Create(&drugstoreRelationship).Error
+	return drugstoreService.DB.Table(utils2.TblDrugstoreRelationship).Create(&drugstoreRelationship).Error
 }

@@ -2,9 +2,9 @@ package account
 
 import (
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/packages/accounts/builders"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 )
 
 func (userService *Service) CreateRole(request *requests2.RoleRequest) *gorm.DB {
@@ -13,7 +13,7 @@ func (userService *Service) CreateRole(request *requests2.RoleRequest) *gorm.DB 
 		SetDescription(request.Description).
 		SetPermissions(request.Permissions).
 		Build()
-	return userService.DB.Table(utils.TblRole).Create(role)
+	return userService.DB.Table(utils2.TblRole).Create(role)
 }
 
 func (userService *Service) EditRole(request *requests2.RoleRequest, id uint) error {
@@ -30,7 +30,7 @@ func (userService *Service) EditRole(request *requests2.RoleRequest, id uint) er
 		return err
 	}
 	role.Permissions = perms
-	return userService.DB.Table(utils.TblRole).Updates(&role).Error
+	return userService.DB.Table(utils2.TblRole).Updates(&role).Error
 }
 
 func (userService *Service) DeleteRole(id uint, roleName string) error {

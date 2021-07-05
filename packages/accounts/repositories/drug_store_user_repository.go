@@ -2,12 +2,11 @@ package repositories
 
 import (
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
-	"medilane-api/utils"
 )
 
 type DrugStoreUserRepositoryQ interface {
-
 }
 
 type DrugStoreUserRepository struct {
@@ -18,6 +17,6 @@ func NewDrugStoreUserRepository(db *gorm.DB) *DrugStoreUserRepository {
 	return &DrugStoreUserRepository{DB: db}
 }
 
-func (DrugStoreUserRepository *DrugStoreUserRepository) GetListDrugStoreAssignToStaff(drugStoreUser *[]models.DrugStoreUser , staffId uint) {
-	DrugStoreUserRepository.DB.Table(utils.TblDrugstoreUser).Where("user_id = ?", staffId).Find(&drugStoreUser)
+func (DrugStoreUserRepository *DrugStoreUserRepository) GetListDrugStoreAssignToStaff(drugStoreUser *[]models.DrugStoreUser, staffId uint) {
+	DrugStoreUserRepository.DB.Table(utils2.TblDrugstoreUser).Where("user_id = ?", staffId).Find(&drugStoreUser)
 }

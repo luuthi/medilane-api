@@ -3,15 +3,16 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 	"strings"
 )
 
 type PermissionRepositoryQ interface {
 	GetPermissions(perms []*models2.Permission, filter requests2.SearchPermissionRequest)
 	GetPermissionByID(perm *models2.Permission, id uint)
+	GetPermissionByUsername(perm *[]models2.Permission, username string)
 }
 
 type PermissionRepository struct {
@@ -51,7 +52,7 @@ func (permRepo *PermissionRepository) GetPermissionByID(perm *models2.Permission
 }
 
 func (permRepo *PermissionRepository) GetPermissionByUsername(perms *[]models2.Permission, userName string) {
-	permRepo.DB.Table(utils.TblUserRole).Select("DISTINCT p.permission_name").
+	permRepo.DB.Table(utils2.TblUserRole).Select("DISTINCT p.permission_name").
 		Joins("JOIN role_permissions rp ON rp.role_role_name = role_user.role_role_name ").
 		Joins("JOIN permission p ON p.permission_name = rp.permission_permission_name ").
 		Where(fmt.Sprintf("role_user.user_username = \"%s\"", userName)).Find(&perms)

@@ -3,7 +3,7 @@ package requests
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
-	"medilane-api/utils"
+	utils2 "medilane-api/core/utils"
 )
 
 type SearchAccountRequest struct {
@@ -61,12 +61,12 @@ func (rr AccountRequest) Validate() error {
 		validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
 		validation.Field(&rr.FullName, validation.Required),
 		validation.Field(&rr.IsAdmin, validation.Required),
-		validation.Field(&rr.Type, validation.In(string(utils.STAFF), string(utils.USER), string(utils.SUPPLIER), string(utils.MANUFACTURER))),
+		validation.Field(&rr.Type, validation.In(string(utils2.STAFF), string(utils2.USER), string(utils2.SUPPLIER), string(utils2.MANUFACTURER))),
 	)
 }
 
 type StaffRelationship struct {
-	DrugStoreId uint `json:"DrugStoresId"`
+	DrugStoreId  uint   `json:"DrugStoresId"`
 	Relationship string `json:"Relationship"`
 }
 

@@ -3,9 +3,9 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 	"strings"
 )
 
@@ -36,7 +36,7 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 }
 
 func (AccountRepository *AccountRepository) GetDrugStoreByUSer(store *models.DrugStore, userID uint) {
-	AccountRepository.DB.Table(utils.TblDrugstore).Select("drug_store.* ").
+	AccountRepository.DB.Table(utils2.TblDrugstore).Select("drug_store.* ").
 		Joins(" JOIN drug_store_user du ON du.drug_store_id = drug_store.id ").
 		Where(fmt.Sprintf("du.user_id = \"%v\"", userID)).Find(&store)
 }

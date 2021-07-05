@@ -2,6 +2,10 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/dgrijalva/jwt-go/request"
+	"medilane-api/core/authentication"
+	utils2 "medilane-api/core/utils"
+	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	responses2 "medilane-api/packages/accounts/responses"
@@ -9,8 +13,6 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"medilane-api/utils"
-	"medilane-api/utils/drugstores"
 	"net/http"
 
 	jwtGo "github.com/dgrijalva/jwt-go"
@@ -59,11 +61,11 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 	drugStore := models.DrugStore{}
 	AccountRepository.GetDrugStoreByUSer(&drugStore, user.ID)
 
-	if drugStore.ID == 0 && user.Type != string(utils.SUPER_ADMIN) {
+	if drugStore.ID == 0 && user.Type != string(utils2.SUPER_ADMIN) {
 		return responses.ErrorResponse(c, http.StatusForbidden, "User not in any active store")
 	}
 
-	if drugStore.Status != drugstores.ACTIVE && user.Type != string(utils.SUPER_ADMIN) {
+	if drugStore.Status != drugstores2.ACTIVE && user.Type != string(utils2.SUPER_ADMIN) {
 		return responses.ErrorResponse(c, http.StatusForbidden, "Store is not active")
 	}
 
@@ -139,4 +141,27 @@ func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
 	res := responses2.NewLoginResponse(accessToken, refreshToken, exp, *user)
 
 	return responses.Response(c, http.StatusOK, res)
+}
+
+// Logout Refresh godoc
+// @Summary Refresh access token
+// @Description Perform refresh access token
+// @ID user-logout
+// @Tags User Actions
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.LoginResponse
+// @Failure 401 {object} responses.Error
+// @Router /logout [post]
+// @Security BearerAuth
+func (authHandler *AuthHandler) Logout(c echo.Context) error {
+	authBackend := authentication.InitJWTAuthenticationBackend(authHandler.server.Config)
+	tokenRequest, err := request.ParseFromRequest(c.Request(), request.OAuth2Extractor, func(token *jwtGo.Token) (interface{}, error) {
+		return authBackend.PublicKey, nil
+	})
+	if err != nil {
+		return err
+	}
+	tokenString := authentication.ExtractToken(c.Request())
+	return authBackend.Logout(tokenString, tokenRequest)
 }

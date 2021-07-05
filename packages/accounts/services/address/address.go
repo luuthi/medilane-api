@@ -3,10 +3,10 @@ package address
 import (
 	"errors"
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/accounts/builders"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 )
 
 func (addressService *Service) CreateAddress(request *requests2.AddressRequest) *gorm.DB {
@@ -21,7 +21,7 @@ func (addressService *Service) CreateAddress(request *requests2.AddressRequest) 
 		SetStreet(request.Address).
 		SetDefault(request.IsDefault).
 		Build()
-	return addressService.DB.Table(utils.TblAddress).Create(&address)
+	return addressService.DB.Table(utils2.TblAddress).Create(&address)
 }
 
 func (addressService *Service) EditAddress(request *requests2.AddressRequest, id uint) error {
@@ -37,13 +37,13 @@ func (addressService *Service) EditAddress(request *requests2.AddressRequest, id
 		SetDefault(request.IsDefault).
 		SetID(id).
 		Build()
-	return addressService.DB.Table(utils.TblAddress).Updates(&address).Error
+	return addressService.DB.Table(utils2.TblAddress).Updates(&address).Error
 }
 
 func (addressService *Service) DeleteAddress(id uint) error {
 
 	var existedAddress models.Address
-	addressService.DB.Table(utils.TblAddress).First(&existedAddress, id)
+	addressService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
 	if existedAddress.IsDefault {
 		return errors.New("cannot delete default address")
 	}
@@ -51,13 +51,13 @@ func (addressService *Service) DeleteAddress(id uint) error {
 	address := builders.NewAreaBuilder().
 		SetID(id).
 		Build()
-	return addressService.DB.Table(utils.TblAddress).Delete(&address).Error
+	return addressService.DB.Table(utils2.TblAddress).Delete(&address).Error
 }
 
 func (addressService *Service) SetAddressDefault(id uint) error {
 
 	var existedAddress models.Address
-	addressService.DB.Table(utils.TblAddress).First(&existedAddress, id)
+	addressService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
 	if existedAddress.IsDefault {
 		return errors.New("cannot delete default address")
 	}
@@ -65,5 +65,5 @@ func (addressService *Service) SetAddressDefault(id uint) error {
 	address := builders.NewAreaBuilder().
 		SetID(id).
 		Build()
-	return addressService.DB.Table(utils.TblAddress).Delete(&address).Error
+	return addressService.DB.Table(utils2.TblAddress).Delete(&address).Error
 }

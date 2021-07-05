@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
+	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/drugstores/repositories"
 	responses2 "medilane-api/packages/drugstores/responses"
@@ -11,7 +12,6 @@ import (
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"medilane-api/utils/drugstores"
 	"net/http"
 	"strconv"
 )
@@ -187,11 +187,11 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ChildStoreId))
 	}
 
-	if parentStore.Type != drugstores.DRUGSTORES {
+	if parentStore.Type != drugstores2.DRUGSTORES {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))
 	}
 
-	if childStore.Type != drugstores.DRUGSTORES {
+	if childStore.Type != drugstores2.DRUGSTORES {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))
 	}
 
@@ -200,7 +200,7 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 	}
 
 	typeStore, _ := checkTypeOfDrugStoreInRelationship(drugstore.ChildStoreId, drugStoreHandler.server.DB)
-	if typeStore == string(drugstores.PARENT) {
+	if typeStore == string(drugstores2.PARENT) {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't connective 2 drugstore is parent"))
 	}
 
@@ -250,10 +250,10 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 
 	typeOfStoreInRelationship, parentStoreId := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
 	var relationshipStores []models.DrugStore
-	if typeOfStoreInRelationship == string(drugstores.PARENT) {
+	if typeOfStoreInRelationship == string(drugstores2.PARENT) {
 		var drugstore models.DrugStore
 		relationshipStores = permRepo.GetListChildStoreOfParent(&drugstore, id)
-	} else if typeOfStoreInRelationship == string(drugstores.CHILD) {
+	} else if typeOfStoreInRelationship == string(drugstores2.CHILD) {
 		var drugstore models.DrugStore
 		relationshipStores = permRepo.GetListRelationshipStore(&drugstore, parentStoreId, id)
 	}
@@ -301,16 +301,16 @@ func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
 	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(db)
 	storeRelationshipRepo.GetDrugstoreParentByID(&parentStore, id)
 	if parentStore.ParentStoreID != 0 {
-		return string(drugstores.PARENT), 0
+		return string(drugstores2.PARENT), 0
 	}
 
 	var childStore models.DrugStoreRelationship
 	storeRelationshipRepo.GetDrugstoreChildByID(&childStore, id)
 	if childStore.ChildStoreID != 0 {
-		return string(drugstores.CHILD), childStore.ParentStoreID
+		return string(drugstores2.CHILD), childStore.ParentStoreID
 	}
 
-	return string(drugstores.NONE), 0
+	return string(drugstores2.NONE), 0
 }
 
 // SearchAccountByDrugStore Search account in drugstore godoc

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/labstack/echo/v4"
-	"medilane-api/funcHelpers"
+	"medilane-api/core/authentication"
 	handlers2 "medilane-api/packages/medicines/handlers"
 	s "medilane-api/server"
 )
@@ -23,36 +23,36 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	// medicine api
 	product := appRoute.Group("/product")
 	//product.Use(middleware.JWTWithConfig(config))
-	product.POST("/find", productHandler.SearchProduct, funcHelpers.CheckPermission(server, []string{"read:product"}, false))
-	product.POST("", productHandler.CreateProduct, funcHelpers.CheckPermission(server, []string{"create:product"}, false))
-	product.PUT("/:id", productHandler.EditProduct, funcHelpers.CheckPermission(server, []string{"edit:product"}, false))
-	product.DELETE("/:id", productHandler.DeleteProduct, funcHelpers.CheckPermission(server, []string{"delete:product"}, false))
+	product.POST("/find", productHandler.SearchProduct, authentication.CheckPermission(server, []string{"read:product"}, false))
+	product.POST("", productHandler.CreateProduct, authentication.CheckPermission(server, []string{"create:product"}, false))
+	product.PUT("/:id", productHandler.EditProduct, authentication.CheckPermission(server, []string{"edit:product"}, false))
+	product.DELETE("/:id", productHandler.DeleteProduct, authentication.CheckPermission(server, []string{"delete:product"}, false))
 
 	products := appRoute.Group("/products")
 	//products.Use(middleware.JWTWithConfig(config))
-	products.POST("/status", productHandler.ChangeStatusProducts, funcHelpers.CheckPermission(server, []string{"edit:product"}, false))
+	products.POST("/status", productHandler.ChangeStatusProducts, authentication.CheckPermission(server, []string{"edit:product"}, false))
 
 	// category api
 	category := appRoute.Group("/category")
 	//category.Use(middleware.JWTWithConfig(config))
-	category.POST("/find", categoryHandler.SearchCategory, funcHelpers.CheckPermission(server, []string{"read:category"}, false))
-	category.POST("", categoryHandler.CreateCategory, funcHelpers.CheckPermission(server, []string{"create:category"}, false))
-	category.PUT("/:id", categoryHandler.EditCategory, funcHelpers.CheckPermission(server, []string{"edit:category"}, false))
-	category.DELETE("/:id", categoryHandler.DeleteCategory, funcHelpers.CheckPermission(server, []string{"delete:category"}, false))
+	category.POST("/find", categoryHandler.SearchCategory, authentication.CheckPermission(server, []string{"read:category"}, false))
+	category.POST("", categoryHandler.CreateCategory, authentication.CheckPermission(server, []string{"create:category"}, false))
+	category.PUT("/:id", categoryHandler.EditCategory, authentication.CheckPermission(server, []string{"edit:category"}, false))
+	category.DELETE("/:id", categoryHandler.DeleteCategory, authentication.CheckPermission(server, []string{"delete:category"}, false))
 
 	// tag api
 	tag := appRoute.Group("/tag")
 	//tag.Use(middleware.JWTWithConfig(config))
-	tag.POST("/find", tagHandler.SearchTag, funcHelpers.CheckPermission(server, []string{"read:tag"}, false))
-	tag.POST("", tagHandler.CreateTag, funcHelpers.CheckPermission(server, []string{"create:tag"}, false))
-	tag.PUT("/:id", tagHandler.EditTag, funcHelpers.CheckPermission(server, []string{"edit:tag"}, false))
-	tag.DELETE("/:id", tagHandler.DeleteTag, funcHelpers.CheckPermission(server, []string{"delete:tag"}, false))
+	tag.POST("/find", tagHandler.SearchTag, authentication.CheckPermission(server, []string{"read:tag"}, false))
+	tag.POST("", tagHandler.CreateTag, authentication.CheckPermission(server, []string{"create:tag"}, false))
+	tag.PUT("/:id", tagHandler.EditTag, authentication.CheckPermission(server, []string{"edit:tag"}, false))
+	tag.DELETE("/:id", tagHandler.DeleteTag, authentication.CheckPermission(server, []string{"delete:tag"}, false))
 
 	// variant api
 	variant := appRoute.Group("/variant")
 	//variant.Use(middleware.JWTWithConfig(config))
-	variant.POST("/find", variantHandler.SearchVariant, funcHelpers.CheckPermission(server, []string{"read:variant"}, false))
-	variant.POST("", variantHandler.CreateVariant, funcHelpers.CheckPermission(server, []string{"create:variant"}, false))
-	variant.PUT("/:id", variantHandler.EditVariant, funcHelpers.CheckPermission(server, []string{"edit:variant"}, false))
-	variant.DELETE("/:id", variantHandler.DeleteVariant, funcHelpers.CheckPermission(server, []string{"delete:variant"}, false))
+	variant.POST("/find", variantHandler.SearchVariant, authentication.CheckPermission(server, []string{"read:variant"}, false))
+	variant.POST("", variantHandler.CreateVariant, authentication.CheckPermission(server, []string{"create:variant"}, false))
+	variant.PUT("/:id", variantHandler.EditVariant, authentication.CheckPermission(server, []string{"edit:variant"}, false))
+	variant.DELETE("/:id", variantHandler.DeleteVariant, authentication.CheckPermission(server, []string{"delete:variant"}, false))
 }

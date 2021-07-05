@@ -3,9 +3,9 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 	"strings"
 )
 
@@ -75,7 +75,7 @@ func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address,
 		filter.Sort.SortDirection = "desc"
 	}
 
-	addressRepo.DB.Table(utils.TblAddress).Where(strings.Join(spec, " AND "), values...).
+	addressRepo.DB.Table(utils2.TblAddress).Where(strings.Join(spec, " AND "), values...).
 		Preload("Area").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
@@ -84,7 +84,7 @@ func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address,
 }
 
 func (addressRepo *AddressRepository) GetAddressByID(address *models2.Address, id uint) {
-	addressRepo.DB.Table(utils.TblAddress).First(&address, id)
+	addressRepo.DB.Table(utils2.TblAddress).First(&address, id)
 }
 
 func (addressRepo *AddressRepository) GetAddressByArea(addresses []*models2.Address, id uint) {
@@ -92,7 +92,7 @@ func (addressRepo *AddressRepository) GetAddressByArea(addresses []*models2.Addr
 	values := make([]interface{}, 0)
 	spec = append(spec, "area_id = ?")
 	values = append(values, id)
-	addressRepo.DB.Table(utils.TblAddress).
+	addressRepo.DB.Table(utils2.TblAddress).
 		Where(strings.Join(spec, " AND "), values...).
 		Find(&addresses)
 }

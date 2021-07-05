@@ -1,9 +1,9 @@
 package medicine
 
 import (
+	utils2 "medilane-api/core/utils"
 	builders2 "medilane-api/packages/medicines/builders"
 	requests2 "medilane-api/requests"
-	"medilane-api/utils"
 )
 
 func (productService *Service) CreateProduct(request *requests2.ProductRequest) error {
@@ -58,14 +58,14 @@ func (productService *Service) EditProduct(request *requests2.ProductRequest, id
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
 		Build()
-	return productService.DB.Table(utils.TblProduct).Save(&product).Error
+	return productService.DB.Table(utils2.TblProduct).Save(&product).Error
 }
 
 func (productService *Service) DeleteMedicine(id uint) error {
 	medicine := builders2.NewProductBuilder().
 		SetID(id).
 		Build()
-	return productService.DB.Table(utils.TblProduct).Delete(&medicine).Error
+	return productService.DB.Table(utils2.TblProduct).Delete(&medicine).Error
 }
 
 func (productService *Service) ChangeStatusProduct(id uint, status string) error {
@@ -73,5 +73,5 @@ func (productService *Service) ChangeStatusProduct(id uint, status string) error
 		SetID(id).
 		SetStatus(status).
 		Build()
-	return productService.DB.Table(utils.TblProduct).Save(&product).Error
+	return productService.DB.Table(utils2.TblProduct).Save(&product).Error
 }
