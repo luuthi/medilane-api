@@ -10,7 +10,7 @@ import (
 )
 
 type PermissionRepositoryQ interface {
-	GetPermissions(perms []*models2.Permission, filter requests2.SearchPermissionRequest)
+	GetPermissions(perms []*models2.Permission, count *int64, filter requests2.SearchPermissionRequest)
 	GetPermissionByID(perm *models2.Permission, id uint)
 	GetPermissionByUsername(perm *[]models2.Permission, username string)
 }
@@ -23,7 +23,7 @@ func NewPermissionRepository(db *gorm.DB) *PermissionRepository {
 	return &PermissionRepository{DB: db}
 }
 
-func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission, filter requests2.SearchPermissionRequest) {
+func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission, count *int64, filter requests2.SearchPermissionRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -40,7 +40,8 @@ func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission
 		filter.Sort.SortDirection = "desc"
 	}
 
-	permRepo.DB.Where(strings.Join(spec, " AND "), values...).
+	permRepo.DB.Table(utils2.TblPermission).Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

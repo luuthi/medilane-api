@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
+	responses2 "medilane-api/packages/accounts/responses"
 	"medilane-api/packages/accounts/services/account"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -43,10 +44,16 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 
 	permHandler.server.Logger.Info("search permission")
 	var permissions []models2.Permission
+	var total int64
 
 	permissionRepo := repositories.NewPermissionRepository(permHandler.server.DB)
-	permissionRepo.GetPermissions(&permissions, searchReq)
-	return responses.SearchResponse(c, http.StatusOK, "", permissions)
+	permissionRepo.GetPermissions(&permissions, &total, searchReq)
+	return responses.Response(c, http.StatusOK, responses2.PermissionSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    permissions,
+	})
 }
 
 // CreatePermission Create permission godoc

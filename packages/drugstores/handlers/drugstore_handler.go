@@ -44,11 +44,17 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 
 	drugStoreHandler.server.Logger.Info("search account")
 	var drugstores []models.DrugStore
+	var total int64
 
 	drugStoresRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	drugStoresRepo.GetDrugStores(&drugstores, searchRequest)
+	drugStoresRepo.GetDrugStores(&drugstores, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", drugstores)
+	return responses.Response(c, http.StatusOK, responses2.DrugStoreSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    drugstores,
+	})
 }
 
 // CreateDrugStore Create drugstore godoc
@@ -251,11 +257,9 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 	typeOfStoreInRelationship, parentStoreId := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
 	var relationshipStores []models.DrugStore
 	if typeOfStoreInRelationship == string(drugstores2.PARENT) {
-		var drugstore models.DrugStore
-		relationshipStores = permRepo.GetListChildStoreOfParent(&drugstore, id)
+		relationshipStores = permRepo.GetListChildStoreOfParent(id)
 	} else if typeOfStoreInRelationship == string(drugstores2.CHILD) {
-		var drugstore models.DrugStore
-		relationshipStores = permRepo.GetListRelationshipStore(&drugstore, parentStoreId, id)
+		relationshipStores = permRepo.GetListRelationshipStore(parentStoreId, id)
 	}
 
 	res := responses2.NewGetRelationshipResponse(relationshipStores)

@@ -7,6 +7,7 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
+	responses2 "medilane-api/packages/medicines/responses"
 	"medilane-api/packages/medicines/services/medicine"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -42,12 +43,18 @@ func (categoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 	}
 
 	categoryHandler.server.Logger.Info("Search Category")
-	var Categorys []models2.Category
+	var categories []models2.Category
+	var total int64
 
 	categoryRepo := repositories2.NewCategoryRepository(categoryHandler.server.DB)
-	categoryRepo.GetCategories(&Categorys, searchRequest)
+	categoryRepo.GetCategories(&categories, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", Categorys)
+	return responses.Response(c, http.StatusOK, responses2.CategorySearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    categories,
+	})
 }
 
 // CreateCategory Create category godoc

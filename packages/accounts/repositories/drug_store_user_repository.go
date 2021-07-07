@@ -17,6 +17,9 @@ func NewDrugStoreUserRepository(db *gorm.DB) *DrugStoreUserRepository {
 	return &DrugStoreUserRepository{DB: db}
 }
 
-func (DrugStoreUserRepository *DrugStoreUserRepository) GetListDrugStoreAssignToStaff(drugStoreUser *[]models.DrugStoreUser, staffId uint) {
-	DrugStoreUserRepository.DB.Table(utils2.TblDrugstoreUser).Where("user_id = ?", staffId).Find(&drugStoreUser)
+func (DrugStoreUserRepository *DrugStoreUserRepository) GetListDrugStoreAssignToStaff(drugStoreUser *[]models.DrugStoreUser, count *int64, staffId uint) {
+	DrugStoreUserRepository.DB.Table(utils2.TblDrugstoreUser).
+		Count(count).
+		Where("user_id = ?", staffId).
+		Find(&drugStoreUser)
 }

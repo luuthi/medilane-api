@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
@@ -11,7 +12,7 @@ import (
 
 type VariantRepositoryQ interface {
 	GetVariantById(category *models2.Variant, id int16)
-	GetVariants(category []*models2.Variant, filter requests2.SearchVariantRequest)
+	GetVariants(category []*models2.Variant, count *int64, filter requests2.SearchVariantRequest)
 }
 
 type VariantRepository struct {
@@ -23,10 +24,10 @@ func NewVariantRepository(db *gorm.DB) *VariantRepository {
 }
 
 func (variantRepository *VariantRepository) GetVariantById(category *models2.Variant, id uint) {
-	variantRepository.DB.Where("id = ?", id).Find(category)
+	variantRepository.DB.Table(utils.TblVariant).Where("id = ?", id).Find(category)
 }
 
-func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, filter *requests2.SearchVariantRequest) {
+func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, count *int64, filter *requests2.SearchVariantRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -43,8 +44,9 @@ func (variantRepository *VariantRepository) GetVariants(category *[]models2.Vari
 		filter.Sort.SortDirection = "desc"
 	}
 
-	variantRepository.DB.Where(strings.Join(spec, " AND "), values...).
+	variantRepository.DB.Table(utils.TblVariant).Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
+		Count(count).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&category)

@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
 )
 
 type RoleRepositoryQ interface {
-	GetRoles(perms []*models2.Role, filter requests2.SearchRoleRequest)
+	GetRoles(perms []*models2.Role, count *int64, filter requests2.SearchRoleRequest)
 	GetRoleByID(perm *models2.Role, id uint)
 }
 
@@ -22,7 +23,7 @@ func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{DB: db}
 }
 
-func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests2.SearchRoleRequest) {
+func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, count *int64, filter requests2.SearchRoleRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -39,7 +40,8 @@ func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, filter requests2
 		filter.Sort.SortDirection = "desc"
 	}
 
-	roleRepo.DB.Where(strings.Join(spec, " AND "), values...).
+	roleRepo.DB.Table(utils2.TblRole).Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).

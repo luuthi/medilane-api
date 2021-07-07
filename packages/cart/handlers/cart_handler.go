@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	repositories2 "medilane-api/packages/medicines/repositories"
+	responses2 "medilane-api/packages/medicines/responses"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
@@ -38,9 +39,15 @@ func (cartHandler *CartHandler) GetCart(c echo.Context) error {
 
 	cartHandler.server.Logger.Info("Search product")
 	var medicines []models2.Product
+	var total int64
 
 	productRepo := repositories2.NewProductRepository(cartHandler.server.DB)
-	productRepo.GetProducts(&medicines, searchRequest)
+	productRepo.GetProducts(&medicines, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", medicines)
+	return responses.Response(c, http.StatusOK, responses2.ProductSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    medicines,
+	})
 }

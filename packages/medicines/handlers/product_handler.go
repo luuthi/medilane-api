@@ -8,6 +8,7 @@ import (
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
 	response2 "medilane-api/packages/medicines/responses"
+	responses2 "medilane-api/packages/medicines/responses"
 	"medilane-api/packages/medicines/services/medicine"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -44,11 +45,17 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 
 	productHandler.server.Logger.Info("Search product")
 	var medicines []models2.Product
+	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	productRepo.GetProducts(&medicines, searchRequest)
+	productRepo.GetProducts(&medicines, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", medicines)
+	return responses.Response(c, http.StatusOK, responses2.ProductSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    medicines,
+	})
 }
 
 // CreateProduct Create product godoc

@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
@@ -13,7 +14,7 @@ import (
 type ProductsRepositoryQ interface {
 	GetProductByCode(Product *models2.Product, Code string)
 	GetProductById(Product *models2.Product, id int16)
-	GetProducts(product []*models2.Product, filter requests2.SearchProductRequest)
+	GetProducts(product []*models2.Product, count *int64, filter requests2.SearchProductRequest)
 }
 
 type ProductRepository struct {
@@ -32,7 +33,7 @@ func (productRepository *ProductRepository) GetProductById(product *models2.Prod
 	productRepository.DB.Where("id = ?", id).Find(product)
 }
 
-func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, filter *requests2.SearchProductRequest) {
+func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -64,7 +65,8 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		filter.Sort.SortDirection = "desc"
 	}
 
-	productRepository.DB.Where(strings.Join(spec, " AND "), values...).
+	productRepository.DB.Table(utils.TblProduct).Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).

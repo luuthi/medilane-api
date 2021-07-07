@@ -10,7 +10,7 @@ import (
 )
 
 type AreaRepositoryQ interface {
-	GetAreas(perms []*models2.Area, filter requests2.SearchAreaRequest)
+	GetAreas(perms []*models2.Area, total *int64, filter requests2.SearchAreaRequest)
 	GetAreaByID(perm *models2.Area, id uint)
 }
 
@@ -22,7 +22,7 @@ func NewAreaRepository(db *gorm.DB) *AreaRepository {
 	return &AreaRepository{DB: db}
 }
 
-func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, filter requests2.SearchAreaRequest) {
+func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, filter requests2.SearchAreaRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -35,6 +35,7 @@ func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, filter requests2
 	}
 
 	areaRepo.DB.Table(utils2.TblArea).Where(strings.Join(spec, " AND "), values...).
+		Count(total).
 		Preload("Addresses").
 		Limit(filter.Limit).
 		Offset(filter.Offset).

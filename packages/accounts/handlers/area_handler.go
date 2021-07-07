@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
+	responses2 "medilane-api/packages/accounts/responses"
 	"medilane-api/packages/accounts/services/address"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -44,10 +45,17 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 
 	areaHandler.server.Logger.Info("search area")
 	var areas []models2.Area
+	var total int64
 
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
-	areaRepo.GetAreas(&areas, searchArea)
-	return responses.SearchResponse(c, http.StatusOK, "", areas)
+	areaRepo.GetAreas(&areas, &total, searchArea)
+	//return responses.SearchResponse(c, http.StatusOK, "", areas)
+	return responses.Response(c, http.StatusOK, responses2.AreaSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    areas,
+	})
 }
 
 // CreateArea Create area godoc
@@ -184,9 +192,11 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
 
 	var productsOfArea []models2.AreaCost
-	areaCostRepo.GetProductsOfArea(&productsOfArea, bodyRequest.AreaId)
+	var total int64
 
-	if len(productsOfArea) == 0 {
+	areaCostRepo.GetProductsOfArea(&productsOfArea, &total, bodyRequest.AreaId)
+
+	if total == 0 {
 		for _, v := range bodyRequest.Products {
 			if err := areaService.SetCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
 			}

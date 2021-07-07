@@ -7,6 +7,7 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
+	responses2 "medilane-api/packages/medicines/responses"
 	"medilane-api/packages/medicines/services/medicine"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -43,11 +44,17 @@ func (tagHandler *TagHandler) SearchTag(c echo.Context) error {
 
 	tagHandler.server.Logger.Info("Search Tag")
 	var tags []models2.Tag
+	var total int64
 
 	tagRepo := repositories2.NewTagRepository(tagHandler.server.DB)
-	tagRepo.GetTags(&tags, searchRequest)
+	tagRepo.GetTags(&tags, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", tags)
+	return responses.Response(c, http.StatusOK, responses2.TagSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    tags,
+	})
 }
 
 // CreateTag Create Tag godoc

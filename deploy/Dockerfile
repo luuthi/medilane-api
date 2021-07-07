@@ -28,7 +28,7 @@ RUN ls -l
 
 FROM alpine:3.12
 WORKDIR /app
-COPY --from=build /go/src/api/main /app/account-api
-RUN chmod +x /app/account-api
-ENTRYPOINT ["/app/account-api"]
+COPY --from=build /go/src/api/main /app/medilane-api
+RUN chmod +x /app/medilane-api
+ENTRYPOINT ["/app/medilane-api"]
 

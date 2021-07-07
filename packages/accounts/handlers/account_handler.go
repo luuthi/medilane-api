@@ -6,6 +6,7 @@ import (
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
+	responses2 "medilane-api/packages/accounts/responses"
 	"medilane-api/packages/accounts/services/account"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -42,11 +43,18 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 
 	accHandler.server.Logger.Info("search account")
 	var accounts []models.User
+	var total int64
 
 	accountRepo := repositories2.NewAccountRepository(accHandler.server.DB)
-	accountRepo.GetAccounts(&accounts, searchRequest)
+	accountRepo.GetAccounts(&accounts, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", accounts)
+	//return responses.SearchResponse(c, http.StatusOK, "", accounts)
+	return responses.Response(c, http.StatusOK, responses2.UserSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    accounts,
+	})
 }
 
 // CreateAccount Create account godoc
@@ -203,9 +211,10 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	drugStoreUserRepo := repositories2.NewDrugStoreUserRepository(accHandler.server.DB)
 
 	var drugStoreUserInDB []models.DrugStoreUser
-	drugStoreUserRepo.GetListDrugStoreAssignToStaff(&drugStoreUserInDB, id)
+	var total int64
+	drugStoreUserRepo.GetListDrugStoreAssignToStaff(&drugStoreUserInDB, &total, id)
 
-	if len(drugStoreUserInDB) == 0 {
+	if total == 0 {
 		for _, v := range requestBody.AssignDetail {
 			err := userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
 			if err != nil {

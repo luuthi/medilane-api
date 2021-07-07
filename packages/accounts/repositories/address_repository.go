@@ -10,7 +10,7 @@ import (
 )
 
 type AddressRepositoryQ interface {
-	GetAddresses(perms []*models2.Address, filter requests2.SearchAddressRequest)
+	GetAddresses(perms []*models2.Address, count *int64, filter requests2.SearchAddressRequest)
 	GetAddressByID(perm *models2.Address, id uint)
 	GetAddressByArea(perm []*models2.Address, id uint)
 }
@@ -23,7 +23,7 @@ func NewAddressRepository(db *gorm.DB) *AddressRepository {
 	return &AddressRepository{DB: db}
 }
 
-func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address, filter requests2.SearchAddressRequest) {
+func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address, count *int64, filter requests2.SearchAddressRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -76,6 +76,7 @@ func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address,
 	}
 
 	addressRepo.DB.Table(utils2.TblAddress).Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Preload("Area").
 		Limit(filter.Limit).
 		Offset(filter.Offset).

@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
+	responses2 "medilane-api/packages/accounts/responses"
 	"medilane-api/packages/accounts/services/account"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -43,10 +44,17 @@ func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 
 	roleHandler.server.Logger.Info("search role")
 	var roles []models2.Role
+	var total int64
 
 	roleRepo := repositories.NewRoleRepository(roleHandler.server.DB)
-	roleRepo.GetRoles(&roles, searchReq)
-	return responses.SearchResponse(c, http.StatusOK, "", roles)
+	roleRepo.GetRoles(&roles, &total, searchReq)
+
+	return responses.Response(c, http.StatusOK, responses2.RoleSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    roles,
+	})
 }
 
 // CreateRole Create role godoc

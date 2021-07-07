@@ -12,7 +12,7 @@ import (
 type TagRepositoryQ interface {
 	GetTagBySlug(tag *models2.Tag, Slug string)
 	GetTagById(tag *models2.Tag, id int16)
-	GetTags(tag []*models2.Tag, filter requests2.SearchTagRequest)
+	GetTags(tag []*models2.Tag, count *int64, filter requests2.SearchTagRequest)
 }
 
 type TagRepository struct {
@@ -31,7 +31,7 @@ func (tagRepository *TagRepository) GetTagById(tag *models2.Tag, id uint) {
 	tagRepository.DB.Where("id = ?", id).Find(tag)
 }
 
-func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, filter *requests2.SearchTagRequest) {
+func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, count *int64, filter *requests2.SearchTagRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -46,6 +46,7 @@ func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, filter *requests
 	}
 
 	tagRepository.DB.Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

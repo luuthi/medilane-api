@@ -7,6 +7,7 @@ import (
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
+	responses2 "medilane-api/packages/medicines/responses"
 	"medilane-api/packages/medicines/services/medicine"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -43,11 +44,17 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 
 	variantHandler.server.Logger.Info("Search Variant")
 	var Variants []models2.Variant
+	var total int64
 
 	variantRepo := repositories2.NewVariantRepository(variantHandler.server.DB)
-	variantRepo.GetVariants(&Variants, searchRequest)
+	variantRepo.GetVariants(&Variants, &total, searchRequest)
 
-	return responses.SearchResponse(c, http.StatusOK, "", Variants)
+	return responses.Response(c, http.StatusOK, responses2.VariantSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    Variants,
+	})
 }
 
 // CreateVariant Create variant godoc

@@ -12,7 +12,7 @@ import (
 type AccountRepositoryQ interface {
 	GetUserByEmail(user *models.User, email string)
 	GetUserByUsername(user *models.User, email string)
-	GetAccounts(users []*models.User, filter requests2.SearchAccountRequest)
+	GetAccounts(users []*models.User, count *int64, filter requests2.SearchAccountRequest)
 }
 
 type AccountRepository struct {
@@ -41,7 +41,7 @@ func (AccountRepository *AccountRepository) GetDrugStoreByUSer(store *models.Dru
 		Where(fmt.Sprintf("du.user_id = \"%v\"", userID)).Find(&store)
 }
 
-func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, filter *requests2.SearchAccountRequest) {
+func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, count *int64, filter *requests2.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -83,7 +83,9 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, fi
 		filter.Sort.SortDirection = "desc"
 	}
 
-	AccountRepository.DB.Where(strings.Join(spec, " AND "), values...).
+	AccountRepository.DB.Table(utils2.TblAccount).
+		Count(count).
+		Where(strings.Join(spec, " AND "), values...).
 		Preload("Roles").
 		Limit(filter.Limit).
 		Offset(filter.Offset).

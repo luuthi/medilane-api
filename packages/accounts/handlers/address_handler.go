@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
+	responses2 "medilane-api/packages/accounts/responses"
 	"medilane-api/packages/accounts/services/address"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -43,10 +44,16 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 
 	addHandler.server.Logger.Info("search address")
 	var addresses []models2.Address
+	var total int64
 
 	addressRepo := repositories.NewAddressRepository(addHandler.server.DB)
-	addressRepo.GetAddresses(&addresses, searchReq)
-	return responses.SearchResponse(c, http.StatusOK, "", addresses)
+	addressRepo.GetAddresses(&addresses, &total, searchReq)
+	return responses.Response(c, http.StatusOK, responses2.AddressSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    addresses,
+	})
 }
 
 // CreateAddress Create address godoc
