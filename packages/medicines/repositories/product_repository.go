@@ -26,11 +26,11 @@ func NewProductRepository(db *gorm.DB) *ProductRepository {
 }
 
 func (productRepository *ProductRepository) GetProductByCode(product *models2.Product, Code string) {
-	productRepository.DB.Where("Code = ?", Code).Find(product)
+	productRepository.DB.Table(utils.TblProduct).Where("Code = ?", Code).Find(product)
 }
 
 func (productRepository *ProductRepository) GetProductById(product *models2.Product, id uint) {
-	productRepository.DB.Where("id = ?", id).Find(product)
+	productRepository.DB.Table(utils.TblProduct).Where("id = ?", id).Find(product)
 }
 
 func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest) {
@@ -64,8 +64,11 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	if filter.Sort.SortDirection == "" {
 		filter.Sort.SortDirection = "desc"
 	}
-
-	productRepository.DB.Table(utils.TblProduct).Where(strings.Join(spec, " AND "), values...).
+	fieldToSelect := []string{"code", "name", "registration_no", "content", "description", "packaging_size", "unit", "barcode", "status",
+		"base_price", "manufacturer", "id"}
+	productRepository.DB.Table(utils.TblProduct).
+		Select(fieldToSelect).
+		Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
