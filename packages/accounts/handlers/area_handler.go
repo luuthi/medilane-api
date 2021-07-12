@@ -32,7 +32,7 @@ func NewAreaHandler(server *s.Server) *AreaHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchAreaRequest true "Filter area"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.AreaSearch
 // @Failure 400 {object} responses.Error
 // @Router /area/find [post]
 // @Security BearerAuth

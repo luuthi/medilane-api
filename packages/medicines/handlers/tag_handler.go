@@ -32,7 +32,7 @@ func NewTagHandler(server *s.Server) *TagHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchTagRequest true "Filter Tag"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.TagSearch
 // @Failure 401 {object} responses.Error
 // @Router /tag/find [post]
 // @Security BearerAuth

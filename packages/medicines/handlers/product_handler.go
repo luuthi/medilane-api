@@ -33,7 +33,7 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchProductRequest true "Filter product"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.ProductSearch
 // @Failure 401 {object} responses.Error
 // @Router /product/find [post]
 // @Security BearerAuth
@@ -166,7 +166,7 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.ChangeStatusProductsRequest true "body change status products"
-// @Success 201 {object} responses.Data
+// @Success 201 {object} responses.MessageDetail
 // @Failure 401 {object} responses.Error
 // @Router /products/status [post]
 // @Security BearerAuth
@@ -205,5 +205,6 @@ func (productHandler *ProductHandler) ChangeStatusProducts(c echo.Context) error
 		ListProductChangeStatusSuccess: listChangeStatusSuccess,
 	}
 
-	return response2.MessageResponse(c, http.StatusOK, messageDetail)
+	//return response2.MessageResponse(c, http.StatusOK, messageDetail)
+	return responses.Response(c, http.StatusOK, messageDetail)
 }

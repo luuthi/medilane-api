@@ -32,7 +32,7 @@ func NewRoleHandler(server *s.Server) *RoleHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchRoleRequest true "Filter role"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.RoleSearch
 // @Failure 400 {object} responses.Error
 // @Router /role/find [post]
 // @Security BearerAuth

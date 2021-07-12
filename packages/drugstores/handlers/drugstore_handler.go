@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/models"
+	responses3 "medilane-api/packages/accounts/responses"
 	repositories2 "medilane-api/packages/drugstores/repositories"
 	responses2 "medilane-api/packages/drugstores/responses"
 	drugServices "medilane-api/packages/drugstores/services"
@@ -32,7 +33,7 @@ func NewDrugStoreHandler(server *s.Server) *DrugStoreHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchDrugStoreRequest true "Drugstore's credentials"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.DrugStoreSearch
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/find [post]
 // @Security BearerAuth
@@ -234,7 +235,7 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Param id path uint true "id drugstore"
-// @Success 201 {object} responses.Data
+// @Success 201 {object} responses.GetRelationshipResponse
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/connective/{id} [get]
 // @Security BearerAuth
@@ -325,7 +326,7 @@ func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
 // @Accept json
 // @Produce json
 // @Param id path uint true "id of drugstore"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.UserSearch
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/{id}/accounts [get]
 // @Security BearerAuth
@@ -339,11 +340,18 @@ func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Contex
 
 	drugStoreHandler.server.Logger.Info("search account in store")
 	var accounts []models.User
+	var total int64
 
 	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	drugStoreRepo.GetUsersByDrugstore(&accounts, idStore)
+	drugStoreRepo.GetUsersByDrugstore(&accounts, &total, idStore)
 
-	return responses.SearchResponse(c, http.StatusOK, "", accounts)
+	//return responses.SearchResponse(c, http.StatusOK, "", accounts)
+	return responses.Response(c, http.StatusOK, responses3.UserSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    accounts,
+	})
 }
 
 // StatisticNewStore Statistic new drugstore godoc
@@ -353,7 +361,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Contex
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.StatisticNewDrugStoreResult
 // @Failure 401 {object} responses.Error
 // @Router /drugstore/statistic-new [get]
 // @Security BearerAuth
@@ -376,5 +384,11 @@ func (drugStoreHandler *DrugStoreHandler) StatisticNewStore(c echo.Context) erro
 	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	drugStoreRepo.StatisticNewDrugStore(&drugStore, timeFrom, timeTo)
 
-	return responses.SearchResponse(c, http.StatusOK, "", drugStore)
+	//return responses.SearchResponse(c, http.StatusOK, "", drugStore)
+	return responses.Response(c, http.StatusOK, responses2.StatisticNewDrugStoreResult{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   0,
+		Data:    drugStore,
+	})
 }

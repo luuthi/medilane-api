@@ -31,7 +31,7 @@ func NewAccountHandler(server *s.Server) *AccountHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchAccountRequest true "Filter account"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.UserSearch
 // @Failure 400 {object} responses.Error
 // @Router /account/find [post]
 // @Security BearerAuth
@@ -274,6 +274,7 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 // @Tags Account Management
 // @Accept json
 // @Produce json
+// @Param username path string true "username"
 // @Success 200 {object} responses.DataSearch
 // @Failure 400 {object} responses.Error
 // @Router /account/{username}/permissions [get]

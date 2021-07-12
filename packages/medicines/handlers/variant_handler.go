@@ -32,7 +32,7 @@ func NewVariantHandler(server *s.Server) *VariantHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchVariantRequest true "Filter Variant"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.VariantSearch
 // @Failure 401 {object} responses.Error
 // @Router /variant/find [post]
 // @Security BearerAuth

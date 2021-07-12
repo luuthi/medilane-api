@@ -32,7 +32,7 @@ func NewCategoryHandler(server *s.Server) *CategoryHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchCategoryRequest true "Filter Category"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.CategorySearch
 // @Failure 401 {object} responses.Error
 // @Router /category/find [post]
 // @Security BearerAuth

@@ -32,7 +32,7 @@ func NewPermissionHandler(server *s.Server) *PermissionHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchPermissionRequest true "Filter permission"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.PermissionSearch
 // @Failure 400 {object} responses.Error
 // @Router /permission/find [post]
 // @Security BearerAuth

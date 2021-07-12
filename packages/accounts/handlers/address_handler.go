@@ -32,7 +32,7 @@ func NewAddressHandler(server *s.Server) *AddressHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchAddressRequest true "Filter address"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.AddressSearch
 // @Failure 400 {object} responses.Error
 // @Router /address/find [post]
 // @Security BearerAuth
