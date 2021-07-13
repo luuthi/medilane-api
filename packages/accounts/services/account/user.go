@@ -178,6 +178,10 @@ func (userService *Service) DeleteUser(id uint, username string) error {
 		SetID(id).
 		SetName(username).
 		Build()
+	//err := userService.DB.Model(&user).Association("Roles").Clear()
+	//if err != nil {
+	//	return err
+	//}
 	return userService.DB.Select("Roles").Delete(&user).Error
 }
 

@@ -5,10 +5,8 @@ import (
 )
 
 type CartBuilder struct {
-	id uint
-
-	CartDetails []models2.CartDetail `gorm:"foreignKey:CartID"`
-	UserID      uint                 `json:"UserID"`
+	id     uint
+	UserID uint `json:"UserID"`
 }
 
 func NewCartBuilder() *CartBuilder {
@@ -20,10 +18,18 @@ func (cartBuilder *CartBuilder) SetID(id uint) (u *CartBuilder) {
 	return cartBuilder
 }
 
+func (cartBuilder *CartBuilder) SetUserID(userID uint) (u *CartBuilder) {
+	cartBuilder.UserID = userID
+	return cartBuilder
+}
+
 func (cartBuilder *CartBuilder) Build() models2.Cart {
+	common := models2.CommonModelFields{
+		ID: cartBuilder.id,
+	}
 	cart := models2.Cart{
-		CartDetails: cartBuilder.CartDetails,
-		UserID:      cartBuilder.UserID,
+		UserID:            cartBuilder.UserID,
+		CommonModelFields: common,
 	}
 
 	return cart

@@ -23,6 +23,7 @@ type JwtCustomClaims struct {
 	Name    string `json:"name"`
 	IsAdmin bool   `json:"is_admin"`
 	Type    string `json:"type"`
+	UserId  uint   `json:"user_id"`
 	jwt.StandardClaims
 }
 
@@ -57,6 +58,7 @@ func (backend *JWTAuthenticationBackend) GenerateToken(user *models.User) (acces
 		user.Username,
 		user.IsAdmin,
 		user.Type,
+		user.ID,
 		jwt.StandardClaims{
 			ExpiresAt: exp,
 		},

@@ -26,6 +26,7 @@ func ConfigureDrugStoreRoutes(appRoute *echo.Group, server *s.Server) {
 	drugstore.GET("/connective/type/:id", drugStoreHandler.GetTypeConnectiveDrugStore, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
 	drugstore.PUT("/:id", drugStoreHandler.EditDrugstore, authentication.CheckPermission(server, []string{"edit:drugstore"}, false))
 	drugstore.DELETE("/:id", drugStoreHandler.DeleteDrugstore, authentication.CheckPermission(server, []string{"delete:drugstore"}, false))
+	drugstore.GET("/:id", drugStoreHandler.GetDrugstoreById, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
 	drugstore.GET("/:id/accounts", drugStoreHandler.SearchAccountByDrugStore, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
 	drugstore.GET("/statistic-new", drugStoreHandler.StatisticNewStore, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
 }

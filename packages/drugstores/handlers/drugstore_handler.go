@@ -58,6 +58,32 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 	})
 }
 
+// GetDrugstoreById Get drugstore godoc
+// @Summary Get drugstore in system
+// @Description Perform get drugstore
+// @ID get-drugstore
+// @Tags Drugstore Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id drugstore"
+// @Success 200 {object} models.DrugStore
+// @Failure 401 {object} responses.Error
+// @Router /drugstore/{id} [get]
+// @Security BearerAuth
+func (drugStoreHandler *DrugStoreHandler) GetDrugstoreById(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id drugstore: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedDrugstore models.DrugStore
+	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	return responses.Response(c, http.StatusOK, existedDrugstore)
+}
+
 // CreateDrugStore Create drugstore godoc
 // @Summary Create drugstore in system
 // @Description Perform create drugstore

@@ -7,6 +7,7 @@ type Order struct {
 	Discount        float32        `json:"Discount" gorm:"type:float(8)"`
 	SubTotal        float32        `json:"SubTotal" gorm:"type:float(8)"`
 	Total           float32        `json:"Total" gorm:"type:float(8)"`
+	Type            string         `json:"Type" gorm:"type:varchar(100);"`
 	Vat             float32        `json:"Vat" gorm:"type:float(8)"`
 	Note            string         `json:"Note" gorm:"type:varchar(200)"`
 	Status          string         `json:"Status" gorm:"type:varchar(200)"`
@@ -41,4 +42,10 @@ type PaymentMethod struct {
 
 	Name string `json:"Name" gorm:"type:varchar(200)"`
 	Note string `json:"Note" gorm:"type:varchar(500)"`
+}
+
+type OrderCode struct {
+	ID     uint   `json:"id" gorm:"primary_key"`
+	Number int64  `json:"Number" gorm:"type:integer(64)"`
+	Time   string `json:"Time" gorm:"type:varchar(100)"`
 }

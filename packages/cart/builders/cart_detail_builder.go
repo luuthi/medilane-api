@@ -25,16 +25,46 @@ func (cartDetailBuilder *CartDetailBuilder) SetID(id uint) (u *CartDetailBuilder
 	return cartDetailBuilder
 }
 
-func (cartBuilder *CartDetailBuilder) Build() models2.CartDetail {
+func (cartDetailBuilder *CartDetailBuilder) SetCartID(cartId uint) (u *CartDetailBuilder) {
+	cartDetailBuilder.CartID = cartId
+	return cartDetailBuilder
+}
+
+func (cartDetailBuilder *CartDetailBuilder) SetVariantID(variantId uint) (u *CartDetailBuilder) {
+	cartDetailBuilder.VariantID = variantId
+	return cartDetailBuilder
+}
+
+func (cartDetailBuilder *CartDetailBuilder) SetProductID(productId uint) (u *CartDetailBuilder) {
+	cartDetailBuilder.ProductID = productId
+	return cartDetailBuilder
+}
+
+func (cartDetailBuilder *CartDetailBuilder) SetCost(cost float32) (u *CartDetailBuilder) {
+	cartDetailBuilder.Cost = cost
+	return cartDetailBuilder
+}
+
+func (cartDetailBuilder *CartDetailBuilder) SetQuantity(quantity int) (u *CartDetailBuilder) {
+	cartDetailBuilder.Quantity = quantity
+	return cartDetailBuilder
+}
+
+func (cartDetailBuilder *CartDetailBuilder) SetDiscount(discount float32) (u *CartDetailBuilder) {
+	cartDetailBuilder.Discount = discount
+	return cartDetailBuilder
+}
+
+func (cartDetailBuilder *CartDetailBuilder) Build() models2.CartDetail {
 	cartDetail := models2.CartDetail{
-		Cost:      cartBuilder.Cost,
-		Quantity:  cartBuilder.Quantity,
-		Discount:  cartBuilder.Discount,
-		CartID:    cartBuilder.CartID,
-		ProductID: cartBuilder.ProductID,
-		VariantID: cartBuilder.VariantID,
-		Product:   cartBuilder.Product,
-		Variant:   cartBuilder.Variant,
+		Cost:      cartDetailBuilder.Cost,
+		Quantity:  cartDetailBuilder.Quantity,
+		Discount:  cartDetailBuilder.Discount,
+		CartID:    cartDetailBuilder.CartID,
+		ProductID: cartDetailBuilder.ProductID,
+		VariantID: cartDetailBuilder.VariantID,
+		Product:   cartDetailBuilder.Product,
+		Variant:   cartDetailBuilder.Variant,
 	}
 
 	return cartDetail

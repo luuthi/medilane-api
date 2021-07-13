@@ -158,6 +158,33 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 	return responses.MessageResponse(c, http.StatusOK, "Product deleted!")
 }
 
+// GetProductByID Get product godoc
+// @Summary Get product in system
+// @Description Perform get product
+// @ID get-product
+// @Tags Product Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id product"
+// @Success 200 {object} models.Product
+// @Failure 401 {object} responses.Error
+// @Router /product/{id} [get]
+// @Security BearerAuth
+func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id product: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedProduct models.Product
+	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
+	medicineRepo.GetProductById(&existedProduct, id)
+
+	return responses.Response(c, http.StatusOK, existedProduct)
+}
+
 // ChangeStatusProducts Change status of list product godoc
 // @Summary Change status of list product in system
 // @Description Perform Change status of list product

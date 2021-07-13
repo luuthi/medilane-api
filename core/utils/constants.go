@@ -18,6 +18,11 @@ const (
 	TblDrugstoreUser         = "drug_store_user"
 	TblPromotion             = "promotion"
 	TblPromotionDetail       = "promotion_detail"
+	TblCart                  = "cart"
+	TblCartDetail            = "cart_detail"
+	TblOrder                 = "order"
+	TblOrderCode             = "order_code"
+	TblOrderDetail           = "order_detail"
 )
 
 type AccountType string
@@ -51,3 +56,10 @@ const (
 func (a UserDrugStoreRelationShip) String() string {
 	return [...]string{"manager", "staff", "caring_staff"}[a]
 }
+
+type OrderType string
+
+const (
+	IMPORT OrderType = "import"
+	EXPORT           = "export"
+)

@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	log2 "github.com/labstack/gommon/log"
 	accRoute "medilane-api/packages/accounts/routes"
+	cartRoute "medilane-api/packages/cart/routes"
 	drugStoreRoute "medilane-api/packages/drugstores/routes"
 	productRoute "medilane-api/packages/medicines/routes"
 	promotionRoute "medilane-api/packages/promotion/routes"
@@ -35,6 +36,7 @@ func ConfigureRoutes(server *s.Server) {
 	productRoute.ConfigureProductRoutes(appRoute, server)
 	drugStoreRoute.ConfigureDrugStoreRoutes(appRoute, server)
 	promotionRoute.ConfigureAccountRoutes(appRoute, server)
+	cartRoute.ConfigureCartRoutes(appRoute, server)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {
