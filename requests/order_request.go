@@ -11,12 +11,14 @@ type SearchOrderRequest struct {
 	Offset int        `json:"offset" example:"0"`
 	Sort   SortOption `json:"sort"`
 	Status string     `json:"status" example:"true"`
+	Type   string     `json:"type"`
 }
 
 func (rr SearchOrderRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
+		validation.Field(&rr.Type, validation.In(utils.IMPORT, utils.EXPORT)),
 	)
 }
 
@@ -38,7 +40,7 @@ type OrderRequest struct {
 	OrderDetails    []models.OrderDetail `json:"OrderDetails"`
 }
 
-func (rr OrderRequest) OrderRequest() error {
+func (rr OrderRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Discount, validation.Min(0)),
 		validation.Field(&rr.SubTotal, validation.Min(0)),

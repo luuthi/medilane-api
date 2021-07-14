@@ -10,7 +10,7 @@ import (
 )
 
 type OrderRepositoryQ interface {
-	GetOrder(orders []*models2.Order, count *int64, userId uint, filter requests2.SearchOrderRequest)
+	GetOrder(orders *[]models2.Order, count *int64, userId uint, filter *requests2.SearchOrderRequest)
 	GetOrderByDetail(order *models2.Order, orderId uint)
 }
 
@@ -22,15 +22,21 @@ func NewOrderRepository(db *gorm.DB) *OrderRepository {
 	return &OrderRepository{DB: db}
 }
 
-func (OrderRepository *OrderRepository) GetOrder(orders []*models2.Order, count *int64, userId uint, filter requests2.SearchOrderRequest) {
+func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, filter *requests2.SearchOrderRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
-	spec = append(spec, "status = ?")
-	values = append(values, filter.Status)
-
 	spec = append(spec, "user_id = ?")
 	values = append(values, userId)
+
+	if filter.Status != "" {
+		spec = append(spec, "status = ?")
+		values = append(values, filter.Status)
+	}
+	if filter.Type != "" {
+		spec = append(spec, "type = ?")
+		values = append(values, filter.Type)
+	}
 
 	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).
 		Count(count).

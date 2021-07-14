@@ -1,4 +1,4 @@
-package cart
+package order
 
 import (
 	"fmt"
@@ -143,14 +143,16 @@ func (s *Service) EditOrder(request *requests2.OrderRequest, orderId uint) (erro
 		SetOrderCode(request.OrderCode).
 		SetDrugStoreID(request.DrugStoreID).Build()
 
-	details := order.OrderDetails
+	//if len(order.OrderDetails) > 0 {
+	//	details := order.OrderDetails
+	//}
+	//
+	//err := tx.Model(&order).Association("OrderDetails").Clear()
+	//if err != nil {
+	//	return err, nil
+	//}
 
-	err := tx.Model(&order).Association("OrderDetails").Clear()
-	if err != nil {
-		return err, nil
-	}
-
-	order.OrderDetails = details
+	//order.OrderDetails = details
 	rs := tx.Table(utils.TblOrder).Updates(&order)
 	return rs.Error, &order
 }

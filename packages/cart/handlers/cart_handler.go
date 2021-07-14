@@ -101,7 +101,7 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 // AddCartItem Create cart godoc
 // @Summary Create cart in system
 // @Description Perform create cart
-// @ID create-cart
+// @ID create-cart-item
 // @Tags Cart Management
 // @Accept json
 // @Produce json
@@ -173,7 +173,7 @@ func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
 // @Param id path uint true "id cart item"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
-// @Router /cart/{id}/details[delete]
+// @Router /cart/{id}/details [delete]
 // @Security BearerAuth
 func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
 	var paramUrl uint64
