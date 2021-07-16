@@ -10,6 +10,7 @@ type SearchProductRequest struct {
 	Name    string `json:"Name" example:"name"`
 	Barcode string `json:"Barcode"  example:"example"`
 	Status  string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	AreaId  uint   `json:"area_id"`
 
 	Limit  int        `json:"limit" example:"10"`
 	Offset int        `json:"offset" example:"0"`

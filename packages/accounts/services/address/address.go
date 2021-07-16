@@ -9,7 +9,7 @@ import (
 	requests2 "medilane-api/requests"
 )
 
-func (addressService *Service) CreateAddress(request *requests2.AddressRequest) *gorm.DB {
+func (areaCostService *Service) CreateAddress(request *requests2.AddressRequest) *gorm.DB {
 	address := builders.NewAddressBuilder().
 		SetProvince(request.Province).
 		SetArea(request.AreaID).
@@ -21,10 +21,10 @@ func (addressService *Service) CreateAddress(request *requests2.AddressRequest) 
 		SetStreet(request.Address).
 		SetDefault(request.IsDefault).
 		Build()
-	return addressService.DB.Table(utils2.TblAddress).Create(&address)
+	return areaCostService.DB.Table(utils2.TblAddress).Create(&address)
 }
 
-func (addressService *Service) EditAddress(request *requests2.AddressRequest, id uint) error {
+func (areaCostService *Service) EditAddress(request *requests2.AddressRequest, id uint) error {
 	address := builders.NewAddressBuilder().
 		SetProvince(request.Province).
 		SetArea(request.AreaID).
@@ -37,13 +37,13 @@ func (addressService *Service) EditAddress(request *requests2.AddressRequest, id
 		SetDefault(request.IsDefault).
 		SetID(id).
 		Build()
-	return addressService.DB.Table(utils2.TblAddress).Updates(&address).Error
+	return areaCostService.DB.Table(utils2.TblAddress).Updates(&address).Error
 }
 
-func (addressService *Service) DeleteAddress(id uint) error {
+func (areaCostService *Service) DeleteAddress(id uint) error {
 
 	var existedAddress models.Address
-	addressService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
+	areaCostService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
 	if existedAddress.IsDefault {
 		return errors.New("cannot delete default address")
 	}
@@ -51,13 +51,13 @@ func (addressService *Service) DeleteAddress(id uint) error {
 	address := builders.NewAreaBuilder().
 		SetID(id).
 		Build()
-	return addressService.DB.Table(utils2.TblAddress).Delete(&address).Error
+	return areaCostService.DB.Table(utils2.TblAddress).Delete(&address).Error
 }
 
-func (addressService *Service) SetAddressDefault(id uint) error {
+func (areaCostService *Service) SetAddressDefault(id uint) error {
 
 	var existedAddress models.Address
-	addressService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
+	areaCostService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
 	if existedAddress.IsDefault {
 		return errors.New("cannot delete default address")
 	}
@@ -65,5 +65,5 @@ func (addressService *Service) SetAddressDefault(id uint) error {
 	address := builders.NewAreaBuilder().
 		SetID(id).
 		Build()
-	return addressService.DB.Table(utils2.TblAddress).Delete(&address).Error
+	return areaCostService.DB.Table(utils2.TblAddress).Delete(&address).Error
 }

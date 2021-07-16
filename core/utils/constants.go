@@ -13,9 +13,9 @@ const (
 	TblArea                  = "area"
 	TblAddress               = "address"
 	TblDrugstore             = "drug_store"
+	TblDrugstoreUser         = "drug_store_user"
 	TblAreaCost              = "area_cost"
 	TblDrugstoreRelationship = "drug_store_relationship"
-	TblDrugstoreUser         = "drug_store_user"
 	TblPromotion             = "promotion"
 	TblPromotionDetail       = "promotion_detail"
 	TblCart                  = "cart"
@@ -29,10 +29,10 @@ type AccountType string
 
 const (
 	SUPER_ADMIN  AccountType = "super_admin"
-	STAFF                    = "staff"
-	USER                     = "user"
-	SUPPLIER                 = "supplier"
-	MANUFACTURER             = "manufacturer"
+	STAFF        AccountType = "staff"
+	USER         AccountType = "user"
+	SUPPLIER     AccountType = "supplier"
+	MANUFACTURER AccountType = "manufacturer"
 )
 
 type UserDrugStoreRelationShip int

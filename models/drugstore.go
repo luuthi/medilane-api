@@ -18,7 +18,7 @@ type DrugStore struct {
 	ChildStores    []*DrugStore    `json:"ChildStores,omitempty" gorm:"-"`
 	Vouchers       []*Voucher      `json:"Vouchers,omitempty" gorm:"-"`
 	Address        *Address        `json:"Address,omitempty" gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Orders         []*Order        `json:"Orders,omitempty" gorm:"foreignKey:DrugStoreID"`
+	Orders         []*Order        `json:"Orders,omitempty" gorm:"-"`
 	OrdersStore    []*OrderStore   `json:"OrdersStore,omitempty" gorm:"foreignKey:DrugStoreID"`
 	Products       []*ProductStore `json:"Products,omitempty" gorm:"many2many:drug_store_product"`
 }

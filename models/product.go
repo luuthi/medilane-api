@@ -27,6 +27,7 @@ type Product struct {
 	Images                 []*Image    `json:"Images" gorm:"many2many:product_image"`
 	Tags                   []*Tag      `json:"Tags" gorm:"many2many:product_tag"`
 	Category               []*Category `json:"Category" gorm:"many2many:product_category"`
+	Cost                   float64     `json:"Cost" gorm:"float(8);not null"`
 }
 
 type ProductStore struct {

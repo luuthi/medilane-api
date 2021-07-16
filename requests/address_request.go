@@ -73,13 +73,13 @@ func (rr SearchAreaRequest) Validate() error {
 }
 
 type CostProductOfArea struct {
-	Cost float32 `json:"Cost"`
-	ProductId uint `json:"ProductId"`
+	Cost      float64 `json:"Cost"`
+	ProductId uint    `json:"ProductId"`
 }
 
 type SetCostProductsOfAreaRequest struct {
 	Products []CostProductOfArea `json:"Products"`
-	AreaId uint `json:"AreaId"`
+	AreaId   uint                `json:"AreaId"`
 }
 
 func (rr CostProductOfArea) Validate() error {

@@ -33,7 +33,17 @@ func (productRepository *ProductRepository) GetProductById(product *models2.Prod
 	productRepository.DB.Table(utils.TblProduct).Where("id = ?", id).Find(product)
 }
 
-func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest) {
+func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint) {
+	// check user area
+	var address models2.Address
+	var user models2.User
+	productRepository.DB.Table(utils.TblAccount).
+		Select("adr.*, user.*").
+		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+		Joins("JOIN address adr ON adr.id = ds.address_id").
+		Where("user.id = ?", userId).Find(&address).Find(&user)
+
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -65,9 +75,18 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		filter.Sort.SortDirection = "desc"
 	}
 	fieldToSelect := []string{"code", "name", "registration_no", "content", "description", "packaging_size", "unit", "barcode", "status",
-		"base_price", "manufacturer", "id"}
+		"base_price", "manufacturer", "id", "ac.cost"}
+
+	var areaId uint
+	if user.Type == string(utils.SUPER_ADMIN) || user.Type == string(utils.STAFF) {
+		areaId = filter.AreaId
+	} else {
+		areaId = address.AreaID
+	}
 	productRepository.DB.Table(utils.TblProduct).
 		Select(fieldToSelect).
+		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
+		Where(" ac.area_id = ?", areaId).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload(clause.Associations).

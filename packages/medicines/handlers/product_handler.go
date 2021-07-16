@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/authentication"
 	"medilane-api/models"
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
@@ -38,6 +39,15 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 // @Router /product/find [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
+	token, err := authentication.VerifyToken(c.Request(), productHandler.server)
+	if err != nil {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+
 	searchRequest := new(requests2.SearchProductRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		return err
@@ -48,7 +58,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	productRepo.GetProducts(&medicines, &total, searchRequest)
+	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId)
 
 	return responses.Response(c, http.StatusOK, responses2.ProductSearch{
 		Code:    http.StatusOK,

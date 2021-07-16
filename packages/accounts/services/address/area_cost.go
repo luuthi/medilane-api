@@ -5,7 +5,7 @@ import (
 	"medilane-api/packages/accounts/builders"
 )
 
-func (areaCostService *Service) SetCostProductOfArea(areaId uint, productId uint, cost float32) error {
+func (areaCostService *Service) SetCostProductOfArea(areaId uint, productId uint, cost float64) error {
 	area := builders.NewAreaCostBuilder().
 		SetProductId(productId).
 		SetAreaId(areaId).
@@ -14,7 +14,7 @@ func (areaCostService *Service) SetCostProductOfArea(areaId uint, productId uint
 	return areaCostService.DB.Table(utils2.TblAreaCost).Create(&area).Error
 }
 
-func (areaCostService *Service) UpdateCostProductOfArea(areaId uint, productId uint, cost float32) error {
+func (areaCostService *Service) UpdateCostProductOfArea(areaId uint, productId uint, cost float64) error {
 	area := builders.NewAreaCostBuilder().
 		SetProductId(productId).
 		SetAreaId(areaId).
