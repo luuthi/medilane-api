@@ -203,7 +203,7 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	if existedUser.Username == "" {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
 	}
-	if existedUser.Type != utils2.STAFF {
+	if existedUser.Type != string(utils2.STAFF) {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("User isn't staff"))
 	}
 

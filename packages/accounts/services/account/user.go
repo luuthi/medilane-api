@@ -44,10 +44,10 @@ func (userService *Service) CreateUser(request *requests2.AccountRequest) (error
 	// if account is type user, check drugStoreId and assign for drugstore
 	ud := builders2.NewUserDrugStoreBuilder().
 		SetUser(user.ID)
-	if request.Type == utils2.USER {
+	if request.Type == string(utils2.USER) {
 		if request.DrugStoreID != nil {
 			ud.SetDrugStoreId(*request.DrugStoreID).
-				SetRelationship(utils2.USER).
+				SetRelationship(string(utils2.USER)).
 				Build()
 			rs = tx.Table(utils2.TblDrugstoreUser).Create(&ud)
 			//rollback if error
@@ -120,7 +120,7 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 	ud := builders2.NewUserDrugStoreBuilder().
 		SetUser(user.ID).
 		SetDrugStoreId(store.ID).
-		SetRelationship(utils2.USER).
+		SetRelationship(string(utils2.USER)).
 		Build()
 	rs = tx.Table(utils2.TblDrugstoreUser).Create(&ud)
 	//rollback if error
