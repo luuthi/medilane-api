@@ -58,14 +58,14 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "Invalid credentials")
 	}
 
-	drugStore := models.DrugStore{}
-	AccountRepository.GetDrugStoreByUSer(&drugStore, user.ID)
+	var drugStore models.DrugStore
+	AccountRepository.GetDrugStoreByUser(&drugStore, user.ID)
 
 	if drugStore.ID == 0 && user.Type != string(utils2.SUPER_ADMIN) {
 		return responses.ErrorResponse(c, http.StatusForbidden, "User not in any active store")
 	}
 
-	if drugStore.Status != drugstores2.ACTIVE && user.Type != string(utils2.SUPER_ADMIN) {
+	if drugStore.Status != drugstores2.ACTIVE && user.Type != string(utils2.SUPER_ADMIN) && user.Type != string(utils2.STAFF) {
 		return responses.ErrorResponse(c, http.StatusForbidden, "Store is not active")
 	}
 
@@ -75,14 +75,14 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 		return err
 	}
 
-	//authHandler.server.MemDB.Update(func(txn *badger.Txn) error {
-	//
-	//})
-	//
 	refreshToken, err := tokenServ.CreateRefreshToken(&user)
 	if err != nil {
 		return err
 	}
+	var address models.Address
+	AccountRepository.GetAddressByUser(&address, user.ID)
+	user.DrugStore = &drugStore
+	user.Address = &address
 	res := responses2.NewLoginResponse(accessToken, refreshToken, exp, user)
 
 	return responses.Response(c, http.StatusOK, res)

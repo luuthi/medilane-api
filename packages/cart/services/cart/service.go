@@ -3,6 +3,7 @@ package cart
 import (
 	"errors"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	builders2 "medilane-api/packages/cart/builders"
@@ -33,7 +34,7 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 	// begin a transaction
 	tx := s.DB.Begin()
 
-	rs := tx.Create(&cart)
+	rs := tx.FirstOrCreate(&cart)
 
 	//rollback if error
 	if rs.Error != nil {
@@ -44,18 +45,37 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 	// if account is type user, check drugStoreId and assign for drugstore
 	var details []models.CartDetail
 	for _, item := range request.CartDetails {
-		cd := builders2.NewCartDetailBuilder().
-			SetCartID(cart.ID).
-			SetProductID(item.ProductID).
-			SetCost(item.Cost).
-			SetVariantID(item.VariantID).
-			SetDiscount(item.Discount).
-			SetQuantity(item.Quantity).
-			Build()
 
-		details = append(details, cd)
+		var existedCartDetail models.CartDetail
+		tx.Table(utils.TblCartDetail).
+			Where("product_id = ?", item.ProductID).
+			Where("variant_id = ?", item.VariantID).
+			First(&existedCartDetail)
 
-		rs = tx.Table(utils.TblCartDetail).Create(&cd)
+		if existedCartDetail.ID == 0 {
+			// not exist
+			existedCartDetail = builders2.NewCartDetailBuilder().
+				SetCartID(cart.ID).
+				SetProductID(item.ProductID).
+				SetCost(item.Cost).
+				SetVariantID(item.VariantID).
+				SetDiscount(item.Discount).
+				SetQuantity(item.Quantity).
+				Build()
+
+			rs = tx.Table(utils.TblCartDetail).Create(&existedCartDetail)
+		} else {
+			existedCartDetail.Quantity += item.Quantity
+			rs = tx.Table(utils.TblCartDetail).Updates(&existedCartDetail)
+		}
+
+		tx.Table(utils.TblCartDetail).
+			Preload(clause.Associations).
+			Preload("Product.Images").
+			First(&existedCartDetail)
+
+		details = append(details, existedCartDetail)
+
 		//rollback if error
 		if rs.Error != nil {
 			tx.Rollback()
@@ -88,8 +108,8 @@ func (s *Service) AddCartItem(request *requests.CartItemRequest) (error, *models
 	return rs.Error, &cd
 }
 
-func (s *Service) DeleteCartItem(cartItemId uint) error {
-	return s.DB.Table(utils.TblCartDetail).Delete(cartItemId).Error
+func (s *Service) DeleteCartItem(cart models.CartDetail) error {
+	return s.DB.Table(utils.TblCartDetail).Delete(&cart).Error
 }
 
 func (s *Service) DeleteCart(cart models.Cart) error {

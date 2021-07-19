@@ -46,9 +46,44 @@ func (genDb *GenDB) GenAreaCost() {
 
 }
 
+func (genDb GenDB) GenVariant() {
+	var products []models.Product
+	var offset int
+	var count int64
+	for {
+		genDb.DB.Table(utils.TblProduct).Select([]string{"id", "unit"}).
+			Limit(100).
+			Offset(offset).
+			Find(&products)
+		if len(products) == 0 {
+			break
+		}
+		for _, prod := range products {
+			var variant models.Variant
+			genDb.DB.Table(utils.TblVariant).Where("name = ?", prod.Unit).Find(&variant)
+
+			if variant.ID == 0 {
+				variant.Name = prod.Unit
+				genDb.DB.Table(utils.TblVariant).Create(&variant)
+			}
+
+			vv := models.VariantValue{
+				ProductID:    prod.ID,
+				VariantID:    variant.ID,
+				ConvertValue: 1,
+				Operator:     "multiply",
+			}
+			genDb.DB.Table(utils.TblVariantValue).Create(&vv)
+			count++
+			fmt.Printf("count: %d\n", count)
+		}
+		offset += len(products)
+	}
+}
+
 func main() {
 	cfg := config.NewConfig()
 	app := server.NewServer(cfg)
 	genDB := NewGenDB(app.DB)
-	genDB.GenAreaCost()
+	genDB.GenVariant()
 }

@@ -30,7 +30,33 @@ func (productRepository *ProductRepository) GetProductByCode(product *models2.Pr
 }
 
 func (productRepository *ProductRepository) GetProductById(product *models2.Product, id uint) {
-	productRepository.DB.Table(utils.TblProduct).Where("id = ?", id).Find(product)
+	productRepository.DB.Table(utils.TblProduct).
+		Preload(clause.Associations).
+		Where("id = ?", id).
+		Find(product)
+}
+
+func (productRepository *ProductRepository) GetProductByIdCost(product *models2.Product, id uint, userId uint) {
+	// check user area
+	var address models2.Address
+	var user models2.User
+	productRepository.DB.Table(utils.TblAccount).
+		Select("adr.*, user.*").
+		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+		Joins("JOIN address adr ON adr.id = ds.address_id").
+		Where("user.id = ?", userId).Find(&address).Find(&user)
+
+	var areaId uint
+	areaId = address.AreaID
+
+	productRepository.DB.Table(utils.TblProduct).
+		Select("product.*, ac.cost").
+		Preload(clause.Associations).
+		Preload("Variants.VariantValue").
+		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
+		Where(" ac.area_id = ?", areaId).
+		Where("product.id = ?", id).Find(product)
 }
 
 func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint) {
@@ -67,6 +93,11 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		values = append(values, filter.Barcode)
 	}
 
+	if filter.Category != 0 {
+		spec = append(spec, "cat.id = ?")
+		values = append(values, filter.Category)
+	}
+
 	if filter.Sort.SortField == "" {
 		filter.Sort.SortField = "created_at"
 	}
@@ -74,8 +105,8 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	if filter.Sort.SortDirection == "" {
 		filter.Sort.SortDirection = "desc"
 	}
-	fieldToSelect := []string{"code", "name", "registration_no", "content", "description", "packaging_size", "unit", "barcode", "status",
-		"base_price", "manufacturer", "id", "ac.cost"}
+	fieldToSelect := []string{"code", "product.name", "registration_no", "content", "description", "packaging_size", "unit", "barcode", "status",
+		"base_price", "manufacturer", "product.id", "ac.cost"}
 
 	var areaId uint
 	if user.Type == string(utils.SUPER_ADMIN) || user.Type == string(utils.STAFF) {
@@ -86,6 +117,8 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	productRepository.DB.Table(utils.TblProduct).
 		Select(fieldToSelect).
 		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
+		Joins(" JOIN product_category pc ON pc.product_id = product.id").
+		Joins(" JOIN category cat ON pc.category_id = cat.id").
 		Where(" ac.area_id = ?", areaId).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(count).

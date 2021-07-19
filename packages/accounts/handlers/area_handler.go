@@ -274,6 +274,8 @@ func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
 // @Accept json
 // @Produce json
 // @Param id path uint true "id area"
+// @Param offset query int true "offset"
+// @Param limit query int true "limit"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /area/{id}/cost [get]
@@ -286,6 +288,17 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
+	var offset int
+	var limit int
+	limit, err = strconv.Atoi(c.QueryParam("offset"))
+	if err != nil {
+		offset = 0
+	}
+	limit, err = strconv.Atoi(c.QueryParam("limit"))
+	if err != nil {
+		limit = 10
+	}
+
 	var existedArea models2.Area
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
 	areaRepo.GetAreaByID(&existedArea, id)
@@ -294,8 +307,14 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	}
 
 	var productsOfArea []models2.AreaCost
+	var total int64
 	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
-	areaCostRepo.GetProductsDetailOfArea(&productsOfArea, id)
+	areaCostRepo.GetProductsDetailOfArea(&productsOfArea, &total, id, offset, limit)
 
-	return responses.SearchResponse(c, http.StatusOK, "", productsOfArea)
+	return responses.Response(c, http.StatusOK, responses2.AreaCostSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    productsOfArea,
+	})
 }

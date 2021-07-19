@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -28,17 +29,31 @@ func (AccountRepository *AccountRepository) GetUserByEmail(user *models.User, em
 }
 
 func (AccountRepository *AccountRepository) GetUserByUsername(user *models.User, email string) {
-	AccountRepository.DB.Where("username = ?", email).Find(&user)
+	AccountRepository.DB.Where("username = ?", email).Preload(clause.Associations).Find(&user)
+}
+
+func (AccountRepository *AccountRepository) GetAddressByUser(address *models.Address, userID uint) {
+	AccountRepository.DB.Table(utils2.TblAccount).Select("adr.*").
+		Preload("Area").
+		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+		Joins("JOIN address adr ON adr.id = ds.address_id").
+		Where("user.id = ?", userID).
+		Where("user.type = 'user'").
+		First(&address)
+}
+
+func (AccountRepository *AccountRepository) GetDrugStoreByUser(drugstore *models.DrugStore, userID uint) {
+	AccountRepository.DB.Table(utils2.TblAccount).Select("ds.*").
+		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+		Where("user.id = ?", userID).
+		Where("user.type = 'user'").
+		First(&drugstore)
 }
 
 func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id uint) {
 	AccountRepository.DB.Where("id = ?", id).Find(&user)
-}
-
-func (AccountRepository *AccountRepository) GetDrugStoreByUSer(store *models.DrugStore, userID uint) {
-	AccountRepository.DB.Table(utils2.TblDrugstore).Select("drug_store.* ").
-		Joins(" JOIN drug_store_user du ON du.drug_store_id = drug_store.id ").
-		Where(fmt.Sprintf("du.user_id = \"%v\"", userID)).Find(&store)
 }
 
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, count *int64, filter *requests2.SearchAccountRequest) {

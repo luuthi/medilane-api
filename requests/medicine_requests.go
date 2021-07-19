@@ -6,11 +6,12 @@ import (
 )
 
 type SearchProductRequest struct {
-	Code    string `json:"Code" example:"MD01"`
-	Name    string `json:"Name" example:"name"`
-	Barcode string `json:"Barcode"  example:"example"`
-	Status  string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	AreaId  uint   `json:"area_id"`
+	Code     string `json:"Code" example:"MD01"`
+	Name     string `json:"Name" example:"name"`
+	Barcode  string `json:"Barcode"  example:"example"`
+	Status   string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	AreaId   uint   `json:"AreaId"`
+	Category uint   `json:"Category"`
 
 	Limit  int        `json:"limit" example:"10"`
 	Offset int        `json:"offset" example:"0"`

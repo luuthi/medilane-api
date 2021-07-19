@@ -26,7 +26,7 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
-	spec = append(spec, "user_id = ?")
+	spec = append(spec, "user_order_id = ?")
 	values = append(values, userId)
 
 	if filter.Status != "" {
@@ -40,7 +40,7 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 
 	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
-		Preload("Address, PaymentMethod, UserOrder, UserApprove").
+		Preload(clause.Associations).
 		Find(&orders)
 }
 

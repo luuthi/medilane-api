@@ -28,7 +28,7 @@ type ProductBuilder struct {
 	Manufacturer           string
 
 	Category []*models2.Category
-	Variants []*models2.Variant
+	Variants []*models2.VariantValue
 	Tags     []*models2.Tag
 }
 
@@ -156,16 +156,6 @@ func (productBuilder *ProductBuilder) SetCategories(ids []uint) (r *ProductBuild
 	return productBuilder
 }
 
-func (productBuilder *ProductBuilder) SetVariants(ids []uint) (r *ProductBuilder) {
-	var variants []*models2.Variant
-	variBuilder := NewVariantBuilder()
-	for _, v := range ids {
-		variants = append(variants, variBuilder.SetID(v).Build())
-	}
-	productBuilder.Variants = variants
-	return productBuilder
-}
-
 func (productBuilder *ProductBuilder) SetTags(ids []uint) (r *ProductBuilder) {
 	var tags []*models2.Tag
 	tagBuilder := NewTagBuilder()
@@ -198,7 +188,6 @@ func (productBuilder *ProductBuilder) Build() models2.Product {
 		Direction:              productBuilder.Direction,
 		IndicationsOfTheDrug:   productBuilder.IndicationsOfTheDrug,
 		Category:               productBuilder.Category,
-		Variants:               productBuilder.Variants,
 		Tags:                   productBuilder.Tags,
 	}
 

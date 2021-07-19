@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 )
@@ -28,9 +29,12 @@ func (AreaCostRepository *AreaCostRepository) GetProductsOfArea(areas *[]models2
 		Find(&areas)
 }
 
-func (AreaCostRepository *AreaCostRepository) GetProductsDetailOfArea(area *[]models2.AreaCost, areaId uint) {
+func (AreaCostRepository *AreaCostRepository) GetProductsDetailOfArea(area *[]models2.AreaCost, total *int64, areaId uint, offset int, limit int) {
 	AreaCostRepository.DB.Table(utils2.TblAreaCost).
+		Count(total).
 		Where("area_cost.area_id = ?", areaId).
-		Preload("Product").
+		Preload(clause.Associations).
+		Limit(limit).
+		Offset(offset).
 		Find(&area)
 }

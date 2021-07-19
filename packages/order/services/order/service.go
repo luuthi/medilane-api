@@ -96,7 +96,7 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 		return rs.Error, nil
 	}
 
-	var details []models.OrderDetail
+	var details []*models.OrderDetail
 	for _, item := range request.OrderDetails {
 		od := builders.NewOrderDetailBuilder().
 			SetCost(item.Cost).
@@ -107,7 +107,7 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 			SetQuantity(item.Quantity).
 			Build()
 
-		details = append(details, od)
+		details = append(details, &od)
 
 		rs = tx.Table(utils.TblOrderDetail).Create(&od)
 		//rollback if error

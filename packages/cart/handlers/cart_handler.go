@@ -30,7 +30,7 @@ func NewCartHandler(server *s.Server) *CartHandler {
 // @Tags Cart Management
 // @Accept json
 // @Produce json
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.CartSearch
 // @Failure 401 {object} responses.Error
 // @Router /cart/find [post]
 // @Security BearerAuth
@@ -44,7 +44,7 @@ func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 		return responses.Response(c, http.StatusUnauthorized, nil)
 	}
 
-	cartHandler.server.Logger.Info("Search product")
+	cartHandler.server.Logger.Info("cart product")
 	var cart models2.Cart
 	var total int64
 
@@ -66,7 +66,7 @@ func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.CartRequest true "Create cart"
-// @Success 201 {object} responses.Data
+// @Success 201 {object} responses.CreatedCart
 // @Failure 400 {object} responses.Error
 // @Router /cart [post]
 // @Security BearerAuth
@@ -90,12 +90,17 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
-	rs, _ := cartService.AddCart(&newCart, claims.UserId)
+	rs, data := cartService.AddCart(&newCart, claims.UserId)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert cart: %v", err.Error()))
 	}
 
-	return responses.MessageResponse(c, http.StatusCreated, "Cart created!")
+	return responses.Response(c, http.StatusCreated, responses2.CreatedCart{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   int64(len(data.CartDetails)),
+		Data:    data.CartDetails,
+	})
 }
 
 // AddCartItem Create cart godoc
@@ -191,7 +196,7 @@ func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
-	if err := cartService.DeleteCartItem(existCart.ID); err != nil {
+	if err := cartService.DeleteCartItem(existCart); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "User deleted!")

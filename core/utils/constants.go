@@ -10,6 +10,7 @@ const (
 	TblCategory              = "category"
 	TblTag                   = "tag"
 	TblVariant               = "variant"
+	TblVariantValue          = "variant_value"
 	TblArea                  = "area"
 	TblAddress               = "address"
 	TblDrugstore             = "drug_store"

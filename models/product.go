@@ -64,13 +64,14 @@ type ProductStore struct {
 type Variant struct {
 	CommonModelFields
 
-	Name string `json:"Name" gorm:"type:varchar(255);not null"`
+	Name         string `json:"Name" gorm:"type:varchar(255);not null"`
+	VariantValue *VariantValue
 }
 
 type VariantValue struct {
 	ProductID    uint    `gorm:"primaryKey"`
 	VariantID    uint    `gorm:"primaryKey"`
-	ConvertValue float32 `gorm:"type:decimal(10,2);"`
+	ConvertValue float32 `gorm:"type:float(8);"`
 	Operator     string  `gorm:"type:varchar(100)"`
 	Variant      *Variant
 	Product      *Product
@@ -83,7 +84,7 @@ func (*VariantValue) TableName() string {
 type VariantStoreValue struct {
 	ProductStoreID uint    `gorm:"primaryKey"`
 	VariantID      uint    `gorm:"primaryKey"`
-	ConvertValue   float32 `gorm:"type:decimal(10,2);"`
+	ConvertValue   float32 `gorm:"type:float(8);"`
 	Operator       string  `gorm:"type:varchar(100)"`
 	Variant        *Variant
 	ProductStore   *ProductStore

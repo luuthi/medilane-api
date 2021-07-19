@@ -3,7 +3,7 @@ package models
 type Cart struct {
 	CommonModelFields
 
-	CartDetails []CartDetail `gorm:"foreignKey:CartID"`
+	CartDetails []CartDetail `json:"CartDetails" gorm:"foreignKey:CartID"`
 	UserID      uint         `json:"UserID"`
 }
 

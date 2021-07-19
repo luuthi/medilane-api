@@ -27,9 +27,12 @@ func (CartRepository *CartRepository) GetCartByUser(cart *models.Cart, count *in
 	spec = append(spec, "user_id = ?")
 	values = append(values, userId)
 
-	CartRepository.DB.Table(utils.TblCart).Where(strings.Join(spec, " AND "), values...).
+	CartRepository.DB.Table(utils.TblCart).
 		Count(count).
+		Where(strings.Join(spec, " AND "), values...).
 		Preload(clause.Associations).
+		Preload("CartDetails.Product").
+		Preload("CartDetails.Product.Images").
 		First(&cart)
 }
 

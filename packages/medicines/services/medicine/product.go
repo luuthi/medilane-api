@@ -28,7 +28,6 @@ func (productService *Service) CreateProduct(request *requests2.ProductRequest) 
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
 		SetCategories(request.Categories).
-		SetVariants(request.Variants).
 		SetTags(request.Tags).
 		Build()
 

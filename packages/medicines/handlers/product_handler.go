@@ -181,8 +181,17 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Router /product/{id} [get]
 // @Security BearerAuth
 func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
+	token, err := authentication.VerifyToken(c.Request(), productHandler.server)
+	if err != nil {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+
 	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	paramUrl, err = strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id product: %v", err.Error()))
 	}
@@ -190,7 +199,7 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 
 	var existedProduct models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
-	medicineRepo.GetProductById(&existedProduct, id)
+	medicineRepo.GetProductByIdCost(&existedProduct, id, claims.UserId)
 
 	return responses.Response(c, http.StatusOK, existedProduct)
 }
