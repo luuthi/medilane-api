@@ -9,7 +9,6 @@ import (
 	"medilane-api/packages/medicines/repositories"
 	repositories2 "medilane-api/packages/medicines/repositories"
 	response2 "medilane-api/packages/medicines/responses"
-	responses2 "medilane-api/packages/medicines/responses"
 	"medilane-api/packages/medicines/services/medicine"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -58,9 +57,9 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId)
+	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId, 0)
 
-	return responses.Response(c, http.StatusOK, responses2.ProductSearch{
+	return responses.Response(c, http.StatusOK, responses.ProductSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,

@@ -66,7 +66,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.POST("/find", areaHandler.SearchArea, authentication.CheckPermission(server, []string{"read:area"}, false))
 	area.POST("", areaHandler.CreateArea, authentication.CheckPermission(server, []string{"create:area"}, false))
 	area.POST("/cost", areaHandler.SetCostProductsOfArea, authentication.CheckPermission(server, []string{"edit:area"}, false))
-	area.GET("/:id/cost", areaHandler.GetProductsOfArea, authentication.CheckPermission(server, []string{"read:area"}, false))
+	area.POST("/:id/cost", areaHandler.GetProductsOfArea, authentication.CheckPermission(server, []string{"read:area"}, false))
 	area.PUT("/:id", areaHandler.EditArea, authentication.CheckPermission(server, []string{"edit:area"}, false))
 	area.DELETE("/:id", areaHandler.DeleteArea, authentication.CheckPermission(server, []string{"delete:area"}, false))
 

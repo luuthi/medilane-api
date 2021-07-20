@@ -1,0 +1,3862 @@
+basePath: /api/v1
+definitions:
+  models.Address:
+    properties:
+      Address:
+        type: string
+      Area:
+        $ref: '#/definitions/models.Area'
+        type: object
+      AreaID:
+        type: integer
+      ContactName:
+        type: string
+      Coordinates:
+        type: string
+      Country:
+        type: string
+      District:
+        type: string
+      IsDefault:
+        type: boolean
+      Phone:
+        type: string
+      State:
+        type: string
+      Ward:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Area:
+    properties:
+      Addresses:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      Name:
+        type: string
+      Note:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      updated_at:
+        type: integer
+    type: object
+  models.Cart:
+    properties:
+      CartDetails:
+        items:
+          $ref: '#/definitions/models.CartDetail'
+        type: array
+      UserID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.CartDetail:
+    properties:
+      CartID:
+        type: integer
+      Cost:
+        type: number
+      Discount:
+        type: number
+      Product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      ProductID:
+        type: integer
+      Quantity:
+        type: integer
+      Variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      VariantID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Category:
+    properties:
+      Image:
+        type: string
+      Name:
+        type: string
+      Products:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      ProductsStore:
+        items:
+          $ref: '#/definitions/models.ProductStore'
+        type: array
+      Slug:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.DrugStore:
+    properties:
+      Address:
+        $ref: '#/definitions/models.Address'
+        type: object
+      AddressID:
+        type: integer
+      ApproveBy:
+        $ref: '#/definitions/models.User'
+        type: object
+      ApproveTime:
+        type: integer
+      ChildStores:
+        items:
+          $ref: '#/definitions/models.DrugStore'
+        type: array
+      LicenseFile:
+        type: string
+      Orders:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+      OrdersStore:
+        items:
+          $ref: '#/definitions/models.OrderStore'
+        type: array
+      Phone:
+        type: string
+      Products:
+        items:
+          $ref: '#/definitions/models.ProductStore'
+        type: array
+      Representative:
+        $ref: '#/definitions/models.User'
+        type: object
+      Staff:
+        $ref: '#/definitions/models.User'
+        type: object
+      Status:
+        type: string
+      StoreName:
+        type: string
+      TaxNumber:
+        type: string
+      Type:
+        type: string
+      Users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      Vouchers:
+        items:
+          $ref: '#/definitions/models.Voucher'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Image:
+    properties:
+      Url:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Order:
+    properties:
+      Address:
+        $ref: '#/definitions/models.Address'
+        type: object
+      AddressID:
+        type: integer
+      Discount:
+        type: number
+      DrugStoreID:
+        type: integer
+      Drugstore:
+        $ref: '#/definitions/models.DrugStore'
+        type: object
+      Note:
+        type: string
+      OrderCode:
+        type: string
+      OrderDetails:
+        items:
+          $ref: '#/definitions/models.OrderDetail'
+        type: array
+      PaymentMethod:
+        $ref: '#/definitions/models.PaymentMethod'
+        type: object
+      PaymentMethodID:
+        type: integer
+      ShippingFee:
+        type: number
+      Status:
+        type: string
+      SubTotal:
+        type: number
+      Total:
+        type: number
+      Type:
+        type: string
+      UserApprove:
+        $ref: '#/definitions/models.User'
+        type: object
+      UserApproveID:
+        type: integer
+      UserOrder:
+        $ref: '#/definitions/models.User'
+        type: object
+      UserOrderID:
+        type: integer
+      Vat:
+        type: number
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.OrderDetail:
+    properties:
+      Cost:
+        type: number
+      Discount:
+        type: number
+      OrderID:
+        type: integer
+      Product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      ProductID:
+        type: integer
+      Quantity:
+        type: integer
+      Variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      VariantID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.OrderStore:
+    properties:
+      Discount:
+        type: number
+      DrugStoreID:
+        type: integer
+      Note:
+        type: string
+      OrderCode:
+        type: string
+      Status:
+        type: string
+      SubTotal:
+        type: number
+      Total:
+        type: number
+      Type:
+        type: string
+      Vat:
+        type: number
+      created_at:
+        type: integer
+      id:
+        type: integer
+      orderStoreDetails:
+        items:
+          $ref: '#/definitions/models.OrderStoreDetail'
+        type: array
+      updated_at:
+        type: integer
+    type: object
+  models.OrderStoreDetail:
+    properties:
+      Cost:
+        type: number
+      Discount:
+        type: number
+      OrderStoreID:
+        type: integer
+      Product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      ProductID:
+        type: integer
+      Quantity:
+        type: integer
+      Variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      VariantID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.PaymentMethod:
+    properties:
+      Name:
+        type: string
+      Note:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Permission:
+    properties:
+      Description:
+        type: string
+      PermissionName:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Product:
+    properties:
+      ActiveElement:
+        type: string
+      Avatar:
+        type: string
+      Barcode:
+        type: string
+      BasePrice:
+        type: number
+      Category:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      Code:
+        type: string
+      Content:
+        type: string
+      Cost:
+        type: number
+      Description:
+        type: string
+      Direction:
+        type: string
+      DoNotUse:
+        type: string
+      DrugInteractions:
+        type: string
+      GlobalManufacturerName:
+        type: string
+      Images:
+        items:
+          $ref: '#/definitions/models.Image'
+        type: array
+      IndicationsOfTheDrug:
+        type: string
+      Manufacturer:
+        type: string
+      Name:
+        type: string
+      Overdose:
+        type: string
+      PackagingSize:
+        type: string
+      RegistrationNo:
+        type: string
+      Status:
+        type: string
+      Storage:
+        type: string
+      Tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
+      Unit:
+        type: string
+      Variants:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.ProductStore:
+    properties:
+      ActiveElement:
+        type: string
+      Avatar:
+        type: string
+      Barcode:
+        type: string
+      BasePrice:
+        type: number
+      Category:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      Code:
+        type: string
+      Content:
+        type: string
+      Description:
+        type: string
+      Direction:
+        type: string
+      DoNotUse:
+        type: string
+      DrugInteractions:
+        type: string
+      GlobalManufacturerName:
+        type: string
+      Images:
+        items:
+          $ref: '#/definitions/models.Image'
+        type: array
+      IndicationsOfTheDrug:
+        type: string
+      Manufacturer:
+        type: string
+      Name:
+        type: string
+      Overdose:
+        type: string
+      PackagingSize:
+        type: string
+      RegistrationNo:
+        type: string
+      Status:
+        type: string
+      Storage:
+        type: string
+      Tags:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
+      Unit:
+        type: string
+      Variants:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Role:
+    properties:
+      Description:
+        type: string
+      RoleName:
+        type: string
+      Users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      permissions:
+        items:
+          $ref: '#/definitions/models.Permission'
+        type: array
+      updated_at:
+        type: integer
+    type: object
+  models.Tag:
+    properties:
+      Name:
+        type: string
+      Slug:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.User:
+    properties:
+      Address:
+        $ref: '#/definitions/models.Address'
+        type: object
+      CaringDrugstore:
+        items:
+          $ref: '#/definitions/models.DrugStore'
+        type: array
+      Confirmed:
+        type: boolean
+      DrugStore:
+        $ref: '#/definitions/models.DrugStore'
+        type: object
+      Email:
+        type: string
+      IsAdmin:
+        type: boolean
+      Name:
+        type: string
+      Roles:
+        items:
+          $ref: '#/definitions/models.Role'
+        type: array
+      Type:
+        type: string
+      Username:
+        type: string
+      carts:
+        items:
+          $ref: '#/definitions/models.Cart'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  models.Variant:
+    properties:
+      Name:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+      variantValue:
+        $ref: '#/definitions/models.VariantValue'
+        type: object
+    type: object
+  models.VariantValue:
+    properties:
+      convertValue:
+        type: number
+      operator:
+        type: string
+      product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      productID:
+        type: integer
+      variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      variantID:
+        type: integer
+    type: object
+  models.Voucher:
+    properties:
+      Name:
+        type: string
+      Note:
+        type: string
+      Type:
+        type: string
+      Value:
+        type: number
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
+  requests.AccountRequest:
+    properties:
+      DrugStoreID:
+        type: integer
+      IsAdmin:
+        example: true
+        type: boolean
+      Name:
+        example: John Doe
+        type: string
+      Roles:
+        items:
+          type: string
+        type: array
+      Type:
+        example: super_admin/staff/user/supplier/manufacturer
+        type: string
+      email:
+        example: john.doe@gmail.com
+        type: string
+      password:
+        example: 123qweA@
+        type: string
+      username:
+        example: JohnDoe
+        type: string
+    required:
+    - IsAdmin
+    - Name
+    - Type
+    - email
+    - password
+    - username
+    type: object
+  requests.AddressRequest:
+    properties:
+      Address:
+        example: Quan Hoa
+        type: string
+      AreaID:
+        example: 1
+        type: integer
+      ContactName:
+        example: Jackie
+        type: string
+      Coordinates:
+        example: Jackie
+        type: string
+      Country:
+        example: Vietnam
+        type: string
+      District:
+        example: Cầu giấy
+        type: string
+      IsDefault:
+        example: true
+        type: boolean
+      Phone:
+        example: "0345532343"
+        type: string
+      State:
+        example: Hà nội
+        type: string
+      Ward:
+        example: Quan Hoa
+        type: string
+    required:
+    - Address
+    - AreaID
+    - ContactName
+    - Coordinates
+    - Country
+    - District
+    - IsDefault
+    - Phone
+    - State
+    - Ward
+    type: object
+  requests.AreaRequest:
+    properties:
+      Name:
+        example: Ngoại thành
+        type: string
+      Note:
+        example: Khu vực ngoại thành
+        type: string
+    required:
+    - Name
+    type: object
+  requests.AssignStaffRequest:
+    properties:
+      AssignDetail:
+        items:
+          $ref: '#/definitions/requests.StaffRelationship'
+        type: array
+    type: object
+  requests.CartItemRequest:
+    properties:
+      CartID:
+        type: integer
+      Cost:
+        type: number
+      Discount:
+        type: number
+      ProductID:
+        type: integer
+      Quantity:
+        type: integer
+      VariantID:
+        type: integer
+    type: object
+  requests.CartRequest:
+    properties:
+      cart_details:
+        items:
+          $ref: '#/definitions/models.CartDetail'
+        type: array
+    type: object
+  requests.CategoryRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      Note:
+        example: note
+        type: string
+      Slug:
+        example: slug
+        type: string
+    type: object
+  requests.ChangeStatusProductsRequest:
+    properties:
+      ProductsId:
+        items:
+          type: integer
+        type: array
+      Status:
+        example: show/hide/approve/cancel/outofstock
+        type: string
+    type: object
+  requests.ConnectiveDrugStoreRequest:
+    properties:
+      ChildStoreId:
+        example: 1
+        type: integer
+      ParentStoreId:
+        example: 1
+        type: integer
+    type: object
+  requests.CostProductOfArea:
+    properties:
+      Cost:
+        type: number
+      ProductId:
+        type: integer
+    type: object
+  requests.DrugStoreRequest:
+    properties:
+      Address:
+        $ref: '#/definitions/requests.AddressRequest'
+        type: object
+      AddressID:
+        type: integer
+      DrugStoreID:
+        type: integer
+      LicenseFile:
+        example: asdasdasdasd
+        type: string
+      Phone:
+        example: "0314232344"
+        type: string
+      StoreName:
+        example: Lyly''s Store
+        type: string
+      TaxNumber:
+        example: "01293123233"
+        type: string
+      Type:
+        example: drugstores
+        type: string
+    required:
+    - LicenseFile
+    - Phone
+    - StoreName
+    - TaxNumber
+    - Type
+    type: object
+  requests.EditAccountRequest:
+    properties:
+      email:
+        example: admin@gmail.com
+        type: string
+      full_name:
+        example: admin
+        type: string
+      is_admin:
+        example: true
+        type: boolean
+      roles:
+        items:
+          type: string
+        type: array
+      status:
+        example: true
+        type: boolean
+      type:
+        example: staff/user/supplier/manufacturer
+        type: string
+    type: object
+  requests.EditDrugStoreRequest:
+    properties:
+      AddressID:
+        example: 1
+        type: integer
+      ApproveTime:
+        example: 1622128376
+        type: integer
+      LicenseFile:
+        example: image.img
+        type: string
+      PhoneNumber:
+        example: "0988272123"
+        type: string
+      Status:
+        example: active
+        type: string
+      StoreName:
+        example: Faker
+        type: string
+      TaxNumber:
+        example: "12341231"
+        type: string
+    type: object
+  requests.LoginRequest:
+    properties:
+      password:
+        example: 123qweA@
+        type: string
+      username:
+        example: admin
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  requests.OrderRequest:
+    properties:
+      AddressID:
+        type: integer
+      Discount:
+        type: number
+      DrugStoreID:
+        type: integer
+      Note:
+        type: string
+      OrderCode:
+        type: string
+      OrderDetails:
+        items:
+          $ref: '#/definitions/models.OrderDetail'
+        type: array
+      PaymentMethodID:
+        type: integer
+      ShippingFee:
+        type: number
+      Status:
+        type: string
+      SubTotal:
+        type: number
+      Total:
+        type: number
+      Type:
+        type: string
+      UserApproveID:
+        type: integer
+      UserOrderID:
+        type: integer
+      Vat:
+        type: number
+    type: object
+  requests.PermissionRequest:
+    properties:
+      description:
+        example: Permission read data user
+        type: string
+      permission_name:
+        example: read:user
+        type: string
+    required:
+    - permission_name
+    type: object
+  requests.ProductRequest:
+    properties:
+      ActiveElement:
+        example: example
+        type: string
+      Avatar:
+        example: example
+        type: string
+      Barcode:
+        example: example
+        type: string
+      BasePrice:
+        example: 1
+        type: number
+      Categories:
+        items:
+          type: integer
+        type: array
+      Code:
+        example: MD01
+        type: string
+      Content:
+        example: example
+        type: string
+      Description:
+        example: example
+        type: string
+      Direction:
+        example: example
+        type: string
+      DoNotUse:
+        example: example
+        type: string
+      DrugInteractions:
+        example: example
+        type: string
+      GlobalManufacturerName:
+        example: example
+        type: string
+      IndicationsOfTheDrug:
+        example: example
+        type: string
+      Manufacturer:
+        example: abc
+        type: string
+      Name:
+        example: name
+        type: string
+      Overdose:
+        example: example
+        type: string
+      PackagingSize:
+        example: example
+        type: string
+      RegistrationNo:
+        example: example
+        type: string
+      Status:
+        example: show/hide/approve/cancel/outofstock
+        type: string
+      Storage:
+        example: example
+        type: string
+      Tags:
+        items:
+          type: integer
+        type: array
+      Unit:
+        example: example
+        type: string
+      Variants:
+        items:
+          type: integer
+        type: array
+    type: object
+  requests.PromotionDetailRequest:
+    properties:
+      Condition:
+        type: string
+      Percent:
+        type: number
+      ProductID:
+        type: integer
+      PromotionID:
+        type: integer
+      Type:
+        type: string
+      Value:
+        type: number
+      VariantID:
+        type: integer
+    required:
+    - Condition
+    - Percent
+    - ProductID
+    - Type
+    - Value
+    - VariantID
+    type: object
+  requests.PromotionDetailRequestList:
+    properties:
+      PromotionDetails:
+        items:
+          $ref: '#/definitions/requests.PromotionDetailRequest'
+        type: array
+    type: object
+  requests.PromotionRequest:
+    properties:
+      EndTime:
+        type: integer
+      Name:
+        example: Khuyến mại hè
+        type: string
+      Note:
+        example: Khuyến mại hè nè
+        type: string
+      StartTime:
+        type: integer
+    required:
+    - EndTime
+    - Name
+    - StartTime
+    type: object
+  requests.RefreshRequest:
+    properties:
+      token:
+        example: refresh_token
+        type: string
+    required:
+    - token
+    type: object
+  requests.RegisterRequest:
+    properties:
+      AccountRequest:
+        $ref: '#/definitions/requests.AccountRequest'
+        type: object
+      Drugstore:
+        $ref: '#/definitions/requests.DrugStoreRequest'
+        type: object
+    type: object
+  requests.RoleRequest:
+    properties:
+      description:
+        example: Manage user
+        type: string
+      permission:
+        items:
+          type: string
+        type: array
+      role_name:
+        example: user_manage
+        type: string
+    required:
+    - role_name
+    type: object
+  requests.SearchAccountRequest:
+    properties:
+      email:
+        example: admin@gmail.com
+        type: string
+      full_name:
+        example: admin
+        type: string
+      is_admin:
+        example: true
+        type: boolean
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+      status:
+        example: "true"
+        type: string
+      type:
+        example: staff/user/supplier/manufacturer
+        type: string
+      username:
+        example: admin
+        type: string
+    type: object
+  requests.SearchAddressRequest:
+    properties:
+      Address:
+        example: Hanoi
+        type: string
+      AreaID:
+        example: 1
+        type: integer
+      ContactName:
+        example: Hanoi
+        type: string
+      Coordinates:
+        example: Hanoi
+        type: string
+      District:
+        example: Hanoi
+        type: string
+      Phone:
+        example: Hanoi
+        type: string
+      Province:
+        example: Hanoi
+        type: string
+      Ward:
+        example: Hanoi
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchAreaRequest:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchCategoryRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      Slug:
+        example: slug
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchDrugStoreRequest:
+    properties:
+      AddressID:
+        example: 1
+        type: integer
+      ApproveTime:
+        example: 1621866181
+        type: integer
+      LicenseFile:
+        example: image.img
+        type: string
+      PhoneNumber:
+        example: "0988272123"
+        type: string
+      Status:
+        example: active
+        type: string
+      StoreName:
+        example: MeTri
+        type: string
+      TaxNumber:
+        example: "12341231"
+        type: string
+      Type:
+        example: parent
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchOrderRequest:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+      status:
+        example: "true"
+        type: string
+      type:
+        type: string
+    type: object
+  requests.SearchPermissionRequest:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      permission_name:
+        example: read:user
+        type: string
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchProductRequest:
+    properties:
+      Barcode:
+        example: example
+        type: string
+      Category:
+        type: integer
+      Code:
+        example: MD01
+        type: string
+      Name:
+        example: name
+        type: string
+      Status:
+        example: show/hide/approve/cancel/outofstock
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchPromotionRequest:
+    properties:
+      FromTimeEnd:
+        type: integer
+      FromTimeStart:
+        type: integer
+      Name:
+        type: string
+      ToTimeEnd:
+        type: integer
+      ToTimeStart:
+        type: integer
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchRoleRequest:
+    properties:
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      role_name:
+        example: role_manage
+        type: string
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchTagRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      Slug:
+        example: slug
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchVariantRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SetCostProductsOfAreaRequest:
+    properties:
+      AreaId:
+        type: integer
+      Products:
+        items:
+          $ref: '#/definitions/requests.CostProductOfArea'
+        type: array
+    type: object
+  requests.SortOption:
+    properties:
+      sort_direction:
+        type: string
+      sort_field:
+        type: string
+    type: object
+  requests.StaffRelationship:
+    properties:
+      DrugStoresId:
+        type: integer
+      Relationship:
+        type: string
+    type: object
+  requests.TagRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+      Slug:
+        example: slug
+        type: string
+    type: object
+  requests.VariantRequest:
+    properties:
+      Name:
+        example: name
+        type: string
+    type: object
+  responses.AddressSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Address'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.AreaSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Area'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.CartSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/models.Cart'
+        type: object
+      message:
+        type: string
+    type: object
+  responses.CategorySearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Category'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.CreatedCart:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.CartDetail'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.Data:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  responses.DataSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      message:
+        type: string
+    type: object
+  responses.DrugStoreSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.DrugStore'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.Error:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
+  responses.GetRelationshipResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/models.DrugStore'
+        type: array
+    type: object
+  responses.LoginResponse:
+    properties:
+      accessToken:
+        type: string
+      exp:
+        type: integer
+      refreshToken:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+        type: object
+    type: object
+  responses.MessageDetail:
+    properties:
+      listProductChangeStatusFail:
+        items:
+          type: integer
+        type: array
+      listProductChangeStatusSuccess:
+        items:
+          type: integer
+        type: array
+      listProductNotFound:
+        items:
+          type: integer
+        type: array
+    type: object
+  responses.OrderCreatedResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/models.Order'
+        type: object
+      message:
+        type: string
+    type: object
+  responses.OrderResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.PaymentMethodResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.PaymentMethod'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.PermissionSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Permission'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.ProductSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Product'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.RoleSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Role'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.StatisticNewDrugStore:
+    properties:
+      created_date:
+        type: string
+      number_store:
+        type: integer
+    type: object
+  responses.StatisticNewDrugStoreResult:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/responses.StatisticNewDrugStore'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.TagSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Tag'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.UserSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.VariantSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+host: v1.api.medilane.vn
+info:
+  contact:
+    name: medilane team
+    url: https://www.medilane.vn/
+  description: This is openapi for account api.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Medilane account api
+  version: "1.0"
+paths:
+  /account:
+    post:
+      consumes:
+      - application/json
+      description: Perform create account
+      operationId: create-account
+      parameters:
+      - description: Create account
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create account in system
+      tags:
+      - Account Management
+  /account/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete account
+      operationId: delete-account
+      parameters:
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete account in system
+      tags:
+      - Account Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit account
+      operationId: edit-account
+      parameters:
+      - description: body account
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditAccountRequest'
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit account in system
+      tags:
+      - Account Management
+  /account/{id}/drugstore:
+    post:
+      consumes:
+      - application/json
+      description: Perform assign staff for drugstore
+      operationId: assign-staff-for-drugstore
+      parameters:
+      - description: body account
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AssignStaffRequest'
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: assign staff for drugstore in system
+      tags:
+      - Account Management
+  /account/{username}/permissions:
+    get:
+      consumes:
+      - application/json
+      description: Perform search all permission of accoun
+      operationId: search-permission-account
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search all permission of account in system
+      tags:
+      - Account Management
+  /account/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search account
+      operationId: search-account
+      parameters:
+      - description: Filter account
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.UserSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search account in system
+      tags:
+      - Account Management
+  /address:
+    post:
+      consumes:
+      - application/json
+      description: Perform create address
+      operationId: create-address
+      parameters:
+      - description: Create address
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AddressRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create address in system
+      tags:
+      - Address Management
+  /address/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete address
+      operationId: delete-address
+      parameters:
+      - description: id address
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete address in system
+      tags:
+      - Address Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit address
+      operationId: edit-address
+      parameters:
+      - description: Edit address
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AddressRequest'
+      - description: id address
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit address in system
+      tags:
+      - Address Management
+  /address/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search address
+      operationId: search-address
+      parameters:
+      - description: Filter address
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchAddressRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.AddressSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search address in system
+      tags:
+      - Address Management
+  /area:
+    post:
+      consumes:
+      - application/json
+      description: Perform create area
+      operationId: create-area
+      parameters:
+      - description: Create area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AreaRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create area in system
+      tags:
+      - Area Management
+  /area/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete area
+      operationId: delete-area
+      parameters:
+      - description: id area
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete area in system
+      tags:
+      - Area Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit area
+      operationId: edit-area
+      parameters:
+      - description: Edit area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AreaRequest'
+      - description: id area
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit area in system
+      tags:
+      - Area Management
+  /area/{id}/cost:
+    post:
+      consumes:
+      - application/json
+      description: Perform get products of area
+      operationId: get-products-of-area
+      parameters:
+      - description: id area
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Filter product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.ProductSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get products of area in system
+      tags:
+      - Area Management
+  /area/cost:
+    post:
+      consumes:
+      - application/json
+      description: Perform set cost products of area
+      operationId: set-cost-products-of-area
+      parameters:
+      - description: set cost products of area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SetCostProductsOfAreaRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Set cost products of area in system
+      tags:
+      - Area Management
+  /area/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search area
+      operationId: search-area
+      parameters:
+      - description: Filter area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchAreaRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.AreaSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search area in system
+      tags:
+      - Area Management
+  /cart:
+    post:
+      consumes:
+      - application/json
+      description: Perform create cart
+      operationId: create-cart
+      parameters:
+      - description: Create cart
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CartRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.CreatedCart'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create cart in system
+      tags:
+      - Cart Management
+  /cart/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete cart
+      operationId: delete-cart
+      parameters:
+      - description: id cart
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete cart in system
+      tags:
+      - Cart Management
+  /cart/{id}/details:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete cart item
+      operationId: delete-cart-item
+      parameters:
+      - description: id cart item
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete cart item in system
+      tags:
+      - Cart Management
+  /cart/details:
+    post:
+      consumes:
+      - application/json
+      description: Perform create cart
+      operationId: create-cart-item
+      parameters:
+      - description: Create cart item
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CartItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create cart in system
+      tags:
+      - Cart Management
+  /cart/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search cart item by username
+      operationId: search-cart-user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CartSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search cart item by username in system
+      tags:
+      - Cart Management
+  /category:
+    post:
+      consumes:
+      - application/json
+      description: Perform create Category
+      operationId: create-category
+      parameters:
+      - description: Filter Category
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create category in system
+      tags:
+      - Category-Management
+  /category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete Category
+      operationId: delete-category
+      parameters:
+      - description: id Category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete category in system
+      tags:
+      - Category-Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit Category
+      operationId: edit-category
+      parameters:
+      - description: body Category
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CategoryRequest'
+      - description: id Category
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit category in system
+      tags:
+      - Category-Management
+  /category/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search Category
+      operationId: search-category
+      parameters:
+      - description: Filter Category
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CategorySearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search category in system
+      tags:
+      - Category-Management
+  /drugstore:
+    post:
+      consumes:
+      - application/json
+      description: Perform create drugstore
+      operationId: create-drugstore
+      parameters:
+      - description: Filter drugstore
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.DrugStoreRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform drugstore role
+      operationId: delete-drugstore
+      parameters:
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete drugstore in system
+      tags:
+      - Drugstore Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get drugstore
+      operationId: get-drugstore
+      parameters:
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.DrugStore'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get drugstore in system
+      tags:
+      - Drugstore Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit drugstore
+      operationId: edit-drugstore
+      parameters:
+      - description: body drugstore
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditDrugStoreRequest'
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/{id}/accounts:
+    get:
+      consumes:
+      - application/json
+      description: Perform search account in drugstore
+      operationId: search-account-drugstore
+      parameters:
+      - description: id of drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.UserSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search account in drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/connective:
+    post:
+      consumes:
+      - application/json
+      description: Perform connective drugstore
+      operationId: connective-drugstore
+      parameters:
+      - description: Filter role
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ConnectiveDrugStoreRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Connective drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/connective/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Perform Get list connective drugstore
+      operationId: get-list-connective-drugstore
+      parameters:
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.GetRelationshipResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get list connective drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/connective/type/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Perform Get type connective drugstore
+      operationId: get-type-connective-drugstore
+      parameters:
+      - description: id drugstore
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get type connective drugstore in system
+      tags:
+      - Drugstore Management
+  /drugstore/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search drugstores
+      operationId: search-drugstore
+      parameters:
+      - description: Drugstore's credentials
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchDrugStoreRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DrugStoreSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search drugstores in system
+      tags:
+      - Drugstore Management
+  /drugstore/statistic-new:
+    get:
+      consumes:
+      - application/json
+      description: Perform statistic new drugstore
+      operationId: statistic-new-drugstore
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.StatisticNewDrugStoreResult'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Statistic new drugstore in system
+      tags:
+      - Drugstore Management
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Perform user login
+      operationId: user-login
+      parameters:
+      - description: User's credentials
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.LoginResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      summary: Authenticate a user
+      tags:
+      - User Actions
+  /logout:
+    post:
+      consumes:
+      - application/json
+      description: Perform refresh access token
+      operationId: user-logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.LoginResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Refresh access token
+      tags:
+      - User Actions
+  /order:
+    post:
+      consumes:
+      - application/json
+      description: Perform create order
+      operationId: create-order
+      parameters:
+      - description: Create account
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.OrderRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.OrderCreatedResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create order in system
+      tags:
+      - Order Management
+  /order/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete order
+      operationId: delete-order
+      parameters:
+      - description: id order
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete order in system
+      tags:
+      - Order Management
+    get:
+      consumes:
+      - application/json
+      description: Perform edit order
+      operationId: get-order
+      parameters:
+      - description: id order
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit order in system
+      tags:
+      - Order Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit order
+      operationId: edit-order
+      parameters:
+      - description: body order
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.OrderRequest'
+      - description: id order
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit order in system
+      tags:
+      - Order Management
+  /order/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search order
+      operationId: search-order
+      parameters:
+      - description: Create cart
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.OrderResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search order in system
+      tags:
+      - Order Management
+  /order/payment-methods:
+    get:
+      consumes:
+      - application/json
+      description: Perform get payment method
+      operationId: get-payment-method
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PaymentMethodResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get payment method in system
+      tags:
+      - Order Management
+  /permission:
+    post:
+      consumes:
+      - application/json
+      description: Perform create permission
+      operationId: create-permission
+      parameters:
+      - description: Create permission
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.PermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create permission in system
+      tags:
+      - Permission Management
+  /permission/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete permission
+      operationId: delete-permission
+      parameters:
+      - description: id permission
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete permission in system
+      tags:
+      - Permission Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit permission
+      operationId: edit-permission
+      parameters:
+      - description: body permission
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.PermissionRequest'
+      - description: id permission
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit permission in system
+      tags:
+      - Permission Management
+  /permission/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search permission
+      operationId: search-permission
+      parameters:
+      - description: Filter permission
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchPermissionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PermissionSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search permission in system
+      tags:
+      - Permission Management
+  /product:
+    post:
+      consumes:
+      - application/json
+      description: Perform create product
+      operationId: create-product
+      parameters:
+      - description: Filter product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ProductRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create product in system
+      tags:
+      - Product Management
+  /product/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete product
+      operationId: delete-product
+      parameters:
+      - description: id product
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete product in system
+      tags:
+      - Product Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get product
+      operationId: get-product
+      parameters:
+      - description: id product
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get product in system
+      tags:
+      - Product Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit product
+      operationId: edit-product
+      parameters:
+      - description: body product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ProductRequest'
+      - description: id product
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit product in system
+      tags:
+      - Product Management
+  /product/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search product
+      operationId: search-product
+      parameters:
+      - description: Filter product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search product in system
+      tags:
+      - Product Management
+  /products/status:
+    post:
+      consumes:
+      - application/json
+      description: Perform Change status of list product
+      operationId: change-status-products
+      parameters:
+      - description: body change status products
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ChangeStatusProductsRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.MessageDetail'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Change status of list product in system
+      tags:
+      - Product Management
+  /promotion:
+    post:
+      consumes:
+      - application/json
+      description: Perform create promotion
+      operationId: create-promotion
+      parameters:
+      - description: Create promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.PromotionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create promotion in system
+      tags:
+      - Promotion Management
+  /promotion/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete promotion
+      operationId: delete-promotion
+      parameters:
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete promotion in system
+      tags:
+      - Promotion Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit promotion
+      operationId: edit-promotion
+      parameters:
+      - description: body promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.PromotionRequest'
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit promotion in system
+      tags:
+      - Promotion Management
+  /promotion/{id}/details:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete promotion detail by promotion
+      operationId: delete-promotion-detail-by-promotion
+      parameters:
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete promotion detail by promotion in system
+      tags:
+      - Promotion Management
+    get:
+      consumes:
+      - application/json
+      description: Perform search promotion detail
+      operationId: search-promotion-detail
+      parameters:
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search promotion detail in system
+      tags:
+      - Promotion Management
+    post:
+      consumes:
+      - application/json
+      description: Perform create multi promotion detail
+      operationId: create-promotion-detail
+      parameters:
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Create promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.PromotionDetailRequestList'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create multi promotion detail in system
+      tags:
+      - Promotion Management
+  /promotion/{id}/details/{d_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete promotion detail
+      operationId: delete-promotion-detail
+      parameters:
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: id promotion detail
+        in: path
+        name: d_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete promotion detail in system
+      tags:
+      - Promotion Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit promotion
+      operationId: edit-promotion-detail
+      parameters:
+      - description: body promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.PromotionRequest'
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: id promotion detail
+        in: path
+        name: d_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit promotion detail in system
+      tags:
+      - Promotion Management
+  /promotion/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search promotion
+      operationId: search-promotion
+      parameters:
+      - description: Filter promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchPromotionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DataSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search promotion in system
+      tags:
+      - Promotion Management
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: Perform refresh access token
+      operationId: user-refresh
+      parameters:
+      - description: Refresh token
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.LoginResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Refresh access token
+      tags:
+      - User Actions
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: New user registration
+      operationId: user-register
+      parameters:
+      - description: User's email, user's password
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Register
+      tags:
+      - User Actions
+  /role:
+    post:
+      consumes:
+      - application/json
+      description: Perform create role
+      operationId: create-role
+      parameters:
+      - description: Filter role
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RoleRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create role in system
+      tags:
+      - Role Management
+  /role/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete role
+      operationId: delete-role
+      parameters:
+      - description: id role
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete role in system
+      tags:
+      - Role Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit role
+      operationId: edit-role
+      parameters:
+      - description: body role
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RoleRequest'
+      - description: id role
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit role in system
+      tags:
+      - Role Management
+  /role/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search role
+      operationId: search-role
+      parameters:
+      - description: Filter role
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchRoleRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.RoleSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search role in system
+      tags:
+      - Role Management
+  /tag:
+    post:
+      consumes:
+      - application/json
+      description: Perform create Tag
+      operationId: create-tag
+      parameters:
+      - description: Filter Tag
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.TagRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create Tag in system
+      tags:
+      - Tag Management
+  /tag/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete Tag
+      operationId: delete-tag
+      parameters:
+      - description: id Tag
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete Tag in system
+      tags:
+      - Tag Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit Tag
+      operationId: edit-tag
+      parameters:
+      - description: body Tag
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.TagRequest'
+      - description: id Tag
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit Tag in system
+      tags:
+      - Tag Management
+  /tag/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search Tag
+      operationId: search-tag
+      parameters:
+      - description: Filter Tag
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchTagRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.TagSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search Tag in system
+      tags:
+      - Tag Management
+  /variant:
+    post:
+      consumes:
+      - application/json
+      description: Perform create variant
+      operationId: create-variant
+      parameters:
+      - description: Filter Variant
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.VariantRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create variant in system
+      tags:
+      - Variant-Management
+  /variant/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete variant
+      operationId: delete-variant
+      parameters:
+      - description: id Variant
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete variant in system
+      tags:
+      - Variant-Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit variant
+      operationId: edit-variant
+      parameters:
+      - description: body Variant
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.VariantRequest'
+      - description: id Variant
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit variant in system
+      tags:
+      - Variant-Management
+  /variant/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search variant
+      operationId: search-variant
+      parameters:
+      - description: Filter Variant
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchVariantRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.VariantSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search variant in system
+      tags:
+      - Variant-Management
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

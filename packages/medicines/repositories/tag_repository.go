@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
@@ -45,7 +46,7 @@ func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, count *int64, fi
 		values = append(values, filter.Slug)
 	}
 
-	tagRepository.DB.Where(strings.Join(spec, " AND "), values...).
+	tagRepository.DB.Table(utils.TblTag).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Limit(filter.Limit).
 		Offset(filter.Offset).

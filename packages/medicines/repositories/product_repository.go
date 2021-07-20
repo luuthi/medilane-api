@@ -61,7 +61,7 @@ func (productRepository *ProductRepository) GetProductByIdCost(product *models2.
 		Where("product.id = ?", id).Find(product)
 }
 
-func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint) {
+func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint, areaId uint) {
 	// check user area
 	time1 := time.Now().UnixNano()
 	var address models2.Address
@@ -108,19 +108,15 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	if filter.Sort.SortDirection == "" {
 		filter.Sort.SortDirection = "desc"
 	}
-	//fieldToSelect := []string{"code", "product.name", "unit", "barcode",
-	//	"manufacturer", "product.id", "ac.cost"}
 
-	var areaId uint
-	if user.Type == string(utils.SUPER_ADMIN) || user.Type == string(utils.STAFF) {
-		areaId = filter.AreaId
-	} else {
+	if !(user.Type == string(utils.SUPER_ADMIN) || user.Type == string(utils.STAFF)) {
 		areaId = address.AreaID
 	}
+
 	time2 := time.Now().UnixNano()
 	log.Infof("=================== time 1: %v", time2-time1)
 	productRepository.DB.Table(utils.TblProduct).
-		Select(filter.Fields).
+		Select("product.*, ac.cost").
 		Count(count).
 		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
 		Joins(" JOIN product_category pc ON pc.product_id = product.id").

@@ -3,10 +3,12 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/authentication"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	responses2 "medilane-api/packages/accounts/responses"
 	"medilane-api/packages/accounts/services/address"
+	repositories2 "medilane-api/packages/medicines/repositories"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
@@ -274,11 +276,10 @@ func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
 // @Accept json
 // @Produce json
 // @Param id path uint true "id area"
-// @Param offset query int true "offset"
-// @Param limit query int true "limit"
-// @Success 201 {object} responses.Data
+// @Param params body requests.SearchProductRequest true "Filter product"
+// @Success 201 {object} responses.ProductSearch
 // @Failure 400 {object} responses.Error
-// @Router /area/{id}/cost [get]
+// @Router /area/{id}/cost [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	var paramUrl uint64
@@ -286,35 +287,33 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id area: %v", err.Error()))
 	}
-	id := uint(paramUrl)
+	areaId := uint(paramUrl)
 
-	var offset int
-	var limit int
-	limit, err = strconv.Atoi(c.QueryParam("offset"))
+	token, err := authentication.VerifyToken(c.Request(), areaHandler.server)
 	if err != nil {
-		offset = 0
+		return responses.Response(c, http.StatusUnauthorized, nil)
 	}
-	limit, err = strconv.Atoi(c.QueryParam("limit"))
-	if err != nil {
-		limit = 10
-	}
-
-	var existedArea models2.Area
-	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
-	areaRepo.GetAreaByID(&existedArea, id)
-	if existedArea.Name == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found area with ID: %v", string(id)))
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
 	}
 
-	var productsOfArea []models2.AreaCost
+	searchRequest := new(requests2.SearchProductRequest)
+	if err := c.Bind(searchRequest); err != nil {
+		return err
+	}
+
+	areaHandler.server.Logger.Info("Search product")
+	var medicines []models2.Product
 	var total int64
-	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
-	areaCostRepo.GetProductsDetailOfArea(&productsOfArea, &total, id, offset, limit)
 
-	return responses.Response(c, http.StatusOK, responses2.AreaCostSearch{
+	productRepo := repositories2.NewProductRepository(areaHandler.server.DB)
+	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId, areaId)
+
+	return responses.Response(c, http.StatusOK, responses.ProductSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
-		Data:    productsOfArea,
+		Data:    medicines,
 	})
 }

@@ -37,13 +37,6 @@ type CategorySearch struct {
 	Data    []models.Category `json:"data"`
 }
 
-type ProductSearch struct {
-	Code    int              `json:"code"`
-	Message string           `json:"message"`
-	Total   int64            `json:"total"`
-	Data    []models.Product `json:"data"`
-}
-
 type TagSearch struct {
 	Code    int          `json:"code"`
 	Message string       `json:"message"`
