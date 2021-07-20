@@ -32,6 +32,7 @@ func (CartRepository *CartRepository) GetCartByUser(cart *models.Cart, count *in
 		Where(strings.Join(spec, " AND "), values...).
 		Preload(clause.Associations).
 		Preload("CartDetails.Product").
+		Preload("CartDetails.Variant").
 		Preload("CartDetails.Product.Images").
 		First(&cart)
 }

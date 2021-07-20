@@ -41,7 +41,7 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 	var orderCode models.OrderCode
 	orderRepo := repositories.NewOrderRepository(s.DB)
 	var timeStr string
-	timeStr = fmt.Sprintf("%s%s%s", string(rune(now.Year())), fmt.Sprintf("%02s", string(rune(now.Month()))), fmt.Sprintf("%02s", string(rune(now.Day()))))
+	timeStr = fmt.Sprintf("%d%s%s", now.Year(), fmt.Sprintf("%02d", now.Month()), fmt.Sprintf("%02d", now.Day()))
 	orderRepo.GetOrderCodeByTime(&orderCode, timeStr)
 
 	// begin a transaction
@@ -86,6 +86,7 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 		SetPaymentMethodID(request.PaymentMethodID).
 		SetUserOrderID(userId).
 		SetOrderCode(code).
+		SetType(request.Type).
 		SetDrugStoreID(request.DrugStoreID).Build()
 
 	rs := tx.Create(&order)
@@ -118,6 +119,11 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 	}
 
 	order.OrderDetails = details
+
+	// clear cart
+	var cart models.Cart
+	tx.Table(utils.TblCart).Where("user_id = ?", userId).First(&cart)
+	tx.Exec("DELETE  FROM cart_detail WHERE cart_id = ?", cart.ID)
 	return tx.Commit().Error, &order
 }
 

@@ -2,11 +2,13 @@ package repositories
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm/clause"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -61,6 +63,7 @@ func (productRepository *ProductRepository) GetProductByIdCost(product *models2.
 
 func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint) {
 	// check user area
+	time1 := time.Now().UnixNano()
 	var address models2.Address
 	var user models2.User
 	productRepository.DB.Table(utils.TblAccount).
@@ -105,8 +108,8 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	if filter.Sort.SortDirection == "" {
 		filter.Sort.SortDirection = "desc"
 	}
-	fieldToSelect := []string{"code", "product.name", "registration_no", "content", "description", "packaging_size", "unit", "barcode", "status",
-		"base_price", "manufacturer", "product.id", "ac.cost"}
+	//fieldToSelect := []string{"code", "product.name", "unit", "barcode",
+	//	"manufacturer", "product.id", "ac.cost"}
 
 	var areaId uint
 	if user.Type == string(utils.SUPER_ADMIN) || user.Type == string(utils.STAFF) {
@@ -114,17 +117,21 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	} else {
 		areaId = address.AreaID
 	}
+	time2 := time.Now().UnixNano()
+	log.Infof("=================== time 1: %v", time2-time1)
 	productRepository.DB.Table(utils.TblProduct).
-		Select(fieldToSelect).
+		Select(filter.Fields).
+		Count(count).
 		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
 		Joins(" JOIN product_category pc ON pc.product_id = product.id").
 		Joins(" JOIN category cat ON pc.category_id = cat.id").
 		Where(" ac.area_id = ?", areaId).
 		Where(strings.Join(spec, " AND "), values...).
-		Count(count).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&product)
+	time3 := time.Now().UnixNano()
+	log.Infof("=================== time 2: %v", time3-time2)
 }

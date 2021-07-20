@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"medilane-api/config"
 	"medilane-api/models"
@@ -24,6 +25,7 @@ func Init(cfg *config.Config) *gorm.DB {
 			SingularTable: true,
 			NoLowerCase:   false,
 		},
+		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
 		panic(err.Error())

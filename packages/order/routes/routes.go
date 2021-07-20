@@ -16,4 +16,5 @@ func ConfigureOrderRoutes(appRoute *echo.Group, server *s.Server) {
 	order.GET("/:id", orderHandler.GetOrder, authentication.CheckPermission(server, []string{"create:order"}, false))
 	order.PUT("/:id", orderHandler.EditOrder, authentication.CheckPermission(server, []string{"delete:order"}, false))
 	order.DELETE("/:id", orderHandler.DeleteOrder, authentication.CheckPermission(server, []string{"delete:order"}, false))
+	order.GET("/payment-methods", orderHandler.GetPaymentMethod, authentication.CheckPermission(server, []string{"read:order"}, false))
 }

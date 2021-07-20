@@ -68,7 +68,7 @@ func ExtractToken(r *http.Request) string {
 }
 
 func VerifyToken(r *http.Request, server *s.Server) (*jwt.Token, error) {
-	authBackend := InitJWTAuthenticationBackend(server.Config)
+	authBackend := InitJWTAuthenticationBackend(server.Config, server.Redis)
 	tokenString := ExtractToken(r)
 	if authBackend.IsInBlacklist(tokenString) {
 		return nil, errors.New("token expired")

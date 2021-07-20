@@ -12,6 +12,7 @@ import (
 type OrderRepositoryQ interface {
 	GetOrder(orders *[]models2.Order, count *int64, userId uint, filter *requests2.SearchOrderRequest)
 	GetOrderByDetail(order *models2.Order, orderId uint)
+	GetPaymentMethod(methods *[]models2.PaymentMethod)
 }
 
 type OrderRepository struct {
@@ -53,4 +54,8 @@ func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, or
 func (OrderRepository *OrderRepository) GetOrderCodeByTime(orderCode *models2.OrderCode, time string) {
 	OrderRepository.DB.Table(utils.TblOrderCode).Where("time = ?", time).
 		First(&orderCode)
+}
+
+func (OrderRepository *OrderRepository) GetPaymentMethod(methods *[]models2.PaymentMethod) {
+	OrderRepository.DB.Table(utils.TblPaymentMethod).Find(&methods)
 }

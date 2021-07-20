@@ -3,7 +3,7 @@ package models
 type Product struct {
 	CommonModelFields
 
-	Code                   string      `json:"Code,omitempty" gorm:"varchar(100);not null"`
+	Code                   string      `json:"Code,omitempty" gorm:"varchar(32);not null"`
 	Name                   string      `json:"Name,omitempty" gorm:"varchar(255);not null"`
 	RegistrationNo         string      `json:"RegistrationNo,omitempty" gorm:"varchar(255);not null"`
 	Content                string      `json:"Content,omitempty" gorm:"varchar(500);not null"`
@@ -16,9 +16,9 @@ type Product struct {
 	Storage                string      `json:"Storage,omitempty" gorm:"varchar(500);not null"`
 	Overdose               string      `json:"Overdose,omitempty" gorm:"varchar(500);not null"`
 	PackagingSize          string      `json:"PackagingSize,omitempty" gorm:"varchar(255);not null"`
-	Unit                   string      `json:"Unit,omitempty" gorm:"varchar(255);not null"`
-	Barcode                string      `json:"Barcode,omitempty" gorm:"varchar(255);not null"`
-	Status                 string      `json:"Status,omitempty" gorm:"varchar(100);not null"`
+	Unit                   string      `json:"Unit,omitempty" gorm:"varchar(32);not null"`
+	Barcode                string      `json:"Barcode,omitempty" gorm:"varchar(64);not null"`
+	Status                 string      `json:"Status,omitempty" gorm:"varchar(32);not null"`
 	ActiveElement          string      `json:"ActiveElement,omitempty" gorm:"varchar(255);not null"`
 	Avatar                 string      `json:"Avatar,omitempty" gorm:"varchar(255);not null"`
 	BasePrice              float64     `json:"BasePrice,omitempty" gorm:"float(8);not null"`

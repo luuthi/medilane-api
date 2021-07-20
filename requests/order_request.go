@@ -16,8 +16,8 @@ type SearchOrderRequest struct {
 
 func (rr SearchOrderRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
-		validation.Field(&rr.Limit, validation.Min(0)),
-		validation.Field(&rr.Offset, validation.Min(0)),
+		validation.Field(&rr.Limit, validation.Min(float32(0))),
+		validation.Field(&rr.Offset, validation.Min(float32(0))),
 		validation.Field(&rr.Type, validation.In(utils.IMPORT, utils.EXPORT)),
 	)
 }
@@ -42,10 +42,14 @@ type OrderRequest struct {
 
 func (rr OrderRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
-		validation.Field(&rr.Discount, validation.Min(0)),
-		validation.Field(&rr.SubTotal, validation.Min(0)),
-		validation.Field(&rr.Total, validation.Min(0)),
-		validation.Field(&rr.Vat, validation.Min(0)),
-		validation.Field(&rr.Type, validation.In(utils.IMPORT, utils.EXPORT)),
+		validation.Field(&rr.Discount, validation.Min(float32(0))),
+		validation.Field(&rr.SubTotal, validation.Min(float32(0))),
+		validation.Field(&rr.Total, validation.Min(float32(0))),
+		validation.Field(&rr.Vat, validation.Min(float32(0))),
+		validation.Field(&rr.DrugStoreID, validation.Required),
+		validation.Field(&rr.PaymentMethodID, validation.Required),
+		validation.Field(&rr.AddressID, validation.Required),
+		validation.Field(&rr.UserOrderID, validation.Required),
+		validation.Field(&rr.Type, validation.In(string(utils.IMPORT), string(utils.EXPORT))),
 	)
 }

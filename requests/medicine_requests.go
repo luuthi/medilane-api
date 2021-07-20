@@ -16,6 +16,7 @@ type SearchProductRequest struct {
 	Limit  int        `json:"limit" example:"10"`
 	Offset int        `json:"offset" example:"0"`
 	Sort   SortOption `json:"sort"`
+	Fields []string   `json:"Fields"`
 }
 
 type ProductRequest struct {

@@ -17,7 +17,7 @@ type OrderBuilder struct {
 	AddressID       uint    `json:"AddressID"`
 	PaymentMethodID uint    `json:"PaymentMethodID"`
 	UserOrderID     uint    `json:"UserOrderID"`
-	UserApproveID   uint    `json:"UserApproveID"`
+	UserApproveID   *uint   `json:"UserApproveID"`
 }
 
 func NewOrderBuilder() *OrderBuilder {
@@ -50,7 +50,7 @@ func (orderBuilder *OrderBuilder) SetUserOrderID(UserOrderID uint) (u *OrderBuil
 }
 
 func (orderBuilder *OrderBuilder) SetUserApproveID(UserApproveID uint) (u *OrderBuilder) {
-	orderBuilder.UserApproveID = UserApproveID
+	orderBuilder.UserApproveID = &UserApproveID
 	return orderBuilder
 }
 

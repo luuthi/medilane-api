@@ -7,7 +7,7 @@ import (
 	"encoding/pem"
 	jwt "github.com/dgrijalva/jwt-go"
 	"medilane-api/config"
-	"medilane-api/core/redis"
+	redisCon "medilane-api/core/redis"
 	"medilane-api/models"
 	"os"
 	"time"
@@ -17,6 +17,7 @@ type JWTAuthenticationBackend struct {
 	privateKey *rsa.PrivateKey
 	PublicKey  *rsa.PublicKey
 	config     *config.Config
+	conn       *redisCon.Cli
 }
 
 type JwtCustomClaims struct {
@@ -40,12 +41,13 @@ const (
 
 var authBackendInstance *JWTAuthenticationBackend = nil
 
-func InitJWTAuthenticationBackend(cfg *config.Config) *JWTAuthenticationBackend {
+func InitJWTAuthenticationBackend(cfg *config.Config, conn *redisCon.Cli) *JWTAuthenticationBackend {
 	if authBackendInstance == nil {
 		authBackendInstance = &JWTAuthenticationBackend{
 			privateKey: getPrivateKey(cfg),
 			PublicKey:  getPublicKey(cfg),
 			config:     cfg,
+			conn:       conn,
 		}
 	}
 
@@ -99,13 +101,11 @@ func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp int
 }
 
 func (backend *JWTAuthenticationBackend) Logout(tokenString string, token *jwt.Token) error {
-	redisConn := redis.Connect(backend.config)
-	return redisConn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
+	return backend.conn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
 }
 
 func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {
-	redisConn := redis.Connect(backend.config)
-	redisToken, _ := redisConn.GetValue(token)
+	redisToken, _ := backend.conn.GetValue(token)
 
 	if redisToken == nil {
 		return false

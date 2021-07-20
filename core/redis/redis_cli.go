@@ -1,4 +1,4 @@
-package redis
+package redisCon
 
 import (
 	"github.com/garyburd/redigo/redis"
@@ -9,26 +9,23 @@ type Cli struct {
 	conn redis.Conn
 }
 
-var instanceRedisCli *Cli = nil
+func Connect(conf *config.Config) *Cli {
+	var err error
 
-func Connect(conf *config.Config) (conn *Cli) {
-	if instanceRedisCli == nil {
-		instanceRedisCli = new(Cli)
-		var err error
+	conn, err := redis.Dial("tcp", conf.REDIS.URL)
 
-		instanceRedisCli.conn, err = redis.Dial("tcp", conf.REDIS.URL)
-
-		if err != nil {
-			panic(err)
-		}
-
-		if _, err := instanceRedisCli.conn.Do("AUTH", conf.REDIS.Password); err != nil {
-			instanceRedisCli.conn.Close()
-			panic(err)
-		}
+	if err != nil {
+		panic(err)
 	}
 
-	return instanceRedisCli
+	if _, err := conn.Do("AUTH", conf.REDIS.Password); err != nil {
+		_ = conn.Close()
+		panic(err)
+	}
+
+	return &Cli{
+		conn: conn,
+	}
 }
 
 func (redisCli *Cli) SetValue(key string, value string, expiration ...interface{}) error {
@@ -43,4 +40,8 @@ func (redisCli *Cli) SetValue(key string, value string, expiration ...interface{
 
 func (redisCli *Cli) GetValue(key string) (interface{}, error) {
 	return redisCli.conn.Do("GET", key)
+}
+
+func (redisCli *Cli) Close() error {
+	return redisCli.conn.Close()
 }

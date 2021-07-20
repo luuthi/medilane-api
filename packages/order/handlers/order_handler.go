@@ -32,7 +32,7 @@ func NewOrderHandler(server *s.Server) *OrderHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchOrderRequest true "Create cart"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.OrderResponse
 // @Failure 401 {object} responses.Error
 // @Router /order/find [post]
 // @Security BearerAuth
@@ -71,7 +71,7 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.OrderRequest true "Create account"
-// @Success 201 {object} responses.Data
+// @Success 201 {object} responses.OrderCreatedResponse
 // @Failure 400 {object} responses.Error
 // @Router /order [post]
 // @Security BearerAuth
@@ -94,11 +94,15 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 	orderService := order.NewOrderService(orderHandler.server.DB)
-	rs, _ := orderService.AddOrder(&orderRequest, claims.UserId)
+	rs, order := orderService.AddOrder(&orderRequest, claims.UserId)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Order created!")
+	return responses.Response(c, http.StatusCreated, responses2.OrderCreatedResponse{
+		Code:    http.StatusCreated,
+		Message: "",
+		Data:    *order,
+	})
 }
 
 // GetOrder Edit order godoc
@@ -109,7 +113,7 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path uint true "id order"
-// @Success 200 {object} responses.Data
+// @Success 200 {object} models.Order
 // @Failure 400 {object} responses.Error
 // @Router /order/{id} [get]
 // @Security BearerAuth
@@ -198,4 +202,29 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete order: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Order deleted!")
+}
+
+// GetPaymentMethod Get payment method godoc
+// @Summary Get payment method in system
+// @Description Perform get payment method
+// @ID get-payment-method
+// @Tags Order Management
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.PaymentMethodResponse
+// @Failure 400 {object} responses.Error
+// @Router /order/payment-methods [get]
+// @Security BearerAuth
+func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
+
+	var methods []models2.PaymentMethod
+	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
+	orderRepo.GetPaymentMethod(&methods)
+	return responses.Response(c, http.StatusOK, responses2.PaymentMethodResponse{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   int64(len(methods)),
+		Data:    methods,
+	})
+
 }

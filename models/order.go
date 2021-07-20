@@ -4,14 +4,14 @@ type Order struct {
 	CommonModelFields
 
 	OrderCode       string         `json:"OrderCode" gorm:"type:varchar(200);not null"`
-	Discount        float32        `json:"Discount" gorm:"type:float(8)"`
-	SubTotal        float32        `json:"SubTotal" gorm:"type:float(8)"`
+	Discount        float32        `json:"Discount" gorm:"type:float(32)"`
+	SubTotal        float32        `json:"SubTotal" gorm:"type:float(32)"`
 	Total           float32        `json:"Total" gorm:"type:float(8)"`
 	Type            string         `json:"Type" gorm:"type:varchar(100);"`
-	Vat             float32        `json:"Vat" gorm:"type:float(8)"`
+	Vat             float32        `json:"Vat" gorm:"type:float(32)"`
 	Note            string         `json:"Note" gorm:"type:varchar(200)"`
 	Status          string         `json:"Status" gorm:"type:varchar(200)"`
-	ShippingFee     float32        `json:"ShippingFee" gorm:"type:float(8)"`
+	ShippingFee     float32        `json:"ShippingFee" gorm:"type:float(32)"`
 	DrugStoreID     uint           `json:"DrugStoreID"`
 	Drugstore       *DrugStore     `json:"Drugstore" gorm:"-"`
 	OrderDetails    []*OrderDetail `json:"OrderDetails" gorm:"foreignKey:OrderID"`
@@ -21,7 +21,7 @@ type Order struct {
 	PaymentMethod   *PaymentMethod `json:"PaymentMethod" gorm:"foreignKey:PaymentMethodID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	UserOrderID     uint           `json:"UserOrderID"`
 	UserOrder       *User          `json:"UserOrder" gorm:"foreignKey:UserOrderID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	UserApproveID   uint           `json:"UserApproveID"`
+	UserApproveID   *uint          `json:"UserApproveID,omitempty"`
 	UserApprove     *User          `json:"UserApprove" gorm:"foreignKey:UserApproveID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 

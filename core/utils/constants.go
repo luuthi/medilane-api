@@ -24,6 +24,7 @@ const (
 	TblOrder                 = "order"
 	TblOrderCode             = "order_code"
 	TblOrderDetail           = "order_detail"
+	TblPaymentMethod         = "payment_method"
 )
 
 type AccountType string
@@ -62,5 +63,5 @@ type OrderType string
 
 const (
 	IMPORT OrderType = "import"
-	EXPORT           = "export"
+	EXPORT OrderType = "export"
 )
