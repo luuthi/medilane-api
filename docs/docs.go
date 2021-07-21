@@ -5260,6 +5260,9 @@ var doc = `{
                     "type": "integer",
                     "example": 0
                 },
+                "order_code": {
+                    "type": "string"
+                },
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
@@ -5267,6 +5270,12 @@ var doc = `{
                 "status": {
                     "type": "string",
                     "example": "true"
+                },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
                 },
                 "type": {
                     "type": "string"

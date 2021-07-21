@@ -1196,12 +1196,18 @@ definitions:
       offset:
         example: 0
         type: integer
+      order_code:
+        type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
         type: object
       status:
         example: "true"
         type: string
+      time_from:
+        type: integer
+      time_to:
+        type: integer
       type:
         type: string
     type: object
