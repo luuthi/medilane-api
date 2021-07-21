@@ -7,11 +7,14 @@ import (
 )
 
 type SearchOrderRequest struct {
-	Limit  int        `json:"limit" example:"10"`
-	Offset int        `json:"offset" example:"0"`
-	Sort   SortOption `json:"sort"`
-	Status string     `json:"status" example:"true"`
-	Type   string     `json:"type"`
+	Limit     int        `json:"limit" example:"10"`
+	Offset    int        `json:"offset" example:"0"`
+	Sort      SortOption `json:"sort"`
+	Status    string     `json:"status" example:"true"`
+	Type      string     `json:"type"`
+	TimeFrom  int64      `json:"time_from"`
+	TimeTo    int64      `json:"time_to"`
+	OrderCode string     `json:"order_code"`
 }
 
 func (rr SearchOrderRequest) Validate() error {

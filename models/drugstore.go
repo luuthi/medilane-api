@@ -5,8 +5,8 @@ type DrugStore struct {
 
 	StoreName      string          `json:"StoreName,omitempty" gorm:"type:varchar(200);not null"`
 	PhoneNumber    string          `json:"Phone,omitempty" gorm:"type:varchar(200)"`
-	Representative *User           `json:"Representative,omitempty" gorm:"-"`
-	CaringStaff    *User           `json:"Staff,omitempty" gorm:"-"`
+	Representative *User           `json:"Representative" gorm:"-"`
+	CaringStaff    *User           `json:"Staff" gorm:"-"`
 	ApproveBy      *User           `json:"ApproveBy,omitempty" gorm:"-"`
 	TaxNumber      string          `json:"TaxNumber,omitempty" gorm:"type:varchar(200)"`
 	LicenseFile    string          `json:"LicenseFile,omitempty" gorm:"type:varchar(200)"`
@@ -24,11 +24,11 @@ type DrugStore struct {
 }
 
 type DrugStoreUser struct {
-	DrugStoreID  uint   `gorm:"primaryKey"`
-	UserID       uint   `gorm:"primaryKey"`
-	Relationship string `json:"Relationship" gorm:"type:varchar(200)"`
-	User         *User
-	DrugStore    *DrugStore
+	DrugStoreID  uint       `gorm:"primaryKey"`
+	UserID       uint       `gorm:"primaryKey"`
+	Relationship string     `json:"Relationship" gorm:"type:varchar(200)"`
+	User         *User      `json:"User" gorm:"foreignKey:UserID"`
+	DrugStore    *DrugStore `json:"DrugStore" gorm:"foreignKey:DrugStoreID"`
 }
 
 func (*DrugStoreUser) TableName() string {

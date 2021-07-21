@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"medilane-api/core/authentication"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	"medilane-api/packages/order/repositories"
 	repositories2 "medilane-api/packages/order/repositories"
@@ -54,7 +55,12 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 	var total int64
 
 	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
-	orderRepo.GetOrder(&orders, &total, claims.UserId, searchRequest)
+
+	if claims.Type == string(utils.USER) {
+		orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchRequest)
+	} else {
+		orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchRequest)
+	}
 	return responses.Response(c, http.StatusOK, responses2.OrderResponse{
 		Code:    http.StatusOK,
 		Message: "",

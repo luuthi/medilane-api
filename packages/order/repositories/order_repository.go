@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"medilane-api/core/utils"
@@ -23,20 +24,37 @@ func NewOrderRepository(db *gorm.DB) *OrderRepository {
 	return &OrderRepository{DB: db}
 }
 
-func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, filter *requests2.SearchOrderRequest) {
+func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, searchByUser bool, filter *requests2.SearchOrderRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
-	spec = append(spec, "user_order_id = ?")
-	values = append(values, userId)
+	if searchByUser {
+		spec = append(spec, "user_order_id = ?")
+		values = append(values, userId)
+	}
 
 	if filter.Status != "" {
 		spec = append(spec, "status = ?")
 		values = append(values, filter.Status)
 	}
+
 	if filter.Type != "" {
 		spec = append(spec, "type = ?")
 		values = append(values, filter.Type)
+	}
+
+	if filter.OrderCode != "" {
+		spec = append(spec, "order_code LIKE ?")
+		values = append(values, fmt.Sprintf("%%%s%%", filter.OrderCode))
+	}
+
+	if filter.TimeFrom > 0 {
+		spec = append(spec, "created_at >= ?")
+		values = append(values, filter.TimeFrom)
+	}
+	if filter.TimeTo > 0 {
+		spec = append(spec, "created_at <= ?")
+		values = append(values, filter.TimeTo)
 	}
 
 	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).

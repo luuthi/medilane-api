@@ -37,6 +37,14 @@ const (
 	MANUFACTURER AccountType = "manufacturer"
 )
 
+type RelationShipType string
+
+const (
+	IS_MANAGER   RelationShipType = "isManager"
+	IS_STAFF     RelationShipType = "isStaff"
+	IS_CARESTAFF RelationShipType = "isCareStaff"
+)
+
 type UserDrugStoreRelationShip int
 
 const (

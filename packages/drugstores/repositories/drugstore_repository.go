@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/drugstores/responses"
@@ -22,7 +23,7 @@ func NewDrugStoreRepository(db *gorm.DB) *DrugStoreRepository {
 	return &DrugStoreRepository{DB: db}
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(drugStores *[]models.DrugStore, count *int64, filter *requests2.SearchDrugStoreRequest) {
+func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filter *requests2.SearchDrugStoreRequest) []models.DrugStore {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -59,12 +60,50 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(drugStores *[]mode
 		filter.Sort.SortDirection = "desc"
 	}
 
-	DrugStoreRepository.DB.Table(utils2.TblDrugstore).Where(strings.Join(spec, " AND "), values...).
+	var drugStores []models.DrugStore
+
+	DrugStoreRepository.DB.Table(utils2.TblDrugstore).
+		Where(strings.Join(spec, " AND "), values...).
 		Count(count).
+		Preload("Address").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&drugStores)
+
+	// get info user
+	var drugstoreIds []uint
+	for _, drugstore := range drugStores {
+		drugstoreIds = append(drugstoreIds, drugstore.ID)
+	}
+	var dsus []models.DrugStoreUser
+	DrugStoreRepository.DB.Table(utils2.TblDrugstoreUser).
+		Preload(clause.Associations).
+		Where("drug_store_id IN ?", drugstoreIds).
+		Find(&dsus)
+
+	var rs []models.DrugStore
+	for _, drugstore := range drugStores {
+		for _, dsu := range dsus {
+			if drugstore.ID == dsu.DrugStoreID {
+				if dsu.Relationship == string(utils2.IS_MANAGER) {
+					drugstore.Users = append(drugstore.Users, dsu.User)
+					drugstore.Representative = dsu.User
+				}
+				if dsu.Relationship == string(utils2.IS_CARESTAFF) {
+					drugstore.CaringStaff = dsu.User
+				}
+				if dsu.Relationship == string(utils2.IS_STAFF) {
+					drugstore.Users = append(drugstore.Users, dsu.User)
+				}
+			}
+		}
+
+		rs = append(rs, drugstore)
+	}
+
+	return rs
+
 }
 
 func (DrugStoreRepository *DrugStoreRepository) GetDrugstoreByID(perm *models.DrugStore, id uint) {

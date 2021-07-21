@@ -48,7 +48,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 	var total int64
 
 	drugStoresRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	drugStoresRepo.GetDrugStores(&drugstores, &total, searchRequest)
+	drugstores = drugStoresRepo.GetDrugStores(&total, searchRequest)
 
 	return responses.Response(c, http.StatusOK, responses2.DrugStoreSearch{
 		Code:    http.StatusOK,
