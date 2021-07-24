@@ -6,7 +6,7 @@ services:
 stages:
   - build
 
-  variables:
+variables:
   IMAGE: registry.gitlab.com/medilane-group/medilane-api
 
 build:
