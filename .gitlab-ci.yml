@@ -12,7 +12,7 @@ stages:
 build:
   stage: build
   tags: 
-    - docker
+    - medilane
   script:
     - ls -la
     - docker build -t $IMAGE -f deploy/Dockerfile .

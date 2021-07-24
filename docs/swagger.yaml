@@ -701,9 +701,9 @@ definitions:
     type: object
   requests.AssignStaffRequest:
     properties:
-      AssignDetail:
+      DrugStoresIdLst:
         items:
-          $ref: '#/definitions/requests.StaffRelationship'
+          type: integer
         type: array
     type: object
   requests.CartItemRequest:
@@ -1339,13 +1339,6 @@ definitions:
       sort_direction:
         type: string
       sort_field:
-        type: string
-    type: object
-  requests.StaffRelationship:
-    properties:
-      DrugStoresId:
-        type: integer
-      Relationship:
         type: string
     type: object
   requests.TagRequest:

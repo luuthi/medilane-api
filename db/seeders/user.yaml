@@ -1,26 +1,8 @@
 users:
-  - email: admin@gmail.com
-    username: admin
+  - email: test_staff1@gmail.com
+    username: test_staff1
     password: 123qweA@
-    full_name: Administrator
-    status: true
-    type: super_admin
-    is_admin: true
-    roles:
-      - author_manage
-      - drugstore_manage
-      - product_manage
-      - product_store_manage
-      - order_manage
-      - order_store_manage
-      - voucher_manage
-      - promotion_manage
-      - consignment_manage
-      - partner_manage
-  - email: medilane@gmail.com
-    username: medilane
-    password: 123qweA@
-    full_name: medilane
+    full_name: test_staff1
     status: true
     type: staff
     is_admin: false
@@ -30,4 +12,193 @@ users:
       - voucher_manage
       - promotion_manage
       - partner_manage
+  - email: test_staff2@gmail.com
+    username: test_staff2
+    password: 123qweA@
+    full_name: test_staff2
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff3@gmail.com
+    username: test_staff3
+    password: 123qweA@
+    full_name: test_staff3
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff4@gmail.com
+    username: test_staff4
+    password: 123qweA@
+    full_name: test_staff4
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff5@gmail.com
+    username: test_staff5
+    password: 123qweA@
+    full_name: test_staff5
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff6@gmail.com
+    username: test_staff6
+    password: 123qweA@
+    full_name: test_staff6
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff7@gmail.com
+    username: test_staff7
+    password: 123qweA@
+    full_name: test_staff7
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff8@gmail.com
+    username: test_staff8
+    password: 123qweA@
+    full_name: test_staff8
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff9@gmail.com
+    username: test_staff9
+    password: 123qweA@
+    full_name: test_staff9
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_staff10@gmail.com
+    username: test_staff10
+    password: 123qweA@
+    full_name: test_staff10
+    status: true
+    type: staff
+    is_admin: false
+    roles:
+      - order_manage
+      - order_store_manage
+      - voucher_manage
+      - promotion_manage
+      - partner_manage
+  - email: test_user2@gmail.com
+    username: test_user2
+    password: 123qweA@
+    full_name: test_user2
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user3@gmail.com
+    username: test_user3
+    password: 123qweA@
+    full_name: test_user3
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user4@gmail.com
+    username: test_user4
+    password: 123qweA@
+    full_name: test_user4
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user5@gmail.com
+    username: test_user5
+    password: 123qweA@
+    full_name: test_user5
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user6@gmail.com
+    username: test_user6
+    password: 123qweA@
+    full_name: test_user6
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user7@gmail.com
+    username: test_user7
+    password: 123qweA@
+    full_name: test_user7
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user8@gmail.com
+    username: test_user8
+    password: 123qweA@
+    full_name: test_user8
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
+  - email: test_user9@gmail.com
+    username: test_user9
+    password: 123qweA@
+    full_name: test_user9
+    status: true
+    type: user
+    is_admin: false
+    roles:
+      - order_manage
 

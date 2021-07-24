@@ -215,18 +215,18 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	drugStoreUserRepo.GetListDrugStoreAssignToStaff(&drugStoreUserInDB, &total, id)
 
 	if total == 0 {
-		for _, v := range requestBody.AssignDetail {
-			err := userService.AssignStaffToDrugStore(id, v.DrugStoreId, v.Relationship)
+		for _, v := range requestBody.DrugStoresIdLst {
+			err := userService.AssignStaffToDrugStore(id, v, string(utils2.IS_CARESTAFF))
 			if err != nil {
 			}
 		}
 	} else {
 		var drugStoreUserRequest []models.DrugStoreUser
-		for _, v := range requestBody.AssignDetail {
+		for _, v := range requestBody.DrugStoresIdLst {
 			drugStoreUserRequest = append(drugStoreUserRequest, models.DrugStoreUser{
 				UserID:       id,
-				DrugStoreID:  v.DrugStoreId,
-				Relationship: v.Relationship,
+				DrugStoreID:  v,
+				Relationship: string(utils2.IS_CARESTAFF),
 			})
 		}
 

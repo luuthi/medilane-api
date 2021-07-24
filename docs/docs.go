@@ -4559,10 +4559,10 @@ var doc = `{
         "requests.AssignStaffRequest": {
             "type": "object",
             "properties": {
-                "AssignDetail": {
+                "DrugStoresIdLst": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/requests.StaffRelationship"
+                        "type": "integer"
                     }
                 }
             }
@@ -5464,17 +5464,6 @@ var doc = `{
                     "type": "string"
                 },
                 "sort_field": {
-                    "type": "string"
-                }
-            }
-        },
-        "requests.StaffRelationship": {
-            "type": "object",
-            "properties": {
-                "DrugStoresId": {
-                    "type": "integer"
-                },
-                "Relationship": {
                     "type": "string"
                 }
             }

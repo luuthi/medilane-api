@@ -71,9 +71,10 @@ type StaffRelationship struct {
 }
 
 type AssignStaffRequest struct {
-	AssignDetail []StaffRelationship `json:"AssignDetail"`
+	DrugStoresIdLst []uint `json:"DrugStoresIdLst"`
 }
 
 func (rr AssignStaffRequest) Validate() error {
-	return validation.ValidateStruct(&rr)
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.DrugStoresIdLst, validation.Required, validation.Length(1, 1000)))
 }
