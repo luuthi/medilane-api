@@ -1,100 +1,22 @@
-image: docker:stable
-
-variables:
-  DOCKER_DRIVER: overlay2
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  DOCKER_TLS_CERTDIR: ""
-  MYSQL_DATABASE: test
-  MYSQL_ROOT_PASSWORD: db_password
-
+image: docker:latest
 services:
-  - docker:dind
+  - docker:18.09-dind
 
+  
 stages:
-  - migrations
-  - test
   - build
-  - deploy
 
-lint:
-  image: golangci/golangci-lint:v1.36.0
-  stage: test
-  before_script:
-    - go get -v github.com/swaggo/swag/cmd/swag
-    - $GOPATH/bin/swag init -g cmd/main.go
-  script:
-    - golangci-lint run -v
-  allow_failure: true
-  only:
-    refs:
-      - develop
-
-migrations:
-  image: golang:1.13.3-alpine3.10
-  services:
-    - mysql:5.7
-  tags:
-    - dind
-    - docker
-  stage: migrations
-  before_script:
-    - cp .env.testing.gitlab-ci .env
-    - go get -v github.com/swaggo/swag/cmd/swag
-    - $GOPATH/bin/swag init -g cmd/main.go
-  script:
-    - go get -v ./...
-#    - go run migrations/entry.go --env-path=./ --verbose
-#    - go run migrations/entry.go --rollback --env-path=./ --verbose
-  only:
-    refs:
-      - develop
-
-test:
-  image: golang:1.13.3-alpine3.10
-  services:
-    - mysql:5.7
-  tags:
-    - dind
-    - docker
-  stage: test
-  before_script:
-    - cp .env.testing.gitlab-ci .env.testing
-    - go get -v github.com/swaggo/swag/cmd/swag
-    - $GOPATH/bin/swag init -g cmd/main.go
-  script:
-    - go get -v ./...
-#    - go test -v ./...
-  only:
-    refs:
-      - develop
+  variables:
+  IMAGE: registry.gitlab.com/medilane-group/medilane-api
 
 build:
-  tags:
-    - dind
-    - docker
   stage: build
-  script:
-    - cp deploy/Dockerfile .
-    - docker --version
-    - docker build
-      -t $CI_REGISTRY_IMAGE:staging .
-  only:
-    refs:
-      - develop
-
-deploy staging:
-  image: golang:1.13.3-alpine3.10
-  environment:
-    name: staging
-  when: manual
-  tags:
-    - dind
+  tags: 
     - docker
-  stage: deploy
-  before_script:
-    - echo "OK"
   script:
-    - echo "OK"
+    - ls -la
+    - docker build -t $IMAGE -f deploy/Dockerfile .
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PWD registry.gitlab.com
+    - docker push $IMAGE
   only:
-    refs:
       - develop
