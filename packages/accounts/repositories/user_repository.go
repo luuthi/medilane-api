@@ -59,6 +59,8 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, count *int64, filter *requests2.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
+	specCount := make([]string, 0)
+	valuesCount := make([]interface{}, 0)
 
 	if filter.Username != "" {
 		spec = append(spec, "username LIKE ?")
@@ -80,9 +82,12 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, co
 		values = append(values, filter.Status)
 	}
 
-	if filter.Type != "" {
-		spec = append(spec, "type = ?")
+	if len(filter.Type) > 0 {
+		spec = append(spec, "type  IN (?)")
 		values = append(values, filter.Type)
+
+		specCount = append(spec, "type  IN (?)")
+		valuesCount = append(values, filter.Type)
 	}
 
 	if filter.IsAdmin != nil {
@@ -99,7 +104,10 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, co
 	}
 
 	AccountRepository.DB.Table(utils2.TblAccount).
-		Count(count).
+		Where(strings.Join(specCount, " AND "), valuesCount...).
+		Count(count)
+
+	AccountRepository.DB.Table(utils2.TblAccount).
 		Where(strings.Join(spec, " AND "), values...).
 		Preload("Roles").
 		Limit(filter.Limit).

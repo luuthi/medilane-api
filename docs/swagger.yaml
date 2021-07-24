@@ -1080,8 +1080,11 @@ definitions:
         example: "true"
         type: string
       type:
-        example: staff/user/supplier/manufacturer
-        type: string
+        example:
+        - staff/user/supplier/manufacturer
+        items:
+          type: string
+        type: array
       username:
         example: admin
         type: string

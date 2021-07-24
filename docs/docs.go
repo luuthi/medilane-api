@@ -5100,8 +5100,13 @@ var doc = `{
                     "example": "true"
                 },
                 "type": {
-                    "type": "string",
-                    "example": "staff/user/supplier/manufacturer"
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "staff/user/supplier/manufacturer"
+                    ]
                 },
                 "username": {
                     "type": "string",

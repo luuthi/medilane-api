@@ -11,7 +11,7 @@ type SearchAccountRequest struct {
 	FullName string     `json:"full_name"  example:"admin"`
 	Email    string     `json:"email" example:"admin@gmail.com"`
 	Status   string     `json:"status" example:"true"`
-	Type     string     `json:"type" example:"staff/user/supplier/manufacturer"`
+	Type     []string   `json:"type" example:"staff/user/supplier/manufacturer"`
 	IsAdmin  *bool      `json:"is_admin" example:"true"`
 	Limit    int        `json:"limit" example:"10"`
 	Offset   int        `json:"offset" example:"0"`
