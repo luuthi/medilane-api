@@ -2,15 +2,12 @@ package repositories
 
 import (
 	"fmt"
-	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
-	"time"
-
-	"gorm.io/gorm"
 )
 
 type ProductsRepositoryQ interface {
@@ -61,17 +58,20 @@ func (productRepository *ProductRepository) GetProductByIdCost(product *models2.
 		Where("product.id = ?", id).Find(product)
 }
 
-func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint, areaId uint) {
+func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint, userType string, areaId uint) {
 	// check user area
-	time1 := time.Now().UnixNano()
-	var address models2.Address
-	var user models2.User
-	productRepository.DB.Table(utils.TblAccount).
-		Select("adr.*, user.*").
-		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
-		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
-		Joins("JOIN address adr ON adr.id = ds.address_id").
-		Where("user.id = ?", userId).Find(&address).Find(&user)
+	if !(userType == string(utils.SUPER_ADMIN) || userType == string(utils.STAFF)) {
+		var address models2.Address
+		var user models2.User
+		productRepository.DB.Table(utils.TblAccount).
+			Select("adr.*, user.*").
+			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+			Joins("JOIN address adr ON adr.id = ds.address_id").
+			Where("user.id = ?", userId).Find(&address).Find(&user)
+
+		areaId = address.AreaID
+	}
 
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
@@ -109,12 +109,6 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		filter.Sort.SortDirection = "desc"
 	}
 
-	if !(user.Type == string(utils.SUPER_ADMIN) || user.Type == string(utils.STAFF)) {
-		areaId = address.AreaID
-	}
-
-	time2 := time.Now().UnixNano()
-	log.Infof("=================== time 1: %v", time2-time1)
 	productRepository.DB.Table(utils.TblProduct).
 		Select("product.*, ac.cost").
 		Count(count).
@@ -128,6 +122,4 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&product)
-	time3 := time.Now().UnixNano()
-	log.Infof("=================== time 2: %v", time3-time2)
 }

@@ -308,7 +308,7 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(areaHandler.server.DB)
-	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId, areaId)
+	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId, claims.Type, areaId)
 
 	return responses.Response(c, http.StatusOK, responses.ProductSearch{
 		Code:    http.StatusOK,
