@@ -1,6 +1,8 @@
 image: docker:latest
 services:
-  - docker:18.09-dind
+  - name: docker:18.09-dind
+    alias: docker
+    command: [ "--tls=false" ]
 
   
 stages:
