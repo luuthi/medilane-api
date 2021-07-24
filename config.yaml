@@ -6,11 +6,12 @@ HTTP:
   EXPOSE_PORT: 8001
 
 MIGRATION:
-  MIGRATE_DB: true
+  MIGRATE_DB: false
   INIT_PERMISSION_PATH: D:\Workspace\medilane\medilane-api\db\seeders\permission.yaml
   INIT_ROLE_PATH: D:\Workspace\medilane\medilane-api\db\seeders\role.yaml
   INIT_USER_PATH: D:\Workspace\medilane\medilane-api\db\seeders\user.yaml
 
+SWAGGER_DOC_URL: http://localhost:8001/swagger/doc.json
 #Parameters for getting the access to the database
 DATABASE:
   DB_USER: medilane

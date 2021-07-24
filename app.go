@@ -10,7 +10,7 @@ import (
 func Start(cfg *config.Config) {
 	app := server.NewServer(cfg)
 
-	routes.ConfigureRoutes(app)
+	routes.ConfigureRoutes(app, cfg)
 
 	err := app.Start(cfg.HTTP.Port)
 	if err != nil {

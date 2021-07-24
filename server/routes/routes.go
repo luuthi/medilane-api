@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	log2 "github.com/labstack/gommon/log"
+	"medilane-api/config"
 	accRoute "medilane-api/packages/accounts/routes"
 	cartRoute "medilane-api/packages/cart/routes"
 	drugStoreRoute "medilane-api/packages/drugstores/routes"
@@ -19,7 +20,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-func ConfigureRoutes(server *s.Server) {
+func ConfigureRoutes(server *s.Server, config *config.Config) {
 	// middleware
 
 	server.Echo.Use(middlewareLogging)
@@ -27,10 +28,10 @@ func ConfigureRoutes(server *s.Server) {
 	server.Echo.Logger.SetLevel(log2.DEBUG)
 
 	server.Echo.Use(middleware.CORS())
-	//server.Echo.Use(middleware.Recover())
 	server.Echo.Use(middleware.RemoveTrailingSlash())
-
-	server.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
+	// Or can use EchoWrapHandler func with configurations.
+	url := echoSwagger.URL(config.SwaggerDocUrl) //The url pointing to API definition
+	server.Echo.GET("/swagger/*", echoSwagger.EchoWrapHandler(url))
 	appRoute := server.Echo.Group("/api/v1")
 
 	accRoute.ConfigureAccountRoutes(appRoute, server)

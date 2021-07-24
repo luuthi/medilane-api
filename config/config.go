@@ -9,12 +9,13 @@ import (
 )
 
 type Config struct {
-	Auth      AuthConfig            `yaml:"AUTH"`
-	DB        DBConfig              `yaml:"DATABASE"`
-	HTTP      HTTPConfig            `yaml:"HTTP"`
-	Logger    logger2.ConfigLogging `yaml:"LOGGER"`
-	MIGRATION Migration             `yaml:"MIGRATION"`
-	REDIS     Redis                 `yaml:"REDIS"`
+	Auth          AuthConfig            `yaml:"AUTH"`
+	DB            DBConfig              `yaml:"DATABASE"`
+	HTTP          HTTPConfig            `yaml:"HTTP"`
+	Logger        logger2.ConfigLogging `yaml:"LOGGER"`
+	MIGRATION     Migration             `yaml:"MIGRATION"`
+	REDIS         Redis                 `yaml:"REDIS"`
+	SwaggerDocUrl string                `yaml:"SWAGGER_DOC_URL"`
 }
 
 type Migration struct {
