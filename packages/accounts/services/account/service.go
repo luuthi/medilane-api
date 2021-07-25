@@ -2,6 +2,7 @@ package account
 
 import (
 	"gorm.io/gorm"
+	"medilane-api/config"
 	"medilane-api/requests"
 	requests2 "medilane-api/requests"
 )
@@ -26,9 +27,10 @@ type ServiceWrapper interface {
 }
 
 type Service struct {
-	DB *gorm.DB
+	DB     *gorm.DB
+	Config *config.Config
 }
 
-func NewAccountService(db *gorm.DB) *Service {
-	return &Service{DB: db}
+func NewAccountService(db *gorm.DB, config *config.Config) *Service {
+	return &Service{DB: db, Config: config}
 }

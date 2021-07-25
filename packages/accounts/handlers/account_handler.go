@@ -79,7 +79,7 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	accService := account.NewAccountService(accHandler.server.DB)
+	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
 	rs, _ := accService.CreateUser(&acc)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert account: %v", err.Error()))
@@ -126,7 +126,7 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
 	}
 
-	accService := account.NewAccountService(accHandler.server.DB)
+	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
 	if err := accService.EditUser(&acc, id, existedUser.Username); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update user: %v", err.Error()))
 	}
@@ -160,7 +160,7 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
 	}
 
-	accService := account.NewAccountService(accHandler.server.DB)
+	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
 	if err := accService.DeleteUser(id, existedUser.Username); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
 	}
@@ -207,7 +207,7 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("User isn't staff"))
 	}
 
-	userService := account.NewAccountService(accHandler.server.DB)
+	userService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
 	drugStoreUserRepo := repositories2.NewDrugStoreUserRepository(accHandler.server.DB)
 
 	var drugStoreUserInDB []models.DrugStoreUser

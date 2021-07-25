@@ -12,6 +12,7 @@ const (
 	TblVariant               = "variant"
 	TblVariantValue          = "variant_value"
 	TblArea                  = "area"
+	TblAreaConfig            = "area_config"
 	TblAddress               = "address"
 	TblDrugstore             = "drug_store"
 	TblDrugstoreUser         = "drug_store_user"

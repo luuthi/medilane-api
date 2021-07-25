@@ -63,19 +63,38 @@ func (userService *Service) CreateUser(request *requests2.AccountRequest) (error
 
 func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest) error {
 	drugStoreReq := request.DrugStore
-	store := builders.NewDrugStoreBuilder().
+	storeBuilder := builders.NewDrugStoreBuilder().
 		SetStoreName(drugStoreReq.StoreName).
 		SetLicenseFile(drugStoreReq.LicenseFile).
 		SetPhoneNumber(drugStoreReq.PhoneNumber).
 		SetTaxNumber(drugStoreReq.TaxNumber).
 		SetStatus(string(drugstores2.NEW)).
 		SetType(drugStoreReq.Type).
-		SetApproveTime(0).
-		SetAddress(&drugStoreReq.Address).
-		Build()
+		SetApproveTime(0)
 
 	// begin a transaction
 	tx := userService.DB.Begin()
+
+	// query area config
+	var areaConfig models.AreaConfig
+	tx.Table(utils2.TblAreaConfig).Where("province = ?", drugStoreReq.Address.Province).First(&areaConfig)
+	if areaConfig.District == "All" {
+		drugStoreReq.Address.AreaID = areaConfig.AreaID
+	} else {
+		var areaConfig1 models.AreaConfig
+		tx.Table(utils2.TblAreaConfig).
+			Where("province = ? AND district = ?", drugStoreReq.Address.Province, drugStoreReq.Address.District).
+			First(&areaConfig1)
+		if areaConfig1.ID != 0 {
+			drugStoreReq.Address.AreaID = areaConfig1.AreaID
+		} else {
+			drugStoreReq.Address.AreaID = 1
+		}
+	}
+
+	store := storeBuilder.
+		SetAddress(&drugStoreReq.Address).
+		Build()
 
 	rs := tx.Table(utils2.TblDrugstore).Create(&store)
 
@@ -97,7 +116,7 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 		return err
 	}
 
-	user := builders2.NewUserBuilder().
+	userBuilder := builders2.NewUserBuilder().
 		SetEmail(userReq.Email).
 		SetName(userReq.Username).
 		SetPassword(string(encryptedPassword)).
@@ -105,8 +124,13 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 		SetStatus(false).
 		SetType(userReq.Type).
 		SetIsAdmin(*userReq.IsAdmin).
-		SetRoles(userReq.Roles).
-		Build()
+		SetRoles(userReq.Roles)
+
+	if userReq.Type == string(utils2.USER) {
+		userBuilder.SetRoles(userService.Config.DefaultRoles.User)
+	}
+
+	user := userBuilder.Build()
 
 	rs = tx.Table(utils2.TblAccount).Create(&user)
 
@@ -117,11 +141,16 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 	}
 
 	//create relationship user with store
-	ud := builders2.NewUserDrugStoreBuilder().
+	udBuilder := builders2.NewUserDrugStoreBuilder().
 		SetUser(user.ID).
-		SetDrugStoreId(store.ID).
-		SetRelationship(string(utils2.USER)).
-		Build()
+		SetDrugStoreId(store.ID)
+
+	if *(userReq.IsAdmin) {
+		udBuilder.SetRelationship(string(utils2.IS_MANAGER))
+	} else {
+		udBuilder.SetRelationship(string(utils2.IS_STAFF))
+	}
+	ud := udBuilder.Build()
 	rs = tx.Table(utils2.TblDrugstoreUser).Create(&ud)
 	//rollback if error
 	if rs.Error != nil {

@@ -36,3 +36,11 @@ type AreaCost struct {
 func (*AreaCost) TableName() string {
 	return "area_cost"
 }
+
+type AreaConfig struct {
+	ID       uint   `json:"id" gorm:"primary_key"`
+	AreaID   uint   `json:"AreaId"`
+	Area     *Area  `json:"Area" gorm:"foreignKey:AreaID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Province string `json:"Province" gorm:"type:varchar(200)"`
+	District string `json:"District" gorm:"type:varchar(200)"`
+}

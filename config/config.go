@@ -16,6 +16,12 @@ type Config struct {
 	MIGRATION     Migration             `yaml:"MIGRATION"`
 	REDIS         Redis                 `yaml:"REDIS"`
 	SwaggerDocUrl string                `yaml:"SWAGGER_DOC_URL"`
+	DefaultRoles  DefaultRole           `yaml:"DEFAULT_ROLES"`
+}
+
+type DefaultRole struct {
+	User  []string `yaml:"USER"`
+	Staff []string `yaml:"STAFF"`
 }
 
 type Migration struct {

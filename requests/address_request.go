@@ -23,7 +23,7 @@ func (rr AddressRequest) Validate() error {
 		validation.Field(&rr.District, validation.Required),
 		validation.Field(&rr.Ward, validation.Required),
 		validation.Field(&rr.Address, validation.Required),
-		validation.Field(&rr.Coordinates, validation.Required),
+		//validation.Field(&rr.Coordinates, validation.Required),
 	)
 }
 

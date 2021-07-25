@@ -52,21 +52,12 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, "User already exists")
 	}
 
-	userService := user2.NewAccountService(registerHandler.server.DB)
+	userService := user2.NewAccountService(registerHandler.server.DB, registerHandler.server.Config)
 
 	rs := userService.RegisterDrugStore(accRequest)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert drugstore")
 	}
-
-	//rs1, newUser := userService.CreateUser(&accRequest.AccountRequest)
-	//if err := rs1; err != nil {
-	//	return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user")
-	//}
-	//
-	//if err := userService.CreateDrugstoreUser(newDrugStore.ID, newUser.ID, utils.Manager.String()); err != nil {
-	//	return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert user drugstore")
-	//}
 
 	return responses.MessageResponse(c, http.StatusCreated, "User successfully created")
 }

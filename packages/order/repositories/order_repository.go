@@ -66,6 +66,9 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, orderId uint) {
 	OrderRepository.DB.Table(utils.TblOrder).
 		Preload(clause.Associations).
+		Preload("OrderDetails.Product").
+		Preload("OrderDetails.Variant").
+		Preload("OrderDetails.Product.Images").
 		First(&orders, orderId)
 }
 

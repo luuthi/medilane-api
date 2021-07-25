@@ -78,7 +78,7 @@ func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	permService := account.NewAccountService(permHandler.server.DB)
+	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.CreatePermission(&perm); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert permission: %v", err.Error()))
 	}
@@ -122,7 +122,7 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found permission with ID: %v", string(id)))
 	}
 
-	permService := account.NewAccountService(permHandler.server.DB)
+	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.EditPermission(&perm, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update permission: %v", err.Error()))
 	}
@@ -149,7 +149,7 @@ func (permHandler *PermissionHandler) DeletePermission(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	permService := account.NewAccountService(permHandler.server.DB)
+	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.DeletePermission(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete permission: %v", err.Error()))
 	}

@@ -48,3 +48,27 @@ LOGGER:
     MAX_DAYS: 5
     COMPRESS: true
     LOCAL_TIME: true
+
+DEFAULT_ROLES:
+  USER:
+    - product_view
+    - drugstore_view
+    - order_view
+    - order_store_view
+    - promotion_view
+    - voucher_view
+    - tag_view
+    - order_manage
+    - order_store_manage
+    - category_view
+  STAFF:
+    - drugstore_manage
+    - product_manage
+    - order_manage
+    - order_store_manage
+    - voucher_manage
+    - promotion_manage
+    - consignment_manage
+    - partner_manage
+    - tag_manage
+    - category_manage

@@ -79,7 +79,7 @@ func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	roleService := account.NewAccountService(roleHandler.server.DB)
+	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
 	rs := roleService.CreateRole(&role)
 	if err := rs.Error; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert role: %v", err.Error()))
@@ -125,7 +125,7 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found role with ID: %v", string(id)))
 	}
 
-	roleService := account.NewAccountService(roleHandler.server.DB)
+	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
 	if err := roleService.EditRole(&role, id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update role: %v", err.Error()))
 	}
@@ -159,7 +159,7 @@ func (roleHandler *RoleHandler) DeleteRole(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found role with ID: %v", string(id)))
 	}
 
-	roleService := account.NewAccountService(roleHandler.server.DB)
+	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
 	if err := roleService.DeleteRole(id, existedRole.RoleName); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete role: %v", err.Error()))
 	}
