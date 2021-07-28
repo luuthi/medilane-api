@@ -1140,6 +1140,10 @@ definitions:
       status:
         example: "true"
         type: string
+      time_from:
+        type: integer
+      time_to:
+        type: integer
       type:
         example:
         - staff/user/supplier/manufacturer
@@ -1251,6 +1255,10 @@ definitions:
       sort:
         $ref: '#/definitions/requests.SortOption'
         type: object
+      time_from:
+        type: integer
+      time_to:
+        type: integer
     type: object
   requests.SearchOrderRequest:
     properties:
@@ -1292,6 +1300,8 @@ definitions:
     type: object
   requests.SearchProductRequest:
     properties:
+      AreaId:
+        type: integer
       Barcode:
         example: example
         type: string
@@ -1315,6 +1325,10 @@ definitions:
       sort:
         $ref: '#/definitions/requests.SortOption'
         type: object
+      time_from:
+        type: integer
+      time_to:
+        type: integer
     type: object
   requests.SearchPromotionDetail:
     properties:
@@ -1335,12 +1349,12 @@ definitions:
     type: object
   requests.SearchPromotionRequest:
     properties:
+      Name:
+        type: string
       TimeFromEnd:
         type: integer
       TimeFromStart:
         type: integer
-      Name:
-        type: string
       TimeToEnd:
         type: integer
       TimeToStart:

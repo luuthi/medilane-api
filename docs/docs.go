@@ -5201,6 +5201,12 @@ var doc = `{
                     "type": "string",
                     "example": "true"
                 },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
+                },
                 "type": {
                     "type": "array",
                     "items": {
@@ -5353,6 +5359,12 @@ var doc = `{
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
                 }
             }
         },
@@ -5413,6 +5425,9 @@ var doc = `{
         "requests.SearchProductRequest": {
             "type": "object",
             "properties": {
+                "AreaId": {
+                    "type": "integer"
+                },
                 "Barcode": {
                     "type": "string",
                     "example": "example"
@@ -5443,6 +5458,12 @@ var doc = `{
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
                 }
             }
         },
@@ -5474,14 +5495,14 @@ var doc = `{
         "requests.SearchPromotionRequest": {
             "type": "object",
             "properties": {
+                "Name": {
+                    "type": "string"
+                },
                 "TimeFromEnd": {
                     "type": "integer"
                 },
                 "TimeFromStart": {
                     "type": "integer"
-                },
-                "Name": {
-                    "type": "string"
                 },
                 "TimeToEnd": {
                     "type": "integer"
