@@ -2533,7 +2533,7 @@ var doc = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Perform edit promotion with list detail",
+                "description": "Perform edit promotion with list detail. in list detail. leave Id=0 if create new",
                 "consumes": [
                     "application/json"
                 ],

@@ -107,7 +107,7 @@ type PromotionDetailRequest struct {
 	PromotionID uint    `json:"PromotionID"`
 	ProductID   uint    `json:"ProductID" validate:"required"`
 	VariantID   uint    `json:"VariantID" validate:"required"`
-	ID          uint    `json:"id"  example:"leave value=0 if create new"`
+	ID          uint    `json:"id"`
 }
 
 func (rr PromotionDetailRequest) Validate() error {

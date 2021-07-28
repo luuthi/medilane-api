@@ -92,7 +92,7 @@ func (promoHandler *PromotionHandler) CreatePromotion(c echo.Context) error {
 
 // EditPromotionWithDetail Edit promotion with list detail godoc
 // @Summary Edit promotion with list detail in system
-// @Description Perform edit promotion with list detail
+// @Description Perform edit promotion with list detail. in list detail. leave Id=0 if create new
 // @ID edit-promotion
 // @Tags Promotion Management
 // @Accept json

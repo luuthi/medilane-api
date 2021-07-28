@@ -3327,7 +3327,8 @@ paths:
     put:
       consumes:
       - application/json
-      description: Perform edit promotion with list detail
+      description: Perform edit promotion with list detail. in list detail. leave
+        Id=0 if create new
       operationId: edit-promotion
       parameters:
       - description: body promotion
