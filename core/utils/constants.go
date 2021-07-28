@@ -74,3 +74,17 @@ const (
 	IMPORT OrderType = "import"
 	EXPORT OrderType = "export"
 )
+
+type TypePromotion string
+
+const (
+	PERCENT TypePromotion = "percent"
+	VOUCHER TypePromotion = "voucher"
+)
+
+type ConditionPromotion string
+
+const (
+	AMOUNT_PRODUCT ConditionPromotion = "AMOUNT_PRODUCT"
+	TOTAL_MONEY    ConditionPromotion = "TOTAL_MONEY"
+)

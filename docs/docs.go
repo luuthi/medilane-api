@@ -2441,7 +2441,7 @@ var doc = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Perform create promotion",
+                "description": "Perform create promotion with list details",
                 "consumes": [
                     "application/json"
                 ],
@@ -2451,7 +2451,7 @@ var doc = `{
                 "tags": [
                     "Promotion Management"
                 ],
-                "summary": "Create promotion in system",
+                "summary": "Create promotion with list details in system",
                 "operationId": "create-promotion",
                 "parameters": [
                     {
@@ -2460,7 +2460,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.PromotionRequest"
+                            "$ref": "#/definitions/requests.PromotionWithDetailRequest"
                         }
                     }
                 ],
@@ -2468,7 +2468,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/responses.Data"
+                            "$ref": "#/definitions/models.Promotion"
                         }
                     },
                     "400": {
@@ -2514,7 +2514,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.DataSearch"
+                            "$ref": "#/definitions/responses.PromotionSearch"
                         }
                     },
                     "400": {
@@ -2533,7 +2533,7 @@ var doc = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Perform edit promotion",
+                "description": "Perform edit promotion with list detail",
                 "consumes": [
                     "application/json"
                 ],
@@ -2543,7 +2543,7 @@ var doc = `{
                 "tags": [
                     "Promotion Management"
                 ],
-                "summary": "Edit promotion in system",
+                "summary": "Edit promotion with list detail in system",
                 "operationId": "edit-promotion",
                 "parameters": [
                     {
@@ -2552,7 +2552,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.PromotionRequest"
+                            "$ref": "#/definitions/requests.PromotionWithDetailRequest"
                         }
                     },
                     {
@@ -2567,7 +2567,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.Data"
+                            "$ref": "#/definitions/models.Promotion"
                         }
                     },
                     "400": {
@@ -2594,7 +2594,7 @@ var doc = `{
                 "tags": [
                     "Promotion Management"
                 ],
-                "summary": "Delete promotion in system",
+                "summary": "Delete promotion (soft delete) in system",
                 "operationId": "delete-promotion",
                 "parameters": [
                     {
@@ -2622,48 +2622,6 @@ var doc = `{
             }
         },
         "/promotion/{id}/details": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform search promotion detail",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Promotion Management"
-                ],
-                "summary": "Search promotion detail in system",
-                "operationId": "search-promotion-detail",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "id promotion",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.DataSearch"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Error"
-                        }
-                    }
-                }
-            },
             "post": {
                 "security": [
                     {
@@ -2758,6 +2716,59 @@ var doc = `{
                 }
             }
         },
+        "/promotion/{id}/details/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search promotion detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Search promotion detail in system",
+                "operationId": "search-promotion-detail",
+                "parameters": [
+                    {
+                        "description": "Filter promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchPromotionDetail"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PromotionDetailSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/promotion/{id}/details/{d_id}": {
             "put": {
                 "security": [
@@ -2784,7 +2795,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.PromotionRequest"
+                            "$ref": "#/definitions/requests.PromotionDetailRequest"
                         }
                     },
                     {
@@ -4255,6 +4266,88 @@ var doc = `{
                 }
             }
         },
+        "models.Promotion": {
+            "type": "object",
+            "properties": {
+                "Deleted": {
+                    "type": "boolean"
+                },
+                "EndTime": {
+                    "type": "integer"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "StartTime": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "promotionDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PromotionDetail"
+                    }
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.PromotionDetail": {
+            "type": "object",
+            "properties": {
+                "Condition": {
+                    "type": "string"
+                },
+                "Percent": {
+                    "type": "number"
+                },
+                "Product": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Product"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "Promotion": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Promotion"
+                },
+                "PromotionID": {
+                    "type": "integer"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": "number"
+                },
+                "Variant": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Variant"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Role": {
             "type": "object",
             "properties": {
@@ -4983,6 +5076,9 @@ var doc = `{
                 },
                 "VariantID": {
                     "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },
@@ -4997,7 +5093,7 @@ var doc = `{
                 }
             }
         },
-        "requests.PromotionRequest": {
+        "requests.PromotionWithDetailRequest": {
             "type": "object",
             "required": [
                 "EndTime",
@@ -5015,6 +5111,12 @@ var doc = `{
                 "Note": {
                     "type": "string",
                     "example": "Khuyến mại hè nè"
+                },
+                "PromotionDetails": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.PromotionDetailRequest"
+                    }
                 },
                 "StartTime": {
                     "type": "integer"
@@ -5341,6 +5443,31 @@ var doc = `{
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SearchPromotionDetail": {
+            "type": "object",
+            "properties": {
+                "Condition": {
+                    "type": "string"
+                },
+                "ProductID": {
+                    "type": "integer"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "VariantID": {
+                    "type": "integer"
+                },
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
                 }
             }
         },
@@ -5778,6 +5905,46 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Product"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.PromotionDetailSearch": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.PromotionDetail"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.PromotionSearch": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Promotion"
                     }
                 },
                 "message": {

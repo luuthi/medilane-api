@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/promotion/repositories"
+	responses2 "medilane-api/packages/promotion/responses"
 	"medilane-api/packages/promotion/services"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
@@ -29,7 +30,7 @@ func NewPromotionHandler(server *s.Server) *PromotionHandler {
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchPromotionRequest true "Filter promotion"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.PromotionSearch
 // @Failure 400 {object} responses.Error
 // @Router /promotion/find [post]
 // @Security BearerAuth
@@ -41,22 +42,23 @@ func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 
 	promoHandler.server.Logger.Info("search promotion")
 	var promotions []models.Promotion
+	var total int64
 
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
-	promoRepo.GetPromotions(&promotions, searchRequest)
+	promoRepo.GetPromotions(&promotions, searchRequest, &total)
 
 	return responses.SearchResponse(c, http.StatusOK, "", promotions)
 }
 
 // CreatePromotion Create promotion godoc
-// @Summary Create promotion in system
-// @Description Perform create promotion
+// @Summary Create promotion with list details in system
+// @Description Perform create promotion with list details
 // @ID create-promotion
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param params body requests.PromotionRequest true "Create promotion"
-// @Success 201 {object} responses.Data
+// @Param params body requests.PromotionWithDetailRequest true "Create promotion"
+// @Success 201 {object} models.Promotion
 // @Failure 400 {object} responses.Error
 // @Router /promotion [post]
 // @Security BearerAuth
@@ -79,29 +81,29 @@ func (promoHandler *PromotionHandler) CreatePromotion(c echo.Context) error {
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
-	err, _ := promoService.CreatePromotion(&promo)
+	err, newPromotion := promoService.CreatePromotion(&promo)
 	if err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert promotion: %v", err.Error()))
 	}
 
-	return responses.MessageResponse(c, http.StatusCreated, "Promotion created!")
+	return responses.Response(c, http.StatusCreated, newPromotion)
 
 }
 
-// EditPromotion Edit promotion godoc
-// @Summary Edit promotion in system
-// @Description Perform edit promotion
+// EditPromotionWithDetail Edit promotion with list detail godoc
+// @Summary Edit promotion with list detail in system
+// @Description Perform edit promotion with list detail
 // @ID edit-promotion
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param params body requests.PromotionRequest true "body promotion"
+// @Param params body requests.PromotionWithDetailRequest true "body promotion"
 // @Param id path uint true "id promotion"
-// @Success 200 {object} responses.Data
+// @Success 200 {object} models.Promotion
 // @Failure 400 {object} responses.Error
 // @Router /promotion/{id} [put]
 // @Security BearerAuth
-func (promoHandler *PromotionHandler) EditPromotion(c echo.Context) error {
+func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -109,24 +111,31 @@ func (promoHandler *PromotionHandler) EditPromotion(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
-	var acc requests2.PromotionRequest
-	if err := c.Bind(&acc); err != nil {
+	var promo requests2.PromotionWithDetailRequest
+	if err := c.Bind(&promo); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
-	if err := acc.Validate(); err != nil {
+	if err := promo.Validate(); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	for _, item := range promo.PromotionDetails {
+		if err := item.Validate(); err != nil {
+			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		}
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
-	if err := promoService.EditPromotion(&acc, id); err != nil {
+	err, editedPro := promoService.EditPromotionWithDetail(&promo, id)
+	if err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update promotion: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Promotion updated!")
+	return responses.Response(c, http.StatusOK, editedPro)
 }
 
 // DeletePromotion Delete promotion godoc
-// @Summary Delete promotion in system
+// @Summary Delete promotion (soft delete) in system
 // @Description Perform delete promotion
 // @ID delete-promotion
 // @Tags Promotion Management
@@ -199,7 +208,7 @@ func (promoHandler *PromotionHandler) CreatePromotionPromotionDetails(c echo.Con
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param params body requests.PromotionRequest true "body promotion"
+// @Param params body requests.PromotionDetailRequest true "body promotion"
 // @Param id path uint true "id promotion"
 // @Param d_id path uint true "id promotion detail"
 // @Success 200 {object} responses.Data
@@ -299,10 +308,11 @@ func (promoHandler *PromotionHandler) DeletePromotionDetailByPromotion(c echo.Co
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
+// @Param params body requests.SearchPromotionDetail true "Filter promotion"
 // @Param id path uint true "id promotion"
-// @Success 200 {object} responses.DataSearch
+// @Success 200 {object} responses.PromotionDetailSearch
 // @Failure 400 {object} responses.Error
-// @Router /promotion/{id}/details [get]
+// @Router /promotion/{id}/details/find [post]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) error {
 	var paramUrl uint64
@@ -312,11 +322,25 @@ func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) erro
 	}
 	id := uint(paramUrl)
 
+	var searchReq requests2.SearchPromotionDetail
+	if err := c.Bind(&searchReq); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := searchReq.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
 	promoHandler.server.Logger.Info("search promotion")
-	var promotions []*models.PromotionDetail
-
+	var promotions []models.PromotionDetail
+	var total int64
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
-	promoRepo.GetPromotionDetailByPromotion(promotions, id)
+	promoRepo.GetPromotionDetailByPromotion(&promotions, &total, id, searchReq)
 
-	return responses.SearchResponse(c, http.StatusOK, "", promotions)
+	return responses.Response(c, http.StatusOK, responses2.PromotionDetailSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    promotions,
+	})
 }

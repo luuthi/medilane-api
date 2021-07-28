@@ -2,6 +2,7 @@ package services
 
 import (
 	"gorm.io/gorm"
+	"medilane-api/core/funcHelpers"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/promotion/builders"
@@ -45,8 +46,8 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		return rs.Error, nil
 	}
 
+	promotionDetails := make([]*models.PromotionDetail, 0)
 	if len(request.PromotionDetails) > 0 {
-		promotionDetails := make([]models.PromotionDetail, 0)
 		for _, detail := range request.PromotionDetails {
 			promotionDetail := builders.NewPromotionDetailBuilder().
 				SetPromotionID(promotion.ID).
@@ -58,7 +59,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 				SetVariantId(detail.VariantID).
 				Build()
 
-			promotionDetails = append(promotionDetails, promotionDetail)
+			promotionDetails = append(promotionDetails, &promotionDetail)
 		}
 		rsDetail := tx.Table(utils2.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
 		//rollback if error
@@ -68,10 +69,88 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		}
 	}
 
+	promotion.PromotionDetails = promotionDetails
+
 	return tx.Commit().Error, &promotion
 }
 
-func (promoService *Service) EditPromotion(request *requests.PromotionRequest, id uint) error {
+func (promoService *Service) EditPromotionWithDetail(request *requests.PromotionWithDetailRequest, id uint) (error, *models.Promotion) {
+	//promotionReq := request.Promotion
+	promotion := builders.NewPromotionBuilder().
+		SetName(request.Name).
+		SetNote(request.Note).
+		SetStartTime(request.StartTime).
+		SetEndTime(request.EndTime).
+		SetDeleted(false).
+		SetID(id).
+		Build()
+
+	// begin a transaction
+	tx := promoService.DB.Begin()
+	rs := tx.Table(utils2.TblPromotion).Updates(promotion)
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error, nil
+	}
+
+	var details []models.PromotionDetail
+	tx.Table(utils2.TblPromotionDetail).Where("promotion_id = ?", promotion.ID).Find(&details)
+
+	var updatedItemID []uint
+	promotionDetails := make([]*models.PromotionDetail, 0)
+	for _, v := range request.PromotionDetails {
+		if v.ID == 0 {
+			promotionDetail := builders.NewPromotionDetailBuilder().
+				SetPromotionID(id).
+				SetType(v.Type).
+				SetCondition(v.Condition).
+				SetPercent(v.Percent).
+				SetValue(v.Value).
+				SetProductId(v.ProductID).
+				SetVariantId(v.VariantID).
+				Build()
+			err := tx.Table(utils2.TblPromotionDetail).Create(&promotionDetail).Error
+			promotionDetails = append(promotionDetails, &promotionDetail)
+			if err != nil {
+				tx.Rollback()
+				return rs.Error, nil
+			}
+		} else {
+			promotionDetail := builders.NewPromotionDetailBuilder().
+				SetPromotionID(id).
+				SetType(v.Type).
+				SetCondition(v.Condition).
+				SetPercent(v.Percent).
+				SetValue(v.Value).
+				SetProductId(v.ProductID).
+				SetVariantId(v.VariantID).
+				SetId(v.ID).
+				Build()
+			updatedItemID = append(updatedItemID, v.ID)
+			err := tx.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
+			promotionDetails = append(promotionDetails, &promotionDetail)
+			if err != nil {
+				tx.Rollback()
+				return rs.Error, nil
+			}
+		}
+	}
+
+	for _, v := range details {
+		if !funcHelpers.UintContains(updatedItemID, v.ID) {
+			err := tx.Table(utils2.TblPromotionDetail).Delete(&v).Error
+			if err != nil {
+				tx.Rollback()
+				return rs.Error, nil
+			}
+		}
+	}
+	promotion.PromotionDetails = promotionDetails
+	return tx.Commit().Error, &promotion
+}
+
+func (promoService *Service) EditPromotion(request *requests.PromotionRequest, id uint) (error, models.Promotion) {
 	promotion := builders.NewPromotionBuilder().
 		SetName(request.Name).
 		SetNote(request.Note).
@@ -79,12 +158,14 @@ func (promoService *Service) EditPromotion(request *requests.PromotionRequest, i
 		SetEndTime(request.EndTime).
 		SetID(id).
 		Build()
-	return promoService.DB.Table(utils2.TblPromotion).Updates(promotion).Error
+	rs := promoService.DB.Table(utils2.TblPromotion).Updates(promotion)
+	return rs.Error, promotion
 }
 
 func (promoService *Service) DeletePromotion(id uint) error {
 	promotion := builders.NewPromotionBuilder().
 		SetID(id).
+		SetDeleted(true).
 		Build()
 	return promoService.DB.Table(utils2.TblPromotion).Delete(promotion).Error
 }

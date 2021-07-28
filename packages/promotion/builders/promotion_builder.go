@@ -8,6 +8,7 @@ type PromotionBuilder struct {
 	startTime int64
 	endTime   int64
 	id        uint
+	deleted   bool
 }
 
 func NewPromotionBuilder() *PromotionBuilder {
@@ -39,6 +40,11 @@ func (proBuilder *PromotionBuilder) SetID(id uint) *PromotionBuilder {
 	return proBuilder
 }
 
+func (proBuilder *PromotionBuilder) SetDeleted(isDeleted bool) *PromotionBuilder {
+	proBuilder.deleted = isDeleted
+	return proBuilder
+}
+
 func (proBuilder *PromotionBuilder) Build() models.Promotion {
 	common := models.CommonModelFields{
 		ID: proBuilder.id,
@@ -50,6 +56,7 @@ func (proBuilder *PromotionBuilder) Build() models.Promotion {
 		Note:              proBuilder.note,
 		StartTime:         proBuilder.startTime,
 		EndTime:           proBuilder.endTime,
+		Deleted:           proBuilder.deleted,
 	}
 
 	return promotion

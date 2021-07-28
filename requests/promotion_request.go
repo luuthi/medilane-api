@@ -3,6 +3,7 @@ package requests
 import (
 	"errors"
 	validation "github.com/go-ozzo/ozzo-validation"
+	"medilane-api/core/utils"
 )
 
 type PromotionRequest struct {
@@ -56,6 +57,22 @@ func (rr SearchPromotionRequest) Validate() error {
 	)
 }
 
+type SearchPromotionDetail struct {
+	Limit     int    `json:"limit" example:"10"`
+	Offset    int    `json:"offset" example:"0"`
+	ProductID uint   `json:"ProductID"`
+	VariantID uint   `json:"VariantID"`
+	Type      string `json:"Type"`
+	Condition string `json:"Condition" `
+}
+
+func (rr SearchPromotionDetail) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Limit, validation.Min(0)),
+		validation.Field(&rr.Offset, validation.Min(0)),
+	)
+}
+
 func checkTimeFromTimeTo(startTime *int64, endTime *int64) validation.RuleFunc {
 	return func(value interface{}) error {
 		if startTime != nil {
@@ -90,15 +107,16 @@ type PromotionDetailRequest struct {
 	PromotionID uint    `json:"PromotionID"`
 	ProductID   uint    `json:"ProductID" validate:"required"`
 	VariantID   uint    `json:"VariantID" validate:"required"`
+	ID          uint    `json:"id"  example:"leave value=0 if create new"`
 }
 
 func (rr PromotionDetailRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.ProductID, validation.Required),
 		validation.Field(&rr.VariantID, validation.Required),
-		validation.Field(&rr.Type, validation.Required),
-		validation.Field(&rr.Percent, validation.Required, validation.Min(float32(0))),
-		validation.Field(&rr.Value, validation.Required, validation.Min(float32(0))),
-		validation.Field(&rr.Condition, validation.Required),
+		validation.Field(&rr.Type, validation.Required, validation.In(string(utils.PERCENT), string(utils.VOUCHER))),
+		validation.Field(&rr.Percent, validation.Min(float32(0))),
+		validation.Field(&rr.Value, validation.Min(float32(0))),
+		validation.Field(&rr.Condition, validation.Required, validation.In(string(utils.AMOUNT_PRODUCT), string(utils.TOTAL_MONEY))),
 	)
 }

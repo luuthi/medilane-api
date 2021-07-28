@@ -489,6 +489,61 @@ definitions:
       updated_at:
         type: integer
     type: object
+  models.Promotion:
+    properties:
+      Deleted:
+        type: boolean
+      EndTime:
+        type: integer
+      Name:
+        type: string
+      Note:
+        type: string
+      StartTime:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      promotionDetails:
+        items:
+          $ref: '#/definitions/models.PromotionDetail'
+        type: array
+      updated_at:
+        type: integer
+    type: object
+  models.PromotionDetail:
+    properties:
+      Condition:
+        type: string
+      Percent:
+        type: number
+      Product:
+        $ref: '#/definitions/models.Product'
+        type: object
+      ProductID:
+        type: integer
+      Promotion:
+        $ref: '#/definitions/models.Promotion'
+        type: object
+      PromotionID:
+        type: integer
+      Type:
+        type: string
+      Value:
+        type: number
+      Variant:
+        $ref: '#/definitions/models.Variant'
+        type: object
+      VariantID:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
   models.Role:
     properties:
       Description:
@@ -992,6 +1047,8 @@ definitions:
         type: number
       VariantID:
         type: integer
+      id:
+        type: integer
     required:
     - Condition
     - Percent
@@ -1007,7 +1064,7 @@ definitions:
           $ref: '#/definitions/requests.PromotionDetailRequest'
         type: array
     type: object
-  requests.PromotionRequest:
+  requests.PromotionWithDetailRequest:
     properties:
       EndTime:
         type: integer
@@ -1017,6 +1074,10 @@ definitions:
       Note:
         example: Khuyến mại hè nè
         type: string
+      PromotionDetails:
+        items:
+          $ref: '#/definitions/requests.PromotionDetailRequest'
+        type: array
       StartTime:
         type: integer
     required:
@@ -1254,6 +1315,23 @@ definitions:
       sort:
         $ref: '#/definitions/requests.SortOption'
         type: object
+    type: object
+  requests.SearchPromotionDetail:
+    properties:
+      Condition:
+        type: string
+      ProductID:
+        type: integer
+      Type:
+        type: string
+      VariantID:
+        type: integer
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
     type: object
   requests.SearchPromotionRequest:
     properties:
@@ -1544,6 +1622,32 @@ definitions:
       data:
         items:
           $ref: '#/definitions/models.Product'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.PromotionDetailSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.PromotionDetail'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.PromotionSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Promotion'
         type: array
       message:
         type: string
@@ -3167,7 +3271,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Perform create promotion
+      description: Perform create promotion with list details
       operationId: create-promotion
       parameters:
       - description: Create promotion
@@ -3175,21 +3279,21 @@ paths:
         name: params
         required: true
         schema:
-          $ref: '#/definitions/requests.PromotionRequest'
+          $ref: '#/definitions/requests.PromotionWithDetailRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/responses.Data'
+            $ref: '#/definitions/models.Promotion'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
       - BearerAuth: []
-      summary: Create promotion in system
+      summary: Create promotion with list details in system
       tags:
       - Promotion Management
   /promotion/{id}:
@@ -3217,13 +3321,13 @@ paths:
             $ref: '#/definitions/responses.Error'
       security:
       - BearerAuth: []
-      summary: Delete promotion in system
+      summary: Delete promotion (soft delete) in system
       tags:
       - Promotion Management
     put:
       consumes:
       - application/json
-      description: Perform edit promotion
+      description: Perform edit promotion with list detail
       operationId: edit-promotion
       parameters:
       - description: body promotion
@@ -3231,7 +3335,7 @@ paths:
         name: params
         required: true
         schema:
-          $ref: '#/definitions/requests.PromotionRequest'
+          $ref: '#/definitions/requests.PromotionWithDetailRequest'
       - description: id promotion
         in: path
         name: id
@@ -3243,14 +3347,14 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.Data'
+            $ref: '#/definitions/models.Promotion'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
       - BearerAuth: []
-      summary: Edit promotion in system
+      summary: Edit promotion with list detail in system
       tags:
       - Promotion Management
   /promotion/{id}/details:
@@ -3279,33 +3383,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete promotion detail by promotion in system
-      tags:
-      - Promotion Management
-    get:
-      consumes:
-      - application/json
-      description: Perform search promotion detail
-      operationId: search-promotion-detail
-      parameters:
-      - description: id promotion
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.DataSearch'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/responses.Error'
-      security:
-      - BearerAuth: []
-      summary: Search promotion detail in system
       tags:
       - Promotion Management
     post:
@@ -3385,7 +3462,7 @@ paths:
         name: params
         required: true
         schema:
-          $ref: '#/definitions/requests.PromotionRequest'
+          $ref: '#/definitions/requests.PromotionDetailRequest'
       - description: id promotion
         in: path
         name: id
@@ -3412,6 +3489,40 @@ paths:
       summary: Edit promotion detail in system
       tags:
       - Promotion Management
+  /promotion/{id}/details/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search promotion detail
+      operationId: search-promotion-detail
+      parameters:
+      - description: Filter promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchPromotionDetail'
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PromotionDetailSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search promotion detail in system
+      tags:
+      - Promotion Management
   /promotion/find:
     post:
       consumes:
@@ -3431,7 +3542,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.DataSearch'
+            $ref: '#/definitions/responses.PromotionSearch'
         "400":
           description: Bad Request
           schema:

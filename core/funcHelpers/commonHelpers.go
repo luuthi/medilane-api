@@ -9,3 +9,12 @@ func StringContain(slice []string, item string) bool {
 	_, ok := set[item]
 	return ok
 }
+
+func UintContains(s []uint, e uint) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}

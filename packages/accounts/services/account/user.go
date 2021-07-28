@@ -191,15 +191,22 @@ func (userService *Service) EditUser(request *requests2.EditAccountRequest, id u
 		userBuild.SetRoles(*request.Roles)
 	}
 	user := userBuild.Build()
+	// begin a transaction
+	tx := userService.DB.Begin()
 
 	roles := user.Roles
-	err := userService.DB.Model(&user).Association("Roles").Clear()
+	err := tx.Model(&user).Association("Roles").Clear()
 	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	user.Roles = roles
-	rs := userService.DB.Table(utils2.TblAccount).Updates(&user)
-	return rs.Error
+	rs := tx.Table(utils2.TblAccount).Updates(&user)
+	if rs.Error != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }
 
 func (userService *Service) DeleteUser(id uint, username string) error {

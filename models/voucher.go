@@ -28,7 +28,8 @@ type Promotion struct {
 	Note             string             `json:"Note" gorm:"type:varchar(200)"`
 	StartTime        int64              `json:"StartTime" gorm:"type:bigint(64)"`
 	EndTime          int64              `json:"EndTime" gorm:"type:bigint(64)"`
-	PromotionDetails []*PromotionDetail `gorm:"-"`
+	Deleted          bool               `json:"Deleted" gorm:"type:bool"`
+	PromotionDetails []*PromotionDetail `gorm:"foreignKey:PromotionID"`
 }
 
 type PromotionDetail struct {

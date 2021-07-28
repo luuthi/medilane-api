@@ -22,10 +22,10 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	promotion.POST("/find", promotionHandler.SearchPromotion, authentication.CheckPermission(server, []string{"read:promotion"}, false))
 	promotion.POST("", promotionHandler.CreatePromotion, authentication.CheckPermission(server, []string{"create:promotion"}, false))
-	promotion.PUT("/:id", promotionHandler.EditPromotion, authentication.CheckPermission(server, []string{"edit:promotion"}, false))
+	promotion.PUT("/:id", promotionHandler.EditPromotionWithDetail, authentication.CheckPermission(server, []string{"edit:promotion"}, false))
 	promotion.DELETE("/:id", promotionHandler.DeletePromotion, authentication.CheckPermission(server, []string{"edit:promotion"}, false))
 
-	promotion.GET("/:id/details", promotionHandler.SearchPromotionDetail, authentication.CheckPermission(server, []string{"read:promotion"}, false))
+	promotion.POST("/:id/details/find", promotionHandler.SearchPromotionDetail, authentication.CheckPermission(server, []string{"read:promotion"}, false))
 	promotion.POST("/:id/details", promotionHandler.CreatePromotionPromotionDetails, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 	promotion.PUT("/:id/details/:d_id", promotionHandler.EditPromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 	promotion.DELETE("/:id/details/:d_id", promotionHandler.DeletePromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))

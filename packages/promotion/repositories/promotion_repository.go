@@ -25,7 +25,7 @@ func NewPromotionRepository(db *gorm.DB) *PromotionRepository {
 	return &PromotionRepository{DB: db}
 }
 
-func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Promotion, filter *requests.SearchPromotionRequest) {
+func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Promotion, filter *requests.SearchPromotionRequest, total *int64) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -54,6 +54,9 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		values = append(values, fmt.Sprintf("%%%v%%", *filter.ToTimeEnd))
 	}
 
+	spec = append(spec, "deleted = ?")
+	values = append(values, 0)
+
 	if filter.Sort.SortField == "" {
 		filter.Sort.SortField = "created_at"
 	}
@@ -63,6 +66,7 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 	}
 
 	promotionRepo.DB.Table(utils2.TblPromotion).Where(strings.Join(spec, " AND "), values...).
+		Count(total).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
@@ -78,6 +82,40 @@ func (promotionRepo *PromotionRepository) GetPromotionDetail(promotion *models.P
 	promotionRepo.DB.Table(utils2.TblPromotionDetail).Preload(clause.Associations).First(&promotion, id)
 }
 
-func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotionDetails []*models.PromotionDetail, promotionID uint) {
-	promotionRepo.DB.Table(utils2.TblPromotionDetail).Where("promotion_id = ?", promotionID).Find(&promotionDetails)
+func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotionDetails *[]models.PromotionDetail, total *int64, promotionID uint, filter requests.SearchPromotionDetail) {
+	spec := make([]string, 0)
+	values := make([]interface{}, 0)
+
+	if filter.ProductID != 0 {
+		spec = append(spec, "product_id = ?")
+		values = append(values, filter.ProductID)
+	}
+
+	if filter.VariantID != 0 {
+		spec = append(spec, "variant_id = ?")
+		values = append(values, filter.VariantID)
+	}
+
+	if filter.Type != "" {
+		spec = append(spec, "`type` = ?")
+		values = append(values, filter.Type)
+	}
+
+	if filter.Condition != "" {
+		spec = append(spec, "`condition` = ?")
+		values = append(values, filter.Type)
+	}
+
+	promotionRepo.DB.Table(utils2.TblPromotionDetail).
+		Count(total).
+		Where("promotion_id = ?", promotionID).
+		Where(strings.Join(spec, " AND "), values...).
+		Preload("Product").
+		Preload("Product.Category").
+		Preload("Product.Images").
+		Preload("Variant").
+		Limit(filter.Limit).
+		Offset(filter.Offset).
+		Order(fmt.Sprintf("%s %s", "updated_at", "asc")).
+		Find(promotionDetails)
 }
