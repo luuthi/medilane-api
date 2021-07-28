@@ -1335,15 +1335,15 @@ definitions:
     type: object
   requests.SearchPromotionRequest:
     properties:
-      FromTimeEnd:
+      TimeFromEnd:
         type: integer
-      FromTimeStart:
+      TimeFromStart:
         type: integer
       Name:
         type: string
-      ToTimeEnd:
+      TimeToEnd:
         type: integer
-      ToTimeStart:
+      TimeToStart:
         type: integer
       limit:
         example: 10

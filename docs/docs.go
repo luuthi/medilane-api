@@ -5474,19 +5474,19 @@ var doc = `{
         "requests.SearchPromotionRequest": {
             "type": "object",
             "properties": {
-                "FromTimeEnd": {
+                "TimeFromEnd": {
                     "type": "integer"
                 },
-                "FromTimeStart": {
+                "TimeFromStart": {
                     "type": "integer"
                 },
                 "Name": {
                     "type": "string"
                 },
-                "ToTimeEnd": {
+                "TimeToEnd": {
                     "type": "integer"
                 },
-                "ToTimeStart": {
+                "TimeToStart": {
                     "type": "integer"
                 },
                 "limit": {

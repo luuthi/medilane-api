@@ -11,10 +11,13 @@ type SearchProductRequest struct {
 	Barcode  string `json:"Barcode"  example:"example"`
 	Status   string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
 	Category uint   `json:"Category"`
+	AreaId   uint   `json:"AreaId"`
 
-	Limit  int        `json:"limit" example:"10"`
-	Offset int        `json:"offset" example:"0"`
-	Sort   SortOption `json:"sort"`
+	Limit    int        `json:"limit" example:"10"`
+	Offset   int        `json:"offset" example:"0"`
+	Sort     SortOption `json:"sort"`
+	TimeFrom *int64     `json:"time_from"`
+	TimeTo   *int64     `json:"time_to"`
 }
 
 type ProductRequest struct {
@@ -54,6 +57,9 @@ func (rr SearchProductRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
+		validation.Field(&rr.TimeFrom, validation.Min(0)),
+		validation.Field(&rr.TimeTo, validation.Min(0)),
+		validation.Field(&rr.TimeTo, validation.By(checkTimeTimeFromTo(rr.TimeFrom, rr.TimeTo))),
 	)
 }
 

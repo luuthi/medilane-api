@@ -34,24 +34,24 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		values = append(values, fmt.Sprintf("%%%s%%", filter.Name))
 	}
 
-	if filter.FromTimeStart != nil {
+	if filter.TimeFromStart != nil {
 		spec = append(spec, "start_time >= ?")
-		values = append(values, fmt.Sprintf("%%%v%%", *filter.FromTimeStart))
+		values = append(values, *filter.TimeFromStart)
 	}
 
-	if filter.ToTimeStart != nil {
+	if filter.TimeToStart != nil {
 		spec = append(spec, "start_time >= ?")
-		values = append(values, fmt.Sprintf("%%%v%%", *filter.ToTimeStart))
+		values = append(values, *filter.TimeToStart)
 	}
 
-	if filter.FromTimeEnd != nil {
+	if filter.TimeFromEnd != nil {
 		spec = append(spec, "end_time >= ?")
-		values = append(values, fmt.Sprintf("%%%v%%", *filter.FromTimeEnd))
+		values = append(values, *filter.TimeFromEnd)
 	}
 
-	if filter.ToTimeEnd != nil {
+	if filter.TimeToEnd != nil {
 		spec = append(spec, "end_time >= ?")
-		values = append(values, fmt.Sprintf("%%%v%%", *filter.ToTimeEnd))
+		values = append(values, *filter.TimeToEnd)
 	}
 
 	spec = append(spec, "deleted = ?")

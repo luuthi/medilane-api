@@ -57,7 +57,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId, claims.Type, 0)
+	productRepo.GetProducts(&medicines, &total, searchRequest, claims.UserId, claims.Type, searchRequest.AreaId)
 
 	return responses.Response(c, http.StatusOK, responses.ProductSearch{
 		Code:    http.StatusOK,

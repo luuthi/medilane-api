@@ -59,8 +59,6 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, count *int64, filter *requests2.SearchAccountRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
-	specCount := make([]string, 0)
-	valuesCount := make([]interface{}, 0)
 
 	if filter.Username != "" {
 		spec = append(spec, "username LIKE ?")
@@ -85,14 +83,21 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, co
 	if len(filter.Type) > 0 {
 		spec = append(spec, "type  IN (?)")
 		values = append(values, filter.Type)
-
-		specCount = append(spec, "type  IN (?)")
-		valuesCount = append(values, filter.Type)
 	}
 
 	if filter.IsAdmin != nil {
 		spec = append(spec, "is_admin = ?")
 		values = append(values, filter.IsAdmin)
+	}
+
+	if filter.TimeTo != nil {
+		spec = append(spec, "created_at <= ?")
+		values = append(values, *filter.TimeTo)
+	}
+
+	if filter.TimeFrom != nil {
+		spec = append(spec, "created_at >= ?")
+		values = append(values, *filter.TimeFrom)
 	}
 
 	if filter.Sort.SortField == "" {
@@ -104,11 +109,8 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, co
 	}
 
 	AccountRepository.DB.Table(utils2.TblAccount).
-		Where(strings.Join(specCount, " AND "), valuesCount...).
-		Count(count)
-
-	AccountRepository.DB.Table(utils2.TblAccount).
 		Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Preload("Roles").
 		Limit(filter.Limit).
 		Offset(filter.Offset).

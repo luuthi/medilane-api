@@ -48,13 +48,14 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 		values = append(values, fmt.Sprintf("%%%s%%", filter.OrderCode))
 	}
 
-	if filter.TimeFrom > 0 {
-		spec = append(spec, "created_at >= ?")
-		values = append(values, filter.TimeFrom)
-	}
-	if filter.TimeTo > 0 {
+	if filter.TimeTo != nil {
 		spec = append(spec, "created_at <= ?")
-		values = append(values, filter.TimeTo)
+		values = append(values, *filter.TimeTo)
+	}
+
+	if filter.TimeFrom != nil {
+		spec = append(spec, "created_at >= ?")
+		values = append(values, *filter.TimeFrom)
 	}
 
 	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).

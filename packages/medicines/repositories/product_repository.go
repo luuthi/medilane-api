@@ -101,8 +101,18 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		values = append(values, filter.Category)
 	}
 
+	if filter.TimeTo != nil {
+		spec = append(spec, "product.created_at <= ?")
+		values = append(values, *filter.TimeTo)
+	}
+
+	if filter.TimeFrom != nil {
+		spec = append(spec, "product.created_at >= ?")
+		values = append(values, *filter.TimeFrom)
+	}
+
 	if filter.Sort.SortField == "" {
-		filter.Sort.SortField = "created_at"
+		filter.Sort.SortField = "product.created_at"
 	}
 
 	if filter.Sort.SortDirection == "" {
@@ -111,12 +121,12 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 
 	productRepository.DB.Table(utils.TblProduct).
 		Select("product.*, ac.cost").
-		Count(count).
 		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
 		Joins(" JOIN product_category pc ON pc.product_id = product.id").
 		Joins(" JOIN category cat ON pc.category_id = cat.id").
 		Where(" ac.area_id = ?", areaId).
 		Where(strings.Join(spec, " AND "), values...).
+		Count(count).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).

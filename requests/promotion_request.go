@@ -37,10 +37,10 @@ func (rr PromotionRequest) Validate() error {
 
 type SearchPromotionRequest struct {
 	Name          string     `json:"Name"`
-	FromTimeStart *int64     `json:"FromTimeStart"`
-	ToTimeStart   *int64     `json:"ToTimeStart"`
-	FromTimeEnd   *int64     `json:"FromTimeEnd"`
-	ToTimeEnd     *int64     `json:"ToTimeEnd"`
+	TimeFromStart *int64     `json:"TimeFromStart"`
+	TimeToStart   *int64     `json:"TimeToStart"`
+	TimeFromEnd   *int64     `json:"TimeFromEnd"`
+	TimeToEnd     *int64     `json:"TimeToEnd"`
 	Limit         int        `json:"limit" example:"10"`
 	Offset        int        `json:"offset" example:"0"`
 	Sort          SortOption `json:"sort"`
@@ -50,10 +50,10 @@ func (rr SearchPromotionRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
-		validation.Field(&rr.FromTimeStart, validation.By(checkTimeFromTimeTo(rr.FromTimeStart, rr.ToTimeStart))),
-		validation.Field(&rr.ToTimeStart, validation.By(checkTimeFromTimeTo(rr.FromTimeStart, rr.ToTimeStart))),
-		validation.Field(&rr.FromTimeEnd, validation.By(checkTimeFromTimeTo(rr.FromTimeStart, rr.ToTimeStart))),
-		validation.Field(&rr.ToTimeEnd, validation.By(checkTimeFromTimeTo(rr.FromTimeEnd, rr.ToTimeEnd))),
+		validation.Field(&rr.TimeFromStart, validation.By(checkTimeTimeFromTo(rr.TimeFromStart, rr.TimeToStart))),
+		validation.Field(&rr.TimeToStart, validation.By(checkTimeTimeFromTo(rr.TimeFromStart, rr.TimeToStart))),
+		validation.Field(&rr.TimeFromEnd, validation.By(checkTimeTimeFromTo(rr.TimeFromStart, rr.TimeToStart))),
+		validation.Field(&rr.TimeToEnd, validation.By(checkTimeTimeFromTo(rr.TimeFromEnd, rr.TimeToEnd))),
 	)
 }
 
@@ -73,7 +73,7 @@ func (rr SearchPromotionDetail) Validate() error {
 	)
 }
 
-func checkTimeFromTimeTo(startTime *int64, endTime *int64) validation.RuleFunc {
+func checkTimeTimeFromTo(startTime *int64, endTime *int64) validation.RuleFunc {
 	return func(value interface{}) error {
 		if startTime != nil {
 			if *startTime <= 0 {

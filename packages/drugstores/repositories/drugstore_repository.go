@@ -52,6 +52,16 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filt
 		values = append(values, fmt.Sprintf("%%%s%%", filter.Type))
 	}
 
+	if filter.TimeTo != nil {
+		spec = append(spec, "created_at <= ?")
+		values = append(values, *filter.TimeTo)
+	}
+
+	if filter.TimeFrom != nil {
+		spec = append(spec, "created_at >= ?")
+		values = append(values, *filter.TimeFrom)
+	}
+
 	if filter.Sort.SortField == "" {
 		filter.Sort.SortField = "created_at"
 	}
