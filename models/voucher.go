@@ -24,6 +24,7 @@ type VoucherDetail struct {
 type Promotion struct {
 	CommonModelFields
 
+	AreaId           uint               `json:"AreaId"`
 	Name             string             `json:"Name" gorm:"type:varchar(200)"`
 	Note             string             `json:"Note" gorm:"type:varchar(200)"`
 	StartTime        int64              `json:"StartTime" gorm:"type:bigint(64)"`

@@ -4269,6 +4269,9 @@ var doc = `{
         "models.Promotion": {
             "type": "object",
             "properties": {
+                "AreaId": {
+                    "type": "integer"
+                },
                 "Deleted": {
                     "type": "boolean"
                 },
@@ -5048,7 +5051,6 @@ var doc = `{
         "requests.PromotionDetailRequest": {
             "type": "object",
             "required": [
-                "Condition",
                 "Percent",
                 "ProductID",
                 "Type",
@@ -5096,11 +5098,15 @@ var doc = `{
         "requests.PromotionWithDetailRequest": {
             "type": "object",
             "required": [
+                "AreaId",
                 "EndTime",
                 "Name",
                 "StartTime"
             ],
             "properties": {
+                "AreaId": {
+                    "type": "integer"
+                },
                 "EndTime": {
                     "type": "integer"
                 },
@@ -5495,6 +5501,9 @@ var doc = `{
         "requests.SearchPromotionRequest": {
             "type": "object",
             "properties": {
+                "AreaId": {
+                    "type": "integer"
+                },
                 "Name": {
                     "type": "string"
                 },

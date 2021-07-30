@@ -35,6 +35,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		SetNote(request.Note).
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
+		SetAreaId(request.AreaId).
 		Build()
 
 	// begin a transaction
@@ -53,8 +54,8 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 				SetPromotionID(promotion.ID).
 				SetType(detail.Type).
 				SetCondition(detail.Condition).
-				SetPercent(detail.Percent).
-				SetValue(detail.Value).
+				SetPercent(*detail.Percent).
+				SetValue(*detail.Value).
 				SetProductId(detail.ProductID).
 				SetVariantId(detail.VariantID).
 				Build()
@@ -82,6 +83,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
 		SetDeleted(false).
+		SetAreaId(request.AreaId).
 		SetID(id).
 		Build()
 
@@ -105,8 +107,8 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				SetPromotionID(id).
 				SetType(v.Type).
 				SetCondition(v.Condition).
-				SetPercent(v.Percent).
-				SetValue(v.Value).
+				SetPercent(*v.Percent).
+				SetValue(*v.Value).
 				SetProductId(v.ProductID).
 				SetVariantId(v.VariantID).
 				Build()
@@ -121,8 +123,8 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				SetPromotionID(id).
 				SetType(v.Type).
 				SetCondition(v.Condition).
-				SetPercent(v.Percent).
-				SetValue(v.Value).
+				SetPercent(*v.Percent).
+				SetValue(*v.Value).
 				SetProductId(v.ProductID).
 				SetVariantId(v.VariantID).
 				SetId(v.ID).
@@ -156,6 +158,7 @@ func (promoService *Service) EditPromotion(request *requests.PromotionRequest, i
 		SetNote(request.Note).
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
+		SetAreaId(request.AreaId).
 		SetID(id).
 		Build()
 	rs := promoService.DB.Table(utils2.TblPromotion).Updates(promotion)
@@ -178,8 +181,8 @@ func (promoService *Service) CreatePromotionDetail(request []*requests.Promotion
 			SetPromotionID(detail.PromotionID).
 			SetType(detail.Type).
 			SetCondition(detail.Condition).
-			SetPercent(detail.Percent).
-			SetValue(detail.Value).
+			SetPercent(*detail.Percent).
+			SetValue(*detail.Value).
 			SetProductId(detail.ProductID).
 			SetVariantId(detail.VariantID).
 			Build()
@@ -197,8 +200,8 @@ func (promoService *Service) EditPromotionDetail(request *requests.PromotionDeta
 		SetPromotionID(request.PromotionID).
 		SetType(request.Type).
 		SetCondition(request.Condition).
-		SetPercent(request.Percent).
-		SetValue(request.Value).
+		SetPercent(*request.Percent).
+		SetValue(*request.Value).
 		SetProductId(request.ProductID).
 		SetVariantId(request.VariantID).
 		Build()

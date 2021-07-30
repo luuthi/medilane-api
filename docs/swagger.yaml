@@ -491,6 +491,8 @@ definitions:
     type: object
   models.Promotion:
     properties:
+      AreaId:
+        type: integer
       Deleted:
         type: boolean
       EndTime:
@@ -1050,7 +1052,6 @@ definitions:
       id:
         type: integer
     required:
-    - Condition
     - Percent
     - ProductID
     - Type
@@ -1066,6 +1067,8 @@ definitions:
     type: object
   requests.PromotionWithDetailRequest:
     properties:
+      AreaId:
+        type: integer
       EndTime:
         type: integer
       Name:
@@ -1081,6 +1084,7 @@ definitions:
       StartTime:
         type: integer
     required:
+    - AreaId
     - EndTime
     - Name
     - StartTime
@@ -1349,6 +1353,8 @@ definitions:
     type: object
   requests.SearchPromotionRequest:
     properties:
+      AreaId:
+        type: integer
       Name:
         type: string
       TimeFromEnd:

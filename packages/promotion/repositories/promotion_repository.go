@@ -39,6 +39,11 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		values = append(values, *filter.TimeFromStart)
 	}
 
+	if filter.AreaId != 0 {
+		spec = append(spec, "area_id >= ?")
+		values = append(values, filter.AreaId)
+	}
+
 	if filter.TimeToStart != nil {
 		spec = append(spec, "start_time >= ?")
 		values = append(values, *filter.TimeToStart)

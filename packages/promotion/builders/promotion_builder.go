@@ -4,6 +4,7 @@ import "medilane-api/models"
 
 type PromotionBuilder struct {
 	name      string
+	AreaId    uint
 	note      string
 	startTime int64
 	endTime   int64
@@ -22,6 +23,11 @@ func (proBuilder *PromotionBuilder) SetName(name string) *PromotionBuilder {
 
 func (proBuilder *PromotionBuilder) SetNote(note string) *PromotionBuilder {
 	proBuilder.note = note
+	return proBuilder
+}
+
+func (proBuilder *PromotionBuilder) SetAreaId(AreaId uint) *PromotionBuilder {
+	proBuilder.AreaId = AreaId
 	return proBuilder
 }
 
@@ -57,6 +63,7 @@ func (proBuilder *PromotionBuilder) Build() models.Promotion {
 		StartTime:         proBuilder.startTime,
 		EndTime:           proBuilder.endTime,
 		Deleted:           proBuilder.deleted,
+		AreaId:            proBuilder.AreaId,
 	}
 
 	return promotion
