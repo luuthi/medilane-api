@@ -47,7 +47,12 @@ func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	promoRepo.GetPromotions(&promotions, searchRequest, &total)
 
-	return responses.SearchResponse(c, http.StatusOK, "", promotions)
+	return responses.Response(c, http.StatusOK, responses2.PromotionSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    promotions,
+	})
 }
 
 // GetPromotion Get promotion godoc
