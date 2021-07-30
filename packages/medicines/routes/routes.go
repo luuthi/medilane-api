@@ -55,5 +55,6 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	variant.POST("/find", variantHandler.SearchVariant, authentication.CheckPermission(server, []string{"read:variant"}, false))
 	variant.POST("", variantHandler.CreateVariant, authentication.CheckPermission(server, []string{"create:variant"}, false))
 	variant.PUT("/:id", variantHandler.EditVariant, authentication.CheckPermission(server, []string{"edit:variant"}, false))
+	variant.GET("/:id", variantHandler.GetVariant, authentication.CheckPermission(server, []string{"read:variant"}, false))
 	variant.DELETE("/:id", variantHandler.DeleteVariant, authentication.CheckPermission(server, []string{"delete:variant"}, false))
 }

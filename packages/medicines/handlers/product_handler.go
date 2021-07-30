@@ -225,7 +225,7 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.ChangeStatusProductsRequest true "body change status products"
-// @Success 201 {object} responses.MessageDetail
+// @Success 200 {object} responses.MessageDetail
 // @Failure 401 {object} responses.Error
 // @Router /products/status [post]
 // @Security BearerAuth

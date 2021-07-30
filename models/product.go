@@ -65,7 +65,7 @@ type Variant struct {
 	CommonModelFields
 
 	Name         string `json:"Name" gorm:"type:varchar(255);not null"`
-	VariantValue *VariantValue
+	VariantValue []*VariantValue
 }
 
 type VariantValue struct {

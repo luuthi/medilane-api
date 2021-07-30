@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"gorm.io/gorm/clause"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -23,8 +24,10 @@ func NewVariantRepository(db *gorm.DB) *VariantRepository {
 	return &VariantRepository{DB: db}
 }
 
-func (variantRepository *VariantRepository) GetVariantById(category *models2.Variant, id uint) {
-	variantRepository.DB.Table(utils.TblVariant).Where("id = ?", id).Find(category)
+func (variantRepository *VariantRepository) GetVariantById(variant *models2.Variant, id uint) {
+	variantRepository.DB.Table(utils.TblVariant).
+		Preload(clause.Associations).
+		First(&variant, id)
 }
 
 func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, count *int64, filter *requests2.SearchVariantRequest) {

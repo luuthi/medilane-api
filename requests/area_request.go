@@ -49,4 +49,12 @@ type AreaConfigListRequest struct {
 type AreaConfigRequest struct {
 	Province string `json:"Province"`
 	District string `json:"District"`
+	ID       uint   `json:"id"`
+}
+
+func (rr AreaConfigRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Province, validation.Required),
+		validation.Field(&rr.District, validation.Required),
+	)
 }

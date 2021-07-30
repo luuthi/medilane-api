@@ -57,6 +57,35 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 	})
 }
 
+// GetVariant Edit variant godoc
+// @Summary Edit variant in system
+// @Description Perform edit variant
+// @ID edit-variant
+// @Tags Variant-Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id Variant"
+// @Success 200 {object} models.Variant
+// @Failure 401 {object} responses.Error
+// @Router /variant/{id} [get]
+// @Security BearerAuth
+func (variantHandler *VariantHandler) GetVariant(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Variant: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedVariant models.Variant
+	variantRepo := repositories.NewVariantRepository(variantHandler.server.DB)
+	variantRepo.GetVariantById(&existedVariant, id)
+	if existedVariant.ID == 0 {
+		responses.Response(c, http.StatusOK, nil)
+	}
+	return responses.Response(c, http.StatusOK, existedVariant)
+}
+
 // CreateVariant Create variant godoc
 // @Summary Create variant in system
 // @Description Perform create variant

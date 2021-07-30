@@ -39,3 +39,38 @@ func (areaBuilder *AreaBuilder) Build() models.Area {
 
 	return area
 }
+
+type AreaConfigBuilder struct {
+	Province string
+	District string
+	id       uint
+}
+
+func NewAreaConfigBuilder() *AreaConfigBuilder {
+	return &AreaConfigBuilder{}
+}
+
+func (areaBuilder *AreaConfigBuilder) SetProvince(name string) (z *AreaConfigBuilder) {
+	areaBuilder.Province = name
+	return areaBuilder
+}
+
+func (areaBuilder *AreaConfigBuilder) SetDistrict(note string) (z *AreaConfigBuilder) {
+	areaBuilder.District = note
+	return areaBuilder
+}
+
+func (areaBuilder *AreaConfigBuilder) SetID(id uint) (z *AreaConfigBuilder) {
+	areaBuilder.id = id
+	return areaBuilder
+}
+
+func (areaBuilder *AreaConfigBuilder) Build() models.AreaConfig {
+	area := models.AreaConfig{
+		ID:       areaBuilder.id,
+		Province: areaBuilder.Province,
+		District: areaBuilder.District,
+	}
+
+	return area
+}

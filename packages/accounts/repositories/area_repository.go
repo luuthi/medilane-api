@@ -44,5 +44,6 @@ func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, fi
 
 func (areaRepo *AreaRepository) GetAreaByID(area *models2.Area, id uint) {
 	areaRepo.DB.Table(utils2.TblArea).
+		Preload("AreaConfig").
 		First(&area, id)
 }

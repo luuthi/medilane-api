@@ -648,8 +648,9 @@ definitions:
       updated_at:
         type: integer
       variantValue:
-        $ref: '#/definitions/models.VariantValue'
-        type: object
+        items:
+          $ref: '#/definitions/models.VariantValue'
+        type: array
     type: object
   models.VariantValue:
     properties:
@@ -762,6 +763,22 @@ definitions:
     - Phone
     - State
     - Ward
+    type: object
+  requests.AreaConfigListRequest:
+    properties:
+      AreaConfigs:
+        items:
+          $ref: '#/definitions/requests.AreaConfigRequest'
+        type: array
+    type: object
+  requests.AreaConfigRequest:
+    properties:
+      District:
+        type: string
+      Province:
+        type: string
+      id:
+        type: integer
     type: object
   requests.AreaRequest:
     properties:
@@ -2174,8 +2191,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/responses.Data'
         "400":
@@ -2185,6 +2202,33 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete area in system
+      tags:
+      - Area Management
+    get:
+      consumes:
+      - application/json
+      description: Perform edit area
+      operationId: get-area
+      parameters:
+      - description: id area
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Area'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit area in system
       tags:
       - Area Management
     put:
@@ -2207,8 +2251,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/responses.Data'
         "400":
@@ -2218,6 +2262,40 @@ paths:
       security:
       - BearerAuth: []
       summary: Edit area in system
+      tags:
+      - Area Management
+  /area/{id}/config:
+    post:
+      consumes:
+      - application/json
+      description: Perform config area contain which province and district area
+      operationId: config-area
+      parameters:
+      - description: id area
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Config area
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.AreaConfigListRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Config area contain which province and district in system
       tags:
       - Area Management
   /area/{id}/cost:
@@ -2241,8 +2319,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/responses.ProductSearch'
         "400":
@@ -2270,8 +2348,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/responses.Data'
         "400":
@@ -3350,8 +3428,8 @@ paths:
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/responses.MessageDetail'
         "401":
@@ -4027,6 +4105,33 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete variant in system
+      tags:
+      - Variant-Management
+    get:
+      consumes:
+      - application/json
+      description: Perform edit variant
+      operationId: edit-variant
+      parameters:
+      - description: id Variant
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Variant'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit variant in system
       tags:
       - Variant-Management
     put:

@@ -663,8 +663,8 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
                         }
@@ -725,6 +725,48 @@ var doc = `{
             }
         },
         "/area/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Area Management"
+                ],
+                "summary": "Edit area in system",
+                "operationId": "get-area",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id area",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Area"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -762,8 +804,8 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
                         }
@@ -804,8 +846,61 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/area/{id}/config": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform config area contain which province and district area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Area Management"
+                ],
+                "summary": "Config area contain which province and district in system",
+                "operationId": "config-area",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id area",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Config area",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.AreaConfigListRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
                         }
@@ -857,8 +952,8 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.ProductSearch"
                         }
@@ -2509,8 +2604,8 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.MessageDetail"
                         }
@@ -3569,6 +3664,48 @@ var doc = `{
             }
         },
         "/variant/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit variant",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Variant-Management"
+                ],
+                "summary": "Edit variant in system",
+                "operationId": "edit-variant",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id Variant",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Variant"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -4636,8 +4773,10 @@ var doc = `{
                     "type": "integer"
                 },
                 "variantValue": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.VariantValue"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.VariantValue"
+                    }
                 }
             }
         },
@@ -4792,6 +4931,31 @@ var doc = `{
                 "Ward": {
                     "type": "string",
                     "example": "Quan Hoa"
+                }
+            }
+        },
+        "requests.AreaConfigListRequest": {
+            "type": "object",
+            "properties": {
+                "AreaConfigs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.AreaConfigRequest"
+                    }
+                }
+            }
+        },
+        "requests.AreaConfigRequest": {
+            "type": "object",
+            "properties": {
+                "District": {
+                    "type": "string"
+                },
+                "Province": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },

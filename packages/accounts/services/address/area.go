@@ -1,7 +1,9 @@
 package address
 
 import (
+	"medilane-api/core/funcHelpers"
 	utils2 "medilane-api/core/utils"
+	"medilane-api/models"
 	"medilane-api/packages/accounts/builders"
 	requests2 "medilane-api/requests"
 )
@@ -28,4 +30,55 @@ func (areaCostService *Service) DeleteArea(id uint) error {
 		SetID(id).
 		Build()
 	return areaCostService.DB.Table(utils2.TblArea).Delete(&zone).Error
+}
+
+func (areaCostService *Service) ConfigArea(areaId uint, request requests2.AreaConfigListRequest) error {
+	tx := areaCostService.DB.Begin()
+
+	// search old config with area id
+	var configs []models.AreaConfig
+	tx.Table(utils2.TblAreaConfig).Where("area_id = ?", areaId).Find(&configs)
+
+	confDetails := make([]*models.AreaConfig, 0)
+	var updatedItemID []uint
+	for _, conf := range request.AreaConfigs {
+		if conf.ID == 0 {
+			aConf := builders.NewAreaConfigBuilder().
+				SetDistrict(conf.District).
+				SetProvince(conf.Province).
+				Build()
+
+			err := tx.Table(utils2.TblAreaConfig).Create(&aConf).Error
+			confDetails = append(confDetails, &aConf)
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+		} else {
+			aConf := builders.NewAreaConfigBuilder().
+				SetDistrict(conf.District).
+				SetProvince(conf.Province).
+				SetID(conf.ID).
+				Build()
+
+			updatedItemID = append(updatedItemID, conf.ID)
+			err := tx.Table(utils2.TblAreaConfig).Updates(&aConf).Error
+			confDetails = append(confDetails, &aConf)
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+		}
+	}
+
+	for _, v := range configs {
+		if !funcHelpers.UintContains(updatedItemID, v.ID) {
+			err := tx.Table(utils2.TblAreaConfig).Delete(&v).Error
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+		}
+	}
+	return tx.Commit().Error
 }

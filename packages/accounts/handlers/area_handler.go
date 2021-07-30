@@ -59,35 +59,6 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 	})
 }
 
-// CreateArea Create area godoc
-// @Summary Create area in system
-// @Description Perform create area
-// @ID create-area
-// @Tags Area Management
-// @Accept json
-// @Produce json
-// @Param params body requests.AreaRequest true "Create area"
-// @Success 201 {object} responses.Data
-// @Failure 400 {object} responses.Error
-// @Router /area [post]
-// @Security BearerAuth
-func (areaHandler *AreaHandler) CreateArea(c echo.Context) error {
-	var area requests2.AreaRequest
-	if err := c.Bind(&area); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
-	}
-
-	if err := area.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
-	}
-
-	areaService := address.NewAddressService(areaHandler.server.DB)
-	if err := areaService.CreateArea(&area); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert role: %v", err.Error()))
-	}
-	return responses.MessageResponse(c, http.StatusCreated, "Area created!")
-}
-
 // EditArea Edit area godoc
 // @Summary Edit area in system
 // @Description Perform edit area
@@ -97,7 +68,7 @@ func (areaHandler *AreaHandler) CreateArea(c echo.Context) error {
 // @Produce json
 // @Param params body requests.AreaRequest true "Edit area"
 // @Param id path uint true "id area"
-// @Success 201 {object} responses.Data
+// @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /area/{id} [put]
 // @Security BearerAuth
@@ -132,6 +103,65 @@ func (areaHandler *AreaHandler) EditArea(c echo.Context) error {
 	return responses.MessageResponse(c, http.StatusOK, "Area updated!")
 }
 
+// CreateArea Create area godoc
+// @Summary Create area in system
+// @Description Perform create area
+// @ID create-area
+// @Tags Area Management
+// @Accept json
+// @Produce json
+// @Param params body requests.AreaRequest true "Create area"
+// @Success 201 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /area [post]
+// @Security BearerAuth
+func (areaHandler *AreaHandler) CreateArea(c echo.Context) error {
+	var area requests2.AreaRequest
+	if err := c.Bind(&area); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	if err := area.Validate(); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	areaService := address.NewAddressService(areaHandler.server.DB)
+	if err := areaService.CreateArea(&area); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert role: %v", err.Error()))
+	}
+	return responses.MessageResponse(c, http.StatusCreated, "Area created!")
+}
+
+// GetArea Edit area godoc
+// @Summary Edit area in system
+// @Description Perform edit area
+// @ID get-area
+// @Tags Area Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id area"
+// @Success 200 {object} models.Area
+// @Failure 400 {object} responses.Error
+// @Router /area/{id} [get]
+// @Security BearerAuth
+func (areaHandler *AreaHandler) GetArea(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedArea models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	areaRepo.GetAreaByID(&existedArea, id)
+	if existedArea.ID == 0 {
+		responses.Response(c, http.StatusOK, nil)
+	}
+
+	return responses.Response(c, http.StatusOK, existedArea)
+}
+
 // DeleteArea Delete area godoc
 // @Summary Delete area in system
 // @Description Perform delete area
@@ -140,7 +170,7 @@ func (areaHandler *AreaHandler) EditArea(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path uint true "id area"
-// @Success 201 {object} responses.Data
+// @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /area/{id} [delete]
 // @Security BearerAuth
@@ -167,7 +197,7 @@ func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.SetCostProductsOfAreaRequest true "set cost products of area"
-// @Success 201 {object} responses.Data
+// @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
 // @Router /area/cost [post]
 // @Security BearerAuth
@@ -276,7 +306,7 @@ func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
 // @Produce json
 // @Param id path uint true "id area"
 // @Param params body requests.SearchProductRequest true "Filter product"
-// @Success 201 {object} responses.ProductSearch
+// @Success 200 {object} responses.ProductSearch
 // @Failure 400 {object} responses.Error
 // @Router /area/{id}/cost [post]
 // @Security BearerAuth
@@ -315,4 +345,45 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 		Total:   total,
 		Data:    medicines,
 	})
+}
+
+// ConfigArea Config area godoc
+// @Summary Config area contain which province and district in system
+// @Description Perform config area contain which province and district area
+// @ID config-area
+// @Tags Area Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id area"
+// @Param params body requests.AreaConfigListRequest true "Config area"
+// @Success 200 {object} responses.Data
+// @Failure 400 {object} responses.Error
+// @Router /area/{id}/config [post]
+// @Security BearerAuth
+func (areaHandler *AreaHandler) ConfigArea(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var areaConf requests2.AreaConfigListRequest
+	if err := c.Bind(&areaConf); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	for _, v := range areaConf.AreaConfigs {
+		if err := v.Validate(); err != nil {
+			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		}
+	}
+
+	areaService := address.NewAddressService(areaHandler.server.DB)
+	if err := areaService.ConfigArea(id, areaConf); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update area: %v", err.Error()))
+	}
+
+	return responses.MessageResponse(c, http.StatusOK, "Area config updated!")
+
 }

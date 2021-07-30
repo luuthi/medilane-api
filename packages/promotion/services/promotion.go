@@ -96,6 +96,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 		return rs.Error, nil
 	}
 
+	// search old promotion detail with promotion id
 	var details []models.PromotionDetail
 	tx.Table(utils2.TblPromotionDetail).Where("promotion_id = ?", promotion.ID).Find(&details)
 
@@ -116,7 +117,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 			promotionDetails = append(promotionDetails, &promotionDetail)
 			if err != nil {
 				tx.Rollback()
-				return rs.Error, nil
+				return err, nil
 			}
 		} else {
 			promotionDetail := builders.NewPromotionDetailBuilder().
@@ -134,7 +135,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 			promotionDetails = append(promotionDetails, &promotionDetail)
 			if err != nil {
 				tx.Rollback()
-				return rs.Error, nil
+				return err, nil
 			}
 		}
 	}
@@ -144,7 +145,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 			err := tx.Table(utils2.TblPromotionDetail).Delete(&v).Error
 			if err != nil {
 				tx.Rollback()
-				return rs.Error, nil
+				return err, nil
 			}
 		}
 	}

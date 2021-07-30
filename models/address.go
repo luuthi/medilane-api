@@ -19,11 +19,11 @@ type Address struct {
 type Area struct {
 	CommonModelFields
 
-	Name       string       `json:"Name" gorm:"type:varchar(200)"`
-	Note       string       `json:"Note" gorm:"type:varchar(200)"`
-	Addresses  []Address    `json:"Addresses"`
-	Products   []*Product   `gorm:"many2many:area_cost"`
-	AreaConfig []AreaConfig `json:"AreaConfig"`
+	Name       string        `json:"Name" gorm:"type:varchar(200)"`
+	Note       string        `json:"Note" gorm:"type:varchar(200)"`
+	Addresses  []*Address    `json:"Addresses"`
+	Products   []*Product    `gorm:"many2many:area_cost"`
+	AreaConfig []*AreaConfig `json:"AreaConfig"`
 }
 
 type AreaCost struct {

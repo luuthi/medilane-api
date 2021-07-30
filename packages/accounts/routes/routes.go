@@ -68,6 +68,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.POST("/cost", areaHandler.SetCostProductsOfArea, authentication.CheckPermission(server, []string{"edit:area"}, false))
 	area.POST("/:id/cost", areaHandler.GetProductsOfArea, authentication.CheckPermission(server, []string{"read:area"}, false))
 	area.PUT("/:id", areaHandler.EditArea, authentication.CheckPermission(server, []string{"edit:area"}, false))
+	area.GET("/:id", areaHandler.GetArea, authentication.CheckPermission(server, []string{"read:area"}, false))
 	area.DELETE("/:id", areaHandler.DeleteArea, authentication.CheckPermission(server, []string{"delete:area"}, false))
 
 	// address api
