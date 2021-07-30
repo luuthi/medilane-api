@@ -50,6 +50,35 @@ func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 	return responses.SearchResponse(c, http.StatusOK, "", promotions)
 }
 
+// GetPromotion Get promotion godoc
+// @Summary Get promotion in system
+// @Description Perform get promotion
+// @ID get-promotion
+// @Tags Promotion Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id promotion"
+// @Success 200 {object} models.Promotion
+// @Failure 400 {object} responses.Error
+// @Router /promotion/{id} [get]
+// @Security BearerAuth
+func (promoHandler *PromotionHandler) GetPromotion(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id promotion: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var promo models.Promotion
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	promoRepo.GetPromotion(&promo, id)
+	if promo.ID == 0 {
+		return responses.Response(c, http.StatusOK, nil)
+	}
+	return responses.Response(c, http.StatusOK, promo)
+}
+
 // CreatePromotion Create promotion godoc
 // @Summary Create promotion with list details in system
 // @Description Perform create promotion with list details

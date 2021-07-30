@@ -3344,6 +3344,33 @@ paths:
       summary: Delete promotion (soft delete) in system
       tags:
       - Promotion Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get promotion
+      operationId: get-promotion
+      parameters:
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Promotion'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get promotion in system
+      tags:
+      - Promotion Management
     put:
       consumes:
       - application/json

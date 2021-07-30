@@ -2527,6 +2527,48 @@ var doc = `{
             }
         },
         "/promotion/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Get promotion in system",
+                "operationId": "get-promotion",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Promotion"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
