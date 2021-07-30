@@ -175,6 +175,7 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param id path uint true "id product"
+// @Param area_id query uint false "area id"
 // @Success 200 {object} models.Product
 // @Failure 401 {object} responses.Error
 // @Router /product/{id} [get]
@@ -196,9 +197,22 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 
+	var paramUrl1 uint64
+	var areaId uint
+	paramUrl1, err = strconv.ParseUint(c.QueryParam("area_id"), 10, 64)
+	if err != nil {
+		areaId = 0
+	} else {
+		areaId = uint(paramUrl1)
+	}
+
 	var existedProduct models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
-	medicineRepo.GetProductByIdCost(&existedProduct, id, claims.UserId)
+	medicineRepo.GetProductByIdCost(&existedProduct, id, claims.UserId, claims.Type, areaId)
+
+	if existedProduct.ID == 0 {
+		responses.Response(c, http.StatusOK, nil)
+	}
 
 	return responses.Response(c, http.StatusOK, existedProduct)
 }

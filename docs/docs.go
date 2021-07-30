@@ -271,6 +271,50 @@ var doc = `{
                 }
             }
         },
+        "/account/{username}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Account Management"
+                ],
+                "summary": "Get account in system",
+                "operationId": "get-account",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id account",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/account/{username}/permissions": {
             "get": {
                 "security": [
@@ -408,6 +452,48 @@ var doc = `{
             }
         },
         "/address/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get address",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Address Management"
+                ],
+                "summary": "Get address in system",
+                "operationId": "get-address",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id address",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Address"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -2277,6 +2363,12 @@ var doc = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "area id",
+                        "name": "area_id",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -3632,6 +3724,12 @@ var doc = `{
                         "$ref": "#/definitions/models.Address"
                     }
                 },
+                "AreaConfig": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AreaConfig"
+                    }
+                },
                 "Name": {
                     "type": "string"
                 },
@@ -3651,6 +3749,27 @@ var doc = `{
                     }
                 },
                 "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.AreaConfig": {
+            "type": "object",
+            "properties": {
+                "Area": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Area"
+                },
+                "AreaId": {
+                    "type": "integer"
+                },
+                "District": {
+                    "type": "string"
+                },
+                "Province": {
+                    "type": "string"
+                },
+                "id": {
                     "type": "integer"
                 }
             }

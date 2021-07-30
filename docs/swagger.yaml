@@ -38,6 +38,10 @@ definitions:
         items:
           $ref: '#/definitions/models.Address'
         type: array
+      AreaConfig:
+        items:
+          $ref: '#/definitions/models.AreaConfig'
+        type: array
       Name:
         type: string
       Note:
@@ -51,6 +55,20 @@ definitions:
           $ref: '#/definitions/models.Product'
         type: array
       updated_at:
+        type: integer
+    type: object
+  models.AreaConfig:
+    properties:
+      Area:
+        $ref: '#/definitions/models.Area'
+        type: object
+      AreaId:
+        type: integer
+      District:
+        type: string
+      Province:
+        type: string
+      id:
         type: integer
     type: object
   models.Cart:
@@ -1882,6 +1900,34 @@ paths:
       summary: assign staff for drugstore in system
       tags:
       - Account Management
+  /account/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Perform get account
+      operationId: get-account
+      parameters:
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get account in system
+      tags:
+      - Account Management
   /account/{username}/permissions:
     get:
       consumes:
@@ -1994,6 +2040,33 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete address in system
+      tags:
+      - Address Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get address
+      operationId: get-address
+      parameters:
+      - description: id address
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Address'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get address in system
       tags:
       - Address Management
     put:
@@ -3179,6 +3252,10 @@ paths:
         in: path
         name: id
         required: true
+        type: integer
+      - description: area id
+        in: query
+        name: area_id
         type: integer
       produces:
       - application/json

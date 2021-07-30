@@ -35,19 +35,20 @@ func (productRepository *ProductRepository) GetProductById(product *models2.Prod
 		Find(product)
 }
 
-func (productRepository *ProductRepository) GetProductByIdCost(product *models2.Product, id uint, userId uint) {
+func (productRepository *ProductRepository) GetProductByIdCost(product *models2.Product, id uint, userId uint, userType string, areaId uint) {
 	// check user area
-	var address models2.Address
-	var user models2.User
-	productRepository.DB.Table(utils.TblAccount).
-		Select("adr.*, user.*").
-		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
-		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
-		Joins("JOIN address adr ON adr.id = ds.address_id").
-		Where("user.id = ?", userId).Find(&address).Find(&user)
+	if !(userType == string(utils.SUPER_ADMIN) || userType == string(utils.STAFF)) {
+		var address models2.Address
+		var user models2.User
+		productRepository.DB.Table(utils.TblAccount).
+			Select("adr.*, user.*").
+			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+			Joins("JOIN address adr ON adr.id = ds.address_id").
+			Where("user.id = ?", userId).Find(&address).Find(&user)
 
-	var areaId uint
-	areaId = address.AreaID
+		areaId = address.AreaID
+	}
 
 	productRepository.DB.Table(utils.TblProduct).
 		Select("product.*, ac.cost").

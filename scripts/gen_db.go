@@ -6,6 +6,7 @@ import (
 	"medilane-api/config"
 	"medilane-api/core/utils"
 	"medilane-api/models"
+	"medilane-api/packages/promotion/builders"
 	"medilane-api/server"
 )
 
@@ -16,7 +17,6 @@ type GenDB struct {
 func NewGenDB(db *gorm.DB) *GenDB {
 	return &GenDB{DB: db}
 }
-
 func (genDb *GenDB) GenAreaCost() {
 	var products []models.Product
 	var offset int
@@ -81,9 +81,50 @@ func (genDb GenDB) GenVariant() {
 	}
 }
 
+func (genDb *GenDB) GenPromotion() {
+	var i int64
+	for i < 20 {
+		promotion := builders.NewPromotionBuilder().
+			SetName(fmt.Sprintf("Khuyến mại hè %d", i+1)).
+			SetNote(fmt.Sprintf("Khuyến mại hè %d", i+1)).
+			SetStartTime(1603629387709).
+			SetEndTime(1623629387709).
+			SetDeleted(false).
+			SetAreaId(1).
+			Build()
+
+		// begin a transaction
+		tx := genDb.DB.Begin()
+		rs := tx.Table(utils.TblPromotion).Create(&promotion)
+		//rollback if error
+		if rs.Error != nil {
+			tx.Rollback()
+		}
+
+		promotionDetail := builders.NewPromotionDetailBuilder().
+			SetPromotionID(promotion.ID).
+			SetType("percent").
+			SetCondition("").
+			SetPercent(float32(5)).
+			SetValue(float32(0)).
+			SetProductId(1).
+			SetVariantId(1).
+			Build()
+		err := tx.Table(utils.TblPromotionDetail).Create(&promotionDetail).Error
+		if err != nil {
+			tx.Rollback()
+		}
+
+		tx.Commit()
+
+		i++
+	}
+}
+
 func main() {
 	cfg := config.NewConfig()
 	app := server.NewServer(cfg)
 	genDB := NewGenDB(app.DB)
-	genDB.GenVariant()
+	//genDB.GenVariant()
+	genDB.GenPromotion()
 }

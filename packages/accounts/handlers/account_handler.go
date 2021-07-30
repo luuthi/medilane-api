@@ -57,6 +57,32 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 	})
 }
 
+// GetAccount Get account godoc
+// @Summary Get account in system
+// @Description Perform get account
+// @ID get-account
+// @Tags Account Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id account"
+// @Success 200 {object} models.User
+// @Failure 400 {object} responses.Error
+// @Router /account/{username} [get]
+// @Security BearerAuth
+func (accHandler *AccountHandler) GetAccount(c echo.Context) error {
+	var username string
+	username = c.Param("username")
+
+	var existedUser models.User
+	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
+	accRepo.GetUserByUsername(&existedUser, username)
+	if existedUser.ID == 0 {
+		return responses.Response(c, http.StatusOK, nil)
+	}
+
+	return responses.Response(c, http.StatusOK, existedUser)
+}
+
 // CreateAccount Create account godoc
 // @Summary Create account in system
 // @Description Perform create account

@@ -56,6 +56,35 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 	})
 }
 
+// GetAddress Get address godoc
+// @Summary Get address in system
+// @Description Perform get address
+// @ID get-address
+// @Tags Address Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id address"
+// @Success 200 {object} models.Address
+// @Failure 400 {object} responses.Error
+// @Router /address/{id} [get]
+// @Security BearerAuth
+func (addHandler *AddressHandler) GetAddress(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id permission: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedAddress models2.Address
+	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
+	addRepo.GetAddressByID(&existedAddress, id)
+	if existedAddress.ID == 0 {
+		return responses.Response(c, http.StatusOK, nil)
+	}
+	return responses.Response(c, http.StatusOK, existedAddress)
+}
+
 // CreateAddress Create address godoc
 // @Summary Create address in system
 // @Description Perform create address
@@ -118,7 +147,7 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 	var existedAddress models2.Address
 	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
 	addRepo.GetAddressByID(&existedAddress, id)
-	if existedAddress.Province == "" && existedAddress.District == "" && existedAddress.Ward == "" && existedAddress.Street == "" {
+	if existedAddress.ID == 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found address with ID: %v", string(id)))
 	}
 
