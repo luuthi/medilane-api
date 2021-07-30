@@ -67,15 +67,19 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 // @Param id path uint true "id account"
 // @Success 200 {object} models.User
 // @Failure 400 {object} responses.Error
-// @Router /account/{username} [get]
+// @Router /account/{id} [get]
 // @Security BearerAuth
 func (accHandler *AccountHandler) GetAccount(c echo.Context) error {
-	var username string
-	username = c.Param("username")
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+	}
+	id := uint(paramUrl)
 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
-	accRepo.GetUserByUsername(&existedUser, username)
+	accRepo.GetUserByID(&existedUser, id)
 	if existedUser.ID == 0 {
 		return responses.Response(c, http.StatusOK, nil)
 	}

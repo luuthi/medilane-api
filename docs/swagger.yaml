@@ -1833,6 +1833,33 @@ paths:
       summary: Delete account in system
       tags:
       - Account Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get account
+      operationId: get-account
+      parameters:
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get account in system
+      tags:
+      - Account Management
     put:
       consumes:
       - application/json
@@ -1898,34 +1925,6 @@ paths:
       security:
       - BearerAuth: []
       summary: assign staff for drugstore in system
-      tags:
-      - Account Management
-  /account/{username}:
-    get:
-      consumes:
-      - application/json
-      description: Perform get account
-      operationId: get-account
-      parameters:
-      - description: id account
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/responses.Error'
-      security:
-      - BearerAuth: []
-      summary: Get account in system
       tags:
       - Account Management
   /account/{username}/permissions:

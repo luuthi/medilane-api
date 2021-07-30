@@ -36,7 +36,6 @@ func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, fi
 
 	areaRepo.DB.Table(utils2.TblArea).Where(strings.Join(spec, " AND "), values...).
 		Count(total).
-		Preload("Addresses").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
@@ -44,5 +43,6 @@ func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, fi
 }
 
 func (areaRepo *AreaRepository) GetAreaByID(area *models2.Area, id uint) {
-	areaRepo.DB.Table(utils2.TblArea).First(&area, id)
+	areaRepo.DB.Table(utils2.TblArea).
+		First(&area, id)
 }

@@ -51,7 +51,6 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
 	areaRepo.GetAreas(&areas, &total, searchArea)
-	//return responses.SearchResponse(c, http.StatusOK, "", areas)
 	return responses.Response(c, http.StatusOK, responses2.AreaSearch{
 		Code:    http.StatusOK,
 		Message: "",
