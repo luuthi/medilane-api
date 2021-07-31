@@ -4,9 +4,9 @@ import models2 "medilane-api/models"
 
 type OrderDetailBuilder struct {
 	id        uint
-	Cost      float32 `json:"Cost"`
+	Cost      float64 `json:"Cost"`
 	Quantity  int     `json:"Quantity"`
-	Discount  float32 `json:"Discount"`
+	Discount  float64 `json:"Discount"`
 	OrderID   uint    `json:"OrderID"`
 	ProductID uint    `json:"ProductID"`
 	VariantID uint    `json:"VariantID"`
@@ -21,7 +21,7 @@ func (orderDetailBuilder *OrderDetailBuilder) SetID(id uint) (u *OrderDetailBuil
 	return orderDetailBuilder
 }
 
-func (orderDetailBuilder *OrderDetailBuilder) SetCost(Cost float32) (u *OrderDetailBuilder) {
+func (orderDetailBuilder *OrderDetailBuilder) SetCost(Cost float64) (u *OrderDetailBuilder) {
 	orderDetailBuilder.Cost = Cost
 	return orderDetailBuilder
 }
@@ -31,7 +31,7 @@ func (orderDetailBuilder *OrderDetailBuilder) SetQuantity(Quantity int) (u *Orde
 	return orderDetailBuilder
 }
 
-func (orderDetailBuilder *OrderDetailBuilder) SetDiscount(Discount float32) (u *OrderDetailBuilder) {
+func (orderDetailBuilder *OrderDetailBuilder) SetDiscount(Discount float64) (u *OrderDetailBuilder) {
 	orderDetailBuilder.Discount = Discount
 	return orderDetailBuilder
 }

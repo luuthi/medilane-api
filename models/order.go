@@ -4,14 +4,14 @@ type Order struct {
 	CommonModelFields
 
 	OrderCode       string         `json:"OrderCode" gorm:"type:varchar(200);not null"`
-	Discount        float32        `json:"Discount" gorm:"type:float(32)"`
-	SubTotal        float32        `json:"SubTotal" gorm:"type:float(32)"`
-	Total           float32        `json:"Total" gorm:"type:float(8)"`
+	Discount        float64        `json:"Discount" gorm:"type:float(32)"`
+	SubTotal        float64        `json:"SubTotal" gorm:"type:float(32)"`
+	Total           float64        `json:"Total" gorm:"type:float(8)"`
 	Type            string         `json:"Type" gorm:"type:varchar(100);"`
-	Vat             float32        `json:"Vat" gorm:"type:float(32)"`
+	Vat             float64        `json:"Vat" gorm:"type:float(32)"`
 	Note            string         `json:"Note" gorm:"type:varchar(200)"`
 	Status          string         `json:"Status" gorm:"type:varchar(200)"`
-	ShippingFee     float32        `json:"ShippingFee" gorm:"type:float(32)"`
+	ShippingFee     float64        `json:"ShippingFee" gorm:"type:float(32)"`
 	DrugStoreID     uint           `json:"DrugStoreID"`
 	Drugstore       *DrugStore     `json:"Drugstore" gorm:"-"`
 	OrderDetails    []*OrderDetail `json:"OrderDetails" gorm:"foreignKey:OrderID"`
@@ -28,9 +28,9 @@ type Order struct {
 type OrderDetail struct {
 	CommonModelFields
 
-	Cost      float32  `json:"Cost" gorm:"type:float(8)"`
+	Cost      float64  `json:"Cost" gorm:"type:float(8)"`
 	Quantity  int      `json:"Quantity" gorm:"type:integer(8);not null"`
-	Discount  float32  `json:"Discount" gorm:"type:float(8)"`
+	Discount  float64  `json:"Discount" gorm:"type:float(8)"`
 	OrderID   uint     `json:"OrderID"`
 	ProductID uint     `json:"ProductID"`
 	VariantID uint     `json:"VariantID"`

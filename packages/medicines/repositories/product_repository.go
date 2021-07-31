@@ -78,22 +78,22 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 	values := make([]interface{}, 0)
 
 	if filter.Name != "" {
-		spec = append(spec, "Name LIKE ?")
+		spec = append(spec, "product.name LIKE ?")
 		values = append(values, fmt.Sprintf("%%%s%%", filter.Name))
 	}
 
 	if filter.Code != "" {
-		spec = append(spec, "Code = ?")
+		spec = append(spec, "code = ?")
 		values = append(values, filter.Code)
 	}
 
 	if filter.Status != "" {
-		spec = append(spec, "Status = ?")
+		spec = append(spec, "status = ?")
 		values = append(values, filter.Status)
 	}
 
 	if filter.Barcode != "" {
-		spec = append(spec, "Barcode = ?")
+		spec = append(spec, "barcode = ?")
 		values = append(values, filter.Barcode)
 	}
 

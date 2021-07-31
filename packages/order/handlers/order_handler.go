@@ -100,6 +100,7 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 	orderService := order.NewOrderService(orderHandler.server.DB)
+	err = orderService.PreOrder(&orderRequest, claims.UserId, claims.Type)
 	rs, order := orderService.AddOrder(&orderRequest, claims.UserId)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))

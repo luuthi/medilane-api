@@ -127,6 +127,33 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 	return tx.Commit().Error, &order
 }
 
+func (s *Service) PreOrder(request *requests2.OrderRequest, userId uint, userType string) error {
+	areaRepo := repositories.NewOrderRepository(s.DB)
+	err, areaId := areaRepo.GetAreaByUser(userType, userId)
+	if err != nil {
+		return err
+	}
+	var subTotal float64
+	for _, item := range request.OrderDetails {
+		var product models.Product
+		err := s.DB.Table(utils.TblProduct).
+			Select("product.*, ac.cost").
+			Joins(" JOIN area_cost ac ON ac.product_id = product.id").
+			Joins(" JOIN product_category pc ON pc.product_id = product.id").
+			Joins(" JOIN category cat ON pc.category_id = cat.id").
+			Where(" ac.area_id = ?", areaId).
+			First(&product, item.ProductID).Error
+		if err == nil {
+			item.Cost = product.Cost
+			subTotal += item.Cost * float64(item.Quantity)
+		}
+	}
+	request.SubTotal = subTotal
+	request.Total = request.SubTotal + request.ShippingFee - request.Discount*request.SubTotal
+
+	return nil
+}
+
 func (s *Service) EditOrder(request *requests2.OrderRequest, orderId uint) (error, *models.Order) {
 
 	// begin a transaction

@@ -5,14 +5,14 @@ import models2 "medilane-api/models"
 type OrderBuilder struct {
 	id              uint
 	OrderCode       string  `json:"OrderCode"`
-	Discount        float32 `json:"Discount"`
-	SubTotal        float32 `json:"SubTotal"`
-	Total           float32 `json:"Total"`
-	Vat             float32 `json:"Vat"`
+	Discount        float64 `json:"Discount"`
+	SubTotal        float64 `json:"SubTotal"`
+	Total           float64 `json:"Total"`
+	Vat             float64 `json:"Vat"`
 	Note            string  `json:"Note"`
 	Status          string  `json:"Status"`
 	Type            string  `json:"Type"`
-	ShippingFee     float32 `json:"ShippingFee"`
+	ShippingFee     float64 `json:"ShippingFee"`
 	DrugStoreID     uint    `json:"DrugStoreID"`
 	AddressID       uint    `json:"AddressID"`
 	PaymentMethodID uint    `json:"PaymentMethodID"`
@@ -59,27 +59,27 @@ func (orderBuilder *OrderBuilder) SetOrderCode(OrderCode string) (u *OrderBuilde
 	return orderBuilder
 }
 
-func (orderBuilder *OrderBuilder) SetDiscount(Discount float32) (u *OrderBuilder) {
+func (orderBuilder *OrderBuilder) SetDiscount(Discount float64) (u *OrderBuilder) {
 	orderBuilder.Discount = Discount
 	return orderBuilder
 }
 
-func (orderBuilder *OrderBuilder) SetSubTotal(SubTotal float32) (u *OrderBuilder) {
+func (orderBuilder *OrderBuilder) SetSubTotal(SubTotal float64) (u *OrderBuilder) {
 	orderBuilder.SubTotal = SubTotal
 	return orderBuilder
 }
 
-func (orderBuilder *OrderBuilder) SetTotal(Total float32) (u *OrderBuilder) {
+func (orderBuilder *OrderBuilder) SetTotal(Total float64) (u *OrderBuilder) {
 	orderBuilder.Total = Total
 	return orderBuilder
 }
 
-func (orderBuilder *OrderBuilder) SetVat(Vat float32) (u *OrderBuilder) {
+func (orderBuilder *OrderBuilder) SetVat(Vat float64) (u *OrderBuilder) {
 	orderBuilder.Vat = Vat
 	return orderBuilder
 }
 
-func (orderBuilder *OrderBuilder) SetShippingFee(ShippingFee float32) (u *OrderBuilder) {
+func (orderBuilder *OrderBuilder) SetShippingFee(ShippingFee float64) (u *OrderBuilder) {
 	orderBuilder.ShippingFee = ShippingFee
 	return orderBuilder
 }

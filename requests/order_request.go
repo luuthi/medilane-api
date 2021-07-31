@@ -29,21 +29,21 @@ func (rr SearchOrderRequest) Validate() error {
 }
 
 type OrderRequest struct {
-	OrderCode       string               `json:"OrderCode" `
-	Discount        float32              `json:"Discount" `
-	SubTotal        float32              `json:"SubTotal"`
-	Total           float32              `json:"Total" `
-	Vat             float32              `json:"Vat"`
-	Note            string               `json:"Note" `
-	Status          string               `json:"Status" `
-	Type            string               `json:"Type"`
-	ShippingFee     float32              `json:"ShippingFee" `
-	DrugStoreID     uint                 `json:"DrugStoreID"`
-	AddressID       uint                 `json:"AddressID"`
-	PaymentMethodID uint                 `json:"PaymentMethodID"`
-	UserOrderID     uint                 `json:"UserOrderID"`
-	UserApproveID   uint                 `json:"UserApproveID"`
-	OrderDetails    []models.OrderDetail `json:"OrderDetails"`
+	OrderCode       string                `json:"OrderCode" `
+	Discount        float64               `json:"Discount" `
+	SubTotal        float64               `json:"SubTotal"`
+	Total           float64               `json:"Total" `
+	Vat             float64               `json:"Vat"`
+	Note            string                `json:"Note" `
+	Status          string                `json:"Status" `
+	Type            string                `json:"Type"`
+	ShippingFee     float64               `json:"ShippingFee" `
+	DrugStoreID     uint                  `json:"DrugStoreID"`
+	AddressID       uint                  `json:"AddressID"`
+	PaymentMethodID uint                  `json:"PaymentMethodID"`
+	UserOrderID     uint                  `json:"UserOrderID"`
+	UserApproveID   uint                  `json:"UserApproveID"`
+	OrderDetails    []*models.OrderDetail `json:"OrderDetails"`
 }
 
 func (rr OrderRequest) Validate() error {

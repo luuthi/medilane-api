@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"errors"
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -58,9 +59,20 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 		values = append(values, *filter.TimeFrom)
 	}
 
+	if filter.Sort.SortField == "" {
+		filter.Sort.SortField = "created_at"
+	}
+
+	if filter.Sort.SortDirection == "" {
+		filter.Sort.SortDirection = "desc"
+	}
+
 	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload(clause.Associations).
+		Limit(filter.Limit).
+		Offset(filter.Offset).
+		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&orders)
 }
 
@@ -80,4 +92,24 @@ func (OrderRepository *OrderRepository) GetOrderCodeByTime(orderCode *models2.Or
 
 func (OrderRepository *OrderRepository) GetPaymentMethod(methods *[]models2.PaymentMethod) {
 	OrderRepository.DB.Table(utils.TblPaymentMethod).Find(&methods)
+}
+
+func (OrderRepository *OrderRepository) GetAreaByUser(userType string, userId uint) (err error, areaId uint) {
+	if !(userType == string(utils.SUPER_ADMIN) || userType == string(utils.STAFF)) {
+		var address models2.Address
+		var user models2.User
+		err := OrderRepository.DB.Table(utils.TblAccount).
+			Select("adr.*, user.*").
+			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+			Joins("JOIN address adr ON adr.id = ds.address_id").
+			Where("user.id = ?", userId).Find(&address).Find(&user).Error
+
+		if err != nil {
+			return err, 0
+		}
+		areaId = address.AreaID
+		return nil, areaId
+	}
+	return errors.New("user type is not user"), 0
 }

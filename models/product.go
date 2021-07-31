@@ -33,26 +33,26 @@ type Product struct {
 type ProductStore struct {
 	CommonModelFields
 
-	Code                   string      `json:"Code,omitempty" gorm:"type:varchar(100);not null"`
-	Name                   string      `json:"Name,omitempty" gorm:"type:varchar(255);not null"`
-	RegistrationNo         string      `json:"RegistrationNo,omitempty" gorm:"type:varchar(255);not null"`
-	Content                string      `json:"Content,omitempty" gorm:"type:varchar(500);n"`
-	Description            string      `json:"Description,omitempty" gorm:"type:varchar(500);"`
-	IndicationsOfTheDrug   string      `json:"IndicationsOfTheDrug,omitempty" gorm:"type:varchar(500);"`
-	GlobalManufacturerName string      `json:"GlobalManufacturerName,omitempty" gorm:"type:varchar(500);"`
-	Direction              string      `json:"Direction,omitempty" gorm:"type:varchar(500);"`
-	DoNotUse               string      `json:"DoNotUse,omitempty" gorm:"type:varchar(500);"`
-	DrugInteractions       string      `json:"DrugInteractions,omitempty" gorm:"type:varchar(500);"`
-	Storage                string      `json:"Storage,omitempty" gorm:"type:varchar(500);"`
-	Overdose               string      `json:"Overdose,omitempty" gorm:"type:varchar(500);"`
-	PackagingSize          string      `json:"PackagingSize,omitempty" gorm:"type:varchar(255);"`
-	Unit                   string      `json:"Unit,omitempty" gorm:"type:varchar(255);"`
-	Barcode                string      `json:"Barcode,omitempty" gorm:"type:varchar(255);"`
-	Status                 string      `json:"Status,omitempty" gorm:"type:varchar(100);"`
-	ActiveElement          string      `json:"ActiveElement,omitempty" gorm:"type:varchar(255);"`
-	Avatar                 string      `json:"Avatar,omitempty" gorm:"type:varchar(255);"`
-	BasePrice              float64     `json:"BasePrice,omitempty" gorm:"type:float(8);"`
-	Manufacturer           string      `json:"Manufacturer,omitempty" gorm:"type:varchar(255);"`
+	Code                   string      `json:"Code" gorm:"type:varchar(100);not null"`
+	Name                   string      `json:"Name" gorm:"type:varchar(255);not null"`
+	RegistrationNo         string      `json:"RegistrationNo" gorm:"type:varchar(255);not null"`
+	Content                string      `json:"Content" gorm:"type:varchar(500);n"`
+	Description            string      `json:"Description" gorm:"type:varchar(500);"`
+	IndicationsOfTheDrug   string      `json:"IndicationsOfTheDrug" gorm:"type:varchar(500);"`
+	GlobalManufacturerName string      `json:"GlobalManufacturerName" gorm:"type:varchar(500);"`
+	Direction              string      `json:"Direction" gorm:"type:varchar(500);"`
+	DoNotUse               string      `json:"DoNotUse" gorm:"type:varchar(500);"`
+	DrugInteractions       string      `json:"DrugInteractions" gorm:"type:varchar(500);"`
+	Storage                string      `json:"Storage" gorm:"type:varchar(500);"`
+	Overdose               string      `json:"Overdose" gorm:"type:varchar(500);"`
+	PackagingSize          string      `json:"PackagingSize" gorm:"type:varchar(255);"`
+	Unit                   string      `json:"Unit" gorm:"type:varchar(255);"`
+	Barcode                string      `json:"Barcode" gorm:"type:varchar(255);"`
+	Status                 string      `json:"Status" gorm:"type:varchar(100);"`
+	ActiveElement          string      `json:"ActiveElement" gorm:"type:varchar(255);"`
+	Avatar                 string      `json:"Avatar" gorm:"type:varchar(255);"`
+	BasePrice              float64     `json:"BasePrice" gorm:"type:float(8);"`
+	Manufacturer           string      `json:"Manufacturer" gorm:"type:varchar(255);"`
 	Variants               []*Variant  `json:"Variants" gorm:"many2many:product_store_variant"`
 	Images                 []*Image    `json:"Images" gorm:"many2many:product_store_image"`
 	Tags                   []*Tag      `json:"Tags" gorm:"many2many:product_store_tag"`
