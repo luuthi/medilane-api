@@ -3681,7 +3681,7 @@ var doc = `{
                     "Variant-Management"
                 ],
                 "summary": "Edit variant in system",
-                "operationId": "edit-variant",
+                "operationId": "get-variant",
                 "parameters": [
                     {
                         "type": "integer",

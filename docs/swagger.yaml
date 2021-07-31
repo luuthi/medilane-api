@@ -4111,7 +4111,7 @@ paths:
       consumes:
       - application/json
       description: Perform edit variant
-      operationId: edit-variant
+      operationId: get-variant
       parameters:
       - description: id Variant
         in: path

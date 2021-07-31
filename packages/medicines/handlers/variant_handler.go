@@ -60,7 +60,7 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 // GetVariant Edit variant godoc
 // @Summary Edit variant in system
 // @Description Perform edit variant
-// @ID edit-variant
+// @ID get-variant
 // @Tags Variant-Management
 // @Accept json
 // @Produce json
