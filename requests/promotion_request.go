@@ -110,6 +110,7 @@ type PromotionDetailRequest struct {
 	PromotionID uint     `json:"PromotionID"`
 	ProductID   uint     `json:"ProductID" validate:"required"`
 	VariantID   uint     `json:"VariantID" validate:"required"`
+	VoucherID   uint     `json:"VoucherID" validate:"required"`
 	ID          uint     `json:"id"`
 }
 

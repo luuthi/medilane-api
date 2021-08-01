@@ -109,6 +109,7 @@ func (genDb *GenDB) GenPromotion() {
 			SetValue(float32(0)).
 			SetProductId(1).
 			SetVariantId(1).
+			SetVoucherID(2).
 			Build()
 		err := tx.Table(utils.TblPromotionDetail).Create(&promotionDetail).Error
 		if err != nil {

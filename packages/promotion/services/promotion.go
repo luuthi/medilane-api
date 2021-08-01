@@ -58,6 +58,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 				SetValue(*detail.Value).
 				SetProductId(detail.ProductID).
 				SetVariantId(detail.VariantID).
+				SetVoucherID(detail.VoucherID).
 				Build()
 
 			promotionDetails = append(promotionDetails, &promotionDetail)
@@ -112,6 +113,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				SetValue(*v.Value).
 				SetProductId(v.ProductID).
 				SetVariantId(v.VariantID).
+				SetVoucherID(v.VoucherID).
 				Build()
 			err := tx.Table(utils2.TblPromotionDetail).Create(&promotionDetail).Error
 			promotionDetails = append(promotionDetails, &promotionDetail)
@@ -128,6 +130,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				SetValue(*v.Value).
 				SetProductId(v.ProductID).
 				SetVariantId(v.VariantID).
+				SetVoucherID(v.VoucherID).
 				SetId(v.ID).
 				Build()
 			updatedItemID = append(updatedItemID, v.ID)
@@ -186,6 +189,7 @@ func (promoService *Service) CreatePromotionDetail(request []*requests.Promotion
 			SetValue(*detail.Value).
 			SetProductId(detail.ProductID).
 			SetVariantId(detail.VariantID).
+			SetVoucherID(detail.VoucherID).
 			Build()
 
 		promotionDetails = append(promotionDetails, promotionDetail)
@@ -205,6 +209,7 @@ func (promoService *Service) EditPromotionDetail(request *requests.PromotionDeta
 		SetValue(*request.Value).
 		SetProductId(request.ProductID).
 		SetVariantId(request.VariantID).
+		SetVoucherID(request.VoucherID).
 		Build()
 	return promoService.DB.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
 }

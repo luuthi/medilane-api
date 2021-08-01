@@ -5049,6 +5049,9 @@ var doc = `{
                 "VariantID": {
                     "type": "integer"
                 },
+                "VoucherID": {
+                    "type": "integer"
+                },
                 "created_at": {
                     "type": "integer"
                 },
@@ -5057,6 +5060,10 @@ var doc = `{
                 },
                 "updated_at": {
                     "type": "integer"
+                },
+                "voucher": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Voucher"
                 }
             }
         },
@@ -5888,7 +5895,8 @@ var doc = `{
                 "ProductID",
                 "Type",
                 "Value",
-                "VariantID"
+                "VariantID",
+                "VoucherID"
             ],
             "properties": {
                 "Condition": {
@@ -5910,6 +5918,9 @@ var doc = `{
                     "type": "number"
                 },
                 "VariantID": {
+                    "type": "integer"
+                },
+                "VoucherID": {
                     "type": "integer"
                 },
                 "id": {

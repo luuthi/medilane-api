@@ -5034,6 +5034,9 @@
                 "VariantID": {
                     "type": "integer"
                 },
+                "VoucherID": {
+                    "type": "integer"
+                },
                 "created_at": {
                     "type": "integer"
                 },
@@ -5042,6 +5045,10 @@
                 },
                 "updated_at": {
                     "type": "integer"
+                },
+                "voucher": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Voucher"
                 }
             }
         },
@@ -5873,7 +5880,8 @@
                 "ProductID",
                 "Type",
                 "Value",
-                "VariantID"
+                "VariantID",
+                "VoucherID"
             ],
             "properties": {
                 "Condition": {
@@ -5895,6 +5903,9 @@
                     "type": "number"
                 },
                 "VariantID": {
+                    "type": "integer"
+                },
+                "VoucherID": {
                     "type": "integer"
                 },
                 "id": {

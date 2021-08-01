@@ -85,6 +85,7 @@ func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promoti
 		Preload(clause.Associations).
 		Preload("PromotionDetails.Product.Images").
 		Preload("PromotionDetails.Variant").
+		Preload("PromotionDetails.Voucher").
 		First(&promotion, id)
 }
 
@@ -117,12 +118,13 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 	}
 
 	promotionRepo.DB.Table(utils2.TblPromotionDetail).
-		Count(total).
 		Where("promotion_id = ?", promotionID).
 		Where(strings.Join(spec, " AND "), values...).
+		Count(total).
 		Preload("Product").
 		Preload("Product.Category").
 		Preload("Product.Images").
+		Preload("Voucher").
 		Preload("Variant").
 		Limit(filter.Limit).
 		Offset(filter.Offset).

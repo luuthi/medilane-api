@@ -44,6 +44,8 @@ type PromotionDetail struct {
 	Condition   string     `json:"Condition" gorm:"type:varchar(200)"`
 	Value       float32    `json:"Value" gorm:"type:float(8)"`
 	PromotionID uint       `json:"PromotionID"`
+	VoucherID   uint       `json:"VoucherID"`
+	Voucher     *Voucher   `gorm:"foreignKey:VoucherID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Promotion   *Promotion `json:"Promotion" gorm:"foreignKey:PromotionID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	ProductID   uint       `json:"ProductID"`
 	Product     *Product   `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`

@@ -79,6 +79,7 @@ type PromotionDetailBuilder struct {
 	promotionID uint
 	productID   uint
 	variantID   uint
+	voucherID   uint
 	id          uint
 }
 
@@ -111,6 +112,11 @@ func (proDetailBuilder *PromotionDetailBuilder) SetPromotionID(promotionID uint)
 	return proDetailBuilder
 }
 
+func (proDetailBuilder *PromotionDetailBuilder) SetVoucherID(voucherID uint) *PromotionDetailBuilder {
+	proDetailBuilder.voucherID = voucherID
+	return proDetailBuilder
+}
+
 func (proDetailBuilder *PromotionDetailBuilder) SetProductId(productID uint) *PromotionDetailBuilder {
 	proDetailBuilder.productID = productID
 	return proDetailBuilder
@@ -140,6 +146,7 @@ func (proDetailBuilder *PromotionDetailBuilder) Build() models.PromotionDetail {
 		PromotionID:       proDetailBuilder.promotionID,
 		ProductID:         proDetailBuilder.productID,
 		VariantID:         proDetailBuilder.variantID,
+		VoucherID:         proDetailBuilder.voucherID,
 	}
 
 	return promotionDetail
