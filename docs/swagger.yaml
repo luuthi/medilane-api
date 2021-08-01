@@ -895,6 +895,20 @@ definitions:
     - TaxNumber
     - Type
     type: object
+  requests.DrugStoreStatisticRequest:
+    properties:
+      area_id:
+        type: integer
+      interval:
+        example: day/month
+        type: string
+      time_from:
+        example: 1603012735651
+        type: integer
+      time_to:
+        example: 1696192735651
+        type: integer
+    type: object
   requests.EditAccountRequest:
     properties:
       email:
@@ -988,6 +1002,37 @@ definitions:
       Vat:
         type: number
     type: object
+  requests.OrderStatisticCountRequest:
+    properties:
+      area_id:
+        type: integer
+      interval:
+        example: day/month
+        type: string
+      time_from:
+        example: 1603012735651
+        type: integer
+      time_to:
+        example: 1696192735651
+        type: integer
+    type: object
+  requests.OrderStoreStatisticCountRequest:
+    properties:
+      area_id:
+        type: integer
+      interval:
+        example: day/month
+        type: string
+      time_from:
+        example: 1603012735651
+        type: integer
+      time_to:
+        example: 1696192735651
+        type: integer
+      top:
+        example: 5
+        type: integer
+    type: object
   requests.PermissionRequest:
     properties:
       description:
@@ -1073,6 +1118,23 @@ definitions:
         items:
           type: integer
         type: array
+    type: object
+  requests.ProductStatisticCountRequest:
+    properties:
+      area_id:
+        type: integer
+      interval:
+        example: day/month
+        type: string
+      time_from:
+        example: 1603012735651
+        type: integer
+      time_to:
+        example: 1696192735651
+        type: integer
+      top:
+        example: 5
+        type: integer
     type: object
   requests.PromotionDetailRequest:
     properties:
@@ -1617,6 +1679,24 @@ definitions:
       total:
         type: integer
     type: object
+  responses.DrugStoreStatistic:
+    properties:
+      count:
+        type: integer
+      time:
+        type: string
+    type: object
+  responses.DrugStoreStatisticResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/responses.DrugStoreStatistic'
+        type: array
+      message:
+        type: string
+    type: object
   responses.Error:
     properties:
       code:
@@ -1668,6 +1748,33 @@ definitions:
       message:
         type: string
     type: object
+  responses.OrderDrugstoreCount:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/responses.OrderDrugstoreCountItem'
+        type: array
+      time:
+        type: string
+    type: object
+  responses.OrderDrugstoreCountItem:
+    properties:
+      amount:
+        type: integer
+      store_name:
+        type: string
+    type: object
+  responses.OrderDrugstoreCountResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/responses.OrderDrugstoreCount'
+        type: array
+      message:
+        type: string
+    type: object
   responses.OrderResponse:
     properties:
       code:
@@ -1680,6 +1787,24 @@ definitions:
         type: string
       total:
         type: integer
+    type: object
+  responses.OrderStatisticCount:
+    properties:
+      count:
+        type: integer
+      time:
+        type: string
+    type: object
+  responses.OrderStatisticCountResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/responses.OrderStatisticCount'
+        type: array
+      message:
+        type: string
     type: object
   responses.PaymentMethodResponse:
     properties:
@@ -1719,6 +1844,33 @@ definitions:
         type: string
       total:
         type: integer
+    type: object
+  responses.ProductStatisticCount:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/responses.ProductStatisticCountItem'
+        type: array
+      time:
+        type: string
+    type: object
+  responses.ProductStatisticCountItem:
+    properties:
+      count:
+        type: integer
+      product_name:
+        type: string
+    type: object
+  responses.ProductStatisticCountResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/responses.ProductStatisticCount'
+        type: array
+      message:
+        type: string
     type: object
   responses.PromotionDetailSearch:
     properties:
@@ -3981,6 +4133,122 @@ paths:
       summary: Search role in system
       tags:
       - Role Management
+  /statistic/drugstore_count:
+    post:
+      consumes:
+      - application/json
+      description: Perform statistic drugstore order
+      operationId: statistic-drugstore
+      parameters:
+      - description: 'request statistic '
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.DrugStoreStatisticRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.DrugStoreStatisticResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Statistic drugstore in system
+      tags:
+      - Statistic Management
+  /statistic/order_count:
+    post:
+      consumes:
+      - application/json
+      description: Perform statistic order count
+      operationId: statistic-order-count
+      parameters:
+      - description: 'request statistic '
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.OrderStatisticCountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.OrderStatisticCountResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Statistic order count in system
+      tags:
+      - Statistic Management
+  /statistic/order_store_amount:
+    post:
+      consumes:
+      - application/json
+      description: Perform statistic product count top by time and area
+      operationId: statistic-product-count=top
+      parameters:
+      - description: 'request statistic '
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.OrderStoreStatisticCountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.OrderDrugstoreCountResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Statistic product count top by time and area in system
+      tags:
+      - Statistic Management
+  /statistic/product_count:
+    post:
+      consumes:
+      - application/json
+      description: Perform statistic product count top by time and area
+      operationId: statistic-product-count=top
+      parameters:
+      - description: 'request statistic '
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ProductStatisticCountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductStatisticCountResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Statistic product count top by time and area in system
+      tags:
+      - Statistic Management
   /tag:
     post:
       consumes:

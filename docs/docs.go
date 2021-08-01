@@ -3384,6 +3384,190 @@ var doc = `{
                 }
             }
         },
+        "/statistic/drugstore_count": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform statistic drugstore order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistic Management"
+                ],
+                "summary": "Statistic drugstore in system",
+                "operationId": "statistic-drugstore",
+                "parameters": [
+                    {
+                        "description": "request statistic ",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.DrugStoreStatisticRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.DrugStoreStatisticResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/statistic/order_count": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform statistic order count",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistic Management"
+                ],
+                "summary": "Statistic order count in system",
+                "operationId": "statistic-order-count",
+                "parameters": [
+                    {
+                        "description": "request statistic ",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.OrderStatisticCountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.OrderStatisticCountResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/statistic/order_store_amount": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform statistic product count top by time and area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistic Management"
+                ],
+                "summary": "Statistic product count top by time and area in system",
+                "operationId": "statistic-product-count=top",
+                "parameters": [
+                    {
+                        "description": "request statistic ",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.OrderStoreStatisticCountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.OrderDrugstoreCountResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/statistic/product_count": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform statistic product count top by time and area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Statistic Management"
+                ],
+                "summary": "Statistic product count top by time and area in system",
+                "operationId": "statistic-product-count=top",
+                "parameters": [
+                    {
+                        "description": "request statistic ",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ProductStatisticCountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProductStatisticCountResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/tag": {
             "post": {
                 "security": [
@@ -5356,6 +5540,26 @@ var doc = `{
                 }
             }
         },
+        "requests.DrugStoreStatisticRequest": {
+            "type": "object",
+            "properties": {
+                "area_id": {
+                    "type": "integer"
+                },
+                "interval": {
+                    "type": "string",
+                    "example": "day/month"
+                },
+                "time_from": {
+                    "type": "integer",
+                    "example": 1603012735651
+                },
+                "time_to": {
+                    "type": "integer",
+                    "example": 1696192735651
+                }
+            }
+        },
         "requests.EditAccountRequest": {
             "type": "object",
             "properties": {
@@ -5490,6 +5694,50 @@ var doc = `{
                 }
             }
         },
+        "requests.OrderStatisticCountRequest": {
+            "type": "object",
+            "properties": {
+                "area_id": {
+                    "type": "integer"
+                },
+                "interval": {
+                    "type": "string",
+                    "example": "day/month"
+                },
+                "time_from": {
+                    "type": "integer",
+                    "example": 1603012735651
+                },
+                "time_to": {
+                    "type": "integer",
+                    "example": 1696192735651
+                }
+            }
+        },
+        "requests.OrderStoreStatisticCountRequest": {
+            "type": "object",
+            "properties": {
+                "area_id": {
+                    "type": "integer"
+                },
+                "interval": {
+                    "type": "string",
+                    "example": "day/month"
+                },
+                "time_from": {
+                    "type": "integer",
+                    "example": 1603012735651
+                },
+                "time_to": {
+                    "type": "integer",
+                    "example": 1696192735651
+                },
+                "top": {
+                    "type": "integer",
+                    "example": 5
+                }
+            }
+        },
         "requests.PermissionRequest": {
             "type": "object",
             "required": [
@@ -5606,6 +5854,30 @@ var doc = `{
                     "items": {
                         "type": "integer"
                     }
+                }
+            }
+        },
+        "requests.ProductStatisticCountRequest": {
+            "type": "object",
+            "properties": {
+                "area_id": {
+                    "type": "integer"
+                },
+                "interval": {
+                    "type": "string",
+                    "example": "day/month"
+                },
+                "time_from": {
+                    "type": "integer",
+                    "example": 1603012735651
+                },
+                "time_to": {
+                    "type": "integer",
+                    "example": 1696192735651
+                },
+                "top": {
+                    "type": "integer",
+                    "example": 5
                 }
             }
         },
@@ -6394,6 +6666,34 @@ var doc = `{
                 }
             }
         },
+        "responses.DrugStoreStatistic": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.DrugStoreStatisticResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.DrugStoreStatistic"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.Error": {
             "type": "object",
             "properties": {
@@ -6472,6 +6772,48 @@ var doc = `{
                 }
             }
         },
+        "responses.OrderDrugstoreCount": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.OrderDrugstoreCountItem"
+                    }
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.OrderDrugstoreCountItem": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer"
+                },
+                "store_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.OrderDrugstoreCountResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.OrderDrugstoreCount"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "responses.OrderResponse": {
             "type": "object",
             "properties": {
@@ -6489,6 +6831,34 @@ var doc = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "responses.OrderStatisticCount": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.OrderStatisticCountResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.OrderStatisticCount"
+                    }
+                },
+                "message": {
+                    "type": "string"
                 }
             }
         },
@@ -6549,6 +6919,48 @@ var doc = `{
                 },
                 "total": {
                     "type": "integer"
+                }
+            }
+        },
+        "responses.ProductStatisticCount": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ProductStatisticCountItem"
+                    }
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.ProductStatisticCountItem": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "product_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.ProductStatisticCountResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ProductStatisticCount"
+                    }
+                },
+                "message": {
+                    "type": "string"
                 }
             }
         },

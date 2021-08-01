@@ -37,8 +37,8 @@ func NewOrderHandler(server *s.Server) *OrderHandler {
 // @Failure 401 {object} responses.Error
 // @Router /order/find [post]
 // @Security BearerAuth
-func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
+func (orderHanlder *OrderHandler) SearchOrder(c echo.Context) error {
+	token, err := authentication.VerifyToken(c.Request(), orderHanlder.server)
 	if err != nil {
 		return responses.Response(c, http.StatusUnauthorized, nil)
 	}
@@ -48,13 +48,13 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 	}
 	searchRequest := new(requests2.SearchOrderRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
 	var orders []models2.Order
 	var total int64
 
-	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
+	orderRepo := repositories.NewOrderRepository(orderHanlder.server.DB)
 
 	if claims.Type == string(utils.USER) {
 		orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchRequest)
@@ -81,8 +81,8 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 // @Failure 400 {object} responses.Error
 // @Router /order [post]
 // @Security BearerAuth
-func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
+func (orderHanlder *OrderHandler) CreateOrder(c echo.Context) error {
+	token, err := authentication.VerifyToken(c.Request(), orderHanlder.server)
 	if err != nil {
 		return responses.Response(c, http.StatusUnauthorized, nil)
 	}
@@ -99,7 +99,7 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 	if err := orderRequest.Validate(); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
-	orderService := order.NewOrderService(orderHandler.server.DB)
+	orderService := order.NewOrderService(orderHanlder.server.DB)
 	err = orderService.PreOrder(&orderRequest, claims.UserId, claims.Type)
 	rs, order := orderService.AddOrder(&orderRequest, claims.UserId)
 	if err := rs; err != nil {
@@ -124,7 +124,7 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 // @Failure 400 {object} responses.Error
 // @Router /order/{id} [get]
 // @Security BearerAuth
-func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
+func (orderHanlder *OrderHandler) GetOrder(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -132,7 +132,7 @@ func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 	}
 	id := uint(paramUrl)
 	var existedOrder models2.Order
-	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
+	orderRepo := repositories2.NewOrderRepository(orderHanlder.server.DB)
 	orderRepo.GetOrderDetail(&existedOrder, id)
 	if existedOrder.ID == 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found order with ID: %v", string(id)))
@@ -154,7 +154,7 @@ func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 // @Failure 400 {object} responses.Error
 // @Router /order/{id} [put]
 // @Security BearerAuth
-func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
+func (orderHanlder *OrderHandler) EditOrder(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -169,7 +169,7 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 	if err := orderRequest.Validate(); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
-	orderService := order.NewOrderService(orderHandler.server.DB)
+	orderService := order.NewOrderService(orderHanlder.server.DB)
 	rs, _ := orderService.EditOrder(&orderRequest, id)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))
@@ -189,7 +189,7 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 // @Failure 400 {object} responses.Error
 // @Router /order/{id} [delete]
 // @Security BearerAuth
-func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
+func (orderHanlder *OrderHandler) DeleteOrder(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -198,13 +198,13 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 	id := uint(paramUrl)
 
 	var existedOrder models2.Order
-	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
+	orderRepo := repositories2.NewOrderRepository(orderHanlder.server.DB)
 	orderRepo.GetOrderDetail(&existedOrder, id)
 	if existedOrder.ID == 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found order with ID: %v", string(id)))
 	}
 
-	orderService := order.NewOrderService(orderHandler.server.DB)
+	orderService := order.NewOrderService(orderHanlder.server.DB)
 	if err := orderService.DeleteOrder(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete order: %v", err.Error()))
 	}
@@ -222,10 +222,10 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 // @Failure 400 {object} responses.Error
 // @Router /order/payment-methods [get]
 // @Security BearerAuth
-func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
+func (orderHanlder *OrderHandler) GetPaymentMethod(c echo.Context) error {
 
 	var methods []models2.PaymentMethod
-	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
+	orderRepo := repositories2.NewOrderRepository(orderHanlder.server.DB)
 	orderRepo.GetPaymentMethod(&methods)
 	return responses.Response(c, http.StatusOK, responses2.PaymentMethodResponse{
 		Code:    http.StatusOK,

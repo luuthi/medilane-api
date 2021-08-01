@@ -106,3 +106,10 @@ const (
 	Usd     VoucherUnit = "usd"
 	Other   VoucherUnit = "other"
 )
+
+type IntervalStatistic string
+
+const (
+	Month IntervalStatistic = "month"
+	Day   IntervalStatistic = "day"
+)
