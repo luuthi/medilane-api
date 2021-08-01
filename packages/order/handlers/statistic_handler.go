@@ -124,7 +124,7 @@ func (statisticHandler *StatisticHandler) StatisticOrderCount(c echo.Context) er
 // StatisticOrderStoreTopCount Statistic product count top by time and area godoc
 // @Summary Statistic product count top by time and area in system
 // @Description Perform statistic product count top by time and area
-// @ID statistic-product-count=top
+// @ID statistic-order-store-count-top
 // @Tags Statistic Management
 // @Accept json
 // @Produce json

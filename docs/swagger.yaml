@@ -4196,7 +4196,7 @@ paths:
       consumes:
       - application/json
       description: Perform statistic product count top by time and area
-      operationId: statistic-product-count=top
+      operationId: statistic-order-store-count-top
       parameters:
       - description: 'request statistic '
         in: body

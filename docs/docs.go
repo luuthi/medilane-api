@@ -3494,7 +3494,7 @@ var doc = `{
                     "Statistic Management"
                 ],
                 "summary": "Statistic product count top by time and area in system",
-                "operationId": "statistic-product-count=top",
+                "operationId": "statistic-order-store-count-top",
                 "parameters": [
                     {
                         "description": "request statistic ",
