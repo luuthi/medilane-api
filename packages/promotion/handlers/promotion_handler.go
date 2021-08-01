@@ -191,7 +191,7 @@ func (promoHandler *PromotionHandler) DeletePromotion(c echo.Context) error {
 	var existedPromotion models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	promoRepo.GetPromotion(&existedPromotion, id)
-	if existedPromotion.Name == "" {
+	if existedPromotion.ID == 0 {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found promotion with ID: %v", string(id)))
 	}
 

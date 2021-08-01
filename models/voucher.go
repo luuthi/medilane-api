@@ -3,10 +3,13 @@ package models
 type Voucher struct {
 	CommonModelFields
 
-	Name  string  `json:"Name" gorm:"type:varchar(200)"`
-	Type  string  `json:"Type" gorm:"type:varchar(32)"`
-	Value float32 `json:"Value" gorm:"type:float(8)"`
-	Note  string  `json:"Note" gorm:"type:varchar(200)"`
+	Name     string  `json:"Name" gorm:"type:varchar(200)"`
+	Type     string  `json:"Type" gorm:"type:varchar(32)"`
+	Value    float32 `json:"Value" gorm:"type:float(8)"`
+	MaxValue float32 `json:"MaxValue" gorm:"type:float(8)"`
+	Unit     string  `json:"Unit" gorm:"type:varchar(8)"`
+	Note     string  `json:"Note" gorm:"type:varchar(200)"`
+	Deleted  bool    `json:"Deleted" gorm:"type:bool"`
 }
 
 type VoucherDetail struct {

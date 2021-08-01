@@ -26,6 +26,7 @@ const (
 	TblOrderCode             = "order_code"
 	TblOrderDetail           = "order_detail"
 	TblPaymentMethod         = "payment_method"
+	TblVoucher               = "voucher"
 )
 
 type AccountType string
@@ -85,6 +86,23 @@ const (
 type ConditionPromotion string
 
 const (
-	AMOUNT_PRODUCT ConditionPromotion = "AMOUNT_PRODUCT"
-	TOTAL_MONEY    ConditionPromotion = "TOTAL_MONEY"
+	AMOUNT_PRODUCT ConditionPromotion = "count"
+	TOTAL_MONEY    ConditionPromotion = "amount"
+)
+
+type VoucherType string
+
+const (
+	Gift  VoucherType = "gift"
+	Ship  VoucherType = "ship"
+	Money VoucherType = "money"
+)
+
+type VoucherUnit string
+
+const (
+	Percent VoucherUnit = "%"
+	Vnd     VoucherUnit = "vnd"
+	Usd     VoucherUnit = "usd"
+	Other   VoucherUnit = "other"
 )

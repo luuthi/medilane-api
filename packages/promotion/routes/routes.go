@@ -9,6 +9,7 @@ import (
 
 func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	promotionHandler := handlers.NewPromotionHandler(server)
+	voucherHandler := handlers.NewVoucherHandler(server)
 
 	promotion := appRoute.Group("/promotion")
 	//config := middleware.JWTConfig{
@@ -31,5 +32,13 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	promotion.PUT("/:id/details/:d_id", promotionHandler.EditPromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 	promotion.DELETE("/:id/details/:d_id", promotionHandler.DeletePromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 	promotion.DELETE("/:id/details", promotionHandler.DeletePromotionDetailByPromotion, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
+
+	voucher := appRoute.Group("/voucher")
+
+	voucher.POST("/find", voucherHandler.SearchVoucher, authentication.CheckPermission(server, []string{"read:voucher"}, false))
+	voucher.POST("", voucherHandler.CreateVoucher, authentication.CheckPermission(server, []string{"create:voucher"}, false))
+	voucher.PUT("/:id", voucherHandler.EditVoucher, authentication.CheckPermission(server, []string{"edit:voucher"}, false))
+	voucher.DELETE("/:id", voucherHandler.DeleteVoucher, authentication.CheckPermission(server, []string{"edit:voucher"}, false))
+	voucher.GET("/:id", voucherHandler.GetVoucher, authentication.CheckPermission(server, []string{"read:voucher"}, false))
 
 }
