@@ -671,11 +671,17 @@ definitions:
     type: object
   models.Voucher:
     properties:
+      Deleted:
+        type: boolean
+      MaxValue:
+        type: number
       Name:
         type: string
       Note:
         type: string
       Type:
+        type: string
+      Unit:
         type: string
       Value:
         type: number
@@ -1458,6 +1464,22 @@ definitions:
         $ref: '#/definitions/requests.SortOption'
         type: object
     type: object
+  requests.SearchVoucherRequest:
+    properties:
+      Name:
+        type: string
+      Type:
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
   requests.SetCostProductsOfAreaRequest:
     properties:
       AreaId:
@@ -1487,6 +1509,21 @@ definitions:
     properties:
       Name:
         example: name
+        type: string
+    type: object
+  requests.VoucherRequest:
+    properties:
+      MaxValue:
+        type: number
+      Name:
+        type: string
+      Note:
+        type: string
+      Type:
+        type: string
+      Value:
+        type: number
+      unit:
         type: string
     type: object
   responses.AddressSearch:
@@ -1775,6 +1812,19 @@ definitions:
       data:
         items:
           $ref: '#/definitions/models.Variant'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.VoucherSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Voucher'
         type: array
       message:
         type: string
@@ -4196,6 +4246,152 @@ paths:
       summary: Search variant in system
       tags:
       - Variant-Management
+  /voucher:
+    post:
+      consumes:
+      - application/json
+      description: Perform create voucher
+      operationId: create-voucher
+      parameters:
+      - description: Create promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.VoucherRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Voucher'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create voucher  in system
+      tags:
+      - Voucher Management
+  /voucher/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform delete voucher
+      operationId: delete-voucher
+      parameters:
+      - description: id voucher
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete voucher (soft delete) in system
+      tags:
+      - Voucher Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get voucher
+      operationId: get-voucher
+      parameters:
+      - description: id voucher
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Voucher'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get voucher in system
+      tags:
+      - Voucher Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit voucher
+      operationId: edit-voucher
+      parameters:
+      - description: body voucher
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.VoucherRequest'
+      - description: id voucher
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Promotion'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit voucher in system
+      tags:
+      - Voucher Management
+  /voucher/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search voucher
+      operationId: search-voucher
+      parameters:
+      - description: Filter voucher
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchVoucherRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.VoucherSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search voucher in system
+      tags:
+      - Voucher Management
 securityDefinitions:
   BearerAuth:
     in: header

@@ -3799,6 +3799,235 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/voucher": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create voucher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Voucher Management"
+                ],
+                "summary": "Create voucher  in system",
+                "operationId": "create-voucher",
+                "parameters": [
+                    {
+                        "description": "Create promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.VoucherRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Voucher"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/voucher/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search voucher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Voucher Management"
+                ],
+                "summary": "Search voucher in system",
+                "operationId": "search-voucher",
+                "parameters": [
+                    {
+                        "description": "Filter voucher",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchVoucherRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.VoucherSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/voucher/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get voucher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Voucher Management"
+                ],
+                "summary": "Get voucher in system",
+                "operationId": "get-voucher",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id voucher",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Voucher"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit voucher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Voucher Management"
+                ],
+                "summary": "Edit voucher in system",
+                "operationId": "edit-voucher",
+                "parameters": [
+                    {
+                        "description": "body voucher",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.VoucherRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id voucher",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Promotion"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete voucher",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Voucher Management"
+                ],
+                "summary": "Delete voucher (soft delete) in system",
+                "operationId": "delete-voucher",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id voucher",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -4808,6 +5037,12 @@ var doc = `{
         "models.Voucher": {
             "type": "object",
             "properties": {
+                "Deleted": {
+                    "type": "boolean"
+                },
+                "MaxValue": {
+                    "type": "number"
+                },
                 "Name": {
                     "type": "string"
                 },
@@ -4815,6 +5050,9 @@ var doc = `{
                     "type": "string"
                 },
                 "Type": {
+                    "type": "string"
+                },
+                "Unit": {
                     "type": "string"
                 },
                 "Value": {
@@ -5923,6 +6161,29 @@ var doc = `{
                 }
             }
         },
+        "requests.SearchVoucherRequest": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "sort": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
         "requests.SetCostProductsOfAreaRequest": {
             "type": "object",
             "properties": {
@@ -5967,6 +6228,29 @@ var doc = `{
                 "Name": {
                     "type": "string",
                     "example": "name"
+                }
+            }
+        },
+        "requests.VoucherRequest": {
+            "type": "object",
+            "properties": {
+                "MaxValue": {
+                    "type": "number"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": "number"
+                },
+                "unit": {
+                    "type": "string"
                 }
             }
         },
@@ -6409,6 +6693,26 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Variant"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.VoucherSearch": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Voucher"
                     }
                 },
                 "message": {
