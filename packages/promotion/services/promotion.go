@@ -36,6 +36,8 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
 		SetAreaId(request.AreaId).
+		SetStatus(true).
+		SetDeleted(false).
 		Build()
 
 	// begin a transaction
@@ -83,6 +85,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 		SetNote(request.Note).
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
+		SetStatus(*request.Status).
 		SetDeleted(false).
 		SetAreaId(request.AreaId).
 		SetID(id).
@@ -163,6 +166,8 @@ func (promoService *Service) EditPromotion(request *requests.PromotionRequest, i
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
 		SetAreaId(request.AreaId).
+		SetStatus(*request.Status).
+		SetDeleted(false).
 		SetID(id).
 		Build()
 	rs := promoService.DB.Table(utils2.TblPromotion).Updates(promotion)
@@ -174,7 +179,7 @@ func (promoService *Service) DeletePromotion(id uint) error {
 		SetID(id).
 		SetDeleted(true).
 		Build()
-	return promoService.DB.Table(utils2.TblPromotion).Delete(promotion).Error
+	return promoService.DB.Table(utils2.TblPromotion).Updates(promotion).Error
 }
 
 func (promoService *Service) CreatePromotionDetail(request []*requests.PromotionDetailRequest) error {

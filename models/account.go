@@ -13,9 +13,9 @@ type User struct {
 	Username        string       `json:"Username" yaml:"username" gorm:"type:varchar(200);unique;not null"`
 	Password        string       `json:"-" yaml:"password" gorm:"type:varchar(200);"`
 	FullName        string       `json:"Name" yaml:"full_name" gorm:"type:varchar(500)"`
-	Status          bool         `json:"Confirmed" yaml:"status" gorm:"type:bool;default:true"`
+	Status          *bool        `json:"Confirmed" yaml:"status" gorm:"type:bool;default:true"`
 	Type            string       `json:"Type" yaml:"type" gorm:"type:varchar(200)"`
-	IsAdmin         bool         `json:"IsAdmin" yaml:"is_admin" gorm:"type:bool;default:true"`
+	IsAdmin         *bool        `json:"IsAdmin" yaml:"is_admin" gorm:"type:bool;default:true"`
 	Roles           []*Role      `json:"Roles" yaml:"roles" gorm:"many2many:role_user;ForeignKey:Username;References:RoleName"`
 	Carts           []*Cart      `gorm:"foreignKey:UserID"`
 	DrugStore       *DrugStore   `json:"DrugStore" gorm:"-"`

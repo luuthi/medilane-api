@@ -14,7 +14,7 @@ type AddressRequest struct {
 	Coordinates string `json:"Coordinates" validate:"required" example:"Jackie"`
 	AreaID      uint   `json:"AreaID" validate:"required" example:"1"`
 	Country     string `json:"Country" validate:"required" example:"Vietnam"`
-	IsDefault   bool   `json:"IsDefault" validate:"required" example:"true"`
+	IsDefault   *bool  `json:"IsDefault" validate:"required" example:"true"`
 }
 
 func (rr AddressRequest) Validate() error {

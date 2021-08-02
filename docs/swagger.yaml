@@ -521,6 +521,8 @@ definitions:
         type: string
       StartTime:
         type: integer
+      Status:
+        type: boolean
       created_at:
         type: integer
       id:
@@ -1194,11 +1196,14 @@ definitions:
         type: array
       StartTime:
         type: integer
+      Status:
+        type: boolean
     required:
     - AreaId
     - EndTime
     - Name
     - StartTime
+    - Status
     type: object
   requests.RefreshRequest:
     properties:

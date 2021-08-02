@@ -4981,6 +4981,9 @@
                 "StartTime": {
                     "type": "integer"
                 },
+                "Status": {
+                    "type": "boolean"
+                },
                 "created_at": {
                     "type": "integer"
                 },
@@ -5930,7 +5933,8 @@
                 "AreaId",
                 "EndTime",
                 "Name",
-                "StartTime"
+                "StartTime",
+                "Status"
             ],
             "properties": {
                 "AreaId": {
@@ -5955,6 +5959,9 @@
                 },
                 "StartTime": {
                     "type": "integer"
+                },
+                "Status": {
+                    "type": "boolean"
                 }
             }
         },

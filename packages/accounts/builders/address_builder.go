@@ -85,7 +85,7 @@ func (areaBuilder *AddressBuilder) Build() models.Address {
 		District:          areaBuilder.district,
 		Coordinates:       areaBuilder.coordinates,
 		Country:           areaBuilder.country,
-		IsDefault:         areaBuilder.isDefault,
+		IsDefault:         &areaBuilder.isDefault,
 		Phone:             areaBuilder.phone,
 		ContactName:       areaBuilder.contactName,
 		AreaID:            areaBuilder.areaID,

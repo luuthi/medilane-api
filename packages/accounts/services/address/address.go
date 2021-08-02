@@ -19,7 +19,7 @@ func (areaCostService *Service) CreateAddress(request *requests2.AddressRequest)
 		SetDistrict(request.District).
 		SetWard(request.Ward).
 		SetStreet(request.Address).
-		SetDefault(request.IsDefault).
+		SetDefault(*request.IsDefault).
 		Build()
 	return areaCostService.DB.Table(utils2.TblAddress).Create(&address)
 }
@@ -34,7 +34,7 @@ func (areaCostService *Service) EditAddress(request *requests2.AddressRequest, i
 		SetDistrict(request.District).
 		SetWard(request.Ward).
 		SetStreet(request.Address).
-		SetDefault(request.IsDefault).
+		SetDefault(*request.IsDefault).
 		SetID(id).
 		Build()
 	return areaCostService.DB.Table(utils2.TblAddress).Updates(&address).Error
@@ -44,7 +44,7 @@ func (areaCostService *Service) DeleteAddress(id uint) error {
 
 	var existedAddress models.Address
 	areaCostService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
-	if existedAddress.IsDefault {
+	if *existedAddress.IsDefault {
 		return errors.New("cannot delete default address")
 	}
 
@@ -58,7 +58,7 @@ func (areaCostService *Service) SetAddressDefault(id uint) error {
 
 	var existedAddress models.Address
 	areaCostService.DB.Table(utils2.TblAddress).First(&existedAddress, id)
-	if existedAddress.IsDefault {
+	if *existedAddress.IsDefault {
 		return errors.New("cannot delete default address")
 	}
 

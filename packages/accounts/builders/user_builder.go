@@ -85,9 +85,9 @@ func (userBuilder *UserBuilder) Build() models.User {
 		Username:          userBuilder.username,
 		Password:          userBuilder.password,
 		FullName:          userBuilder.fullName,
-		Status:            userBuilder.status,
+		Status:            &userBuilder.status,
 		Type:              userBuilder.type_,
-		IsAdmin:           userBuilder.isAdmin,
+		IsAdmin:           &userBuilder.isAdmin,
 		Roles:             userBuilder.roles,
 		CommonModelFields: common,
 	}

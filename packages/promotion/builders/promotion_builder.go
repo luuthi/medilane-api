@@ -10,6 +10,7 @@ type PromotionBuilder struct {
 	endTime   int64
 	id        uint
 	deleted   bool
+	status    bool
 }
 
 func NewPromotionBuilder() *PromotionBuilder {
@@ -51,6 +52,11 @@ func (proBuilder *PromotionBuilder) SetDeleted(isDeleted bool) *PromotionBuilder
 	return proBuilder
 }
 
+func (proBuilder *PromotionBuilder) SetStatus(status bool) *PromotionBuilder {
+	proBuilder.status = status
+	return proBuilder
+}
+
 func (proBuilder *PromotionBuilder) Build() models.Promotion {
 	common := models.CommonModelFields{
 		ID: proBuilder.id,
@@ -62,8 +68,9 @@ func (proBuilder *PromotionBuilder) Build() models.Promotion {
 		Note:              proBuilder.note,
 		StartTime:         proBuilder.startTime,
 		EndTime:           proBuilder.endTime,
-		Deleted:           proBuilder.deleted,
+		Deleted:           &proBuilder.deleted,
 		AreaId:            proBuilder.AreaId,
+		Status:            &proBuilder.status,
 	}
 
 	return promotion

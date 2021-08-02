@@ -70,7 +70,7 @@ func (voucherBuilder *VoucherBuilder) Builder() models.Voucher {
 		MaxValue:          voucherBuilder.maxValue,
 		Unit:              voucherBuilder.unit,
 		Note:              voucherBuilder.note,
-		Deleted:           voucherBuilder.deleted,
+		Deleted:           &voucherBuilder.deleted,
 	}
 	return voucher
 }

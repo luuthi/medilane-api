@@ -74,7 +74,6 @@ func (drugStoreBuilder *DrugStoreBuilder) SetAddress(Address *requests2.AddressR
 		District:    Address.District,
 		Ward:        Address.Ward,
 		Country:     Address.Country,
-		IsDefault:   false,
 		Phone:       Address.Phone,
 		ContactName: Address.ContactName,
 		Coordinates: Address.Coordinates,

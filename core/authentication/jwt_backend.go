@@ -58,7 +58,7 @@ func (backend *JWTAuthenticationBackend) GenerateToken(user *models.User) (acces
 	exp = time.Now().Add(time.Hour * tokenDuration).Unix()
 	claims := &JwtCustomClaims{
 		user.Username,
-		user.IsAdmin,
+		*user.IsAdmin,
 		user.Type,
 		user.ID,
 		jwt.StandardClaims{

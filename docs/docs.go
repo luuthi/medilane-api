@@ -4996,6 +4996,9 @@ var doc = `{
                 "StartTime": {
                     "type": "integer"
                 },
+                "Status": {
+                    "type": "boolean"
+                },
                 "created_at": {
                     "type": "integer"
                 },
@@ -5945,7 +5948,8 @@ var doc = `{
                 "AreaId",
                 "EndTime",
                 "Name",
-                "StartTime"
+                "StartTime",
+                "Status"
             ],
             "properties": {
                 "AreaId": {
@@ -5970,6 +5974,9 @@ var doc = `{
                 },
                 "StartTime": {
                     "type": "integer"
+                },
+                "Status": {
+                    "type": "boolean"
                 }
             }
         },

@@ -8,7 +8,7 @@ type Address struct {
 	District    string `json:"District" gorm:"type:varchar(200)"`
 	Ward        string `json:"Ward" gorm:"type:varchar(200)"`
 	Country     string `json:"Country" gorm:"type:varchar(200)"`
-	IsDefault   bool   `json:"IsDefault" gorm:"type:varchar(200)"`
+	IsDefault   *bool  `json:"IsDefault" gorm:"type:varchar(200)"`
 	Phone       string `json:"Phone" gorm:"type:varchar(200)"`
 	ContactName string `json:"ContactName" gorm:"type:varchar(200)"`
 	Coordinates string `json:"Coordinates" gorm:"type:varchar(200)"`

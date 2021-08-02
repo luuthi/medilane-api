@@ -12,6 +12,7 @@ type PromotionRequest struct {
 	Note      string `json:"Note" example:"Khuyến mại hè nè"`
 	StartTime int64  `json:"StartTime" validate:"required"`
 	EndTime   int64  `json:"EndTime" validate:"required"`
+	Status    *bool  `json:"Status" validate:"required"`
 }
 
 type PromotionWithDetailRequest struct {
