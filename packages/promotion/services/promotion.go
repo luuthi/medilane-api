@@ -49,20 +49,29 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		return rs.Error, nil
 	}
 
+	// query default voucher for percent ( if type promotion is percent then do not create voucher)
+	var defaultVoucher models.Voucher
+	tx.Table(utils2.TblVoucher).Where("name = \"default\"").First(&defaultVoucher)
+
 	promotionDetails := make([]*models.PromotionDetail, 0)
 	if len(request.PromotionDetails) > 0 {
 		for _, detail := range request.PromotionDetails {
-			promotionDetail := builders.NewPromotionDetailBuilder().
+			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 				SetPromotionID(promotion.ID).
 				SetType(detail.Type).
 				SetCondition(detail.Condition).
 				SetPercent(*detail.Percent).
 				SetValue(*detail.Value).
 				SetProductId(detail.ProductID).
-				SetVariantId(detail.VariantID).
-				SetVoucherID(detail.VoucherID).
-				Build()
-
+				SetVariantId(detail.VariantID)
+			if detail.Type == string(utils2.PERCENT) {
+				promotionDetailBuidler.
+					SetVoucherID(defaultVoucher.ID)
+			} else {
+				promotionDetailBuidler.
+					SetVoucherID(detail.VoucherID)
+			}
+			promotionDetail := promotionDetailBuidler.Build()
 			promotionDetails = append(promotionDetails, &promotionDetail)
 		}
 		rsDetail := tx.Table(utils2.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
@@ -104,20 +113,31 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 	var details []models.PromotionDetail
 	tx.Table(utils2.TblPromotionDetail).Where("promotion_id = ?", promotion.ID).Find(&details)
 
+	// query default voucher for percent ( if type promotion is percent then do not create voucher)
+	var defaultVoucher models.Voucher
+	tx.Table(utils2.TblVoucher).Where("name = \"default\"").First(&defaultVoucher)
+
 	var updatedItemID []uint
 	promotionDetails := make([]*models.PromotionDetail, 0)
 	for _, v := range request.PromotionDetails {
 		if v.ID == 0 {
-			promotionDetail := builders.NewPromotionDetailBuilder().
+			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 				SetPromotionID(id).
 				SetType(v.Type).
 				SetCondition(v.Condition).
 				SetPercent(*v.Percent).
 				SetValue(*v.Value).
 				SetProductId(v.ProductID).
-				SetVariantId(v.VariantID).
-				SetVoucherID(v.VoucherID).
-				Build()
+				SetVariantId(v.VariantID)
+
+			if v.Type == string(utils2.PERCENT) {
+				promotionDetailBuidler.
+					SetVoucherID(defaultVoucher.ID)
+			} else {
+				promotionDetailBuidler.
+					SetVoucherID(v.VoucherID)
+			}
+			promotionDetail := promotionDetailBuidler.Build()
 			err := tx.Table(utils2.TblPromotionDetail).Create(&promotionDetail).Error
 			promotionDetails = append(promotionDetails, &promotionDetail)
 			if err != nil {
@@ -125,7 +145,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				return err, nil
 			}
 		} else {
-			promotionDetail := builders.NewPromotionDetailBuilder().
+			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 				SetPromotionID(id).
 				SetType(v.Type).
 				SetCondition(v.Condition).
@@ -133,9 +153,17 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				SetValue(*v.Value).
 				SetProductId(v.ProductID).
 				SetVariantId(v.VariantID).
-				SetVoucherID(v.VoucherID).
-				SetId(v.ID).
-				Build()
+				SetId(v.ID)
+
+			if v.Type == string(utils2.PERCENT) {
+				promotionDetailBuidler.
+					SetVoucherID(defaultVoucher.ID)
+			} else {
+				promotionDetailBuidler.
+					SetVoucherID(v.VoucherID)
+			}
+			promotionDetail := promotionDetailBuidler.Build()
+
 			updatedItemID = append(updatedItemID, v.ID)
 			err := tx.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
 			promotionDetails = append(promotionDetails, &promotionDetail)
@@ -184,18 +212,30 @@ func (promoService *Service) DeletePromotion(id uint) error {
 
 func (promoService *Service) CreatePromotionDetail(request []*requests.PromotionDetailRequest) error {
 	// begin a transaction
+
+	// query default voucher for percent ( if type promotion is percent then do not create voucher)
+	var defaultVoucher models.Voucher
+	promoService.DB.Table(utils2.TblVoucher).Where("name = \"default\"").First(&defaultVoucher)
+
 	promotionDetails := make([]models.PromotionDetail, len(request))
 	for _, detail := range request {
-		promotionDetail := builders.NewPromotionDetailBuilder().
+		promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 			SetPromotionID(detail.PromotionID).
 			SetType(detail.Type).
 			SetCondition(detail.Condition).
 			SetPercent(*detail.Percent).
 			SetValue(*detail.Value).
 			SetProductId(detail.ProductID).
-			SetVariantId(detail.VariantID).
-			SetVoucherID(detail.VoucherID).
-			Build()
+			SetVariantId(detail.VariantID)
+
+		if detail.Type == string(utils2.PERCENT) {
+			promotionDetailBuidler.
+				SetVoucherID(defaultVoucher.ID)
+		} else {
+			promotionDetailBuidler.
+				SetVoucherID(detail.VoucherID)
+		}
+		promotionDetail := promotionDetailBuidler.Build()
 
 		promotionDetails = append(promotionDetails, promotionDetail)
 	}
@@ -205,7 +245,12 @@ func (promoService *Service) CreatePromotionDetail(request []*requests.Promotion
 }
 
 func (promoService *Service) EditPromotionDetail(request *requests.PromotionDetailRequest, promotionDetailID uint) error {
-	promotionDetail := builders.NewPromotionDetailBuilder().
+
+	// query default voucher for percent ( if type promotion is percent then do not create voucher)
+	var defaultVoucher models.Voucher
+	promoService.DB.Table(utils2.TblVoucher).Where("name = \"default\"").First(&defaultVoucher)
+
+	promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 		SetId(promotionDetailID).
 		SetPromotionID(request.PromotionID).
 		SetType(request.Type).
@@ -213,9 +258,16 @@ func (promoService *Service) EditPromotionDetail(request *requests.PromotionDeta
 		SetPercent(*request.Percent).
 		SetValue(*request.Value).
 		SetProductId(request.ProductID).
-		SetVariantId(request.VariantID).
-		SetVoucherID(request.VoucherID).
-		Build()
+		SetVariantId(request.VariantID)
+
+	if request.Type == string(utils2.PERCENT) {
+		promotionDetailBuidler.
+			SetVoucherID(defaultVoucher.ID)
+	} else {
+		promotionDetailBuidler.
+			SetVoucherID(request.VoucherID)
+	}
+	promotionDetail := promotionDetailBuidler.Build()
 	return promoService.DB.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
 }
 
