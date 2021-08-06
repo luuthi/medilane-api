@@ -44,8 +44,8 @@ type OrderDrugstoreCount struct {
 	Data []OrderDrugstoreCountItem `json:"data"`
 }
 type OrderDrugstoreCountItem struct {
-	StoreName string `json:"store_name"`
-	Amount    int64  `json:"amount"`
+	StoreName string  `json:"store_name"`
+	Amount    float64 `json:"amount"`
 }
 type OrderDrugstoreCountResponse struct {
 	Code    int                   `json:"code"`

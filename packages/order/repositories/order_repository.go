@@ -82,6 +82,7 @@ func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, or
 		Preload("OrderDetails.Product").
 		Preload("OrderDetails.Variant").
 		Preload("OrderDetails.Product.Images").
+		Preload("Drugstore").
 		First(&orders, orderId)
 }
 

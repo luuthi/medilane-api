@@ -176,18 +176,8 @@ func (s *Service) EditOrder(request *requests2.OrderRequest, orderId uint) (erro
 		SetOrderCode(request.OrderCode).
 		SetDrugStoreID(request.DrugStoreID).Build()
 
-	//if len(order.OrderDetails) > 0 {
-	//	details := order.OrderDetails
-	//}
-	//
-	//err := tx.Model(&order).Association("OrderDetails").Clear()
-	//if err != nil {
-	//	return err, nil
-	//}
-
-	//order.OrderDetails = details
-	rs := tx.Table(utils.TblOrder).Updates(&order)
-	return rs.Error, &order
+	tx.Table(utils.TblOrder).Updates(&order)
+	return tx.Commit().Error, &order
 }
 
 func (s *Service) DeleteOrder(orderId uint) error {

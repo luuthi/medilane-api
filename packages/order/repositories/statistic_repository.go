@@ -137,9 +137,9 @@ func (statRepo *StatisticRepository) StatisticDrugStoreOrderTopCount(data *[]res
 		sql = fmt.Sprintf(sqlRaw, "%Y-%m-%d", "%Y-%m-%d")
 	}
 	type resp struct {
-		Date      string `json:"date"`
-		Amount    int64  `json:"amount"`
-		StoreName string `json:"store_name"`
+		Date      string  `json:"date"`
+		Amount    float64 `json:"amount"`
+		StoreName string  `json:"store_name"`
 	}
 	var rs []resp
 	err := statRepo.DB.Raw(sql, request.TimeFrom, request.TimeTo, request.AreaId, request.Top).Scan(&rs).Error

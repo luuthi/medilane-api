@@ -13,7 +13,7 @@ type Order struct {
 	Status          string         `json:"Status" gorm:"type:varchar(200)"`
 	ShippingFee     float64        `json:"ShippingFee" gorm:"type:float(32)"`
 	DrugStoreID     uint           `json:"DrugStoreID"`
-	Drugstore       *DrugStore     `json:"Drugstore" gorm:"-"`
+	Drugstore       *DrugStore     `json:"Drugstore" gorm:"foreignKey:DrugStoreID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	OrderDetails    []*OrderDetail `json:"OrderDetails" gorm:"foreignKey:OrderID"`
 	AddressID       uint           `json:"AddressID"`
 	Address         *Address       `json:"Address" gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
