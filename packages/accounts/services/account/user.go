@@ -6,11 +6,12 @@ import (
 	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/models"
 	builders2 "medilane-api/packages/accounts/builders"
-	builders "medilane-api/packages/drugstores/builders"
+	repositories2 "medilane-api/packages/accounts/repositories"
+	"medilane-api/packages/drugstores/builders"
 	requests2 "medilane-api/requests"
 )
 
-func (userService *Service) CreateUser(request *requests2.AccountRequest) (error, *models.User) {
+func (userService *Service) CreateUser(request *requests2.CreateAccountRequest) (error, *models.User) {
 	encryptedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(request.Password),
 		bcrypt.DefaultCost,
@@ -42,14 +43,43 @@ func (userService *Service) CreateUser(request *requests2.AccountRequest) (error
 	}
 
 	// if account is type user, check drugStoreId and assign for drugstore
-	ud := builders2.NewUserDrugStoreBuilder().
-		SetUser(user.ID)
 	if request.Type == string(utils2.USER) {
 		if request.DrugStoreID != nil {
-			ud.SetDrugStoreId(*request.DrugStoreID).
-				SetRelationship(string(utils2.USER)).
-				Build()
+			ud := builders2.NewUserDrugStoreBuilder().
+				SetUser(user.ID)
+			if *(request.IsAdmin) {
+				ud.SetDrugStoreId(*request.DrugStoreID).
+					SetRelationship(string(utils2.IS_MANAGER)).
+					Build()
+			} else {
+				ud.SetDrugStoreId(*request.DrugStoreID).
+					SetRelationship(string(utils2.IS_STAFF)).
+					Build()
+			}
+
 			rs = tx.Table(utils2.TblDrugstoreUser).Create(&ud)
+			//rollback if error
+			if rs.Error != nil {
+				tx.Rollback()
+				return rs.Error, nil
+			}
+		}
+	} else if request.Type == string(utils2.SUPPLIER) || request.Type == string(utils2.MANUFACTURER) {
+		if request.PartnerID != nil {
+			up := builders.NewUserPartnerBuilder().
+				SetUser(user.ID)
+			if *(request.IsAdmin) {
+				up.SetPartnerID(*request.PartnerID).
+					SetRelationship(string(utils2.IS_MANAGER)).
+					Build()
+			} else {
+				up.SetPartnerID(*request.PartnerID).
+					SetRelationship(string(utils2.IS_STAFF)).
+					Build()
+			}
+
+			rs = tx.Table(utils2.TblPartnerUser).Create(&up)
+
 			//rollback if error
 			if rs.Error != nil {
 				tx.Rollback()
@@ -170,7 +200,7 @@ func (userService *Service) CreateDrugstoreUser(storeID, userId uint, relationsh
 	return userService.DB.Create(&ud).Error
 }
 
-func (userService *Service) EditUser(request *requests2.EditAccountRequest, id uint, username string) error {
+func (userService *Service) EditUser(request *requests2.EditAccountRequest, id uint, username string) (error, *models.User) {
 	userBuild := builders2.NewUserBuilder().
 		SetID(id).
 		SetName(username)
@@ -198,26 +228,32 @@ func (userService *Service) EditUser(request *requests2.EditAccountRequest, id u
 	err := tx.Model(&user).Association("Roles").Clear()
 	if err != nil {
 		tx.Rollback()
-		return err
+		return err, nil
 	}
 	user.Roles = roles
 	rs := tx.Table(utils2.TblAccount).Updates(&user)
 	if rs.Error != nil {
 		tx.Rollback()
-		return err
+		return err, nil
 	}
-	return tx.Commit().Error
+	return tx.Commit().Error, &user
 }
 
-func (userService *Service) DeleteUser(id uint, username string) error {
-	user := builders2.NewUserBuilder().
-		SetID(id).
-		SetName(username).
-		Build()
-	//err := userService.DB.Model(&user).Association("Roles").Clear()
-	//if err != nil {
-	//	return err
-	//}
+func (userService *Service) DeleteUser(id uint) error {
+	var user models.User
+	accRepo := repositories2.NewAccountRepository(userService.DB)
+	accRepo.DB.Where("id = ?", id).
+		Find(&user)
+
+	if user.Type == string(utils2.USER) {
+		// delete user drugstore
+		du := builders2.NewDrugStoreUserBuilder().SetUserId(user.ID).Build()
+		userService.DB.Table(utils2.TblDrugstoreUser).Delete(&du)
+	} else if user.Type == string(utils2.SUPPLIER) || user.Type == string(utils2.MANUFACTURER) {
+		// delete user drugstore
+		pu := builders.NewUserPartnerBuilder().SetUser(user.ID).Build()
+		userService.DB.Table(utils2.TblPartnerUser).Delete(&pu)
+	}
 	return userService.DB.Select("Roles").Delete(&user).Error
 }
 

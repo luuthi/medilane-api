@@ -53,7 +53,28 @@ func (AccountRepository *AccountRepository) GetDrugStoreByUser(drugstore *models
 }
 
 func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id uint) {
-	AccountRepository.DB.Where("id = ?", id).Find(&user)
+	AccountRepository.DB.Where("id = ?", id).
+		Preload("Roles").
+		Find(&user)
+	if user.Type == string(utils2.USER) {
+		var drugstore models.DrugStore
+		AccountRepository.DB.Table(utils2.TblAccount).Select("ds.*").
+			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+			Where("user.id = ?", user.ID).
+			Where("user.type = ?'", user.Type).
+			First(&drugstore)
+		user.DrugStore = &drugstore
+	} else if user.Type == string(utils2.SUPPLIER) || user.Type == string(utils2.MANUFACTURER) {
+		var partner models.Partner
+		AccountRepository.DB.Table(utils2.TblAccount).Select("p.*").
+			Joins("JOIN partner_user pu ON pu.user_id = user.id").
+			Joins("JOIN partner p ON p.id = pu.partner_id").
+			Where("user.id = ?", user.ID).
+			Where("user.type = ?", user.Type).
+			First(&partner)
+		user.Partner = &partner
+	}
 }
 
 func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, count *int64, filter *requests2.SearchAccountRequest) {
@@ -111,7 +132,6 @@ func (AccountRepository *AccountRepository) GetAccounts(users *[]models.User, co
 	AccountRepository.DB.Table(utils2.TblAccount).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(count).
-		Preload("Roles").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

@@ -29,19 +29,12 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// account api
 	acc := appRoute.Group("/account")
-	//config := middleware.JWTConfig{
-	//	Skipper:       middleware.DefaultSkipper,
-	//	SigningMethod: middleware.AlgorithmHS256,
-	//	Claims:        &token2.JwtCustomClaims{},
-	//	AuthScheme:    "Bearer",
-	//	SigningKey:    []byte(server.Config.Auth.AccessSecret),
-	//}
-	//acc.Use(middleware.JWTWithConfig(config))
 	acc.POST("/find", accountHandler.SearchAccount, authentication.CheckPermission(server, []string{"read:user"}, false))
 	acc.GET("/:username/permissions", accountHandler.GetPermissionByUsername, authentication.CheckPermission(server, []string{"read:user", "read:permission"}, false))
 	acc.POST("", accountHandler.CreateAccount, authentication.CheckPermission(server, []string{"create:user"}, false))
 	acc.POST("/:id/drugstore", accountHandler.AssignStaffForDrugStore)
 	acc.PUT("/:id", accountHandler.EditAccount, authentication.CheckPermission(server, []string{"edit:user"}, false))
+	acc.GET("/:id", accountHandler.GetAccount, authentication.CheckPermission(server, []string{"read:user"}, false))
 	acc.DELETE("/:id", accountHandler.DeleteAccount, authentication.CheckPermission(server, []string{"delete:user"}, false))
 
 	// permission api

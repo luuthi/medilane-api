@@ -21,8 +21,8 @@ type LoginRequest struct {
 }
 
 type RegisterRequest struct {
-	DrugStore      DrugStoreRequest `json:"Drugstore"`
-	AccountRequest AccountRequest   `json:"AccountRequest"`
+	DrugStore      DrugStoreRequest     `json:"Drugstore"`
+	AccountRequest CreateAccountRequest `json:"AccountRequest"`
 }
 
 func (rr RegisterRequest) Validate() error {
@@ -36,13 +36,6 @@ func (rr RegisterRequest) Validate() error {
 		return err
 	}
 	return nil
-	//return validation.ValidateStruct(&rr,
-	//	validation.Field(&rr.Email, validation.Required, is.Email),
-	//	validation.Field(&rr.Username, validation.Required, validation.Length(3, 32)),
-	//	validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
-	//	validation.Field(&rr.FullName, validation.Required),
-	//	validation.Field(&rr.IsAdmin, validation.Required),
-	//)
 }
 
 type RefreshRequest struct {

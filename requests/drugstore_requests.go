@@ -39,7 +39,7 @@ type DrugStoreRequest struct {
 	Type        string         `json:"Type" validate:"required" example:"drugstores"`
 	DrugStoreID uint           `json:"DrugStoreID"`
 	AddressID   uint           `json:"AddressID"`
-	Address     AddressRequest `json:"Address"`
+	Address     AddressRequest `json:"Address" validate:"required"`
 }
 
 func (rr DrugStoreRequest) Validate() error {
@@ -50,13 +50,14 @@ func (rr DrugStoreRequest) Validate() error {
 }
 
 type EditDrugStoreRequest struct {
-	StoreName   string `json:"StoreName" example:"Faker"`
-	PhoneNumber string `json:"PhoneNumber"  example:"0988272123"`
-	TaxNumber   string `json:"TaxNumber" example:"12341231"`
-	LicenseFile string `json:"LicenseFile" example:"image.img"`
-	AddressID   uint   `json:"AddressID" example:"1"`
-	Status      string `json:"Status" example:"active"`
-	ApproveTime int64  `json:"ApproveTime" example:"1622128376"`
+	StoreName   string             `json:"StoreName" example:"Faker"`
+	PhoneNumber string             `json:"PhoneNumber"  example:"0988272123"`
+	TaxNumber   string             `json:"TaxNumber" example:"12341231"`
+	LicenseFile string             `json:"LicenseFile" example:"image.img"`
+	AddressID   uint               `json:"AddressID" example:"1"`
+	Status      string             `json:"Status" example:"active"`
+	ApproveTime int64              `json:"ApproveTime" example:"1622128376"`
+	Address     EditAddressRequest `json:"Address" validate:"required"`
 }
 
 func (rr EditDrugStoreRequest) Validate() error {

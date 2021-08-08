@@ -15,6 +15,7 @@ type AddressRequest struct {
 	AreaID      uint   `json:"AreaID" validate:"required" example:"1"`
 	Country     string `json:"Country" validate:"required" example:"Vietnam"`
 	IsDefault   *bool  `json:"IsDefault" validate:"required" example:"true"`
+	Id          uint   `json:"Id"`
 }
 
 func (rr AddressRequest) Validate() error {
@@ -23,7 +24,30 @@ func (rr AddressRequest) Validate() error {
 		validation.Field(&rr.District, validation.Required),
 		validation.Field(&rr.Ward, validation.Required),
 		validation.Field(&rr.Address, validation.Required),
-		//validation.Field(&rr.Coordinates, validation.Required),
+	)
+}
+
+type EditAddressRequest struct {
+	Province    string `json:"State" validate:"required" example:"Hà nội"`
+	District    string `json:"District" validate:"required" example:"Cầu giấy"`
+	Ward        string `json:"Ward" validate:"required" example:"Quan Hoa"`
+	Address     string `json:"Address" validate:"required" example:"Quan Hoa"`
+	Phone       string `json:"Phone" validate:"required" example:"0345532343"`
+	ContactName string `json:"ContactName" validate:"required" example:"Jackie"`
+	Coordinates string `json:"Coordinates" validate:"required" example:"Jackie"`
+	AreaID      uint   `json:"AreaID" validate:"required" example:"1"`
+	Country     string `json:"Country" validate:"required" example:"Vietnam"`
+	IsDefault   *bool  `json:"IsDefault" validate:"required" example:"true"`
+	Id          uint   `json:"Id" validate:"required"`
+}
+
+func (rr EditAddressRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Province, validation.Required),
+		validation.Field(&rr.District, validation.Required),
+		validation.Field(&rr.Ward, validation.Required),
+		validation.Field(&rr.Address, validation.Required),
+		validation.Field(&rr.Id, validation.Required),
 	)
 }
 

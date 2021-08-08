@@ -148,7 +148,7 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	permRepo.GetDrugstoreByID(&existedDrugstore, id)
 	if existedDrugstore.StoreName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %v", string(id)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %v", id))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
@@ -174,13 +174,13 @@ func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error 
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id drugstore: %v", err.Error()))
 	}
 	id := uint(paramUrl)
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreService.DeleteDrugstore(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete role: %v", err.Error()))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete drugstore: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "Drugstore deleted!")
 }

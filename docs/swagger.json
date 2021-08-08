@@ -42,7 +42,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.AccountRequest"
+                            "$ref": "#/definitions/requests.CreateAccountRequest"
                         }
                     }
                 ],
@@ -50,7 +50,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/responses.Data"
+                            "$ref": "#/definitions/models.User"
                         }
                     },
                     "400": {
@@ -191,7 +191,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.Data"
+                            "$ref": "#/definitions/models.User"
                         }
                     },
                     "400": {
@@ -2129,6 +2129,235 @@
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/partner": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create partner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partner Management"
+                ],
+                "summary": "Create partner in system",
+                "operationId": "create-partner",
+                "parameters": [
+                    {
+                        "description": "Filter partner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreatePartnerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/partner/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search partner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partner Management"
+                ],
+                "summary": "Search partner in system",
+                "operationId": "search-partner",
+                "parameters": [
+                    {
+                        "description": "search partner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchPartnerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.PartnerSearch"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/partner/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get partner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partner Management"
+                ],
+                "summary": "Get partner in system",
+                "operationId": "get-partner",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id partner",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Partner"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit partner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partner Management"
+                ],
+                "summary": "Edit partner in system",
+                "operationId": "edit-partner",
+                "parameters": [
+                    {
+                        "description": "body partner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.EditPartnerRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id partner",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform partner role",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partner Management"
+                ],
+                "summary": "Delete partner in system",
+                "operationId": "delete-partner",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id partner",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -4721,6 +4950,52 @@
                 }
             }
         },
+        "models.Partner": {
+            "type": "object",
+            "properties": {
+                "Address": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Address"
+                },
+                "AddressID": {
+                    "type": "integer"
+                },
+                "Email": {
+                    "type": "string"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Note": {
+                    "type": "string"
+                },
+                "Representative": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.User"
+                    }
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.PaymentMethod": {
             "type": "object",
             "properties": {
@@ -5136,6 +5411,10 @@
                 "Name": {
                     "type": "string"
                 },
+                "Partner": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Partner"
+                },
                 "Roles": {
                     "type": "array",
                     "items": {
@@ -5248,52 +5527,6 @@
                 }
             }
         },
-        "requests.AccountRequest": {
-            "type": "object",
-            "required": [
-                "IsAdmin",
-                "Name",
-                "Type",
-                "email",
-                "password",
-                "username"
-            ],
-            "properties": {
-                "DrugStoreID": {
-                    "type": "integer"
-                },
-                "IsAdmin": {
-                    "type": "boolean",
-                    "example": true
-                },
-                "Name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "Roles": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "Type": {
-                    "type": "string",
-                    "example": "super_admin/staff/user/supplier/manufacturer"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "john.doe@gmail.com"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "123qweA@"
-                },
-                "username": {
-                    "type": "string",
-                    "example": "JohnDoe"
-                }
-            }
-        },
         "requests.AddressRequest": {
             "type": "object",
             "required": [
@@ -5332,6 +5565,9 @@
                 "District": {
                     "type": "string",
                     "example": "Cầu giấy"
+                },
+                "Id": {
+                    "type": "integer"
                 },
                 "IsDefault": {
                     "type": "boolean",
@@ -5493,9 +5729,96 @@
                 }
             }
         },
+        "requests.CreateAccountRequest": {
+            "type": "object",
+            "required": [
+                "IsAdmin",
+                "Name",
+                "Type",
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "DrugStoreID": {
+                    "type": "integer"
+                },
+                "IsAdmin": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "PartnerID": {
+                    "type": "integer"
+                },
+                "Roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Type": {
+                    "type": "string",
+                    "example": "super_admin/staff/user/supplier/manufacturer"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "john.doe@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123qweA@"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "JohnDoe"
+                }
+            }
+        },
+        "requests.CreatePartnerRequest": {
+            "type": "object",
+            "required": [
+                "Address",
+                "Email",
+                "Name",
+                "Note",
+                "Status",
+                "Type"
+            ],
+            "properties": {
+                "Address": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.AddressRequest"
+                },
+                "Email": {
+                    "type": "string",
+                    "example": "abc@gmail.com"
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "MeTri"
+                },
+                "Note": {
+                    "type": "string",
+                    "example": "acbasd"
+                },
+                "Status": {
+                    "type": "string",
+                    "example": "new"
+                },
+                "Type": {
+                    "type": "string",
+                    "example": "supplier/manufacturer"
+                }
+            }
+        },
         "requests.DrugStoreRequest": {
             "type": "object",
             "required": [
+                "Address",
                 "LicenseFile",
                 "Phone",
                 "StoreName",
@@ -5586,9 +5909,77 @@
                 }
             }
         },
+        "requests.EditAddressRequest": {
+            "type": "object",
+            "required": [
+                "Address",
+                "AreaID",
+                "ContactName",
+                "Coordinates",
+                "Country",
+                "District",
+                "Id",
+                "IsDefault",
+                "Phone",
+                "State",
+                "Ward"
+            ],
+            "properties": {
+                "Address": {
+                    "type": "string",
+                    "example": "Quan Hoa"
+                },
+                "AreaID": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "ContactName": {
+                    "type": "string",
+                    "example": "Jackie"
+                },
+                "Coordinates": {
+                    "type": "string",
+                    "example": "Jackie"
+                },
+                "Country": {
+                    "type": "string",
+                    "example": "Vietnam"
+                },
+                "District": {
+                    "type": "string",
+                    "example": "Cầu giấy"
+                },
+                "Id": {
+                    "type": "integer"
+                },
+                "IsDefault": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "Phone": {
+                    "type": "string",
+                    "example": "0345532343"
+                },
+                "State": {
+                    "type": "string",
+                    "example": "Hà nội"
+                },
+                "Ward": {
+                    "type": "string",
+                    "example": "Quan Hoa"
+                }
+            }
+        },
         "requests.EditDrugStoreRequest": {
             "type": "object",
+            "required": [
+                "Address"
+            ],
             "properties": {
+                "Address": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.EditAddressRequest"
+                },
                 "AddressID": {
                     "type": "integer",
                     "example": 1
@@ -5616,6 +6007,43 @@
                 "TaxNumber": {
                     "type": "string",
                     "example": "12341231"
+                }
+            }
+        },
+        "requests.EditPartnerRequest": {
+            "type": "object",
+            "required": [
+                "Address",
+                "Email",
+                "Name",
+                "Note",
+                "Status",
+                "Type"
+            ],
+            "properties": {
+                "Address": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.EditAddressRequest"
+                },
+                "Email": {
+                    "type": "string",
+                    "example": "abc@gmail.com"
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "MeTri"
+                },
+                "Note": {
+                    "type": "string",
+                    "example": "acbasd"
+                },
+                "Status": {
+                    "type": "string",
+                    "example": "new"
+                },
+                "Type": {
+                    "type": "string",
+                    "example": "supplier/manufacturer"
                 }
             }
         },
@@ -5982,7 +6410,7 @@
             "properties": {
                 "AccountRequest": {
                     "type": "object",
-                    "$ref": "#/definitions/requests.AccountRequest"
+                    "$ref": "#/definitions/requests.CreateAccountRequest"
                 },
                 "Drugstore": {
                     "type": "object",
@@ -6240,6 +6668,41 @@
                 },
                 "type": {
                     "type": "string"
+                }
+            }
+        },
+        "requests.SearchPartnerRequest": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string",
+                    "example": "MeTri"
+                },
+                "Status": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "Type": {
+                    "type": "string",
+                    "example": "parent"
+                },
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "sort": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.SortOption"
+                },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
                 }
             }
         },
@@ -6793,7 +7256,7 @@
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "integer"
+                    "type": "number"
                 },
                 "store_name": {
                     "type": "string"
@@ -6862,6 +7325,26 @@
                 },
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "responses.PartnerSearch": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Partner"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
                 }
             }
         },

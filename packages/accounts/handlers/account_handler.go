@@ -94,13 +94,13 @@ func (accHandler *AccountHandler) GetAccount(c echo.Context) error {
 // @Tags Account Management
 // @Accept json
 // @Produce json
-// @Param params body requests.AccountRequest true "Create account"
-// @Success 201 {object} responses.Data
+// @Param params body requests.CreateAccountRequest true "Create account"
+// @Success 201 {object} models.User
 // @Failure 400 {object} responses.Error
 // @Router /account [post]
 // @Security BearerAuth
 func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
-	var acc requests2.AccountRequest
+	var acc requests2.CreateAccountRequest
 	if err := c.Bind(&acc); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -110,12 +110,12 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
-	rs, _ := accService.CreateUser(&acc)
+	rs, res := accService.CreateUser(&acc)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert account: %v", err.Error()))
 	}
 
-	return responses.MessageResponse(c, http.StatusCreated, "Account created!")
+	return responses.Response(c, http.StatusCreated, res)
 
 }
 
@@ -128,7 +128,7 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 // @Produce json
 // @Param params body requests.EditAccountRequest true "body account"
 // @Param id path uint true "id account"
-// @Success 200 {object} responses.Data
+// @Success 200 {object} models.User
 // @Failure 400 {object} responses.Error
 // @Router /account/{id} [put]
 // @Security BearerAuth
@@ -153,14 +153,15 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	accRepo.GetUserByID(&existedUser, id)
 	if existedUser.Username == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", id))
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
-	if err := accService.EditUser(&acc, id, existedUser.Username); err != nil {
+	err, res := accService.EditUser(&acc, id, existedUser.Username)
+	if err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update user: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "User updated!")
+	return responses.Response(c, http.StatusOK, res)
 }
 
 // DeleteAccount Delete account godoc
@@ -187,11 +188,11 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	accRepo.GetUserByID(&existedUser, id)
 	if existedUser.Username == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", id))
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
-	if err := accService.DeleteUser(id, existedUser.Username); err != nil {
+	if err := accService.DeleteUser(id); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
 	}
 	return responses.MessageResponse(c, http.StatusOK, "User deleted!")
@@ -231,7 +232,7 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	accRepo.GetUserByID(&existedUser, id)
 	if existedUser.Username == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", string(id)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found user with ID: %v", id))
 	}
 	if existedUser.Type != string(utils2.STAFF) {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("User isn't staff"))

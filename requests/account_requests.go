@@ -1,6 +1,7 @@
 package requests
 
 import (
+	"errors"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	utils2 "medilane-api/core/utils"
@@ -48,7 +49,7 @@ func (rr EditAccountRequest) Validate() error {
 	return validation.ValidateStruct(&rr)
 }
 
-type AccountRequest struct {
+type CreateAccountRequest struct {
 	Email       string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
 	Username    string   `json:"username" validate:"required" example:"JohnDoe"`
 	Password    string   `json:"password"  validate:"required" example:"123qweA@"`
@@ -56,18 +57,34 @@ type AccountRequest struct {
 	IsAdmin     *bool    `json:"IsAdmin" validate:"required" example:"true" `
 	Type        string   `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
 	DrugStoreID *uint    `json:"DrugStoreID"`
+	PartnerID   *uint    `json:"PartnerID"`
 	Roles       []string `json:"Roles"`
 }
 
-func (rr AccountRequest) Validate() error {
+func (rr CreateAccountRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Email, validation.Required, is.Email),
 		validation.Field(&rr.Username, validation.Required, validation.Length(3, 32)),
 		validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
 		validation.Field(&rr.FullName, validation.Required),
 		validation.Field(&rr.IsAdmin, validation.Required),
-		validation.Field(&rr.Type, validation.In(string(utils2.STAFF), string(utils2.USER), string(utils2.SUPPLIER), string(utils2.MANUFACTURER))),
+		validation.Field(&rr.Type, validation.In(string(utils2.STAFF), string(utils2.USER), string(utils2.SUPPLIER), string(utils2.MANUFACTURER)),
+			validation.By(checkRequireByType(rr.Type, rr.DrugStoreID, rr.PartnerID))),
 	)
+}
+func checkRequireByType(_type string, DrugStoreID *uint, PartnerID *uint) validation.RuleFunc {
+	return func(value interface{}) error {
+		if _type == string(utils2.USER) {
+			if DrugStoreID == nil {
+				return errors.New("type is user require drugstore ID")
+			}
+		} else if _type == string(utils2.SUPPLIER) || _type == string(utils2.MANUFACTURER) {
+			if PartnerID == nil {
+				return errors.New("type is partner require partner ID")
+			}
+		}
+		return nil
+	}
 }
 
 type StaffRelationship struct {

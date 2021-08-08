@@ -5,7 +5,6 @@ const (
 	TblRole                  = "role"
 	TblPermission            = "permission"
 	TblUserRole              = "role_user"
-	TblRolePermission        = "role_permissions"
 	TblProduct               = "product"
 	TblCategory              = "category"
 	TblTag                   = "tag"
@@ -27,6 +26,8 @@ const (
 	TblOrderDetail           = "order_detail"
 	TblPaymentMethod         = "payment_method"
 	TblVoucher               = "voucher"
+	TblPartner               = "partner"
+	TblPartnerUser           = "partner_user"
 )
 
 type AccountType string
@@ -47,14 +48,6 @@ const (
 	IS_CARESTAFF RelationShipType = "isCareStaff"
 )
 
-type UserDrugStoreRelationShip int
-
-const (
-	Manager UserDrugStoreRelationShip = iota + 1
-	Staff
-	Caring_staff
-)
-
 type ProductStatus string
 
 const (
@@ -64,10 +57,6 @@ const (
 	CANCEL                   = "cancel"
 	OUTOFSTOCK               = "outofstock"
 )
-
-func (a UserDrugStoreRelationShip) String() string {
-	return [...]string{"manager", "staff", "caring_staff"}[a]
-}
 
 type OrderType string
 
@@ -81,13 +70,6 @@ type TypePromotion string
 const (
 	PERCENT TypePromotion = "percent"
 	VOUCHER TypePromotion = "voucher"
-)
-
-type ConditionPromotion string
-
-const (
-	AMOUNT_PRODUCT ConditionPromotion = "count"
-	TOTAL_MONEY    ConditionPromotion = "amount"
 )
 
 type VoucherType string

@@ -9,25 +9,45 @@ import (
 	requests2 "medilane-api/requests"
 )
 
-func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreRequest) error {
-	drugstore := builders.NewDrugStoreBuilder().
-		SetStoreName(request.StoreName).
-		SetPhoneNumber(request.PhoneNumber).
-		SetTaxNumber(request.TaxNumber).
-		SetLicenseFile(request.LicenseFile).
-		SetStatus(string(drugstores2.NEW)).
-		SetType(request.Type).
-		SetAddressId(request.AddressID).
-		Build()
-
-	if request.AddressID == 0 {
-		return drugstoreService.DB.Table(utils2.TblDrugstore).Omit("address_id").Create(&drugstore).Error
+func (drugstoreService *Service) CreatePartner(request *requests2.CreatePartnerRequest) error {
+	// begin a transaction
+	tx := drugstoreService.DB.Begin()
+	// query area config
+	var areaConfig models.AreaConfig
+	tx.Table(utils2.TblAreaConfig).Where("province = ?", request.Address.Province).First(&areaConfig)
+	if areaConfig.District == "All" {
+		request.Address.AreaID = areaConfig.AreaID
+	} else {
+		var areaConfig1 models.AreaConfig
+		tx.Table(utils2.TblAreaConfig).
+			Where("province = ? AND district = ?", request.Address.Province, request.Address.District).
+			First(&areaConfig1)
+		if areaConfig1.ID != 0 {
+			request.Address.AreaID = areaConfig1.AreaID
+		} else {
+			request.Address.AreaID = 1
+		}
 	}
 
-	return drugstoreService.DB.Table(utils2.TblDrugstore).Create(&drugstore).Error
+	partner := builders.NewPartnerBuilder().
+		SetName(request.Name).
+		SetEmail(request.Email).
+		SetNote(request.Note).
+		SetStatus(string(drugstores2.NEW)).
+		SetType(request.Type).
+		SetAddress(&request.Address).
+		Build()
+
+	rs := tx.Table(utils2.TblPartner).Create(&partner)
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error
+	}
+	return tx.Commit().Error
 }
 
-func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreRequest, id uint) error {
+func (drugstoreService *Service) EditPartner(request *requests2.EditPartnerRequest, id uint) error {
 	// begin a transaction
 	tx := drugstoreService.DB.Begin()
 
@@ -70,16 +90,16 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 		return rs.Error
 	}
 
-	drugstore := builders.NewDrugStoreBuilder().
-		SetID(id).
-		SetStoreName(request.StoreName).
-		SetPhoneNumber(request.PhoneNumber).
-		SetTaxNumber(request.TaxNumber).
-		SetLicenseFile(request.LicenseFile).
+	partner := builders.NewPartnerBuilder().
+		SetName(request.Name).
+		SetEmail(request.Email).
+		SetNote(request.Note).
 		SetStatus(request.Status).
-		SetApproveTime(request.ApproveTime).
+		SetType(request.Type).
+		SetID(id).
 		Build()
-	rs = tx.Table(utils2.TblDrugstore).Updates(&drugstore)
+
+	rs = tx.Table(utils2.TblPartner).Updates(&partner)
 	//rollback if error
 	if rs.Error != nil {
 		tx.Rollback()
@@ -88,18 +108,9 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 	return tx.Commit().Error
 }
 
-func (drugstoreService *Service) DeleteDrugstore(id uint) error {
-	drugstore := builders.NewDrugStoreBuilder().
+func (drugstoreService *Service) DeletePartner(id uint) error {
+	partner := builders.NewPartnerBuilder().
 		SetID(id).
 		Build()
-	return drugstoreService.DB.Table(utils2.TblDrugstore).Delete(&drugstore).Error
-}
-
-func (drugstoreService *Service) ConnectiveDrugStore(request *requests2.ConnectiveDrugStoreRequest) error {
-	drugstoreRelationship := builders.NewDrugStoreRelationshipBuilder().
-		SetParentID(request.ParentStoreId).
-		SetChildID(request.ChildStoreId).
-		Build()
-
-	return drugstoreService.DB.Table(utils2.TblDrugstoreRelationship).Create(&drugstoreRelationship).Error
+	return drugstoreService.DB.Table(utils2.TblPartner).Delete(&partner).Error
 }

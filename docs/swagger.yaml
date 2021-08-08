@@ -349,6 +349,37 @@ definitions:
       updated_at:
         type: integer
     type: object
+  models.Partner:
+    properties:
+      Address:
+        $ref: '#/definitions/models.Address'
+        type: object
+      AddressID:
+        type: integer
+      Email:
+        type: string
+      Name:
+        type: string
+      Note:
+        type: string
+      Representative:
+        $ref: '#/definitions/models.User'
+        type: object
+      Status:
+        type: string
+      Type:
+        type: string
+      Users:
+        items:
+          $ref: '#/definitions/models.User'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
   models.PaymentMethod:
     properties:
       Name:
@@ -625,6 +656,9 @@ definitions:
         type: boolean
       Name:
         type: string
+      Partner:
+        $ref: '#/definitions/models.Partner'
+        type: object
       Roles:
         items:
           $ref: '#/definitions/models.Role'
@@ -699,40 +733,6 @@ definitions:
       updated_at:
         type: integer
     type: object
-  requests.AccountRequest:
-    properties:
-      DrugStoreID:
-        type: integer
-      IsAdmin:
-        example: true
-        type: boolean
-      Name:
-        example: John Doe
-        type: string
-      Roles:
-        items:
-          type: string
-        type: array
-      Type:
-        example: super_admin/staff/user/supplier/manufacturer
-        type: string
-      email:
-        example: john.doe@gmail.com
-        type: string
-      password:
-        example: 123qweA@
-        type: string
-      username:
-        example: JohnDoe
-        type: string
-    required:
-    - IsAdmin
-    - Name
-    - Type
-    - email
-    - password
-    - username
-    type: object
   requests.AddressRequest:
     properties:
       Address:
@@ -753,6 +753,8 @@ definitions:
       District:
         example: Cầu giấy
         type: string
+      Id:
+        type: integer
       IsDefault:
         example: true
         type: boolean
@@ -871,6 +873,70 @@ definitions:
       ProductId:
         type: integer
     type: object
+  requests.CreateAccountRequest:
+    properties:
+      DrugStoreID:
+        type: integer
+      IsAdmin:
+        example: true
+        type: boolean
+      Name:
+        example: John Doe
+        type: string
+      PartnerID:
+        type: integer
+      Roles:
+        items:
+          type: string
+        type: array
+      Type:
+        example: super_admin/staff/user/supplier/manufacturer
+        type: string
+      email:
+        example: john.doe@gmail.com
+        type: string
+      password:
+        example: 123qweA@
+        type: string
+      username:
+        example: JohnDoe
+        type: string
+    required:
+    - IsAdmin
+    - Name
+    - Type
+    - email
+    - password
+    - username
+    type: object
+  requests.CreatePartnerRequest:
+    properties:
+      Address:
+        $ref: '#/definitions/requests.AddressRequest'
+        type: object
+      Email:
+        example: abc@gmail.com
+        type: string
+      Name:
+        example: MeTri
+        type: string
+      Note:
+        example: acbasd
+        type: string
+      Status:
+        example: new
+        type: string
+      Type:
+        example: supplier/manufacturer
+        type: string
+    required:
+    - Address
+    - Email
+    - Name
+    - Note
+    - Status
+    - Type
+    type: object
   requests.DrugStoreRequest:
     properties:
       Address:
@@ -896,6 +962,7 @@ definitions:
         example: drugstores
         type: string
     required:
+    - Address
     - LicenseFile
     - Phone
     - StoreName
@@ -938,8 +1005,58 @@ definitions:
         example: staff/user/supplier/manufacturer
         type: string
     type: object
+  requests.EditAddressRequest:
+    properties:
+      Address:
+        example: Quan Hoa
+        type: string
+      AreaID:
+        example: 1
+        type: integer
+      ContactName:
+        example: Jackie
+        type: string
+      Coordinates:
+        example: Jackie
+        type: string
+      Country:
+        example: Vietnam
+        type: string
+      District:
+        example: Cầu giấy
+        type: string
+      Id:
+        type: integer
+      IsDefault:
+        example: true
+        type: boolean
+      Phone:
+        example: "0345532343"
+        type: string
+      State:
+        example: Hà nội
+        type: string
+      Ward:
+        example: Quan Hoa
+        type: string
+    required:
+    - Address
+    - AreaID
+    - ContactName
+    - Coordinates
+    - Country
+    - District
+    - Id
+    - IsDefault
+    - Phone
+    - State
+    - Ward
+    type: object
   requests.EditDrugStoreRequest:
     properties:
+      Address:
+        $ref: '#/definitions/requests.EditAddressRequest'
+        type: object
       AddressID:
         example: 1
         type: integer
@@ -961,6 +1078,36 @@ definitions:
       TaxNumber:
         example: "12341231"
         type: string
+    required:
+    - Address
+    type: object
+  requests.EditPartnerRequest:
+    properties:
+      Address:
+        $ref: '#/definitions/requests.EditAddressRequest'
+        type: object
+      Email:
+        example: abc@gmail.com
+        type: string
+      Name:
+        example: MeTri
+        type: string
+      Note:
+        example: acbasd
+        type: string
+      Status:
+        example: new
+        type: string
+      Type:
+        example: supplier/manufacturer
+        type: string
+    required:
+    - Address
+    - Email
+    - Name
+    - Note
+    - Status
+    - Type
     type: object
   requests.LoginRequest:
     properties:
@@ -1216,7 +1363,7 @@ definitions:
   requests.RegisterRequest:
     properties:
       AccountRequest:
-        $ref: '#/definitions/requests.AccountRequest'
+        $ref: '#/definitions/requests.CreateAccountRequest'
         type: object
       Drugstore:
         $ref: '#/definitions/requests.DrugStoreRequest'
@@ -1402,6 +1549,31 @@ definitions:
         type: integer
       type:
         type: string
+    type: object
+  requests.SearchPartnerRequest:
+    properties:
+      Name:
+        example: MeTri
+        type: string
+      Status:
+        example: active
+        type: string
+      Type:
+        example: parent
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+      time_from:
+        type: integer
+      time_to:
+        type: integer
     type: object
   requests.SearchPermissionRequest:
     properties:
@@ -1773,7 +1945,7 @@ definitions:
   responses.OrderDrugstoreCountItem:
     properties:
       amount:
-        type: integer
+        type: number
       store_name:
         type: string
     type: object
@@ -1818,6 +1990,19 @@ definitions:
         type: array
       message:
         type: string
+    type: object
+  responses.PartnerSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Partner'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
     type: object
   responses.PaymentMethodResponse:
     properties:
@@ -2020,14 +2205,14 @@ paths:
         name: params
         required: true
         schema:
-          $ref: '#/definitions/requests.AccountRequest'
+          $ref: '#/definitions/requests.CreateAccountRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/responses.Data'
+            $ref: '#/definitions/models.User'
         "400":
           description: Bad Request
           schema:
@@ -2115,7 +2300,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.Data'
+            $ref: '#/definitions/models.User'
         "400":
           description: Bad Request
           schema:
@@ -3358,6 +3543,152 @@ paths:
       summary: Get payment method in system
       tags:
       - Order Management
+  /partner:
+    post:
+      consumes:
+      - application/json
+      description: Perform create partner
+      operationId: create-partner
+      parameters:
+      - description: Filter partner
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreatePartnerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create partner in system
+      tags:
+      - Partner Management
+  /partner/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Perform partner role
+      operationId: delete-partner
+      parameters:
+      - description: id partner
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete partner in system
+      tags:
+      - Partner Management
+    get:
+      consumes:
+      - application/json
+      description: Perform get partner
+      operationId: get-partner
+      parameters:
+      - description: id partner
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Partner'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get partner in system
+      tags:
+      - Partner Management
+    put:
+      consumes:
+      - application/json
+      description: Perform edit partner
+      operationId: edit-partner
+      parameters:
+      - description: body partner
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditPartnerRequest'
+      - description: id partner
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit partner in system
+      tags:
+      - Partner Management
+  /partner/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search partner
+      operationId: search-partner
+      parameters:
+      - description: search partner
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchPartnerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PartnerSearch'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search partner in system
+      tags:
+      - Partner Management
   /permission:
     post:
       consumes:

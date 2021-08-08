@@ -122,6 +122,13 @@ func (genDb *GenDB) GenPromotion() {
 	}
 }
 
+func (genDb *GenDB) GenSupplier() {
+	var i int64
+	for i < 20 {
+
+	}
+}
+
 func main() {
 	cfg := config.NewConfig()
 	app := server.NewServer(cfg)

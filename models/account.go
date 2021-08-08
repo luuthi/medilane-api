@@ -20,6 +20,7 @@ type User struct {
 	Carts           []*Cart      `gorm:"foreignKey:UserID"`
 	DrugStore       *DrugStore   `json:"DrugStore" gorm:"-"`
 	CaringDrugstore []*DrugStore `json:"CaringDrugstore" gorm:"-"`
+	Partner         *Partner     `json:"Partner" gorm:"-"`
 	Address         *Address     `json:"Address" gorm:"-"`
 }
 

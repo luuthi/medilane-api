@@ -10,6 +10,7 @@ import (
 func ConfigureDrugStoreRoutes(appRoute *echo.Group, server *s.Server) {
 	// handler
 	drugStoreHandler := handlers2.NewDrugStoreHandler(server)
+	partnerHandler := handlers2.NewPartnerHandler(server)
 
 	//config := middleware.JWTConfig{
 	//	Claims:     &token2.JwtCustomClaims{},
@@ -29,4 +30,11 @@ func ConfigureDrugStoreRoutes(appRoute *echo.Group, server *s.Server) {
 	drugstore.GET("/:id", drugStoreHandler.GetDrugstoreById, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
 	drugstore.GET("/:id/accounts", drugStoreHandler.SearchAccountByDrugStore, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
 	drugstore.GET("/statistic-new", drugStoreHandler.StatisticNewStore, authentication.CheckPermission(server, []string{"read:drugstore"}, false))
+
+	partner := appRoute.Group("/partner")
+	partner.POST("/find", partnerHandler.SearchPartner, authentication.CheckPermission(server, []string{"read:partner"}, false))
+	partner.POST("", partnerHandler.CreatePartner, authentication.CheckPermission(server, []string{"create:partner"}, false))
+	partner.PUT("/:id", partnerHandler.EditPartner, authentication.CheckPermission(server, []string{"edit:partner"}, false))
+	partner.DELETE("/:id", partnerHandler.DeletePartner, authentication.CheckPermission(server, []string{"delete:partner"}, false))
+	partner.GET("/:id", partnerHandler.GetPartnerById, authentication.CheckPermission(server, []string{"read:partner"}, false))
 }
