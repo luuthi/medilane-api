@@ -1001,9 +1001,6 @@ definitions:
       status:
         example: true
         type: boolean
-      type:
-        example: staff/user/supplier/manufacturer
-        type: string
     type: object
   requests.EditAddressRequest:
     properties:

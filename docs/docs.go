@@ -5917,10 +5917,6 @@ var doc = `{
                 "status": {
                     "type": "boolean",
                     "example": true
-                },
-                "type": {
-                    "type": "string",
-                    "example": "staff/user/supplier/manufacturer"
                 }
             }
         },

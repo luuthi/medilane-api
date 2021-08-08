@@ -40,13 +40,16 @@ type EditAccountRequest struct {
 	FullName *string   `json:"full_name"  example:"admin"`
 	Email    *string   `json:"email" example:"admin@gmail.com"`
 	Status   *bool     `json:"status" example:"true"`
-	Type     *string   `json:"type" example:"staff/user/supplier/manufacturer"`
 	IsAdmin  *bool     `json:"is_admin" example:"true"`
 	Roles    *[]string `json:"roles"`
 }
 
 func (rr EditAccountRequest) Validate() error {
-	return validation.ValidateStruct(&rr)
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Email, validation.Required, is.Email),
+		validation.Field(&rr.FullName, validation.Required),
+		validation.Field(&rr.Status, validation.NotNil),
+		validation.Field(&rr.IsAdmin, validation.NotNil))
 }
 
 type CreateAccountRequest struct {
@@ -67,7 +70,7 @@ func (rr CreateAccountRequest) Validate() error {
 		validation.Field(&rr.Username, validation.Required, validation.Length(3, 32)),
 		validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
 		validation.Field(&rr.FullName, validation.Required),
-		validation.Field(&rr.IsAdmin, validation.Required),
+		validation.Field(&rr.IsAdmin, validation.NotNil),
 		validation.Field(&rr.Type, validation.In(string(utils2.STAFF), string(utils2.USER), string(utils2.SUPPLIER), string(utils2.MANUFACTURER)),
 			validation.By(checkRequireByType(rr.Type, rr.DrugStoreID, rr.PartnerID))),
 	)

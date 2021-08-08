@@ -208,9 +208,6 @@ func (userService *Service) EditUser(request *requests2.EditAccountRequest, id u
 	if request.Status != nil {
 		userBuild.SetStatus(*request.Status)
 	}
-	if request.Type != nil {
-		userBuild.SetType(*request.Type)
-	}
 	if request.FullName != nil {
 		userBuild.SetFullName(*request.FullName)
 	}
