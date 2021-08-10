@@ -134,5 +134,5 @@ func main() {
 	app := server.NewServer(cfg)
 	genDB := NewGenDB(app.DB)
 	//genDB.GenVariant()
-	genDB.GenPromotion()
+	genDB.GenAreaCost()
 }

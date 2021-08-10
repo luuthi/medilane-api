@@ -243,7 +243,7 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 		}
 		var productsAdd []models2.AreaCost
 		var productsUpdate []models2.AreaCost
-		var productsDelete []models2.AreaCost
+		//var productsDelete []models2.AreaCost
 
 		for _, v := range productsOfAreaRequest {
 			if checkStatusOfRecord(productsOfArea, v) == "add" {
@@ -253,11 +253,11 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 			}
 		}
 
-		for _, v := range productsOfArea {
-			if checkDeleteReturn(productsOfAreaRequest, v) {
-				productsDelete = append(productsDelete, v)
-			}
-		}
+		//for _, v := range productsOfArea {
+		//	if checkDeleteReturn(productsOfAreaRequest, v) {
+		//		productsDelete = append(productsDelete, v)
+		//	}
+		//}
 
 		for _, v := range productsAdd {
 			if err := areaService.SetCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
@@ -269,10 +269,10 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 			}
 		}
 
-		for _, v := range productsDelete {
-			if err := areaService.DeleteProductOfArea(bodyRequest.AreaId, v.ProductId); err != nil {
-			}
-		}
+		//for _, v := range productsDelete {
+		//	if err := areaService.DeleteProductOfArea(bodyRequest.AreaId, v.ProductId); err != nil {
+		//	}
+		//}
 	}
 	return responses.MessageResponse(c, http.StatusCreated, "Set cost products of area successfully!")
 }
@@ -288,14 +288,14 @@ func checkStatusOfRecord(arr []models2.AreaCost, record models2.AreaCost) string
 	return "add"
 }
 
-func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
-	for _, v := range arr {
-		if v.ProductId == record.ProductId {
-			return false
-		}
-	}
-	return true
-}
+//func checkDeleteReturn(arr []models2.AreaCost, record models2.AreaCost) bool {
+//	for _, v := range arr {
+//		if v.ProductId == record.ProductId {
+//			return false
+//		}
+//	}
+//	return true
+//}
 
 // GetProductsOfArea Get products of area godoc
 // @Summary Get products of area in system
