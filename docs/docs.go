@@ -3613,6 +3613,151 @@ var doc = `{
                 }
             }
         },
+        "/setting": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Setting Management"
+                ],
+                "summary": "Create setting",
+                "operationId": "create-setting",
+                "parameters": [
+                    {
+                        "description": "Create setting",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SettingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.AppSetting"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/setting/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search setting",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Setting Management"
+                ],
+                "summary": "Search setting in system",
+                "operationId": "setting-promotion",
+                "parameters": [
+                    {
+                        "description": "Filter setting",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchSettingRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.AppSetting"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/setting/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Setting Management"
+                ],
+                "summary": "Edit setting",
+                "operationId": "edit-setting",
+                "parameters": [
+                    {
+                        "description": "Create setting",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SettingRequest"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id account",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.AppSetting"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/statistic/drugstore_count": {
             "post": {
                 "security": [
@@ -4479,6 +4624,32 @@ var doc = `{
                     "type": "string"
                 },
                 "Ward": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.AppSetting": {
+            "type": "object",
+            "properties": {
+                "Android": {
+                    "type": "string"
+                },
+                "Config": {
+                    "type": "string"
+                },
+                "Ios": {
+                    "type": "string"
+                },
+                "Key": {
                     "type": "string"
                 },
                 "created_at": {
@@ -6864,6 +7035,14 @@ var doc = `{
                 }
             }
         },
+        "requests.SearchSettingRequest": {
+            "type": "object",
+            "properties": {
+                "Key": {
+                    "type": "string"
+                }
+            }
+        },
         "requests.SearchTagRequest": {
             "type": "object",
             "properties": {
@@ -6944,6 +7123,23 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/requests.CostProductOfArea"
                     }
+                }
+            }
+        },
+        "requests.SettingRequest": {
+            "type": "object",
+            "properties": {
+                "Android": {
+                    "type": "string"
+                },
+                "Config": {
+                    "type": "string"
+                },
+                "Ios": {
+                    "type": "string"
+                },
+                "Key": {
+                    "type": "string"
                 }
             }
         },

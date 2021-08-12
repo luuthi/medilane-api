@@ -33,7 +33,7 @@ func (genDb *GenDB) GenAreaCost() {
 
 		for _, prod := range products {
 			areaCost := models.AreaCost{
-				AreaId:    1,
+				AreaId:    5,
 				ProductId: prod.ID,
 				Cost:      prod.BasePrice,
 			}

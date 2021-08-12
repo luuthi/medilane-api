@@ -28,6 +28,7 @@ const (
 	TblVoucher               = "voucher"
 	TblPartner               = "partner"
 	TblPartnerUser           = "partner_user"
+	TblSetting               = "app_setting"
 )
 
 type AccountType string

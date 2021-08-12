@@ -32,6 +32,23 @@ definitions:
       updated_at:
         type: integer
     type: object
+  models.AppSetting:
+    properties:
+      Android:
+        type: string
+      Config:
+        type: string
+      Ios:
+        type: string
+      Key:
+        type: string
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+    type: object
   models.Area:
     properties:
       Addresses:
@@ -1675,6 +1692,11 @@ definitions:
         $ref: '#/definitions/requests.SortOption'
         type: object
     type: object
+  requests.SearchSettingRequest:
+    properties:
+      Key:
+        type: string
+    type: object
   requests.SearchTagRequest:
     properties:
       Name:
@@ -1732,6 +1754,17 @@ definitions:
         items:
           $ref: '#/definitions/requests.CostProductOfArea'
         type: array
+    type: object
+  requests.SettingRequest:
+    properties:
+      Android:
+        type: string
+      Config:
+        type: string
+      Ios:
+        type: string
+      Key:
+        type: string
     type: object
   requests.SortOption:
     properties:
@@ -4474,6 +4507,98 @@ paths:
       summary: Search role in system
       tags:
       - Role Management
+  /setting:
+    post:
+      consumes:
+      - application/json
+      description: Perform create
+      operationId: create-setting
+      parameters:
+      - description: Create setting
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SettingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.AppSetting'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create setting
+      tags:
+      - Setting Management
+  /setting/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Perform create
+      operationId: edit-setting
+      parameters:
+      - description: Create setting
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SettingRequest'
+      - description: id account
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.AppSetting'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit setting
+      tags:
+      - Setting Management
+  /setting/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search setting
+      operationId: setting-promotion
+      parameters:
+      - description: Filter setting
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchSettingRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.AppSetting'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search setting in system
+      tags:
+      - Setting Management
   /statistic/drugstore_count:
     post:
       consumes:

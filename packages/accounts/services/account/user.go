@@ -231,7 +231,7 @@ func (userService *Service) EditUser(request *requests2.EditAccountRequest, id u
 	rs := tx.Table(utils2.TblAccount).Updates(&user)
 	if rs.Error != nil {
 		tx.Rollback()
-		return err, nil
+		return rs.Error, nil
 	}
 	return tx.Commit().Error, &user
 }
