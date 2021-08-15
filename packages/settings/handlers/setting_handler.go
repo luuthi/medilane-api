@@ -42,7 +42,7 @@ func (settingHandler *SettingHandler) GetSetting(c echo.Context) error {
 
 	var setting models.AppSetting
 	settingRepo := repositories2.NewSettingRepository(settingHandler.server.DB)
-	settingRepo.GetSetting(setting, searchRequest)
+	settingRepo.GetSetting(&setting, searchRequest)
 	return responses.Response(c, http.StatusOK, setting)
 }
 
