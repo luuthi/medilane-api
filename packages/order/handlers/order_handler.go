@@ -148,7 +148,7 @@ func (orderHanlder *OrderHandler) GetOrder(c echo.Context) error {
 // @Tags Order Management
 // @Accept json
 // @Produce json
-// @Param params body requests.OrderRequest true "body order"
+// @Param params body requests.EditOrderRequest true "body order"
 // @Param id path uint true "id order"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} responses.Error
@@ -161,7 +161,7 @@ func (orderHanlder *OrderHandler) EditOrder(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
 	}
 	id := uint(paramUrl)
-	var orderRequest requests2.OrderRequest
+	var orderRequest requests2.EditOrderRequest
 	if err := c.Bind(&orderRequest); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
@@ -174,7 +174,7 @@ func (orderHanlder *OrderHandler) EditOrder(c echo.Context) error {
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Order created!")
+	return responses.MessageResponse(c, http.StatusCreated, "Order updated!")
 }
 
 // DeleteOrder Delete order godoc

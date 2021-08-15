@@ -1,5 +1,10 @@
 package models
 
+import (
+	log "github.com/sirupsen/logrus"
+	"gorm.io/gorm"
+)
+
 type DrugStore struct {
 	CommonModelFields
 
@@ -21,6 +26,11 @@ type DrugStore struct {
 	Orders         []*Order        `json:"Orders,omitempty" gorm:"-"`
 	OrdersStore    []*OrderStore   `json:"OrdersStore,omitempty" gorm:"foreignKey:DrugStoreID"`
 	Products       []*ProductStore `json:"Products,omitempty" gorm:"many2many:drug_store_product"`
+}
+
+func (ds *DrugStore) AfterCreate(tx *gorm.DB) (err error) {
+	log.Infof("created drugstore: %v", ds)
+	return
 }
 
 type DrugStoreUser struct {

@@ -8,6 +8,7 @@ import (
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
+	"time"
 )
 
 type ProductsRepositoryQ interface {
@@ -35,7 +36,7 @@ func (productRepository *ProductRepository) GetProductById(product *models2.Prod
 		Find(product)
 }
 
-func (productRepository *ProductRepository) GetProductByIdCost(product *models2.Product, id uint, userId uint, userType string, areaId uint) {
+func (productRepository *ProductRepository) GetProductByIdCost(id uint, userId uint, userType string, areaId uint) models2.Product {
 	// check user area
 	if !(userType == string(utils.SUPER_ADMIN) || userType == string(utils.STAFF)) {
 		var address models2.Address
@@ -50,16 +51,26 @@ func (productRepository *ProductRepository) GetProductByIdCost(product *models2.
 		areaId = address.AreaID
 	}
 
+	var product models2.Product
 	productRepository.DB.Table(utils.TblProduct).
 		Select("product.*, ac.cost").
 		Preload(clause.Associations).
 		Preload("Variants.VariantValue").
 		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
 		Where(" ac.area_id = ?", areaId).
-		Where("product.id = ?", id).Find(product)
+		Where("product.id = ?", id).Find(&product)
+
+	productIds := []uint{product.ID}
+	var promotionResp []models2.Product
+	productRepository.CheckProductPromotion(productIds, areaId, &promotionResp)
+	if len(promotionResp) == 1 {
+		product.HasPromote = true
+		product.Percent = promotionResp[0].Percent
+	}
+	return product
 }
 
-func (productRepository *ProductRepository) GetProducts(product *[]models2.Product, count *int64, filter *requests2.SearchProductRequest, userId uint, userType string, areaId uint) {
+func (productRepository *ProductRepository) GetProducts(count *int64, filter *requests2.SearchProductRequest, userId uint, userType string, areaId uint) []models2.Product {
 	// check user area
 	if !(userType == string(utils.SUPER_ADMIN) || userType == string(utils.STAFF)) {
 		var address models2.Address
@@ -120,6 +131,7 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		filter.Sort.SortDirection = "desc"
 	}
 
+	var products []models2.Product
 	productRepository.DB.Table(utils.TblProduct).
 		Select("product.*, ac.cost").
 		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
@@ -132,5 +144,37 @@ func (productRepository *ProductRepository) GetProducts(product *[]models2.Produ
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&product)
+		Find(&products)
+
+	// query in promotion check if product promoted
+	var productIds []uint
+	for _, prod := range products {
+		productIds = append(productIds, prod.ID)
+	}
+	var promotionResp []models2.Product
+	productRepository.CheckProductPromotion(productIds, areaId, &promotionResp)
+	var tmp = make(map[uint]float32)
+	for _, p := range promotionResp {
+		tmp[p.ID] = p.Percent
+	}
+
+	rs := make([]models2.Product, 0)
+	for _, prod := range products {
+		if percent, ok := tmp[prod.ID]; ok {
+			prod.HasPromote = true
+			prod.Percent = percent
+		}
+		rs = append(rs, prod)
+	}
+	return rs
+}
+
+func (productRepository *ProductRepository) CheckProductPromotion(productIds []uint, areaId uint, resp *[]models2.Product) {
+	sql := "SELECT pd.product_id as id, pd.percent FROM promotion p " +
+		"JOIN promotion_detail pd ON p.id  = pd.promotion_id " +
+		"WHERE pd.product_id IN ? AND pd.`type` = 'percent' AND start_time <= ? AND end_time >= ? and p.area_id = ?"
+
+	now := time.Now().Unix() * 1000
+
+	productRepository.DB.Raw(sql, productIds, now, now, areaId).Find(&resp)
 }

@@ -28,6 +28,8 @@ type Product struct {
 	Tags                   []*Tag      `json:"Tags" gorm:"many2many:product_tag"`
 	Category               []*Category `json:"Category" gorm:"many2many:product_category"`
 	Cost                   float64     `json:"Cost" gorm:"float(64);not null"`
+	Percent                float32     `json:"Percent"`
+	HasPromote             bool        `json:"HasPromote"`
 }
 
 type ProductStore struct {

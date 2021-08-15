@@ -52,6 +52,29 @@ func (rr EditAccountRequest) Validate() error {
 		validation.Field(&rr.IsAdmin, validation.NotNil))
 }
 
+type RegisterAccountRequest struct {
+	Email       string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
+	Username    string   `json:"username" validate:"required" example:"JohnDoe"`
+	Password    string   `json:"password"  validate:"required" example:"123qweA@"`
+	FullName    string   `json:"Name" validate:"required" example:"John Doe"`
+	IsAdmin     *bool    `json:"IsAdmin" validate:"required" example:"true" `
+	Type        string   `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
+	DrugStoreID *uint    `json:"DrugStoreID"`
+	PartnerID   *uint    `json:"PartnerID"`
+	Roles       []string `json:"Roles"`
+}
+
+func (rr RegisterAccountRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Email, validation.Required, is.Email),
+		validation.Field(&rr.Username, validation.Required, validation.Length(3, 32)),
+		validation.Field(&rr.Password, validation.Required, validation.Length(6, 32)),
+		validation.Field(&rr.FullName, validation.Required),
+		validation.Field(&rr.IsAdmin, validation.NotNil),
+		validation.Field(&rr.Type, validation.In(string(utils2.USER))),
+	)
+}
+
 type CreateAccountRequest struct {
 	Email       string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
 	Username    string   `json:"username" validate:"required" example:"JohnDoe"`

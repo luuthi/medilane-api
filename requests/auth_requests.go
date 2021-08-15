@@ -21,8 +21,8 @@ type LoginRequest struct {
 }
 
 type RegisterRequest struct {
-	DrugStore      DrugStoreRequest     `json:"Drugstore"`
-	AccountRequest CreateAccountRequest `json:"AccountRequest"`
+	DrugStore      DrugStoreRequest       `json:"Drugstore"`
+	AccountRequest RegisterAccountRequest `json:"AccountRequest"`
 }
 
 func (rr RegisterRequest) Validate() error {

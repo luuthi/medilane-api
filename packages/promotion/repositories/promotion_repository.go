@@ -6,8 +6,10 @@ import (
 	"gorm.io/gorm/clause"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
+	responses2 "medilane-api/packages/promotion/responses"
 	"medilane-api/requests"
 	"strings"
+	"time"
 )
 
 type PromotionRepositoryQ interface {
@@ -34,18 +36,18 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		values = append(values, fmt.Sprintf("%%%s%%", filter.Name))
 	}
 
+	if filter.AreaId != 0 {
+		spec = append(spec, "area_id = ?")
+		values = append(values, filter.AreaId)
+	}
+
 	if filter.TimeFromStart != nil {
 		spec = append(spec, "start_time >= ?")
 		values = append(values, *filter.TimeFromStart)
 	}
 
-	if filter.AreaId != 0 {
-		spec = append(spec, "area_id >= ?")
-		values = append(values, filter.AreaId)
-	}
-
 	if filter.TimeToStart != nil {
-		spec = append(spec, "start_time >= ?")
+		spec = append(spec, "start_time <= ?")
 		values = append(values, *filter.TimeToStart)
 	}
 
@@ -55,8 +57,13 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 	}
 
 	if filter.TimeToEnd != nil {
-		spec = append(spec, "end_time >= ?")
+		spec = append(spec, "end_time <= ?")
 		values = append(values, *filter.TimeToEnd)
+	}
+
+	if filter.Status != nil {
+		spec = append(spec, "status = ?")
+		values = append(values, *filter.Status)
 	}
 
 	spec = append(spec, "deleted = ?")
@@ -70,12 +77,19 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 		filter.Sort.SortDirection = "desc"
 	}
 
-	promotionRepo.DB.Table(utils2.TblPromotion).
+	promo := promotionRepo.DB.Table(utils2.TblPromotion).
 		Where(strings.Join(spec, " AND "), values...).
-		Count(total).
-		Preload(clause.Associations).
-		Limit(filter.Limit).
-		Offset(filter.Offset).
+		Count(total)
+	//Preload("PromotionDetails").
+	//Preload("PromotionDetails.Product").
+	//Preload("PromotionDetails.Variant").
+	//Preload("PromotionDetails.Product.Images")
+
+	if filter.Limit != 0 {
+		promo.Limit(filter.Limit)
+	}
+
+	promo.Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
 		Find(&promotions)
 }
@@ -130,4 +144,89 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", "updated_at", "asc")).
 		Find(promotionDetails)
+}
+
+func (promotionRepo *PromotionRepository) GetProductByPromotion(resp *[]responses2.ProductInPromotionItem, total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) error {
+	// check user area
+	var areaId uint
+	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
+		var address models.Address
+		var user models.User
+		promotionRepo.DB.Table(utils2.TblAccount).
+			Select("adr.*, user.*").
+			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+			Joins("JOIN address adr ON adr.id = ds.address_id").
+			Where("user.id = ?", userId).Find(&address).Find(&user)
+
+		areaId = address.AreaID
+	} else {
+		areaId = request.AreaId
+	}
+
+	countSql := "SELECT count(*) FROM promotion_detail pd " +
+		"INNER JOIN product p2 ON p2.id = pd.product_id " +
+		"WHERE pd.promotion_id = ? "
+
+	sqlRaw := "SELECT p2.id as product_id, p2.name , p2.code, p2.barcode, v.name as unit, ac.cost as cost, pd.percent as percent, i.url as url " +
+		"FROM promotion_detail pd " +
+		"INNER JOIN product p2 ON p2.id = pd.product_id " +
+		"INNER JOIN product_image pi2 ON pi2.product_id = p2.id " +
+		"INNER JOIN image i ON pi2.image_id = i.id " +
+		"INNER JOIN variant v ON v.id = pd.variant_id " +
+		"INNER JOIN area_cost ac ON ac.product_id = p2.id " +
+		"INNER JOIN product_category pc ON pc.product_id = p2.id " +
+		"INNER JOIN category cat ON pc.category_id = cat.id " +
+		"WHERE pd.promotion_id = ? AND ac.area_id = ?  "
+	if request.ProductName != "" {
+		sqlRaw += fmt.Sprintf("p2.Name LIKE %%%s%%", request.ProductName)
+	}
+	sqlRaw += "LIMIT ?  OFFSET ?"
+
+	promotionRepo.DB.Raw(countSql, promotionId).Count(total)
+
+	return promotionRepo.DB.Raw(sqlRaw, promotionId, areaId, request.Limit, request.Offset).Find(resp).Error
+}
+
+func (promotionRepo *PromotionRepository) GetTopProductPromotion(resp *[]responses2.ProductInPromotionItem, total *int64, request *requests.SearchProductPromotion, userId uint, userType string) error {
+	// check user area
+	var areaId uint
+	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
+		var address models.Address
+		var user models.User
+		promotionRepo.DB.Table(utils2.TblAccount).
+			Select("adr.*, user.*").
+			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+			Joins("JOIN address adr ON adr.id = ds.address_id").
+			Where("user.id = ?", userId).Find(&address).Find(&user)
+
+		areaId = address.AreaID
+	} else {
+		areaId = request.AreaId
+	}
+	countSql := "SELECT  count(*) as count FROM promotion p " +
+		"INNER JOIN promotion_detail pd ON p.id = pd.promotion_id " +
+		"INNER JOIN product p2 ON p2.id = pd.product_id " +
+		"WHERE p.id  IN (SELECT p.id FROM `promotion` p WHERE area_id = ? AND start_time <= ? " +
+		"AND end_time >= ? AND status = true AND deleted = 0)"
+
+	now := time.Now().Unix() * 1000
+	promotionRepo.DB.Raw(countSql, areaId, now, now).Count(total)
+
+	sqlRaw := "SELECT p2.id as product_id, p2.name , p2.code, p2.barcode, " +
+		"v.name as unit, ac.cost as cost, pd.percent as percent, i.url as url, v.id as variant_id FROM promotion p " +
+		"INNER JOIN promotion_detail pd ON p.id = pd.promotion_id " +
+		"INNER JOIN product p2 ON p2.id = pd.product_id " +
+		"INNER JOIN product_image pi2 ON pi2.product_id = p2.id " +
+		"INNER JOIN image i ON pi2.image_id = i.id " +
+		"INNER JOIN variant v ON v.id = pd.variant_id " +
+		"INNER JOIN area_cost ac ON ac.product_id = p2.id " +
+		"INNER JOIN product_category pc ON pc.product_id = p2.id " +
+		"INNER JOIN category cat ON pc.category_id = cat.id " +
+		"WHERE p.id  IN (SELECT p.id FROM `promotion` p " +
+		"WHERE area_id = ? AND start_time <= ? AND end_time >= ? AND status = true AND deleted = 0) " +
+		"AND ac.area_id = ?  LIMIT ?"
+
+	return promotionRepo.DB.Raw(sqlRaw, areaId, now, now, areaId, request.Limit).Find(resp).Error
 }

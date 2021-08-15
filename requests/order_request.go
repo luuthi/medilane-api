@@ -3,6 +3,7 @@ package requests
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"medilane-api/core/utils"
+	orderConst "medilane-api/core/utils/order"
 	"medilane-api/models"
 )
 
@@ -57,5 +58,24 @@ func (rr OrderRequest) Validate() error {
 		validation.Field(&rr.AddressID, validation.Required),
 		validation.Field(&rr.UserOrderID, validation.Required),
 		validation.Field(&rr.Type, validation.In(string(utils.IMPORT), string(utils.EXPORT))),
+		validation.Field(&rr.Status, validation.In(orderConst.Draft.String(), orderConst.Cancel.String(), orderConst.Confirm.String(),
+			orderConst.Confirmed.String(), orderConst.Delivery.String(), orderConst.Delivered.String(), orderConst.Packaging.String(),
+			orderConst.Processing.String(), orderConst.Sell.String(), orderConst.Sent.String(), orderConst.Received.String())),
+	)
+}
+
+type EditOrderRequest struct {
+	Note            string `json:"Note" `
+	Status          string `json:"Status" `
+	PaymentMethodID uint   `json:"PaymentMethodID"`
+	UserApproveID   *uint  `json:"UserApproveID"`
+}
+
+func (rr EditOrderRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.PaymentMethodID, validation.Required),
+		validation.Field(&rr.Status, validation.Required, validation.In(orderConst.Draft.String(), orderConst.Cancel.String(), orderConst.Confirm.String(),
+			orderConst.Confirmed.String(), orderConst.Delivery.String(), orderConst.Delivered.String(), orderConst.Packaging.String(),
+			orderConst.Processing.String(), orderConst.Sell.String(), orderConst.Sent.String(), orderConst.Received.String())),
 	)
 }

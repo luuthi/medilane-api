@@ -2082,7 +2082,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.OrderRequest"
+                            "$ref": "#/definitions/requests.EditOrderRequest"
                         }
                     },
                     {
@@ -2940,6 +2940,52 @@ var doc = `{
                 }
             }
         },
+        "/promotion/top-product": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search product in promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Search product in promotion in system",
+                "operationId": "search-product-promotion",
+                "parameters": [
+                    {
+                        "description": "Filter promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchProductPromotion"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProductInPromotionSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/promotion/{id}": {
             "get": {
                 "security": [
@@ -3323,6 +3369,59 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/promotion/{id}/product": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform search product by promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Search product by promotion in system",
+                "operationId": "search-product-by-promotion",
+                "parameters": [
+                    {
+                        "description": "Filter promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchProductByPromotion"
+                        }
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProductInPromotionSearch"
                         }
                     },
                     "400": {
@@ -5267,6 +5366,9 @@ var doc = `{
                 "GlobalManufacturerName": {
                     "type": "string"
                 },
+                "HasPromote": {
+                    "type": "boolean"
+                },
                 "Images": {
                     "type": "array",
                     "items": {
@@ -5287,6 +5389,9 @@ var doc = `{
                 },
                 "PackagingSize": {
                     "type": "string"
+                },
+                "Percent": {
+                    "type": "number"
                 },
                 "RegistrationNo": {
                     "type": "string"
@@ -6192,6 +6297,23 @@ var doc = `{
                 }
             }
         },
+        "requests.EditOrderRequest": {
+            "type": "object",
+            "properties": {
+                "Note": {
+                    "type": "string"
+                },
+                "PaymentMethodID": {
+                    "type": "integer"
+                },
+                "Status": {
+                    "type": "string"
+                },
+                "UserApproveID": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.EditPartnerRequest": {
             "type": "object",
             "required": [
@@ -6587,12 +6709,61 @@ var doc = `{
                 }
             }
         },
+        "requests.RegisterAccountRequest": {
+            "type": "object",
+            "required": [
+                "IsAdmin",
+                "Name",
+                "Type",
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "DrugStoreID": {
+                    "type": "integer"
+                },
+                "IsAdmin": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "PartnerID": {
+                    "type": "integer"
+                },
+                "Roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "Type": {
+                    "type": "string",
+                    "example": "super_admin/staff/user/supplier/manufacturer"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "john.doe@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123qweA@"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "JohnDoe"
+                }
+            }
+        },
         "requests.RegisterRequest": {
             "type": "object",
             "properties": {
                 "AccountRequest": {
                     "type": "object",
-                    "$ref": "#/definitions/requests.CreateAccountRequest"
+                    "$ref": "#/definitions/requests.RegisterAccountRequest"
                 },
                 "Drugstore": {
                     "type": "object",
@@ -6909,6 +7080,40 @@ var doc = `{
                 }
             }
         },
+        "requests.SearchProductByPromotion": {
+            "type": "object",
+            "properties": {
+                "AreaId": {
+                    "type": "integer"
+                },
+                "ProductName": {
+                    "type": "string"
+                },
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "sort": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SearchProductPromotion": {
+            "type": "object",
+            "properties": {
+                "AreaId": {
+                    "type": "integer"
+                },
+                "limit": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.SearchProductRequest": {
             "type": "object",
             "properties": {
@@ -6987,6 +7192,9 @@ var doc = `{
                 },
                 "Name": {
                     "type": "string"
+                },
+                "Status": {
+                    "type": "boolean"
                 },
                 "TimeFromEnd": {
                     "type": "integer"
@@ -7585,6 +7793,58 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Permission"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.ProductInPromotionItem": {
+            "type": "object",
+            "properties": {
+                "Barcode": {
+                    "type": "string"
+                },
+                "Code": {
+                    "type": "string"
+                },
+                "Cost": {
+                    "type": "number"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Percent": {
+                    "type": "number"
+                },
+                "ProductId": {
+                    "type": "integer"
+                },
+                "Unit": {
+                    "type": "string"
+                },
+                "Url": {
+                    "type": "string"
+                },
+                "VariantId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.ProductInPromotionSearch": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ProductInPromotionItem"
                     }
                 },
                 "message": {

@@ -453,6 +453,8 @@ definitions:
         type: string
       GlobalManufacturerName:
         type: string
+      HasPromote:
+        type: boolean
       Images:
         items:
           $ref: '#/definitions/models.Image'
@@ -467,6 +469,8 @@ definitions:
         type: string
       PackagingSize:
         type: string
+      Percent:
+        type: number
       RegistrationNo:
         type: string
       Status:
@@ -1095,6 +1099,17 @@ definitions:
     required:
     - Address
     type: object
+  requests.EditOrderRequest:
+    properties:
+      Note:
+        type: string
+      PaymentMethodID:
+        type: integer
+      Status:
+        type: string
+      UserApproveID:
+        type: integer
+    type: object
   requests.EditPartnerRequest:
     properties:
       Address:
@@ -1374,10 +1389,46 @@ definitions:
     required:
     - token
     type: object
+  requests.RegisterAccountRequest:
+    properties:
+      DrugStoreID:
+        type: integer
+      IsAdmin:
+        example: true
+        type: boolean
+      Name:
+        example: John Doe
+        type: string
+      PartnerID:
+        type: integer
+      Roles:
+        items:
+          type: string
+        type: array
+      Type:
+        example: super_admin/staff/user/supplier/manufacturer
+        type: string
+      email:
+        example: john.doe@gmail.com
+        type: string
+      password:
+        example: 123qweA@
+        type: string
+      username:
+        example: JohnDoe
+        type: string
+    required:
+    - IsAdmin
+    - Name
+    - Type
+    - email
+    - password
+    - username
+    type: object
   requests.RegisterRequest:
     properties:
       AccountRequest:
-        $ref: '#/definitions/requests.CreateAccountRequest'
+        $ref: '#/definitions/requests.RegisterAccountRequest'
         type: object
       Drugstore:
         $ref: '#/definitions/requests.DrugStoreRequest'
@@ -1604,6 +1655,29 @@ definitions:
         $ref: '#/definitions/requests.SortOption'
         type: object
     type: object
+  requests.SearchProductByPromotion:
+    properties:
+      AreaId:
+        type: integer
+      ProductName:
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+    type: object
+  requests.SearchProductPromotion:
+    properties:
+      AreaId:
+        type: integer
+      limit:
+        type: integer
+    type: object
   requests.SearchProductRequest:
     properties:
       AreaId:
@@ -1659,6 +1733,8 @@ definitions:
         type: integer
       Name:
         type: string
+      Status:
+        type: boolean
       TimeFromEnd:
         type: integer
       TimeFromStart:
@@ -2054,6 +2130,40 @@ definitions:
       data:
         items:
           $ref: '#/definitions/models.Permission'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.ProductInPromotionItem:
+    properties:
+      Barcode:
+        type: string
+      Code:
+        type: string
+      Cost:
+        type: number
+      Name:
+        type: string
+      Percent:
+        type: number
+      ProductId:
+        type: integer
+      Unit:
+        type: string
+      Url:
+        type: string
+      VariantId:
+        type: integer
+    type: object
+  responses.ProductInPromotionSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/responses.ProductInPromotionItem'
         type: array
       message:
         type: string
@@ -3500,7 +3610,7 @@ paths:
         name: params
         required: true
         schema:
-          $ref: '#/definitions/requests.OrderRequest'
+          $ref: '#/definitions/requests.EditOrderRequest'
       - description: id order
         in: path
         name: id
@@ -4301,6 +4411,40 @@ paths:
       summary: Search promotion detail in system
       tags:
       - Promotion Management
+  /promotion/{id}/product:
+    post:
+      consumes:
+      - application/json
+      description: Perform search product by promotion
+      operationId: search-product-by-promotion
+      parameters:
+      - description: Filter promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchProductByPromotion'
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductInPromotionSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search product by promotion in system
+      tags:
+      - Promotion Management
   /promotion/find:
     post:
       consumes:
@@ -4328,6 +4472,35 @@ paths:
       security:
       - BearerAuth: []
       summary: Search promotion in system
+      tags:
+      - Promotion Management
+  /promotion/top-product:
+    post:
+      consumes:
+      - application/json
+      description: Perform search product in promotion
+      operationId: search-product-promotion
+      parameters:
+      - description: Filter promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchProductPromotion'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductInPromotionSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search product in promotion in system
       tags:
       - Promotion Management
   /refresh:

@@ -15,7 +15,7 @@ import (
 
 type ServiceWrapper interface {
 	AddOrder(request *requests2.OrderRequest, userId uint) (error, *models.Order)
-	EditOrder(request *requests2.OrderRequest, orderId uint) (error, *models.Order)
+	EditOrder(request *requests2.EditOrderRequest, orderId uint) (error, *models.Order)
 	DeleteOrder(orderId uint) error
 }
 
@@ -123,7 +123,13 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 	// clear cart
 	var cart models.Cart
 	tx.Table(utils.TblCart).Where("user_id = ?", userId).First(&cart)
-	tx.Exec("DELETE  FROM cart_detail WHERE cart_id = ?", cart.ID)
+	rs = tx.Exec("DELETE  FROM cart_detail WHERE cart_id = ?", cart.ID)
+
+	//rollback if error
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error, nil
+	}
 	return tx.Commit().Error, &order
 }
 
@@ -154,29 +160,26 @@ func (s *Service) PreOrder(request *requests2.OrderRequest, userId uint, userTyp
 	return nil
 }
 
-func (s *Service) EditOrder(request *requests2.OrderRequest, orderId uint) (error, *models.Order) {
+func (s *Service) EditOrder(request *requests2.EditOrderRequest, orderId uint) (error, *models.Order) {
 
 	// begin a transaction
 	tx := s.DB.Begin()
 
-	order := builders.NewOrderBuilder().
+	orderBuilder := builders.NewOrderBuilder().
 		SetID(orderId).
 		SetStatus(request.Status).
-		SetSubTotal(request.SubTotal).
-		SetTotal(request.Total).
-		SetVat(request.Vat).
-		SetShippingFee(request.ShippingFee).
-		SetDiscount(request.Discount).
 		SetNote(request.Note).
-		SetAddressID(request.AddressID).
-		SetDrugStoreID(request.DrugStoreID).
-		SetPaymentMethodID(request.PaymentMethodID).
-		SetUserOrderID(request.UserOrderID).
-		SetUserApproveID(request.UserApproveID).
-		SetOrderCode(request.OrderCode).
-		SetDrugStoreID(request.DrugStoreID).Build()
+		SetPaymentMethodID(request.PaymentMethodID)
+	if request.UserApproveID != nil {
+		orderBuilder.SetUserApproveID(*request.UserApproveID)
+	}
+	order := orderBuilder.Build()
 
-	tx.Table(utils.TblOrder).Updates(&order)
+	rs := tx.Table(utils.TblOrder).Updates(&order)
+	if rs.Error != nil {
+		tx.Rollback()
+		return rs.Error, nil
+	}
 	return tx.Commit().Error, &order
 }
 

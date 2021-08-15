@@ -32,6 +32,9 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	promotion.PUT("/:id/details/:d_id", promotionHandler.EditPromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 	promotion.DELETE("/:id/details/:d_id", promotionHandler.DeletePromotionDetail, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
 	promotion.DELETE("/:id/details", promotionHandler.DeletePromotionDetailByPromotion, authentication.CheckPermission(server, []string{"create:promotion", "edit:promotion"}, false))
+	promotion.POST("/:id/product", promotionHandler.SearchProductByPromotion, authentication.CheckPermission(server, []string{"read:promotion"}, false))
+
+	promotion.POST("/top-product", promotionHandler.SearchProductPromotion, authentication.CheckPermission(server, []string{"read:promotion", "read:product"}, false))
 
 	voucher := appRoute.Group("/voucher")
 

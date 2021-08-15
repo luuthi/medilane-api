@@ -42,6 +42,7 @@ func (rr PromotionRequest) Validate() error {
 type SearchPromotionRequest struct {
 	Name          string     `json:"Name"`
 	AreaId        uint       `json:"AreaId"`
+	Status        *bool      `json:"Status"`
 	TimeFromStart *int64     `json:"TimeFromStart"`
 	TimeToStart   *int64     `json:"TimeToStart"`
 	TimeFromEnd   *int64     `json:"TimeFromEnd"`
@@ -140,4 +141,17 @@ func validateByType(_type string, _percent float32, _value float32, _cond string
 		}
 		return nil
 	}
+}
+
+type SearchProductPromotion struct {
+	Limit  int  `json:"limit"`
+	AreaId uint `json:"AreaId"`
+}
+
+type SearchProductByPromotion struct {
+	ProductName string     `json:"ProductName"`
+	Limit       int        `json:"limit" example:"10"`
+	Offset      int        `json:"offset" example:"0"`
+	AreaId      uint       `json:"AreaId"`
+	Sort        SortOption `json:"sort"`
 }

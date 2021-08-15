@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/authentication"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/promotion/repositories"
 	responses2 "medilane-api/packages/promotion/responses"
@@ -37,7 +38,7 @@ func NewPromotionHandler(server *s.Server) *PromotionHandler {
 func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 	searchRequest := new(requests2.SearchPromotionRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
 
 	promoHandler.server.Logger.Info("search promotion")
@@ -376,5 +377,122 @@ func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) erro
 		Message: "",
 		Total:   total,
 		Data:    promotions,
+	})
+}
+
+// SearchProductPromotion Search product in promotion godoc
+// @Summary Search product in promotion in system
+// @Description Perform search product in promotion
+// @ID search-product-promotion
+// @Tags Promotion Management
+// @Accept json
+// @Produce json
+// @Param params body requests.SearchProductPromotion true "Filter promotion"
+// @Success 200 {object} responses.ProductInPromotionSearch
+// @Failure 400 {object} responses.Error
+// @Router /promotion/top-product [post]
+// @Security BearerAuth
+func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) error {
+	searchRequest := new(requests2.SearchProductPromotion)
+	if err := c.Bind(searchRequest); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	promoHandler.server.Logger.Info("search product in promotion")
+	var products []responses2.ProductInPromotionItem
+
+	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
+	if err != nil {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	var total int64
+	rs := promoRepo.GetTopProductPromotion(&products, &total, searchRequest, claims.UserId, claims.Type)
+	if rs != nil {
+		return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+			Code:    http.StatusOK,
+			Message: "",
+			Total:   0,
+			Data:    nil,
+		})
+	}
+	return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    products,
+	})
+}
+
+// SearchProductByPromotion Search product by promotion godoc
+// @Summary Search product by promotion in system
+// @Description Perform search product by promotion
+// @ID search-product-by-promotion
+// @Tags Promotion Management
+// @Accept json
+// @Produce json
+// @Param params body requests.SearchProductByPromotion true "Filter promotion"
+// @Param id path uint true "id promotion"
+// @Success 200 {object} responses.ProductInPromotionSearch
+// @Failure 400 {object} responses.Error
+// @Router /promotion/{id}/product [post]
+// @Security BearerAuth
+func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id promotion: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	searchRequest := new(requests2.SearchProductByPromotion)
+	if err := c.Bind(searchRequest); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	promoHandler.server.Logger.Info("search product in promotion")
+	var products []responses2.ProductInPromotionItem
+
+	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
+	if err != nil {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+
+	var errRes error
+	var total int64
+	if id == 0 {
+		s2 := &requests2.SearchProductPromotion{
+			Limit:  searchRequest.Limit,
+			AreaId: 0,
+		}
+		errRes = promoRepo.GetTopProductPromotion(&products, &total, s2, claims.UserId, claims.Type)
+	} else {
+		errRes = promoRepo.GetProductByPromotion(&products, &total, id, searchRequest, claims.UserId, claims.Type)
+	}
+
+	if errRes != nil {
+		return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+			Code:    http.StatusOK,
+			Message: "",
+			Total:   0,
+			Data:    nil,
+		})
+	}
+	return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    products,
 	})
 }

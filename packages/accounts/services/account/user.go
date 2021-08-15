@@ -126,7 +126,7 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 		SetAddress(&drugStoreReq.Address).
 		Build()
 
-	rs := tx.Table(utils2.TblDrugstore).Create(&store)
+	rs := tx.Model(&store).Create(&store)
 
 	//rollback if error
 	if rs.Error != nil {
