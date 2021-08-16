@@ -297,3 +297,9 @@ func (productRepository *ProductRepository) CheckProductPromotionVoucher(product
 
 	productRepository.DB.Raw(sql, productIds, now, now, areaId).Find(&resp)
 }
+
+func (productRepository *ProductRepository) GetCostProduct(productIds []uint, areaId uint) []models2.AreaCost {
+	var productCost []models2.AreaCost
+	productRepository.DB.Table(utils.TblAreaCost).Where("area_id = ? AND product_id = ?", areaId, productIds).Find(&productCost)
+	return productCost
+}

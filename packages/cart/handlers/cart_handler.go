@@ -45,16 +45,16 @@ func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 	}
 
 	cartHandler.server.Logger.Info("cart product")
-	var cart models2.Cart
+	var cart *models2.Cart
 	var total int64
 
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	cartRepo.GetCartByUser(&cart, &total, claims.UserId)
+	cart = cartRepo.GetCartByUser(&total, claims.UserId, claims.Type)
 
 	return responses.Response(c, http.StatusOK, responses2.CartSearch{
 		Code:    http.StatusOK,
 		Message: "",
-		Data:    cart,
+		Data:    *cart,
 	})
 }
 

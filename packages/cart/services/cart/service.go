@@ -27,14 +27,12 @@ func NewCartService(db *gorm.DB) *Service {
 }
 
 func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *models.Cart) {
-	cart := builders2.NewCartBuilder().
-		SetUserID(userId).
-		Build()
+	var cart models.Cart
 
 	// begin a transaction
 	tx := s.DB.Begin()
 
-	rs := tx.FirstOrCreate(&cart, userId)
+	rs := tx.Where("user_id = ?", userId).FirstOrCreate(&cart)
 
 	//rollback if error
 	if rs.Error != nil {
