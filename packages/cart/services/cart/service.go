@@ -32,12 +32,23 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 	// begin a transaction
 	tx := s.DB.Begin()
 
-	rs := tx.Where("user_id = ?", userId).FirstOrCreate(&cart)
+	rs := tx.Where("user_id = ?", userId).FirstOrInit(&cart)
 
 	//rollback if error
 	if rs.Error != nil {
 		tx.Rollback()
 		return rs.Error, nil
+	}
+
+	if cart.ID == 0 {
+		cart = builders2.NewCartBuilder().SetUserID(userId).Build()
+		rs = tx.Create(&cart)
+
+		//rollback if error
+		if rs.Error != nil {
+			tx.Rollback()
+			return rs.Error, nil
+		}
 	}
 
 	// if account is type user, check drugStoreId and assign for drugstore

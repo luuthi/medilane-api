@@ -23,7 +23,9 @@ func NewCartRepository(db *gorm.DB) *CartRepository {
 }
 
 func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, userType string) *models.Cart {
-	cart := &models.Cart{}
+	cart := &models.Cart{
+		CartDetails: make([]models.CartDetail, 0),
+	}
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
