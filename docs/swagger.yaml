@@ -278,6 +278,8 @@ definitions:
         type: integer
       id:
         type: integer
+      oldStatus:
+        type: string
       updated_at:
         type: integer
     type: object
@@ -439,6 +441,8 @@ definitions:
         type: array
       Code:
         type: string
+      ConditionVoucher:
+        type: string
       Content:
         type: string
       Cost:
@@ -454,6 +458,8 @@ definitions:
       GlobalManufacturerName:
         type: string
       HasPromote:
+        type: boolean
+      HasPromoteVoucher:
         type: boolean
       Images:
         items:
@@ -483,15 +489,53 @@ definitions:
         type: array
       Unit:
         type: string
+      ValueVoucher:
+        type: number
       Variants:
         items:
           $ref: '#/definitions/models.Variant'
         type: array
+      Voucher:
+        $ref: '#/definitions/models.Voucher'
+        type: object
+      VoucherId:
+        type: integer
       created_at:
         type: integer
       id:
         type: integer
       updated_at:
+        type: integer
+    type: object
+  models.ProductInPromotionItem:
+    properties:
+      Barcode:
+        type: string
+      Code:
+        type: string
+      Condition:
+        type: string
+      Cost:
+        type: number
+      Name:
+        type: string
+      Percent:
+        type: number
+      ProductId:
+        type: integer
+      Type:
+        type: string
+      Unit:
+        type: string
+      Url:
+        type: string
+      Value:
+        type: number
+      VariantId:
+        type: integer
+      VoucherId:
+        type: integer
+      id:
         type: integer
     type: object
   models.ProductStore:
@@ -1753,6 +1797,36 @@ definitions:
         $ref: '#/definitions/requests.SortOption'
         type: object
     type: object
+  requests.SearchPureProductRequest:
+    properties:
+      Barcode:
+        example: example
+        type: string
+      Category:
+        type: integer
+      Code:
+        example: MD01
+        type: string
+      Name:
+        example: name
+        type: string
+      Status:
+        example: show/hide/approve/cancel/outofstock
+        type: string
+      limit:
+        example: 10
+        type: integer
+      offset:
+        example: 0
+        type: integer
+      sort:
+        $ref: '#/definitions/requests.SortOption'
+        type: object
+      time_from:
+        type: integer
+      time_to:
+        type: integer
+    type: object
   requests.SearchRoleRequest:
     properties:
       limit:
@@ -1771,6 +1845,12 @@ definitions:
   requests.SearchSettingRequest:
     properties:
       Key:
+        type: string
+    type: object
+  requests.SearchSuggestRequest:
+    properties:
+      Name:
+        example: name
         type: string
     type: object
   requests.SearchTagRequest:
@@ -2136,34 +2216,13 @@ definitions:
       total:
         type: integer
     type: object
-  responses.ProductInPromotionItem:
-    properties:
-      Barcode:
-        type: string
-      Code:
-        type: string
-      Cost:
-        type: number
-      Name:
-        type: string
-      Percent:
-        type: number
-      ProductId:
-        type: integer
-      Unit:
-        type: string
-      Url:
-        type: string
-      VariantId:
-        type: integer
-    type: object
   responses.ProductInPromotionSearch:
     properties:
       code:
         type: integer
       data:
         items:
-          $ref: '#/definitions/responses.ProductInPromotionItem'
+          $ref: '#/definitions/models.ProductInPromotionItem'
         type: array
       message:
         type: string
@@ -3968,8 +4027,8 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
@@ -3996,8 +4055,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
@@ -4027,8 +4086,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Product'
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
@@ -4060,13 +4119,41 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
       - BearerAuth: []
       summary: Edit product in system
+      tags:
+      - Product Management
+  /product/{id}/pure:
+    get:
+      consumes:
+      - application/json
+      description: Perform get pure product
+      operationId: get-pure-product
+      parameters:
+      - description: id product
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Get pure product in system
       tags:
       - Product Management
   /product/find:
@@ -4089,13 +4176,71 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.ProductSearch'
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:
       - BearerAuth: []
       summary: Search product in system
+      tags:
+      - Product Management
+  /product/pure-search:
+    post:
+      consumes:
+      - application/json
+      description: Perform only search product
+      operationId: search-pure-product
+      parameters:
+      - description: Filter product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchPureProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search only product in system
+      tags:
+      - Product Management
+  /product/suggest:
+    post:
+      consumes:
+      - application/json
+      description: Perform suggest product
+      operationId: suggest-product
+      parameters:
+      - description: Suggest product
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchSuggestRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Suggest product in system
       tags:
       - Product Management
   /products/status:
@@ -4118,8 +4263,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.MessageDetail'
-        "401":
-          description: Unauthorized
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/responses.Error'
       security:

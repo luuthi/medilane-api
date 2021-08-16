@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm/clause"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
-	responses2 "medilane-api/packages/promotion/responses"
 	"medilane-api/requests"
 	"strings"
 	"time"
@@ -146,7 +145,7 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 		Find(promotionDetails)
 }
 
-func (promotionRepo *PromotionRepository) GetProductByPromotion(resp *[]responses2.ProductInPromotionItem, total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) error {
+func (promotionRepo *PromotionRepository) GetProductByPromotion(resp *[]models.ProductInPromotionItem, total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) error {
 	// check user area
 	var areaId uint
 	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
@@ -188,7 +187,7 @@ func (promotionRepo *PromotionRepository) GetProductByPromotion(resp *[]response
 	return promotionRepo.DB.Raw(sqlRaw, promotionId, areaId, request.Limit, request.Offset).Find(resp).Error
 }
 
-func (promotionRepo *PromotionRepository) GetTopProductPromotion(resp *[]responses2.ProductInPromotionItem, total *int64, request *requests.SearchProductPromotion, userId uint, userType string) error {
+func (promotionRepo *PromotionRepository) GetTopProductPromotion(resp *[]models.ProductInPromotionItem, total *int64, request *requests.SearchProductPromotion, userId uint, userType string) error {
 	// check user area
 	var areaId uint
 	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {

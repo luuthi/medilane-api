@@ -34,7 +34,7 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 // @Produce json
 // @Param params body requests.SearchProductRequest true "Filter product"
 // @Success 200 {object} responses.ProductSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /product/find [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
@@ -67,6 +67,112 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	})
 }
 
+// SearchPureProduct Search only product godoc
+// @Summary Search only product in system
+// @Description Perform only search product
+// @ID search-pure-product
+// @Tags Product Management
+// @Accept json
+// @Produce json
+// @Param params body requests.SearchPureProductRequest true "Filter product"
+// @Success 200 {object} responses.ProductSearch
+// @Failure 400 {object} responses.Error
+// @Router /product/pure-search [post]
+// @Security BearerAuth
+func (productHandler *ProductHandler) SearchPureProduct(c echo.Context) error {
+	searchRequest := new(requests2.SearchPureProductRequest)
+	if err := c.Bind(searchRequest); err != nil {
+		return err
+	}
+
+	productHandler.server.Logger.Info("Search product")
+	var medicines []models2.Product
+	var total int64
+
+	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
+	productRepo.GetPureProduct(&medicines, &total, searchRequest)
+
+	return responses.Response(c, http.StatusOK, responses.ProductSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    medicines,
+	})
+}
+
+// GetPureProductByID Get pure product godoc
+// @Summary Get pure product in system
+// @Description Perform get pure product
+// @ID get-pure-product
+// @Tags Product Management
+// @Accept json
+// @Produce json
+// @Param id path uint true "id product"
+// @Success 200 {object} models.Product
+// @Failure 400 {object} responses.Error
+// @Router /product/{id}/pure [get]
+// @Security BearerAuth
+func (productHandler *ProductHandler) GetPureProductByID(c echo.Context) error {
+	var paramUrl uint64
+	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id product: %v", err.Error()))
+	}
+	id := uint(paramUrl)
+
+	var existedProduct models.Product
+	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
+	medicineRepo.GetProductById(&existedProduct, id)
+
+	if existedProduct.ID == 0 {
+		return responses.Response(c, http.StatusOK, nil)
+	}
+
+	return responses.Response(c, http.StatusOK, existedProduct)
+}
+
+// SearchSuggestProduct Suggest product godoc
+// @Summary Suggest product in system
+// @Description Perform suggest product
+// @ID suggest-product
+// @Tags Product Management
+// @Accept json
+// @Produce json
+// @Param params body requests.SearchSuggestRequest true "Suggest product"
+// @Success 200 {object} responses.ProductSearch
+// @Failure 400 {object} responses.Error
+// @Router /product/suggest [post]
+// @Security BearerAuth
+func (productHandler *ProductHandler) SearchSuggestProduct(c echo.Context) error {
+	token, err := authentication.VerifyToken(c.Request(), productHandler.server)
+	if err != nil {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+
+	searchRequest := new(requests2.SearchSuggestRequest)
+	if err := c.Bind(searchRequest); err != nil {
+		return err
+	}
+
+	productHandler.server.Logger.Info("Suggest product")
+	var medicines []models2.Product
+	var total int64
+
+	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
+	medicines = productRepo.GetSuggestProducts(searchRequest, claims.UserId, claims.Type)
+
+	return responses.Response(c, http.StatusOK, responses.ProductSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   total,
+		Data:    medicines,
+	})
+}
+
 // CreateProduct Create product godoc
 // @Summary Create product in system
 // @Description Perform create product
@@ -76,7 +182,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 // @Produce json
 // @Param params body requests.ProductRequest true "Filter product"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /product [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
@@ -106,7 +212,7 @@ func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 // @Param params body requests.ProductRequest true "body product"
 // @Param id path uint true "id product"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /product/{id} [put]
 // @Security BearerAuth
 func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
@@ -130,7 +236,7 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
 	medicineRepo.GetProductById(&existedProduct, id)
 	if existedProduct.Code == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found medicine with ID: %v", string(id)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found medicine with ID: %v", id))
 	}
 
 	productService := medicine.NewProductService(productHandler.server.DB)
@@ -149,7 +255,7 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id product"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /product/{id} [delete]
 // @Security BearerAuth
 func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
@@ -177,7 +283,7 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Param id path uint true "id product"
 // @Param area_id query uint false "area id"
 // @Success 200 {object} models.Product
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /product/{id} [get]
 // @Security BearerAuth
 func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
@@ -211,7 +317,7 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 	existedProduct = medicineRepo.GetProductByIdCost(id, claims.UserId, claims.Type, areaId)
 
 	if existedProduct.ID == 0 {
-		responses.Response(c, http.StatusOK, nil)
+		return responses.Response(c, http.StatusOK, nil)
 	}
 
 	return responses.Response(c, http.StatusOK, existedProduct)
@@ -226,7 +332,7 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 // @Produce json
 // @Param params body requests.ChangeStatusProductsRequest true "body change status products"
 // @Success 200 {object} responses.MessageDetail
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} responses.Error
 // @Router /products/status [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) ChangeStatusProducts(c echo.Context) error {

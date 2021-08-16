@@ -5,8 +5,10 @@ import (
 	"gorm.io/gorm"
 	"medilane-api/core/utils"
 	"medilane-api/models"
+	repositories2 "medilane-api/packages/medicines/repositories"
 	"medilane-api/packages/order/builders"
 	"medilane-api/packages/order/repositories"
+	builders2 "medilane-api/packages/promotion/builders"
 	requests2 "medilane-api/requests"
 	"strconv"
 	"strings"
@@ -135,25 +137,54 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 
 func (s *Service) PreOrder(request *requests2.OrderRequest, userId uint, userType string) error {
 	areaRepo := repositories.NewOrderRepository(s.DB)
+	prodRepo := repositories2.NewProductRepository(s.DB)
 	err, areaId := areaRepo.GetAreaByUser(userType, userId)
 	if err != nil {
 		return err
 	}
 	var subTotal float64
+
+	// get product id list
+	productIds := make([]uint, 0)
 	for _, item := range request.OrderDetails {
-		var product models.Product
-		err := s.DB.Table(utils.TblProduct).
-			Select("product.*, ac.cost").
-			Joins(" JOIN area_cost ac ON ac.product_id = product.id").
-			Joins(" JOIN product_category pc ON pc.product_id = product.id").
-			Joins(" JOIN category cat ON pc.category_id = cat.id").
-			Where(" ac.area_id = ?", areaId).
-			First(&product, item.ProductID).Error
-		if err == nil {
-			item.Cost = product.Cost
+		productIds = append(productIds, item.ProductID)
+	}
+	// get cost current in db
+	var costResp []models.Product
+	s.DB.Table(utils.TblProduct).
+		Select("product.*, ac.cost").
+		Joins(" JOIN area_cost ac ON ac.product_id = product.id").
+		Joins(" JOIN product_category pc ON pc.product_id = product.id").
+		Joins(" JOIN category cat ON pc.category_id = cat.id").
+		Where(" ac.area_id = ? AND product.id IN ?", areaId, productIds).
+		First(&costResp)
+
+	// check promotion of product
+	var promotionResp []models.ProductInPromotionItem
+	prodRepo.CheckProductPromotionPercent(productIds, areaId, &promotionResp)
+
+	var promotionMap = make(map[uint]float32)
+	for _, p := range promotionResp {
+		promotionMap[p.ProductId] = p.Percent
+	}
+
+	var costMap = make(map[uint]float64)
+	for _, p := range costResp {
+		costMap[p.ID] = p.Cost
+	}
+
+	for _, item := range request.OrderDetails {
+		if cost, ok := costMap[item.ProductID]; ok {
+			item.Cost = cost
+		}
+		if percent, ok := promotionMap[item.ProductID]; ok {
+			subTotal += item.Cost * (1 - float64(percent)/100) * float64(item.Quantity)
+		} else {
 			subTotal += item.Cost * float64(item.Quantity)
 		}
+
 	}
+
 	request.SubTotal = subTotal
 	request.Total = request.SubTotal + request.ShippingFee - request.Discount*request.SubTotal
 
@@ -190,4 +221,71 @@ func (s *Service) DeleteOrder(orderId uint) error {
 		return err
 	}
 	return s.DB.Table(utils.TblOrder).Select("OrderDetails").Delete(&order).Error
+}
+
+func (s *Service) AddPromotion(tx *gorm.DB, order *models.Order) {
+	// start transaction
+	tx.Begin()
+	defer tx.Commit()
+	var productIds []uint
+	for _, item := range order.OrderDetails {
+		productIds = append(productIds, item.ProductID)
+	}
+
+	// get areaId
+	var address models.Address
+	var user models.User
+	err := tx.Table(utils.TblAccount).
+		Select("adr.*, user.*").
+		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
+		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
+		Joins("JOIN address adr ON adr.id = ds.address_id").
+		Where("user.id = ?", order.UserOrderID).Find(&address).Find(&user).Error
+
+	if err != nil {
+		tx.Rollback()
+	}
+	areaId := address.AreaID
+
+	// check promotion
+	var resp []models.ProductInPromotionItem
+	sql := "SELECT pd.id,  pd.product_id , pd.type, pd.value, pd.`condition`, pd.voucher_id FROM promotion p " +
+		"JOIN promotion_detail pd ON p.id  = pd.promotion_id " +
+		"WHERE pd.product_id IN ? AND pd.`type` = 'voucher' AND start_time <= ? AND end_time >= ? and p.area_id = ?"
+
+	now := time.Now().Unix() * 1000
+
+	tx.Raw(sql, productIds, now, now, areaId).Find(&resp)
+	var promotionMap = make(map[uint]float32)
+	var promotionMap1 = make(map[uint]models.ProductInPromotionItem)
+	for _, p := range resp {
+		promotionMap[p.ProductId] = p.Value
+		promotionMap1[p.ProductId] = p
+	}
+	for _, item := range order.OrderDetails {
+		if value, ok := promotionMap[item.ProductID]; ok {
+			if promotionMap1[item.ProductID].Condition == "amount" {
+				if (float64(item.Quantity) * item.Cost) >= float64(value) {
+					// gen voucher
+					voucherDetail := builders2.NewVoucherDetailBuilder().
+						SetPromoDetailId(promotionMap1[item.ProductID].Id).
+						SetOrderId(order.ID).
+						SetDrugstoreId(order.DrugStoreID).
+						SetVoucherId(promotionMap1[item.ProductID].VoucherId).Builder()
+					tx.Model(&voucherDetail).Create(&voucherDetail)
+				}
+			} else if promotionMap1[item.ProductID].Condition == "count" {
+				if float64(value) >= float64(item.Quantity) {
+					// gen voucher
+					voucherDetail := builders2.NewVoucherDetailBuilder().
+						SetPromoDetailId(promotionMap1[item.ProductID].Id).
+						SetOrderId(order.ID).
+						SetDrugstoreId(order.DrugStoreID).
+						SetVoucherId(promotionMap1[item.ProductID].VoucherId).Builder()
+					tx.Model(&voucherDetail).Create(&voucherDetail)
+				}
+			}
+		}
+	}
+	return
 }

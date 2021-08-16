@@ -34,7 +34,7 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 	// begin a transaction
 	tx := s.DB.Begin()
 
-	rs := tx.FirstOrCreate(&cart)
+	rs := tx.FirstOrCreate(&cart, userId)
 
 	//rollback if error
 	if rs.Error != nil {
@@ -45,11 +45,11 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 	// if account is type user, check drugStoreId and assign for drugstore
 	var details []models.CartDetail
 	for _, item := range request.CartDetails {
-
 		var existedCartDetail models.CartDetail
 		tx.Table(utils.TblCartDetail).
 			Where("product_id = ?", item.ProductID).
 			Where("variant_id = ?", item.VariantID).
+			Where("cart_id = ?", cart.ID).
 			First(&existedCartDetail)
 
 		if existedCartDetail.ID == 0 {

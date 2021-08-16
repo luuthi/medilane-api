@@ -1,6 +1,8 @@
 package builders
 
-import "medilane-api/models"
+import (
+	"medilane-api/models"
+)
 
 type VoucherBuilder struct {
 	name     string
@@ -71,6 +73,58 @@ func (voucherBuilder *VoucherBuilder) Builder() models.Voucher {
 		Unit:              voucherBuilder.unit,
 		Note:              voucherBuilder.note,
 		Deleted:           &voucherBuilder.deleted,
+	}
+	return voucher
+}
+
+type VoucherDetailBuilder struct {
+	voucherId         uint
+	DrugstoreId       uint
+	OrderId           uint
+	PromotionDetailId uint
+	Id                uint
+}
+
+func NewVoucherDetailBuilder() *VoucherDetailBuilder {
+	return &VoucherDetailBuilder{}
+}
+
+func (voucherDetailBuilder *VoucherDetailBuilder) SetVoucherId(voucherId uint) *VoucherDetailBuilder {
+	voucherDetailBuilder.voucherId = voucherId
+	return voucherDetailBuilder
+}
+
+func (voucherDetailBuilder *VoucherDetailBuilder) SetDrugstoreId(drugstoreId uint) *VoucherDetailBuilder {
+	voucherDetailBuilder.DrugstoreId = drugstoreId
+	return voucherDetailBuilder
+}
+
+func (voucherDetailBuilder *VoucherDetailBuilder) SetOrderId(orderId uint) *VoucherDetailBuilder {
+	voucherDetailBuilder.OrderId = orderId
+	return voucherDetailBuilder
+}
+
+func (voucherDetailBuilder *VoucherDetailBuilder) SetPromoDetailId(promDetailId uint) *VoucherDetailBuilder {
+	voucherDetailBuilder.PromotionDetailId = promDetailId
+	return voucherDetailBuilder
+}
+
+func (voucherDetailBuilder *VoucherDetailBuilder) SetId(id uint) *VoucherDetailBuilder {
+	voucherDetailBuilder.Id = id
+	return voucherDetailBuilder
+}
+
+func (voucherDetailBuilder *VoucherDetailBuilder) Builder() models.VoucherDetail {
+	common := models.CommonModelFields{
+		ID: voucherDetailBuilder.Id,
+	}
+
+	voucher := models.VoucherDetail{
+		CommonModelFields: common,
+		VoucherID:         voucherDetailBuilder.voucherId,
+		DrugStoreID:       voucherDetailBuilder.DrugstoreId,
+		OrderID:           voucherDetailBuilder.OrderId,
+		PromotionDetailID: voucherDetailBuilder.PromotionDetailId,
 	}
 	return voucher
 }

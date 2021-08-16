@@ -28,8 +28,13 @@ type Product struct {
 	Tags                   []*Tag      `json:"Tags" gorm:"many2many:product_tag"`
 	Category               []*Category `json:"Category" gorm:"many2many:product_category"`
 	Cost                   float64     `json:"Cost" gorm:"float(64);not null"`
-	Percent                float32     `json:"Percent"`
-	HasPromote             bool        `json:"HasPromote"`
+	Percent                float32     `json:"Percent" gorm:"-"`
+	HasPromote             bool        `json:"HasPromote" gorm:"-"`
+	HasPromoteVoucher      bool        `json:"HasPromoteVoucher" gorm:"-"`
+	ConditionVoucher       string      `json:"ConditionVoucher" gorm:"-"`
+	ValueVoucher           float32     `json:"ValueVoucher" gorm:"-"`
+	VoucherId              uint        `json:"VoucherId" gorm:"-"`
+	Voucher                Voucher     `json:"Voucher" gorm:"-"`
 }
 
 type ProductStore struct {

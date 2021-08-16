@@ -24,8 +24,11 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	product := appRoute.Group("/product")
 	//product.Use(middleware.JWTWithConfig(config))
 	product.POST("/find", productHandler.SearchProduct, authentication.CheckPermission(server, []string{"read:product"}, false))
+	product.POST("/pure-search", productHandler.SearchPureProduct, authentication.CheckPermission(server, []string{"read:product"}, false))
+	product.POST("/suggest", productHandler.SearchSuggestProduct, authentication.CheckPermission(server, []string{"read:product"}, false))
 	product.POST("", productHandler.CreateProduct, authentication.CheckPermission(server, []string{"create:product"}, false))
 	product.GET("/:id", productHandler.GetProductByID, authentication.CheckPermission(server, []string{"read:product"}, false))
+	product.GET("/:id/pure", productHandler.GetPureProductByID, authentication.CheckPermission(server, []string{"read:product"}, false))
 	product.PUT("/:id", productHandler.EditProduct, authentication.CheckPermission(server, []string{"edit:product"}, false))
 	product.DELETE("/:id", productHandler.DeleteProduct, authentication.CheckPermission(server, []string{"delete:product"}, false))
 
