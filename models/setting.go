@@ -8,3 +8,12 @@ type AppSetting struct {
 	Config  string `json:"Config" gorm:"varchar(500)"`
 	Key     string `json:"Key" gorm:"varchar(100)"`
 }
+
+type Banner struct {
+	CommonModelFields
+
+	Url        string `json:"url" gorm:"varchar(255)"`
+	StartTime  int64  `json:"StartTime" gorm:"bigint"`
+	ExpireTime int64  `json:"ExpireTime" gorm:"bigint"`
+	Visible    *bool  `json:"Visible" gorm:"bool"`
+}

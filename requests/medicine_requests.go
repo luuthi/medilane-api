@@ -5,6 +5,10 @@ import (
 	utils2 "medilane-api/core/utils"
 )
 
+type SearchSuggestRequest struct {
+	Name string `json:"Name" example:"name"`
+}
+
 type SearchProductRequest struct {
 	Code     string `json:"Code" example:"MD01"`
 	Name     string `json:"Name" example:"name"`
@@ -12,6 +16,20 @@ type SearchProductRequest struct {
 	Status   string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
 	Category uint   `json:"Category"`
 	AreaId   uint   `json:"AreaId"`
+
+	Limit    int        `json:"limit" example:"10"`
+	Offset   int        `json:"offset" example:"0"`
+	Sort     SortOption `json:"sort"`
+	TimeFrom *int64     `json:"time_from"`
+	TimeTo   *int64     `json:"time_to"`
+}
+
+type SearchPureProductRequest struct {
+	Code     string `json:"Code" example:"MD01"`
+	Name     string `json:"Name" example:"name"`
+	Barcode  string `json:"Barcode"  example:"example"`
+	Status   string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	Category uint   `json:"Category"`
 
 	Limit    int        `json:"limit" example:"10"`
 	Offset   int        `json:"offset" example:"0"`

@@ -193,7 +193,7 @@ func (promoHandler *PromotionHandler) DeletePromotion(c echo.Context) error {
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	promoRepo.GetPromotion(&existedPromotion, id)
 	if existedPromotion.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found promotion with ID: %v", string(id)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found promotion with ID: %v", id))
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
@@ -299,7 +299,7 @@ func (promoHandler *PromotionHandler) DeletePromotionDetail(c echo.Context) erro
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	promoRepo.GetPromotionDetail(&existedPromotionDetail, dId)
 	if existedPromotionDetail.Type == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found promotion with ID: %v", string(dId)))
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found promotion with ID: %v", dId))
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
@@ -399,7 +399,7 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 	}
 
 	promoHandler.server.Logger.Info("search product in promotion")
-	var products []responses2.ProductInPromotionItem
+	var products []models.ProductInPromotionItem
 
 	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
 	if err != nil {
@@ -456,7 +456,7 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 	}
 
 	promoHandler.server.Logger.Info("search product in promotion")
-	var products []responses2.ProductInPromotionItem
+	var products []models.ProductInPromotionItem
 
 	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
 	if err != nil {

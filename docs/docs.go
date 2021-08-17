@@ -967,6 +967,190 @@ var doc = `{
                 }
             }
         },
+        "/banner": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Create banner",
+                "operationId": "create-banner",
+                "parameters": [
+                    {
+                        "description": "Create banner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateBannerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BannerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/banner-delete": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Delete banner",
+                "operationId": "delete-banner",
+                "parameters": [
+                    {
+                        "description": "Edit banner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.DeleteBanner"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/banner-edit": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Edit banner",
+                "operationId": "edit-banner",
+                "parameters": [
+                    {
+                        "description": "Edit banner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.EditBannerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/banner/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform banner setting",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Search banner in system",
+                "operationId": "search-banner",
+                "parameters": [
+                    {
+                        "description": "Filter setting",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchBannerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BannerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/cart": {
             "post": {
                 "security": [
@@ -2604,8 +2788,8 @@ var doc = `{
                             "$ref": "#/definitions/responses.Data"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -2650,8 +2834,100 @@ var doc = `{
                             "$ref": "#/definitions/responses.ProductSearch"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/pure-search": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform only search product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Search only product in system",
+                "operationId": "search-pure-product",
+                "parameters": [
+                    {
+                        "description": "Filter product",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchPureProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProductSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/suggest": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform suggest product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Suggest product in system",
+                "operationId": "suggest-product",
+                "parameters": [
+                    {
+                        "description": "Suggest product",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchSuggestRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.ProductSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -2700,8 +2976,8 @@ var doc = `{
                             "$ref": "#/definitions/models.Product"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -2751,8 +3027,8 @@ var doc = `{
                             "$ref": "#/definitions/responses.Data"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -2793,8 +3069,52 @@ var doc = `{
                             "$ref": "#/definitions/responses.Data"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/product/{id}/pure": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get pure product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product Management"
+                ],
+                "summary": "Get pure product in system",
+                "operationId": "get-pure-product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id product",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Product"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -2839,8 +3159,8 @@ var doc = `{
                             "$ref": "#/definitions/responses.MessageDetail"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/responses.Error"
                         }
@@ -4821,6 +5141,32 @@ var doc = `{
                 }
             }
         },
+        "models.Banner": {
+            "type": "object",
+            "properties": {
+                "ExpireTime": {
+                    "type": "integer"
+                },
+                "StartTime": {
+                    "type": "integer"
+                },
+                "Visible": {
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Cart": {
             "type": "object",
             "properties": {
@@ -5103,6 +5449,9 @@ var doc = `{
                 "id": {
                     "type": "integer"
                 },
+                "oldStatus": {
+                    "type": "string"
+                },
                 "updated_at": {
                     "type": "integer"
                 }
@@ -5345,6 +5694,9 @@ var doc = `{
                 "Code": {
                     "type": "string"
                 },
+                "ConditionVoucher": {
+                    "type": "string"
+                },
                 "Content": {
                     "type": "string"
                 },
@@ -5367,6 +5719,9 @@ var doc = `{
                     "type": "string"
                 },
                 "HasPromote": {
+                    "type": "boolean"
+                },
+                "HasPromoteVoucher": {
                     "type": "boolean"
                 },
                 "Images": {
@@ -5411,11 +5766,21 @@ var doc = `{
                 "Unit": {
                     "type": "string"
                 },
+                "ValueVoucher": {
+                    "type": "number"
+                },
                 "Variants": {
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Variant"
                     }
+                },
+                "Voucher": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.Voucher"
+                },
+                "VoucherId": {
+                    "type": "integer"
                 },
                 "created_at": {
                     "type": "integer"
@@ -5424,6 +5789,53 @@ var doc = `{
                     "type": "integer"
                 },
                 "updated_at": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ProductInPromotionItem": {
+            "type": "object",
+            "properties": {
+                "Barcode": {
+                    "type": "string"
+                },
+                "Code": {
+                    "type": "string"
+                },
+                "Condition": {
+                    "type": "string"
+                },
+                "Cost": {
+                    "type": "number"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "Percent": {
+                    "type": "number"
+                },
+                "ProductId": {
+                    "type": "integer"
+                },
+                "Type": {
+                    "type": "string"
+                },
+                "Unit": {
+                    "type": "string"
+                },
+                "Url": {
+                    "type": "string"
+                },
+                "Value": {
+                    "type": "number"
+                },
+                "VariantId": {
+                    "type": "integer"
+                },
+                "VoucherId": {
+                    "type": "integer"
+                },
+                "id": {
                     "type": "integer"
                 }
             }
@@ -5531,6 +5943,9 @@ var doc = `{
             "properties": {
                 "AreaId": {
                     "type": "integer"
+                },
+                "Avatar": {
+                    "type": "string"
                 },
                 "Deleted": {
                     "type": "boolean"
@@ -5930,6 +6345,26 @@ var doc = `{
                 }
             }
         },
+        "requests.BannerRequest": {
+            "type": "object",
+            "properties": {
+                "ExpireTime": {
+                    "type": "integer"
+                },
+                "Id": {
+                    "type": "integer"
+                },
+                "StartTime": {
+                    "type": "integer"
+                },
+                "Url": {
+                    "type": "string"
+                },
+                "Visible": {
+                    "type": "boolean"
+                }
+            }
+        },
         "requests.CartItemRequest": {
             "type": "object",
             "properties": {
@@ -6069,6 +6504,17 @@ var doc = `{
                 }
             }
         },
+        "requests.CreateBannerRequest": {
+            "type": "object",
+            "properties": {
+                "BannerList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.BannerRequest"
+                    }
+                }
+            }
+        },
         "requests.CreatePartnerRequest": {
             "type": "object",
             "required": [
@@ -6103,6 +6549,17 @@ var doc = `{
                 "Type": {
                     "type": "string",
                     "example": "supplier/manufacturer"
+                }
+            }
+        },
+        "requests.DeleteBanner": {
+            "type": "object",
+            "properties": {
+                "BannerListId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -6254,6 +6711,17 @@ var doc = `{
                 "Ward": {
                     "type": "string",
                     "example": "Quan Hoa"
+                }
+            }
+        },
+        "requests.EditBannerRequest": {
+            "type": "object",
+            "properties": {
+                "BannerList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.BannerRequest"
+                    }
                 }
             }
         },
@@ -6672,6 +7140,9 @@ var doc = `{
                 "AreaId": {
                     "type": "integer"
                 },
+                "Avatar": {
+                    "type": "string"
+                },
                 "EndTime": {
                     "type": "integer"
                 },
@@ -6908,6 +7379,14 @@ var doc = `{
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SearchBannerRequest": {
+            "type": "object",
+            "properties": {
+                "Visible": {
+                    "type": "boolean"
                 }
             }
         },
@@ -7222,6 +7701,48 @@ var doc = `{
                 }
             }
         },
+        "requests.SearchPureProductRequest": {
+            "type": "object",
+            "properties": {
+                "Barcode": {
+                    "type": "string",
+                    "example": "example"
+                },
+                "Category": {
+                    "type": "integer"
+                },
+                "Code": {
+                    "type": "string",
+                    "example": "MD01"
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "name"
+                },
+                "Status": {
+                    "type": "string",
+                    "example": "show/hide/approve/cancel/outofstock"
+                },
+                "limit": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "offset": {
+                    "type": "integer",
+                    "example": 0
+                },
+                "sort": {
+                    "type": "object",
+                    "$ref": "#/definitions/requests.SortOption"
+                },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
+                }
+            }
+        },
         "requests.SearchRoleRequest": {
             "type": "object",
             "properties": {
@@ -7248,6 +7769,15 @@ var doc = `{
             "properties": {
                 "Key": {
                     "type": "string"
+                }
+            }
+        },
+        "requests.SearchSuggestRequest": {
+            "type": "object",
+            "properties": {
+                "Name": {
+                    "type": "string",
+                    "example": "name"
                 }
             }
         },
@@ -7437,6 +7967,26 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Area"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.BannerResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Banner"
                     }
                 },
                 "message": {
@@ -7803,38 +8353,6 @@ var doc = `{
                 }
             }
         },
-        "responses.ProductInPromotionItem": {
-            "type": "object",
-            "properties": {
-                "Barcode": {
-                    "type": "string"
-                },
-                "Code": {
-                    "type": "string"
-                },
-                "Cost": {
-                    "type": "number"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Percent": {
-                    "type": "number"
-                },
-                "ProductId": {
-                    "type": "integer"
-                },
-                "Unit": {
-                    "type": "string"
-                },
-                "Url": {
-                    "type": "string"
-                },
-                "VariantId": {
-                    "type": "integer"
-                }
-            }
-        },
         "responses.ProductInPromotionSearch": {
             "type": "object",
             "properties": {
@@ -7844,7 +8362,7 @@ var doc = `{
                 "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/responses.ProductInPromotionItem"
+                        "$ref": "#/definitions/models.ProductInPromotionItem"
                     }
                 },
                 "message": {
