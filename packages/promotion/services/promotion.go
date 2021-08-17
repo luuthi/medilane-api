@@ -38,6 +38,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		SetAreaId(request.AreaId).
 		SetStatus(true).
 		SetDeleted(false).
+		SetAvatar(request.Avatar).
 		Build()
 
 	// begin a transaction
@@ -97,6 +98,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 		SetStatus(*request.Status).
 		SetDeleted(false).
 		SetAreaId(request.AreaId).
+		SetAvatar(request.Avatar).
 		SetID(id).
 		Build()
 
@@ -195,6 +197,7 @@ func (promoService *Service) EditPromotion(request *requests.PromotionRequest, i
 		SetEndTime(request.EndTime).
 		SetAreaId(request.AreaId).
 		SetStatus(*request.Status).
+		SetAvatar(request.Avatar).
 		SetDeleted(false).
 		SetID(id).
 		Build()

@@ -13,6 +13,7 @@ type PromotionRequest struct {
 	StartTime int64  `json:"StartTime" validate:"required"`
 	EndTime   int64  `json:"EndTime" validate:"required"`
 	Status    *bool  `json:"Status" validate:"required"`
+	Avatar    string `json:"Avatar"`
 }
 
 type PromotionWithDetailRequest struct {

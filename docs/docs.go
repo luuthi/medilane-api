@@ -967,6 +967,190 @@ var doc = `{
                 }
             }
         },
+        "/banner": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Create banner",
+                "operationId": "create-banner",
+                "parameters": [
+                    {
+                        "description": "Create banner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CreateBannerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BannerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/banner-delete": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Delete banner",
+                "operationId": "delete-banner",
+                "parameters": [
+                    {
+                        "description": "Edit banner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.DeleteBanner"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/banner-edit": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform create banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Edit banner",
+                "operationId": "edit-banner",
+                "parameters": [
+                    {
+                        "description": "Edit banner",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.EditBannerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/banner/find": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform banner setting",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Banner Management"
+                ],
+                "summary": "Search banner in system",
+                "operationId": "search-banner",
+                "parameters": [
+                    {
+                        "description": "Filter setting",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.SearchBannerRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BannerResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/cart": {
             "post": {
                 "security": [
@@ -4957,6 +5141,32 @@ var doc = `{
                 }
             }
         },
+        "models.Banner": {
+            "type": "object",
+            "properties": {
+                "ExpireTime": {
+                    "type": "integer"
+                },
+                "StartTime": {
+                    "type": "integer"
+                },
+                "Visible": {
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Cart": {
             "type": "object",
             "properties": {
@@ -5734,6 +5944,9 @@ var doc = `{
                 "AreaId": {
                     "type": "integer"
                 },
+                "Avatar": {
+                    "type": "string"
+                },
                 "Deleted": {
                     "type": "boolean"
                 },
@@ -6132,6 +6345,26 @@ var doc = `{
                 }
             }
         },
+        "requests.BannerRequest": {
+            "type": "object",
+            "properties": {
+                "ExpireTime": {
+                    "type": "integer"
+                },
+                "Id": {
+                    "type": "integer"
+                },
+                "StartTime": {
+                    "type": "integer"
+                },
+                "Url": {
+                    "type": "string"
+                },
+                "Visible": {
+                    "type": "boolean"
+                }
+            }
+        },
         "requests.CartItemRequest": {
             "type": "object",
             "properties": {
@@ -6271,6 +6504,17 @@ var doc = `{
                 }
             }
         },
+        "requests.CreateBannerRequest": {
+            "type": "object",
+            "properties": {
+                "BannerList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.BannerRequest"
+                    }
+                }
+            }
+        },
         "requests.CreatePartnerRequest": {
             "type": "object",
             "required": [
@@ -6305,6 +6549,17 @@ var doc = `{
                 "Type": {
                     "type": "string",
                     "example": "supplier/manufacturer"
+                }
+            }
+        },
+        "requests.DeleteBanner": {
+            "type": "object",
+            "properties": {
+                "BannerListId": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -6456,6 +6711,17 @@ var doc = `{
                 "Ward": {
                     "type": "string",
                     "example": "Quan Hoa"
+                }
+            }
+        },
+        "requests.EditBannerRequest": {
+            "type": "object",
+            "properties": {
+                "BannerList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/requests.BannerRequest"
+                    }
                 }
             }
         },
@@ -6874,6 +7140,9 @@ var doc = `{
                 "AreaId": {
                     "type": "integer"
                 },
+                "Avatar": {
+                    "type": "string"
+                },
                 "EndTime": {
                     "type": "integer"
                 },
@@ -7110,6 +7379,14 @@ var doc = `{
                 "sort": {
                     "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
+                }
+            }
+        },
+        "requests.SearchBannerRequest": {
+            "type": "object",
+            "properties": {
+                "Visible": {
+                    "type": "boolean"
                 }
             }
         },
@@ -7690,6 +7967,26 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Area"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.BannerResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Banner"
                     }
                 },
                 "message": {

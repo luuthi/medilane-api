@@ -11,6 +11,7 @@ type PromotionBuilder struct {
 	id        uint
 	deleted   bool
 	status    bool
+	avatar    string
 }
 
 func NewPromotionBuilder() *PromotionBuilder {
@@ -24,6 +25,11 @@ func (proBuilder *PromotionBuilder) SetName(name string) *PromotionBuilder {
 
 func (proBuilder *PromotionBuilder) SetNote(note string) *PromotionBuilder {
 	proBuilder.note = note
+	return proBuilder
+}
+
+func (proBuilder *PromotionBuilder) SetAvatar(avatar string) *PromotionBuilder {
+	proBuilder.avatar = avatar
 	return proBuilder
 }
 
@@ -71,6 +77,7 @@ func (proBuilder *PromotionBuilder) Build() models.Promotion {
 		Deleted:           &proBuilder.deleted,
 		AreaId:            proBuilder.AreaId,
 		Status:            &proBuilder.status,
+		Avatar:            proBuilder.avatar,
 	}
 
 	return promotion

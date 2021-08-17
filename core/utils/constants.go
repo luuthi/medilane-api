@@ -29,6 +29,7 @@ const (
 	TblPartner               = "partner"
 	TblPartnerUser           = "partner_user"
 	TblSetting               = "app_setting"
+	TblBanner                = "banner"
 )
 
 type AccountType string

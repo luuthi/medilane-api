@@ -88,6 +88,23 @@ definitions:
       id:
         type: integer
     type: object
+  models.Banner:
+    properties:
+      ExpireTime:
+        type: integer
+      StartTime:
+        type: integer
+      Visible:
+        type: boolean
+      created_at:
+        type: integer
+      id:
+        type: integer
+      updated_at:
+        type: integer
+      url:
+        type: string
+    type: object
   models.Cart:
     properties:
       CartDetails:
@@ -607,6 +624,8 @@ definitions:
     properties:
       AreaId:
         type: integer
+      Avatar:
+        type: string
       Deleted:
         type: boolean
       EndTime:
@@ -878,6 +897,19 @@ definitions:
           type: integer
         type: array
     type: object
+  requests.BannerRequest:
+    properties:
+      ExpireTime:
+        type: integer
+      Id:
+        type: integer
+      StartTime:
+        type: integer
+      Url:
+        type: string
+      Visible:
+        type: boolean
+    type: object
   requests.CartItemRequest:
     properties:
       CartID:
@@ -974,6 +1006,13 @@ definitions:
     - password
     - username
     type: object
+  requests.CreateBannerRequest:
+    properties:
+      BannerList:
+        items:
+          $ref: '#/definitions/requests.BannerRequest'
+        type: array
+    type: object
   requests.CreatePartnerRequest:
     properties:
       Address:
@@ -1001,6 +1040,13 @@ definitions:
     - Note
     - Status
     - Type
+    type: object
+  requests.DeleteBanner:
+    properties:
+      BannerListId:
+        items:
+          type: integer
+        type: array
     type: object
   requests.DrugStoreRequest:
     properties:
@@ -1113,6 +1159,13 @@ definitions:
     - Phone
     - State
     - Ward
+    type: object
+  requests.EditBannerRequest:
+    properties:
+      BannerList:
+        items:
+          $ref: '#/definitions/requests.BannerRequest'
+        type: array
     type: object
   requests.EditDrugStoreRequest:
     properties:
@@ -1402,6 +1455,8 @@ definitions:
     properties:
       AreaId:
         type: integer
+      Avatar:
+        type: string
       EndTime:
         type: integer
       Name:
@@ -1577,6 +1632,11 @@ definitions:
       sort:
         $ref: '#/definitions/requests.SortOption'
         type: object
+    type: object
+  requests.SearchBannerRequest:
+    properties:
+      Visible:
+        type: boolean
     type: object
   requests.SearchCategoryRequest:
     properties:
@@ -1979,6 +2039,19 @@ definitions:
       data:
         items:
           $ref: '#/definitions/models.Area'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
+  responses.BannerResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.Banner'
         type: array
       message:
         type: string
@@ -2989,6 +3062,122 @@ paths:
       summary: Search area in system
       tags:
       - Area Management
+  /banner:
+    post:
+      consumes:
+      - application/json
+      description: Perform create banner
+      operationId: create-banner
+      parameters:
+      - description: Create banner
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.CreateBannerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.BannerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Create banner
+      tags:
+      - Banner Management
+  /banner-delete:
+    post:
+      consumes:
+      - application/json
+      description: Perform delete banner
+      operationId: delete-banner
+      parameters:
+      - description: Edit banner
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.DeleteBanner'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Delete banner
+      tags:
+      - Banner Management
+  /banner-edit:
+    post:
+      consumes:
+      - application/json
+      description: Perform create banner
+      operationId: edit-banner
+      parameters:
+      - description: Edit banner
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.EditBannerRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Edit banner
+      tags:
+      - Banner Management
+  /banner/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform banner setting
+      operationId: search-banner
+      parameters:
+      - description: Filter setting
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchBannerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.BannerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Search banner in system
+      tags:
+      - Banner Management
   /cart:
     post:
       consumes:
