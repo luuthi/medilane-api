@@ -35,6 +35,11 @@ type Order struct {
 
 func (order *Order) AfterCreate(tx *gorm.DB) (err error) {
 	// TODO: thông báo admin: có đơn hàng mới
+	orderNotification := OrderNotification{
+		DB: tx,
+		Entity: order,
+	}
+	orderNotification.AddNotificationToDB("created")
 	return
 }
 
@@ -73,6 +78,11 @@ func (order *Order) BeforeUpdate(tx *gorm.DB) (err error) {
 }
 
 func (order *Order) AfterUpdate(tx *gorm.DB) (err error) {
+	orderNotification := OrderNotification{
+		DB: tx,
+		Entity: order,
+	}
+	orderNotification.AddNotificationToDB("updated")
 	switch order.OldStatus {
 	case orderConst.Confirm.String():
 		if order.Status == orderConst.Confirmed.String() {

@@ -75,6 +75,7 @@ func Init(cfg *config.Config) *gorm.DB {
 		//	_ = db.AutoMigrate(&models.Voucher{})
 		//	_ = db.AutoMigrate(&models.PromotionDetail{})
 		//	_ = db.AutoMigrate(&models.Promotion{})
+		//	_ = db.AutoMigrate(&models.Notification{})
 	}
 
 	//if cfg.MIGRATION.Migrate {

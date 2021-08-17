@@ -29,6 +29,11 @@ type DrugStore struct {
 }
 
 func (ds *DrugStore) AfterCreate(tx *gorm.DB) (err error) {
+	drugStoreNotification := DrugStoreNotification{
+		DB: tx,
+		Entity: ds,
+	}
+	drugStoreNotification.AddNotificationToDB()
 	log.Infof("created drugstore: %v", ds)
 	return
 }
