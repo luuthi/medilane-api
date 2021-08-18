@@ -9,6 +9,7 @@ import (
 	cartRoute "medilane-api/packages/cart/routes"
 	drugStoreRoute "medilane-api/packages/drugstores/routes"
 	productRoute "medilane-api/packages/medicines/routes"
+	"medilane-api/packages/notification/routes"
 	orderRoute "medilane-api/packages/order/routes"
 	promotionRoute "medilane-api/packages/promotion/routes"
 	settingRoute "medilane-api/packages/settings/routes"
@@ -42,6 +43,7 @@ func ConfigureRoutes(server *s.Server, config *config.Config) {
 	cartRoute.ConfigureCartRoutes(appRoute, server)
 	orderRoute.ConfigureOrderRoutes(appRoute, server)
 	settingRoute.ConfigureSettingtRoutes(appRoute, server)
+	routes.ConfigureNotificationRoutes(appRoute, server)
 }
 
 func makeLogEntry(c echo.Context) *log.Entry {
