@@ -5456,10 +5456,13 @@ var doc = `{
                 "Action": {
                     "type": "string"
                 },
-                "Data": {
+                "Entity": {
                     "type": "string"
                 },
-                "Entity": {
+                "EntityId": {
+                    "type": "integer"
+                },
+                "Message": {
                     "type": "string"
                 },
                 "Status": {

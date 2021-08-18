@@ -238,9 +238,11 @@ definitions:
     properties:
       Action:
         type: string
-      Data:
-        type: string
       Entity:
+        type: string
+      EntityId:
+        type: integer
+      Message:
         type: string
       Status:
         type: string
