@@ -31,6 +31,7 @@ const (
 	TblSetting               = "app_setting"
 	TblBanner                = "banner"
 	TblNotification          = "notification"
+	TblFcmToken              = "fcm_token"
 )
 
 type AccountType string

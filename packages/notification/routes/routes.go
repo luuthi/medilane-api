@@ -8,7 +8,11 @@ import (
 
 func ConfigureNotificationRoutes(appRoute *echo.Group, server *s.Server) {
 	notificationHandler := handlers.NewNotificationHandler(server)
+	fcmTokenHandler := handlers.NewFcmTokenHandler(server)
 
 	notification := appRoute.Group("/notification")
 	notification.POST("/find", notificationHandler.SearchNotification)
+
+	fcmToken := appRoute.Group("/fcm-token")
+	fcmToken.POST("/find", fcmTokenHandler.CreateFcmToken)
 }
