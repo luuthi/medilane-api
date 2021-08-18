@@ -1,8 +1,9 @@
 package models
 
 import (
-	"encoding/json"
+	"fmt"
 	"gorm.io/gorm"
+	"medilane-api/core/utils"
 )
 
 type ActionNotification interface {
@@ -20,11 +21,15 @@ type DrugStoreNotification struct {
 	Entity *DrugStore
 }
 
-func (o OrderNotification) GetUserNeedNotification() []uint {
+func (o OrderNotification) GetUserNeedNotification(notificationForUser bool) []uint {
 	var  idUsers []uint
 	var users *[]User
-	idUsers = append(idUsers, o.Entity.UserOrderID)
-	o.DB.Table("user").Where("type", "staff").
+
+	if notificationForUser {
+		idUsers = append(idUsers, o.Entity.UserOrderID)
+	}
+
+	o.DB.Table(utils.TblAccount).Where("type", "staff").
 		Where("is_admin", true).
 		Find(&users)
 	for _,user := range *users {
@@ -33,25 +38,24 @@ func (o OrderNotification) GetUserNeedNotification() []uint {
 	return idUsers
 }
 
-func (o OrderNotification) AddNotificationToDB(action string) {
-	idUsers := o.GetUserNeedNotification()
-	orderJson,_ := json.Marshal(o.Entity)
+func (o OrderNotification) AddNotificationToDB(action string, message string, idUsers []uint) {
 	for _,user:= range idUsers {
 		notification := Notification{
-			Data: string(orderJson),
 			Action: action,
 			Entity: "order",
 			Status: "unseen",
 			UserId: user,
+			Message: message,
+			EntityId: o.Entity.ID,
 		}
-		o.DB.Table("notification").Create(&notification)
+		o.DB.Table(utils.TblNotification).Create(&notification)
 	}
 }
 
 func (d DrugStoreNotification) GetUserNeedNotification() []uint {
 	var  idUsers []uint
 	var users *[]User
-	d.DB.Table("user").Where("type", "staff").
+	d.DB.Table(utils.TblAccount).Where("type", "staff").
 		Where("is_admin", true).
 		Find(&users)
 	for _,user := range *users {
@@ -62,15 +66,16 @@ func (d DrugStoreNotification) GetUserNeedNotification() []uint {
 
 func (d DrugStoreNotification) AddNotificationToDB() {
 	idUsers := d.GetUserNeedNotification()
-	userJson,_ := json.Marshal(d.Entity)
+	message := fmt.Sprintf("Cửa hàng %s đã được tạo", d.Entity.StoreName)
 	for _,user:= range idUsers {
 		notification := Notification{
-			Data: string(userJson),
 			Action: "created",
 			Entity: "drugstore",
 			Status: "unseen",
 			UserId: user,
+			Message: message,
+			EntityId: d.Entity.ID,
 		}
-		d.DB.Table("notification").Create(&notification)
+		d.DB.Table(utils.TblNotification).Create(&notification)
 	}
 }
