@@ -26,8 +26,8 @@ func NewNotificationHandler(server *s.Server) *NotificationHandler {
 // @Tags Notification Management
 // @Accept json
 // @Produce json
-// @Param params body requests2.SearchNotificationRequest true "Notification's credentials"
-// @Success 200 {object} responses3.NotificationSearch
+// @Param params body requests.SearchNotificationRequest true "Notification's credentials"
+// @Success 200 {object} responses.NotificationSearch
 // @Failure 401 {object} responses.Error
 // @Router /notification/find [post]
 func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Context) error {

@@ -58,7 +58,6 @@ func (bannerHandler *BannerHandler) SearchBanner(c echo.Context) error {
 // @Tags Banner Management
 // @Accept json
 // @Produce json
-// @Param params body requests.SearchBannerRequest true "Filter setting"
 // @Success 200 {object} models.Banner
 // @Failure 400 {object} responses.Error
 // @Router /banner/id [get]
