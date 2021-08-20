@@ -42,3 +42,11 @@ func (NotificationRepository *NotificationRepository) GetNotifications(count *in
 
 	return notifications
 }
+
+func (NotificationRepository *NotificationRepository) GetNotificationByID(perm *models.Notification, id uint) {
+	NotificationRepository.DB.First(&perm, id)
+}
+
+func (NotificationRepository *NotificationRepository) GetNotificationByUserID(perm *[]models.Notification, id uint) {
+	NotificationRepository.DB.Table(utils.TblNotification).Where("user_id", id).Find(&perm)
+}
