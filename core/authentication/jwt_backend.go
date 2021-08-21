@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"bufio"
+	"context"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
@@ -17,7 +18,6 @@ type JWTAuthenticationBackend struct {
 	privateKey *rsa.PrivateKey
 	PublicKey  *rsa.PublicKey
 	config     *config.Config
-	conn       *redisCon.Cli
 }
 
 type JwtCustomClaims struct {
@@ -41,13 +41,12 @@ const (
 
 var authBackendInstance *JWTAuthenticationBackend = nil
 
-func InitJWTAuthenticationBackend(cfg *config.Config, conn *redisCon.Cli) *JWTAuthenticationBackend {
+func InitJWTAuthenticationBackend(cfg *config.Config) *JWTAuthenticationBackend {
 	if authBackendInstance == nil {
 		authBackendInstance = &JWTAuthenticationBackend{
 			privateKey: getPrivateKey(cfg),
 			PublicKey:  getPublicKey(cfg),
 			config:     cfg,
-			conn:       conn,
 		}
 	}
 
@@ -101,13 +100,19 @@ func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp int
 }
 
 func (backend *JWTAuthenticationBackend) Logout(tokenString string, token *jwt.Token) error {
-	return backend.conn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
+	ctx := context.Background()
+	ttl := time.Duration(backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]) * 1e9)
+	_, err := redisCon.GetInstance().Set(ctx, tokenString, tokenString, ttl)
+	return err
+	//return backend.conn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
 }
 
 func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {
-	redisToken, _ := backend.conn.GetValue(token)
+	ctx := context.Background()
+	redisToken, _ := redisCon.GetInstance().Get(ctx, token)
+	//redisToken, _ := backend.conn.GetValue(token)
 
-	if redisToken == nil {
+	if redisToken == "" {
 		return false
 	}
 

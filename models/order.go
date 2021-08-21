@@ -37,12 +37,13 @@ type Order struct {
 func (order *Order) AfterCreate(tx *gorm.DB) (err error) {
 	// TODO: thông báo admin: có đơn hàng mới
 	orderNotification := OrderNotification{
-		DB: tx,
+		DB:     tx,
 		Entity: order,
 	}
+	title := "Đơn hàng mới"
 	message := fmt.Sprintf("Đơn hàng %s đã được tạo", order.OrderCode)
 	idUsers := orderNotification.GetUserNeedNotification(false)
-	orderNotification.AddNotificationToDB("created", message, idUsers)
+	orderNotification.PushNotification("created", message, idUsers, title)
 	return
 }
 
@@ -82,61 +83,67 @@ func (order *Order) BeforeUpdate(tx *gorm.DB) (err error) {
 
 func (order *Order) AfterUpdate(tx *gorm.DB) (err error) {
 	orderNotification := OrderNotification{
-		DB: tx,
+		DB:     tx,
 		Entity: order,
 	}
 	switch order.OldStatus {
 	case orderConst.Confirm.String():
 		if order.Status == orderConst.Confirmed.String() {
 			log.Info("đơn hàng đã đc xác nhận")
+			title := "Cập nhật đơn hàng"
 			message := fmt.Sprintf("Đơn hàng %s đã được xác nhận", order.OrderCode)
 			idUsers := orderNotification.GetUserNeedNotification(true)
-			orderNotification.AddNotificationToDB("updated", message, idUsers)
+			orderNotification.PushNotification("updated", message, idUsers, title)
 			// TODO: thông báo cho user tạo đơn, admin : đơn hàng đã đc xác nhận
 			return
 		}
 	case orderConst.Confirmed.String():
 		if order.Status == orderConst.Processing.String() {
 			log.Info("đơn hàng đang được chuẩn bị")
+			title := "Cập nhật đơn hàng"
 			message := fmt.Sprintf("Đơn hàng %s đang được chuẩn bị", order.OrderCode)
 			idUsers := orderNotification.GetUserNeedNotification(true)
-			orderNotification.AddNotificationToDB("updated", message, idUsers)
+			orderNotification.PushNotification("updated", message, idUsers, title)
 			// TODO: thông báo cho user tạo đơn, admin : đơn hàng đang được chuẩn bị
 			return
 		}
 	case orderConst.Processing.String():
 		if order.Status == orderConst.Packaging.String() {
 			log.Info("đơn hàng đang được đóng gói")
+			title := "Cập nhật đơn hàng"
 			message := fmt.Sprintf("Đơn hàng %s đang đóng gói", order.OrderCode)
 			idUsers := orderNotification.GetUserNeedNotification(true)
-			orderNotification.AddNotificationToDB("updated", message, idUsers)
+			orderNotification.PushNotification("updated", message, idUsers, title)
 			// TODO: thông báo cho user tạo đơn, admin : đơn hàng đang được đóng gói
 			return
 		}
 	case orderConst.Packaging.String():
 		if order.Status == orderConst.Delivery.String() {
 			log.Info("đơn hàng đang được giao")
+			title := "Cập nhật đơn hàng"
 			message := fmt.Sprintf("Đơn hàng %s đang giao", order.OrderCode)
 			idUsers := orderNotification.GetUserNeedNotification(true)
-			orderNotification.AddNotificationToDB("updated", message, idUsers)
+			orderNotification.PushNotification("updated", message, idUsers, title)
 			// TODO: thông báo cho user tạo đơn, admin : đơn hàng đang được giao
 			return
 		}
 	case orderConst.Delivery.String():
 		if order.Status == orderConst.Delivered.String() {
 			log.Info(" đơn hàng đã được giao")
+			title := "Cập nhật đơn hàng"
 			message := fmt.Sprintf("Đơn hàng %s đã được giao", order.OrderCode)
 			idUsers := orderNotification.GetUserNeedNotification(false)
-			orderNotification.AddNotificationToDB("updated", message, idUsers)
+			orderNotification.PushNotification("updated", message, idUsers, title)
 			// TODO: thông báo cho  admin : đơn hàng đã được giao
 			return
 		}
 	case orderConst.Delivered.String():
 		if order.Status == orderConst.Received.String() {
 			log.Info("khách hàng xác nhận đã nhận đơn")
+			title := "Cập nhật đơn hàng"
 			message := fmt.Sprintf("Đơn hàng %s đã được khách hàng xác nhận", order.OrderCode)
 			idUsers := orderNotification.GetUserNeedNotification(false)
-			orderNotification.AddNotificationToDB("updated", message, idUsers)
+			orderNotification.PushNotification("updated", message, idUsers, title)
 			// TODO: thông báo cho  admin : khách hàng xác nhận đã nhận đơn
 			return
 		}

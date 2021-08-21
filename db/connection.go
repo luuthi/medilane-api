@@ -18,8 +18,6 @@ func Init(cfg *config.Config) *gorm.DB {
 		cfg.DB.Port,
 		cfg.DB.Name)
 
-	fmt.Println(dataSourceName)
-
 	db, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
@@ -32,7 +30,7 @@ func Init(cfg *config.Config) *gorm.DB {
 	}
 
 	if cfg.MIGRATION.Migrate {
-		_ = db.AutoMigrate(&models.Banner{})
+		_ = db.AutoMigrate(&models.Notification{})
 		//_ = db.SetupJoinTable(&models.Partner{}, "Users", &models.PartnerUser{})
 		//_ = db.AutoMigrate(&models.Partner{})
 		//	_ = db.AutoMigrate(&models.User{}, &models.Role{}, &models.Permission{})

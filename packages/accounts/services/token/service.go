@@ -3,7 +3,6 @@ package token
 import (
 	"github.com/dgrijalva/jwt-go"
 	"medilane-api/config"
-	redisCon "medilane-api/core/redis"
 	"medilane-api/models"
 )
 
@@ -28,13 +27,11 @@ type ServiceWrapper interface {
 }
 
 type Service struct {
-	config   *config.Config
-	redisCli *redisCon.Cli
+	config *config.Config
 }
 
-func NewTokenService(cfg *config.Config, redisCli *redisCon.Cli) *Service {
+func NewTokenService(cfg *config.Config) *Service {
 	return &Service{
-		config:   cfg,
-		redisCli: redisCli,
+		config: cfg,
 	}
 }

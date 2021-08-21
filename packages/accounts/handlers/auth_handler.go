@@ -69,7 +69,7 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusForbidden, "Store is not active")
 	}
 
-	tokenServ := tokenService.NewTokenService(authHandler.server.Config, authHandler.server.Redis)
+	tokenServ := tokenService.NewTokenService(authHandler.server.Config)
 	accessToken, exp, err := tokenServ.CreateAccessToken(&user)
 	if err != nil {
 		return err
@@ -129,7 +129,7 @@ func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
 		return responses.ErrorResponse(c, http.StatusUnauthorized, "User not found")
 	}
 
-	tokenServ := tokenService.NewTokenService(authHandler.server.Config, authHandler.server.Redis)
+	tokenServ := tokenService.NewTokenService(authHandler.server.Config)
 	accessToken, exp, err := tokenServ.CreateAccessToken(user)
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
 // @Router /logout [post]
 // @Security BearerAuth
 func (authHandler *AuthHandler) Logout(c echo.Context) error {
-	authBackend := authentication.InitJWTAuthenticationBackend(authHandler.server.Config, authHandler.server.Redis)
+	authBackend := authentication.InitJWTAuthenticationBackend(authHandler.server.Config)
 	tokenRequest, err := request.ParseFromRequest(c.Request(), request.OAuth2Extractor, func(token *jwtGo.Token) (interface{}, error) {
 		return authBackend.PublicKey, nil
 	})
