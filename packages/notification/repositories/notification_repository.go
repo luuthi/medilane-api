@@ -30,7 +30,7 @@ func (NotificationRepository *NotificationRepository) GetNotifications(count *in
 	var notifications []models.Notification
 
 	NotificationRepository.DB.Table(utils.TblNotification).
-		Where("status = ?", "unseen").
+		Where("status = ? AND user_id = ?", "unseen", filter.UserId).
 		Count(count).
 		Find(&notifications)
 
