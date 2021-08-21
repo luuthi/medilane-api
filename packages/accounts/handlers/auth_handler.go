@@ -61,7 +61,7 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 	var drugStore models.DrugStore
 	AccountRepository.GetDrugStoreByUser(&drugStore, user.ID)
 
-	if drugStore.ID == 0 && user.Type != string(utils2.SUPER_ADMIN) {
+	if drugStore.ID == 0 && user.Type != string(utils2.SUPER_ADMIN) && user.Type != string(utils2.STAFF) {
 		return responses.ErrorResponse(c, http.StatusForbidden, "User not in any active store")
 	}
 
