@@ -16,6 +16,7 @@ type Config struct {
 	MIGRATION     Migration             `yaml:"MIGRATION"`
 	REDIS         Redis                 `yaml:"REDIS"`
 	SwaggerDocUrl string                `yaml:"SWAGGER_DOC_URL"`
+	FcmKeyPath    string                `yaml:"FCM_KEY"`
 	DefaultRoles  DefaultRole           `yaml:"DEFAULT_ROLES"`
 }
 

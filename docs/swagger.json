@@ -5195,6 +5195,7 @@
                     "type": "string"
                 },
                 "Area": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Area"
                 },
                 "AreaID": {
@@ -5303,6 +5304,7 @@
             "type": "object",
             "properties": {
                 "Area": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Area"
                 },
                 "AreaId": {
@@ -5381,6 +5383,7 @@
                     "type": "number"
                 },
                 "Product": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -5390,6 +5393,7 @@
                     "type": "integer"
                 },
                 "Variant": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -5445,12 +5449,14 @@
             "type": "object",
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
                     "type": "integer"
                 },
                 "ApproveBy": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "ApproveTime": {
@@ -5487,9 +5493,11 @@
                     }
                 },
                 "Representative": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "Staff": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "Status": {
@@ -5562,6 +5570,13 @@
                 "Status": {
                     "type": "string"
                 },
+                "Title": {
+                    "type": "string"
+                },
+                "User": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
                 "UserId": {
                     "type": "integer"
                 },
@@ -5580,6 +5595,7 @@
             "type": "object",
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
@@ -5592,6 +5608,7 @@
                     "type": "integer"
                 },
                 "Drugstore": {
+                    "type": "object",
                     "$ref": "#/definitions/models.DrugStore"
                 },
                 "Note": {
@@ -5607,6 +5624,7 @@
                     }
                 },
                 "PaymentMethod": {
+                    "type": "object",
                     "$ref": "#/definitions/models.PaymentMethod"
                 },
                 "PaymentMethodID": {
@@ -5628,12 +5646,14 @@
                     "type": "string"
                 },
                 "UserApprove": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "UserApproveID": {
                     "type": "integer"
                 },
                 "UserOrder": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "UserOrderID": {
@@ -5669,6 +5689,7 @@
                     "type": "integer"
                 },
                 "Product": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -5678,6 +5699,7 @@
                     "type": "integer"
                 },
                 "Variant": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -5754,6 +5776,7 @@
                     "type": "integer"
                 },
                 "Product": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -5763,6 +5786,7 @@
                     "type": "integer"
                 },
                 "Variant": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -5783,6 +5807,7 @@
             "type": "object",
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
@@ -5798,6 +5823,7 @@
                     "type": "string"
                 },
                 "Representative": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "Status": {
@@ -5969,6 +5995,7 @@
                     }
                 },
                 "Voucher": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Voucher"
                 },
                 "VoucherId": {
@@ -6184,12 +6211,14 @@
                     "type": "number"
                 },
                 "Product": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
                     "type": "integer"
                 },
                 "Promotion": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Promotion"
                 },
                 "PromotionID": {
@@ -6202,6 +6231,7 @@
                     "type": "number"
                 },
                 "Variant": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -6220,6 +6250,7 @@
                     "type": "integer"
                 },
                 "voucher": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Voucher"
                 }
             }
@@ -6280,6 +6311,7 @@
             "type": "object",
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "CaringDrugstore": {
@@ -6292,6 +6324,7 @@
                     "type": "boolean"
                 },
                 "DrugStore": {
+                    "type": "object",
                     "$ref": "#/definitions/models.DrugStore"
                 },
                 "Email": {
@@ -6304,6 +6337,7 @@
                     "type": "string"
                 },
                 "Partner": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Partner"
                 },
                 "Roles": {
@@ -6368,12 +6402,14 @@
                     "type": "string"
                 },
                 "product": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "productID": {
                     "type": "integer"
                 },
                 "variant": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "variantID": {
@@ -6721,6 +6757,7 @@
             ],
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "Email": {
@@ -6768,6 +6805,7 @@
             ],
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "AddressID": {
@@ -6924,6 +6962,7 @@
             ],
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "AddressID": {
@@ -6985,6 +7024,7 @@
             ],
             "properties": {
                 "Address": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "Email": {
@@ -7423,9 +7463,11 @@
             "type": "object",
             "properties": {
                 "AccountRequest": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.RegisterAccountRequest"
                 },
                 "Drugstore": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.DrugStoreRequest"
                 }
             }
@@ -7476,6 +7518,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "status": {
@@ -7547,6 +7590,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7563,6 +7607,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7595,6 +7640,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7643,6 +7689,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7684,6 +7731,7 @@
                     "type": "string"
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "status": {
@@ -7725,6 +7773,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7751,6 +7800,7 @@
                     "example": "read:user"
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7773,6 +7823,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7822,6 +7873,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7890,6 +7942,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7925,6 +7978,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7951,6 +8005,7 @@
                     "example": "role_manage"
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7992,6 +8047,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -8012,6 +8068,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -8034,6 +8091,7 @@
                     "example": 0
                 },
                 "sort": {
+                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -8192,6 +8250,7 @@
                     "type": "integer"
                 },
                 "data": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Cart"
                 },
                 "message": {
@@ -8347,6 +8406,7 @@
                     "type": "string"
                 },
                 "user": {
+                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 }
             }
@@ -8401,6 +8461,7 @@
                     "type": "integer"
                 },
                 "data": {
+                    "type": "object",
                     "$ref": "#/definitions/models.Order"
                 },
                 "message": {

@@ -16,5 +16,5 @@ func ConfigureNotificationRoutes(appRoute *echo.Group, server *s.Server) {
 	notification.PUT("/all/seen/:id", notificationHandler.MarkAllNotificationAsRead)
 
 	fcmToken := appRoute.Group("/fcm-token")
-	fcmToken.POST("/find", fcmTokenHandler.CreateFcmToken)
+	fcmToken.POST("", fcmTokenHandler.CreateFcmToken)
 }

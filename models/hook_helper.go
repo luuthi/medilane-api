@@ -1,8 +1,12 @@
 package models
 
 import (
+	"context"
 	"fmt"
+	jsoniter "github.com/json-iterator/go"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	redisCon "medilane-api/core/redis"
 	"medilane-api/core/utils"
 )
 
@@ -12,17 +16,17 @@ type ActionNotification interface {
 }
 
 type OrderNotification struct {
-	DB *gorm.DB
+	DB     *gorm.DB
 	Entity *Order
 }
 
 type DrugStoreNotification struct {
-	DB *gorm.DB
+	DB     *gorm.DB
 	Entity *DrugStore
 }
 
 func (o OrderNotification) GetUserNeedNotification(notificationForUser bool) []uint {
-	var  idUsers []uint
+	var idUsers []uint
 	var users *[]User
 
 	if notificationForUser {
@@ -32,50 +36,61 @@ func (o OrderNotification) GetUserNeedNotification(notificationForUser bool) []u
 	o.DB.Table(utils.TblAccount).Where("type", "staff").
 		Where("is_admin", true).
 		Find(&users)
-	for _,user := range *users {
+	for _, user := range *users {
 		idUsers = append(idUsers, user.ID)
 	}
 	return idUsers
 }
 
-func (o OrderNotification) AddNotificationToDB(action string, message string, idUsers []uint) {
-	for _,user:= range idUsers {
-		notification := Notification{
-			Action: action,
-			Entity: "order",
-			Status: "unseen",
-			UserId: user,
-			Message: message,
-			EntityId: o.Entity.ID,
-		}
-		o.DB.Table(utils.TblNotification).Create(&notification)
+func (o OrderNotification) PushNotification(action string, message string, idUsers []uint, title string) {
+	notification := NotificationQueue{
+		Action:   action,
+		Entity:   "order",
+		Status:   "unseen",
+		UserId:   idUsers,
+		Message:  message,
+		EntityId: o.Entity.ID,
+		Title:    title,
+	}
+	_, err := PushNotificationToQueue(notification)
+	if err != nil {
+		log.Errorf("Error when push notification to queue")
 	}
 }
 
 func (d DrugStoreNotification) GetUserNeedNotification() []uint {
-	var  idUsers []uint
+	var idUsers []uint
 	var users *[]User
 	d.DB.Table(utils.TblAccount).Where("type", "staff").
 		Where("is_admin", true).
 		Find(&users)
-	for _,user := range *users {
+	for _, user := range *users {
 		idUsers = append(idUsers, user.ID)
 	}
 	return idUsers
 }
 
-func (d DrugStoreNotification) AddNotificationToDB() {
+func (d DrugStoreNotification) PushNotification() {
 	idUsers := d.GetUserNeedNotification()
-	message := fmt.Sprintf("Cửa hàng %s đã được tạo", d.Entity.StoreName)
-	for _,user:= range idUsers {
-		notification := Notification{
-			Action: "created",
-			Entity: "drugstore",
-			Status: "unseen",
-			UserId: user,
-			Message: message,
-			EntityId: d.Entity.ID,
-		}
-		d.DB.Table(utils.TblNotification).Create(&notification)
+	message := fmt.Sprintf("Cửa hàng %s đã được đăng ký", d.Entity.StoreName)
+
+	notification := NotificationQueue{
+		Action:   "created",
+		Entity:   "drugstore",
+		Status:   "unseen",
+		UserId:   idUsers,
+		Message:  message,
+		EntityId: d.Entity.ID,
+		Title:    "Đăng ký mới",
 	}
+	_, err := PushNotificationToQueue(notification)
+	if err != nil {
+		log.Errorf("Error when push notification to queue")
+	}
+}
+
+func PushNotificationToQueue(notification NotificationQueue) (int64, error) {
+	ctx := context.Background()
+	data, _ := jsoniter.Marshal(notification)
+	return redisCon.GetInstance().LPush(ctx, "notification", data)
 }
