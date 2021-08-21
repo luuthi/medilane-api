@@ -2132,6 +2132,45 @@
                 }
             }
         },
+        "/notification/all/seen/{id}": {
+            "put": {
+                "description": "Perform Mark all notification as read",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notification Management"
+                ],
+                "summary": "Mark all notification as read",
+                "operationId": "mark-all-notification-as-read",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id user",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/notification/find": {
             "post": {
                 "description": "Perform search notification",
@@ -2162,6 +2201,45 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.NotificationSearch"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/notification/{id}": {
+            "put": {
+                "description": "Perform Mark notification as read",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notification Management"
+                ],
+                "summary": "Mark notification as read",
+                "operationId": "mark-notification-as-read",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id notification",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
                         }
                     },
                     "401": {
@@ -5117,7 +5195,6 @@
                     "type": "string"
                 },
                 "Area": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Area"
                 },
                 "AreaID": {
@@ -5226,7 +5303,6 @@
             "type": "object",
             "properties": {
                 "Area": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Area"
                 },
                 "AreaId": {
@@ -5305,7 +5381,6 @@
                     "type": "number"
                 },
                 "Product": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -5315,7 +5390,6 @@
                     "type": "integer"
                 },
                 "Variant": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -5371,14 +5445,12 @@
             "type": "object",
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
                     "type": "integer"
                 },
                 "ApproveBy": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "ApproveTime": {
@@ -5415,11 +5487,9 @@
                     }
                 },
                 "Representative": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "Staff": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "Status": {
@@ -5510,7 +5580,6 @@
             "type": "object",
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
@@ -5523,7 +5592,6 @@
                     "type": "integer"
                 },
                 "Drugstore": {
-                    "type": "object",
                     "$ref": "#/definitions/models.DrugStore"
                 },
                 "Note": {
@@ -5539,7 +5607,6 @@
                     }
                 },
                 "PaymentMethod": {
-                    "type": "object",
                     "$ref": "#/definitions/models.PaymentMethod"
                 },
                 "PaymentMethodID": {
@@ -5561,14 +5628,12 @@
                     "type": "string"
                 },
                 "UserApprove": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "UserApproveID": {
                     "type": "integer"
                 },
                 "UserOrder": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "UserOrderID": {
@@ -5604,7 +5669,6 @@
                     "type": "integer"
                 },
                 "Product": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -5614,7 +5678,6 @@
                     "type": "integer"
                 },
                 "Variant": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -5691,7 +5754,6 @@
                     "type": "integer"
                 },
                 "Product": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
@@ -5701,7 +5763,6 @@
                     "type": "integer"
                 },
                 "Variant": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -5722,7 +5783,6 @@
             "type": "object",
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
@@ -5738,7 +5798,6 @@
                     "type": "string"
                 },
                 "Representative": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "Status": {
@@ -5910,7 +5969,6 @@
                     }
                 },
                 "Voucher": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Voucher"
                 },
                 "VoucherId": {
@@ -6126,14 +6184,12 @@
                     "type": "number"
                 },
                 "Product": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
                     "type": "integer"
                 },
                 "Promotion": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Promotion"
                 },
                 "PromotionID": {
@@ -6146,7 +6202,6 @@
                     "type": "number"
                 },
                 "Variant": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
@@ -6165,7 +6220,6 @@
                     "type": "integer"
                 },
                 "voucher": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Voucher"
                 }
             }
@@ -6226,7 +6280,6 @@
             "type": "object",
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Address"
                 },
                 "CaringDrugstore": {
@@ -6239,7 +6292,6 @@
                     "type": "boolean"
                 },
                 "DrugStore": {
-                    "type": "object",
                     "$ref": "#/definitions/models.DrugStore"
                 },
                 "Email": {
@@ -6252,7 +6304,6 @@
                     "type": "string"
                 },
                 "Partner": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Partner"
                 },
                 "Roles": {
@@ -6317,14 +6368,12 @@
                     "type": "string"
                 },
                 "product": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "productID": {
                     "type": "integer"
                 },
                 "variant": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Variant"
                 },
                 "variantID": {
@@ -6672,7 +6721,6 @@
             ],
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "Email": {
@@ -6720,7 +6768,6 @@
             ],
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "AddressID": {
@@ -6877,7 +6924,6 @@
             ],
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "AddressID": {
@@ -6939,7 +6985,6 @@
             ],
             "properties": {
                 "Address": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "Email": {
@@ -7378,11 +7423,9 @@
             "type": "object",
             "properties": {
                 "AccountRequest": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.RegisterAccountRequest"
                 },
                 "Drugstore": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.DrugStoreRequest"
                 }
             }
@@ -7433,7 +7476,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "status": {
@@ -7505,7 +7547,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7522,7 +7563,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7555,7 +7595,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7604,7 +7643,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7646,7 +7684,6 @@
                     "type": "string"
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "status": {
@@ -7688,7 +7725,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7715,7 +7751,6 @@
                     "example": "read:user"
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7738,7 +7773,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7788,7 +7822,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7857,7 +7890,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7893,7 +7925,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 },
                 "time_from": {
@@ -7920,7 +7951,6 @@
                     "example": "role_manage"
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7962,7 +7992,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -7983,7 +8012,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -8006,7 +8034,6 @@
                     "example": 0
                 },
                 "sort": {
-                    "type": "object",
                     "$ref": "#/definitions/requests.SortOption"
                 }
             }
@@ -8165,7 +8192,6 @@
                     "type": "integer"
                 },
                 "data": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Cart"
                 },
                 "message": {
@@ -8321,7 +8347,6 @@
                     "type": "string"
                 },
                 "user": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
                 }
             }
@@ -8376,7 +8401,6 @@
                     "type": "integer"
                 },
                 "data": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Order"
                 },
                 "message": {

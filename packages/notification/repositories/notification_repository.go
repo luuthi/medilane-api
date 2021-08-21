@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"gorm.io/gorm"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
 	"strings"
@@ -28,12 +29,24 @@ func (NotificationRepository *NotificationRepository) GetNotifications(count *in
 
 	var notifications []models.Notification
 
-	NotificationRepository.DB.Table("notification").
-		Where(strings.Join(spec, " AND "), values...).
+	NotificationRepository.DB.Table(utils.TblNotification).
+		Where("status = ?", "unseen").
 		Count(count).
+		Find(&notifications)
+
+	NotificationRepository.DB.Table(utils.TblNotification).
+		Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Find(&notifications)
 
 	return notifications
+}
+
+func (NotificationRepository *NotificationRepository) GetNotificationByID(perm *models.Notification, id uint) {
+	NotificationRepository.DB.First(&perm, id)
+}
+
+func (NotificationRepository *NotificationRepository) GetNotificationByUserID(perm *[]models.Notification, id uint) {
+	NotificationRepository.DB.Table(utils.TblNotification).Where("user_id", id).Find(&perm)
 }
