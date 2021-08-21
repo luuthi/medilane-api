@@ -6,6 +6,7 @@ definitions:
         type: string
       Area:
         $ref: '#/definitions/models.Area'
+        type: object
       AreaID:
         type: integer
       ContactName:
@@ -77,6 +78,7 @@ definitions:
     properties:
       Area:
         $ref: '#/definitions/models.Area'
+        type: object
       AreaId:
         type: integer
       District:
@@ -128,12 +130,14 @@ definitions:
         type: number
       Product:
         $ref: '#/definitions/models.Product'
+        type: object
       ProductID:
         type: integer
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
+        type: object
       VariantID:
         type: integer
       created_at:
@@ -170,10 +174,12 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/models.Address'
+        type: object
       AddressID:
         type: integer
       ApproveBy:
         $ref: '#/definitions/models.User'
+        type: object
       ApproveTime:
         type: integer
       ChildStores:
@@ -198,8 +204,10 @@ definitions:
         type: array
       Representative:
         $ref: '#/definitions/models.User'
+        type: object
       Staff:
         $ref: '#/definitions/models.User'
+        type: object
       Status:
         type: string
       StoreName:
@@ -246,6 +254,11 @@ definitions:
         type: string
       Status:
         type: string
+      Title:
+        type: string
+      User:
+        $ref: '#/definitions/models.User'
+        type: object
       UserId:
         type: integer
       created_at:
@@ -259,6 +272,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/models.Address'
+        type: object
       AddressID:
         type: integer
       Discount:
@@ -267,6 +281,7 @@ definitions:
         type: integer
       Drugstore:
         $ref: '#/definitions/models.DrugStore'
+        type: object
       Note:
         type: string
       OrderCode:
@@ -277,6 +292,7 @@ definitions:
         type: array
       PaymentMethod:
         $ref: '#/definitions/models.PaymentMethod'
+        type: object
       PaymentMethodID:
         type: integer
       ShippingFee:
@@ -291,10 +307,12 @@ definitions:
         type: string
       UserApprove:
         $ref: '#/definitions/models.User'
+        type: object
       UserApproveID:
         type: integer
       UserOrder:
         $ref: '#/definitions/models.User'
+        type: object
       UserOrderID:
         type: integer
       Vat:
@@ -318,12 +336,14 @@ definitions:
         type: integer
       Product:
         $ref: '#/definitions/models.Product'
+        type: object
       ProductID:
         type: integer
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
+        type: object
       VariantID:
         type: integer
       created_at:
@@ -374,12 +394,14 @@ definitions:
         type: integer
       Product:
         $ref: '#/definitions/models.Product'
+        type: object
       ProductID:
         type: integer
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
+        type: object
       VariantID:
         type: integer
       created_at:
@@ -393,6 +415,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/models.Address'
+        type: object
       AddressID:
         type: integer
       Email:
@@ -403,6 +426,7 @@ definitions:
         type: string
       Representative:
         $ref: '#/definitions/models.User'
+        type: object
       Status:
         type: string
       Type:
@@ -516,6 +540,7 @@ definitions:
         type: array
       Voucher:
         $ref: '#/definitions/models.Voucher'
+        type: object
       VoucherId:
         type: integer
       created_at:
@@ -658,10 +683,12 @@ definitions:
         type: number
       Product:
         $ref: '#/definitions/models.Product'
+        type: object
       ProductID:
         type: integer
       Promotion:
         $ref: '#/definitions/models.Promotion'
+        type: object
       PromotionID:
         type: integer
       Type:
@@ -670,6 +697,7 @@ definitions:
         type: number
       Variant:
         $ref: '#/definitions/models.Variant'
+        type: object
       VariantID:
         type: integer
       VoucherID:
@@ -682,6 +710,7 @@ definitions:
         type: integer
       voucher:
         $ref: '#/definitions/models.Voucher'
+        type: object
     type: object
   models.Role:
     properties:
@@ -721,6 +750,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/models.Address'
+        type: object
       CaringDrugstore:
         items:
           $ref: '#/definitions/models.DrugStore'
@@ -729,6 +759,7 @@ definitions:
         type: boolean
       DrugStore:
         $ref: '#/definitions/models.DrugStore'
+        type: object
       Email:
         type: string
       IsAdmin:
@@ -737,6 +768,7 @@ definitions:
         type: string
       Partner:
         $ref: '#/definitions/models.Partner'
+        type: object
       Roles:
         items:
           $ref: '#/definitions/models.Role'
@@ -779,10 +811,12 @@ definitions:
         type: string
       product:
         $ref: '#/definitions/models.Product'
+        type: object
       productID:
         type: integer
       variant:
         $ref: '#/definitions/models.Variant'
+        type: object
       variantID:
         type: integer
     type: object
@@ -1016,6 +1050,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/requests.AddressRequest'
+        type: object
       Email:
         example: abc@gmail.com
         type: string
@@ -1050,6 +1085,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/requests.AddressRequest'
+        type: object
       AddressID:
         type: integer
       DrugStoreID:
@@ -1168,6 +1204,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/requests.EditAddressRequest'
+        type: object
       AddressID:
         example: 1
         type: integer
@@ -1207,6 +1244,7 @@ definitions:
     properties:
       Address:
         $ref: '#/definitions/requests.EditAddressRequest'
+        type: object
       Email:
         example: abc@gmail.com
         type: string
@@ -1523,8 +1561,10 @@ definitions:
     properties:
       AccountRequest:
         $ref: '#/definitions/requests.RegisterAccountRequest'
+        type: object
       Drugstore:
         $ref: '#/definitions/requests.DrugStoreRequest'
+        type: object
     type: object
   requests.RoleRequest:
     properties:
@@ -1560,6 +1600,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       status:
         example: "true"
         type: string
@@ -1611,6 +1652,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchAreaRequest:
     properties:
@@ -1622,6 +1664,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchBannerRequest:
     properties:
@@ -1644,6 +1687,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchDrugStoreRequest:
     properties:
@@ -1679,6 +1723,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       time_from:
         type: integer
       time_to:
@@ -1707,6 +1752,7 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       status:
         example: "true"
         type: string
@@ -1736,6 +1782,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       time_from:
         type: integer
       time_to:
@@ -1754,6 +1801,7 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchProductByPromotion:
     properties:
@@ -1769,6 +1817,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchProductPromotion:
     properties:
@@ -1803,6 +1852,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       time_from:
         type: integer
       time_to:
@@ -1849,6 +1899,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchPureProductRequest:
     properties:
@@ -1874,6 +1925,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
       time_from:
         type: integer
       time_to:
@@ -1892,6 +1944,7 @@ definitions:
         type: string
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchSettingRequest:
     properties:
@@ -1920,6 +1973,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchVariantRequest:
     properties:
@@ -1934,6 +1988,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SearchVoucherRequest:
     properties:
@@ -1949,6 +2004,7 @@ definitions:
         type: integer
       sort:
         $ref: '#/definitions/requests.SortOption'
+        type: object
     type: object
   requests.SetCostProductsOfAreaRequest:
     properties:
@@ -2052,6 +2108,7 @@ definitions:
         type: integer
       data:
         $ref: '#/definitions/models.Cart'
+        type: object
       message:
         type: string
     type: object
@@ -2152,6 +2209,7 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/models.User'
+        type: object
     type: object
   responses.MessageDetail:
     properties:
@@ -2187,6 +2245,7 @@ definitions:
         type: integer
       data:
         $ref: '#/definitions/models.Order'
+        type: object
       message:
         type: string
     type: object
