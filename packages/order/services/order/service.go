@@ -191,7 +191,7 @@ func (s *Service) PreOrder(request *requests2.OrderRequest, userId uint, userTyp
 	return nil
 }
 
-func (s *Service) EditOrder(request *requests2.EditOrderRequest, orderId uint) (error, *models.Order) {
+func (s *Service) EditOrder(request *requests2.EditOrderRequest, orderId uint, existedOrder *models.Order) (error, *models.Order) {
 
 	// begin a transaction
 	tx := s.DB.Begin()
@@ -200,6 +200,8 @@ func (s *Service) EditOrder(request *requests2.EditOrderRequest, orderId uint) (
 		SetID(orderId).
 		SetStatus(request.Status).
 		SetNote(request.Note).
+		SetOrderCode(existedOrder.OrderCode).
+		SetUserOrderID(existedOrder.UserOrderID).
 		SetPaymentMethodID(request.PaymentMethodID)
 	if request.UserApproveID != nil {
 		orderBuilder.SetUserApproveID(*request.UserApproveID)
