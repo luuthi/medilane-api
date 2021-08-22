@@ -178,8 +178,16 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 	if err := orderRequest.Validate(); err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
 	}
+
+	var existedOrder models2.Order
+	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
+	orderRepo.GetOrderDetail(&existedOrder, id)
+	if existedOrder.ID == 0 {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found order with ID: %v", id))
+	}
+
 	orderService := order.NewOrderService(orderHandler.server.DB)
-	rs, _ := orderService.EditOrder(&orderRequest, id)
+	rs, _ := orderService.EditOrder(&orderRequest, id, &existedOrder)
 	if err := rs; err != nil {
 		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))
 	}
