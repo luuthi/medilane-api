@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"medilane-api/config"
-	"medilane-api/models"
 )
 
 func Init(cfg *config.Config) *gorm.DB {
@@ -30,7 +29,7 @@ func Init(cfg *config.Config) *gorm.DB {
 	}
 
 	if cfg.MIGRATION.Migrate {
-		_ = db.AutoMigrate(&models.Notification{})
+		//_ = db.AutoMigrate(&models.Notification{})
 		//_ = db.SetupJoinTable(&models.Partner{}, "Users", &models.PartnerUser{})
 		//_ = db.AutoMigrate(&models.Partner{})
 		//	_ = db.AutoMigrate(&models.User{}, &models.Role{}, &models.Permission{})

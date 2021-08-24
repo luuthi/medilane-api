@@ -25,6 +25,45 @@ func NewOrderRepository(db *gorm.DB) *OrderRepository {
 	return &OrderRepository{DB: db}
 }
 
+func (OrderRepository *OrderRepository) CountOrder(count *int64, userId uint, searchByUser bool, filter *requests2.ExportOrderRequest) {
+	spec := make([]string, 0)
+	values := make([]interface{}, 0)
+
+	if searchByUser {
+		spec = append(spec, "user_order_id = ?")
+		values = append(values, userId)
+	}
+
+	if filter.Status != "" {
+		spec = append(spec, "status = ?")
+		values = append(values, filter.Status)
+	}
+
+	if filter.Type != "" {
+		spec = append(spec, "type = ?")
+		values = append(values, filter.Type)
+	}
+
+	if filter.OrderCode != "" {
+		spec = append(spec, "order_code LIKE ?")
+		values = append(values, fmt.Sprintf("%%%s%%", filter.OrderCode))
+	}
+
+	if filter.TimeTo != nil {
+		spec = append(spec, "created_at <= ?")
+		values = append(values, *filter.TimeTo)
+	}
+
+	if filter.TimeFrom != nil {
+		spec = append(spec, "created_at >= ?")
+		values = append(values, *filter.TimeFrom)
+	}
+
+	OrderRepository.DB.Table(utils.TblOrder).
+		Where(strings.Join(spec, " AND "), values...).
+		Count(count)
+}
+
 func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, searchByUser bool, filter *requests2.SearchOrderRequest) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
@@ -70,6 +109,8 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload(clause.Associations).
+		Preload("OrderDetails.Product").
+		Preload("OrderDetails.Variant").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).

@@ -1,10 +1,13 @@
 package handlers
 
 import (
+	"archive/zip"
+	"bytes"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 	"medilane-api/core/authentication"
+	excelWriter2 "medilane-api/core/excel"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	"medilane-api/packages/order/repositories"
@@ -16,6 +19,7 @@ import (
 	s "medilane-api/server"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type OrderHandler struct {
@@ -251,4 +255,176 @@ func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
 		Data:    methods,
 	})
 
+}
+
+// ExportOrder Export order godoc
+// @Summary Export order in system
+// @Description Perform export order
+// @ID export-order
+// @Tags Order Management
+// @Accept json
+// @Produce json
+// @Param params body requests.ExportOrderRequest true "search order"
+// @Produce  application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+// @Success 200 {file} binary
+// @Failure 400 {object} responses.Error
+// @Router /order/export [post]
+// @Security BearerAuth
+func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
+
+	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
+	if err != nil {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
+	if !ok {
+		return responses.Response(c, http.StatusUnauthorized, nil)
+	}
+	searchRequest := new(requests2.ExportOrderRequest)
+	if err := c.Bind(searchRequest); err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+	}
+
+	var total int64
+
+	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
+
+	if claims.Type == string(utils.USER) {
+		orderRepo.CountOrder(&total, claims.UserId, true, searchRequest)
+	} else {
+		orderRepo.CountOrder(&total, claims.UserId, false, searchRequest)
+	}
+
+	if total > 1000 {
+		total = 1000
+	}
+
+	// init excel writer
+	headers := []string{"No", "ProductName", "Unit", "Quantity", "Cost", "Discount", "SubTotal", "Total"}
+	columns := []excelWriter2.Column{
+		{
+			Width: 10,
+			Value: "No",
+			Name:  "STT",
+		},
+		{
+			Width: 60,
+			Value: "ProductName",
+			Name:  "Tên sản phẩm",
+		},
+		{
+			Width: 15,
+			Value: "Unit",
+			Name:  "Đơn vị",
+		},
+		{
+			Width: 15,
+			Value: "Quantity",
+			Name:  "Số lượng",
+		},
+		{
+			Width: 20,
+			Value: "Cost",
+			Name:  "Giá",
+		},
+		{
+			Width: 20,
+			Value: "Discount",
+			Name:  "Giảm giá",
+		},
+		{
+			Width: 25,
+			Value: "SubTotal",
+			Name:  "Tạm tính",
+		},
+		{
+			Width: 25,
+			Value: "Total",
+			Name:  "Thành tiền",
+		},
+	}
+
+	var orders []models2.Order
+	var mapFile = make(map[string]bytes.Buffer)
+	for i := 0; i < int(total); i += 100 {
+		searchOrder := &requests2.SearchOrderRequest{
+			Limit:     100,
+			Offset:    i,
+			Status:    searchRequest.Status,
+			Type:      searchRequest.Type,
+			TimeFrom:  searchRequest.TimeFrom,
+			TimeTo:    searchRequest.TimeTo,
+			OrderCode: searchRequest.OrderCode,
+		}
+		if claims.Type == string(utils.USER) {
+			orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchOrder)
+		} else {
+			orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchOrder)
+		}
+
+		for _, o := range orders {
+			var fileName = fmt.Sprintf("order-%s.xlsx", o.OrderCode)
+			excelWriter, err := excelWriter2.NewExcelWriter(fileName, headers, columns)
+			if err != nil {
+				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			}
+			excelWriter.SetSheetActive(o.OrderCode)
+			if err != nil {
+				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			}
+
+			err = excelWriter.WriteOrderHeader(&o)
+			if err != nil {
+				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			}
+
+			err = excelWriter.WriteOrderBody(&o)
+			if err != nil {
+				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			}
+
+			err = excelWriter.WriteOrderFooter(&o)
+			if err != nil {
+				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			}
+			excelWriter.File.DeleteSheet("Sheet1")
+
+			var b bytes.Buffer
+			if err := excelWriter.File.Write(&b); err != nil {
+				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			}
+			mapFile[fileName] = b
+		}
+	}
+
+	// zip file
+	buf := new(bytes.Buffer)
+
+	// Create a new zip archive.
+	zipWriter := zip.NewWriter(buf)
+	for name, file := range mapFile {
+		zipFile, err := zipWriter.Create(name)
+		if err != nil {
+			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+		}
+		_, err = zipFile.Write(file.Bytes())
+		if err != nil {
+			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+		}
+	}
+
+	// Make sure to check the error on Close.
+	err = zipWriter.Close()
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+	}
+
+	//write the zipped file to the disk
+	downloadNameFile := time.Now().UTC().Format("order-20060102150405.zip")
+	if err != nil {
+		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+	}
+	c.Response().Header().Set("Content-Description", "File Transfer")
+	c.Response().Header().Set("Content-Disposition", "attachment; filename="+downloadNameFile)
+	return c.Blob(http.StatusOK, "application/octet-stream", buf.Bytes())
 }

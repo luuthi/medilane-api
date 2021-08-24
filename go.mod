@@ -23,7 +23,8 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/echo-swagger v1.0.0
 	github.com/swaggo/swag v1.7.1
-	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	github.com/xuri/excelize/v2 v2.4.1 // indirect
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97
 	golang.org/x/net v0.0.0-20210813160813-60bc85c4be6d // indirect
 	golang.org/x/oauth2 v0.0.0-20210817223510-7df4dd6e12ab // indirect
 	golang.org/x/sys v0.0.0-20210817190340-bfb29a6856f2 // indirect

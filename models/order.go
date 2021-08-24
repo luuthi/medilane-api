@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	orderConst "medilane-api/core/utils/order"
@@ -162,6 +163,10 @@ type OrderDetail struct {
 	VariantID uint     `json:"VariantID"`
 	Product   *Product `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Variant   *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+func (od *OrderDetail) MarshalJson() ([]byte, error) {
+	return jsoniter.Marshal(od)
 }
 
 type PaymentMethod struct {

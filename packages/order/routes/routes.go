@@ -13,6 +13,7 @@ func ConfigureOrderRoutes(appRoute *echo.Group, server *s.Server) {
 
 	order := appRoute.Group("/order")
 	order.POST("/find", orderHandler.SearchOrder, authentication.CheckPermission(server, []string{"read:order"}, false))
+	order.POST("/export", orderHandler.ExportOrder, authentication.CheckPermission(server, []string{"read:order"}, false))
 	order.POST("", orderHandler.CreateOrder, authentication.CheckPermission(server, []string{"create:order"}, false))
 	order.GET("/:id", orderHandler.GetOrder, authentication.CheckPermission(server, []string{"create:order"}, false))
 	order.PUT("/:id", orderHandler.EditOrder, authentication.CheckPermission(server, []string{"delete:order"}, false))

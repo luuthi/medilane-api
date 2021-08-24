@@ -79,3 +79,20 @@ func (rr EditOrderRequest) Validate() error {
 			orderConst.Processing.String(), orderConst.Sell.String(), orderConst.Sent.String(), orderConst.Received.String())),
 	)
 }
+
+type ExportOrderRequest struct {
+	Status    string `json:"status" example:"true"`
+	Type      string `json:"type"`
+	TimeFrom  *int64 `json:"time_from"`
+	TimeTo    *int64 `json:"time_to"`
+	OrderCode string `json:"order_code"`
+}
+
+func (rr ExportOrderRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.Type, validation.In(utils.IMPORT, utils.EXPORT)),
+		validation.Field(&rr.TimeFrom, validation.Min(0)),
+		validation.Field(&rr.TimeTo, validation.Min(0)),
+		validation.Field(&rr.TimeTo, validation.By(checkTimeTimeFromTo(rr.TimeFrom, rr.TimeTo))),
+	)
+}

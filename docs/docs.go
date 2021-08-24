@@ -2312,6 +2312,53 @@ var doc = `{
                 }
             }
         },
+        "/order/export": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform export order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ],
+                "tags": [
+                    "Order Management"
+                ],
+                "summary": "Export order in system",
+                "operationId": "export-order",
+                "parameters": [
+                    {
+                        "description": "search order",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.ExportOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/order/find": {
             "post": {
                 "security": [
@@ -7061,6 +7108,27 @@ var doc = `{
                 "Type": {
                     "type": "string",
                     "example": "supplier/manufacturer"
+                }
+            }
+        },
+        "requests.ExportOrderRequest": {
+            "type": "object",
+            "properties": {
+                "order_code": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "true"
+                },
+                "time_from": {
+                    "type": "integer"
+                },
+                "time_to": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },

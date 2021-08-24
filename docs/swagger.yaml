@@ -1268,6 +1268,20 @@ definitions:
     - Status
     - Type
     type: object
+  requests.ExportOrderRequest:
+    properties:
+      order_code:
+        type: string
+      status:
+        example: "true"
+        type: string
+      time_from:
+        type: integer
+      time_to:
+        type: integer
+      type:
+        type: string
+    type: object
   requests.LoginRequest:
     properties:
       password:
@@ -4063,6 +4077,36 @@ paths:
       security:
       - BearerAuth: []
       summary: Edit order in system
+      tags:
+      - Order Management
+  /order/export:
+    post:
+      consumes:
+      - application/json
+      description: Perform export order
+      operationId: export-order
+      parameters:
+      - description: search order
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.ExportOrderRequest'
+      produces:
+      - application/json
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
+      summary: Export order in system
       tags:
       - Order Management
   /order/find:
