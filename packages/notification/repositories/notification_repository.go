@@ -38,6 +38,7 @@ func (NotificationRepository *NotificationRepository) GetNotifications(count *in
 		Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
+		Order("created_at desc").
 		Find(&notifications)
 
 	return notifications

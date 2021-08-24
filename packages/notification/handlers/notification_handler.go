@@ -33,6 +33,7 @@ func NewNotificationHandler(server *s.Server) *NotificationHandler {
 // @Success 200 {object} responses.NotificationSearch
 // @Failure 401 {object} responses.Error
 // @Router /notification/find [post]
+// @Security BearerAuth
 func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Context) error {
 	searchRequest := new(requests2.SearchNotificationRequest)
 	if err := c.Bind(searchRequest); err != nil {
@@ -65,6 +66,7 @@ func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Contex
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /notification/{id} [put]
+// @Security BearerAuth
 func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
@@ -99,6 +101,7 @@ func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Co
 // @Success 200 {object} responses.Data
 // @Failure 401 {object} responses.Error
 // @Router /notification/all/seen/{id} [put]
+// @Security BearerAuth
 func (NotificationHandler *NotificationHandler) MarkAllNotificationAsRead(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
