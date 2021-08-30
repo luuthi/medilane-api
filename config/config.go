@@ -21,8 +21,15 @@ type Config struct {
 }
 
 type DefaultRole struct {
-	User  []string `yaml:"USER"`
-	Staff []string `yaml:"STAFF"`
+	User         RoleType `yaml:"USER"`
+	Staff        RoleType `yaml:"STAFF"`
+	Supplier     RoleType `yaml:"SUPPLIER"`
+	Manufacturer RoleType `yaml:"MANUFACTURER"`
+}
+
+type RoleType struct {
+	Admin  []string `yaml:"ADMIN"`
+	Member []string `yaml:"MEMBER"`
 }
 
 type Migration struct {

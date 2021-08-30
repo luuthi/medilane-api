@@ -30,7 +30,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	// account api
 	acc := appRoute.Group("/account")
 	acc.POST("/find", accountHandler.SearchAccount, authentication.CheckPermission(server, []string{"read:user"}, false))
-	acc.GET("/:username/permissions", accountHandler.GetPermissionByUsername, authentication.CheckPermission(server, []string{"read:user", "read:permission"}, false))
+	acc.GET("/:username/permissions", accountHandler.GetPermissionByUsername, authentication.CheckPermission(server, []string{}, false))
 	acc.POST("", accountHandler.CreateAccount, authentication.CheckPermission(server, []string{"create:user"}, false))
 	acc.POST("/:id/drugstore", accountHandler.AssignStaffForDrugStore)
 	acc.PUT("/:id", accountHandler.EditAccount, authentication.CheckPermission(server, []string{"edit:user"}, false))

@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm/clause"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
+	repositories2 "medilane-api/packages/accounts/repositories"
 	requests2 "medilane-api/requests"
 	"strings"
 )
@@ -65,12 +66,17 @@ func (OrderRepository *OrderRepository) CountOrder(count *int64, userId uint, se
 }
 
 func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, searchByUser bool, filter *requests2.SearchOrderRequest) {
+	// get user info
+	accountRepo := repositories2.NewAccountRepository(OrderRepository.DB)
+	var user models2.User
+	accountRepo.GetUserByID(&user, userId)
+
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
 	if searchByUser {
-		spec = append(spec, "user_order_id = ?")
-		values = append(values, userId)
+		spec = append(spec, "drug_store_id = ?")
+		values = append(values, user.DrugStore.ID)
 	}
 
 	if filter.Status != "" {

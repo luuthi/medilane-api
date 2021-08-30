@@ -20,17 +20,42 @@ func (userService *Service) CreateUser(request *requests2.CreateAccountRequest) 
 		return err, nil
 	}
 
-	user := builders2.NewUserBuilder().
+	userBuilder := builders2.NewUserBuilder().
 		SetEmail(request.Email).
 		SetName(request.Username).
 		SetPassword(string(encryptedPassword)).
 		SetFullName(request.FullName).
-		SetStatus(false).
+		SetStatus(true).
 		SetType(request.Type).
-		SetIsAdmin(*request.IsAdmin).
-		SetRoles(request.Roles).
-		Build()
+		SetIsAdmin(*request.IsAdmin)
 
+	switch request.Type {
+	case string(utils2.STAFF):
+		if *request.IsAdmin {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.Staff.Admin)
+		} else {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.Staff.Member)
+		}
+	case string(utils2.USER):
+		if *request.IsAdmin {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.User.Admin)
+		} else {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.User.Member)
+		}
+	case string(utils2.SUPPLIER):
+		if *request.IsAdmin {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.Supplier.Admin)
+		} else {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.Supplier.Member)
+		}
+	case string(utils2.MANUFACTURER):
+		if *request.IsAdmin {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.Manufacturer.Admin)
+		} else {
+			userBuilder.SetRoles(userService.Config.DefaultRoles.Manufacturer.Member)
+		}
+	}
+	user := userBuilder.Build()
 	// begin a transaction
 	tx := userService.DB.Begin()
 
@@ -153,11 +178,10 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 		SetFullName(userReq.FullName).
 		SetStatus(false).
 		SetType(userReq.Type).
-		SetIsAdmin(*userReq.IsAdmin).
-		SetRoles(userReq.Roles)
+		SetIsAdmin(*userReq.IsAdmin)
 
 	if userReq.Type == string(utils2.USER) {
-		userBuilder.SetRoles(userService.Config.DefaultRoles.User)
+		userBuilder.SetRoles(userService.Config.DefaultRoles.User.Admin)
 	}
 
 	user := userBuilder.Build()

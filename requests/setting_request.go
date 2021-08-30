@@ -50,6 +50,7 @@ type BannerRequest struct {
 func (rr BannerRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Url, validation.Required),
+		validation.Field(&rr.StartTime, validation.Required),
 		validation.Field(&rr.ExpireTime, validation.Required, validation.Min(0), validation.By(checkStartTimeEndTime(rr.StartTime, rr.ExpireTime))),
 	)
 }
