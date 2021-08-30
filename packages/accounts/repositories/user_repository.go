@@ -62,7 +62,6 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 			Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
 			Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
 			Where("user.id = ?", user.ID).
-			Where("user.type = ?'", user.Type).
 			First(&drugstore)
 		user.DrugStore = &drugstore
 	} else if user.Type == string(utils2.SUPPLIER) || user.Type == string(utils2.MANUFACTURER) {
@@ -71,7 +70,6 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 			Joins("JOIN partner_user pu ON pu.user_id = user.id").
 			Joins("JOIN partner p ON p.id = pu.partner_id").
 			Where("user.id = ?", user.ID).
-			Where("user.type = ?", user.Type).
 			First(&partner)
 		user.Partner = &partner
 	}

@@ -141,11 +141,11 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 			}
 			promotionDetail := promotionDetailBuidler.Build()
 			err := tx.Table(utils2.TblPromotionDetail).Create(&promotionDetail).Error
-			promotionDetails = append(promotionDetails, &promotionDetail)
 			if err != nil {
 				tx.Rollback()
 				return err, nil
 			}
+			promotionDetails = append(promotionDetails, &promotionDetail)
 		} else {
 			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 				SetPromotionID(id).
