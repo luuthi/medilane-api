@@ -3906,6 +3906,8 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
       summary: Mark notification as read
       tags:
       - Notification Management
@@ -3932,6 +3934,8 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
       summary: Mark all notification as read
       tags:
       - Notification Management
@@ -3959,6 +3963,8 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/responses.Error'
+      security:
+      - BearerAuth: []
       summary: Search notification in system
       tags:
       - Notification Management
@@ -4093,8 +4099,7 @@ paths:
         schema:
           $ref: '#/definitions/requests.ExportOrderRequest'
       produces:
-      - application/json
-      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - application/zip
       responses:
         "200":
           description: OK

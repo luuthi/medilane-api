@@ -2149,6 +2149,11 @@ var doc = `{
         },
         "/notification/all/seen/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Perform Mark all notification as read",
                 "consumes": [
                     "application/json"
@@ -2188,6 +2193,11 @@ var doc = `{
         },
         "/notification/find": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Perform search notification",
                 "consumes": [
                     "application/json"
@@ -2229,6 +2239,11 @@ var doc = `{
         },
         "/notification/{id}": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Perform Mark notification as read",
                 "consumes": [
                     "application/json"
@@ -2324,8 +2339,7 @@ var doc = `{
                     "application/json"
                 ],
                 "produces": [
-                    "application/json",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    "application/zip"
                 ],
                 "tags": [
                     "Order Management"

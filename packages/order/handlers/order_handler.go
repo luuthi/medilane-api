@@ -263,9 +263,8 @@ func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
 // @ID export-order
 // @Tags Order Management
 // @Accept json
-// @Produce json
 // @Param params body requests.ExportOrderRequest true "search order"
-// @Produce  application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+// @Produce application/zip
 // @Success 200 {file} binary
 // @Failure 400 {object} responses.Error
 // @Router /order/export [post]
