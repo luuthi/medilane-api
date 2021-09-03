@@ -550,37 +550,6 @@ definitions:
       updated_at:
         type: integer
     type: object
-  models.ProductInPromotionItem:
-    properties:
-      Barcode:
-        type: string
-      Code:
-        type: string
-      Condition:
-        type: string
-      Cost:
-        type: number
-      Name:
-        type: string
-      Percent:
-        type: number
-      ProductId:
-        type: integer
-      Type:
-        type: string
-      Unit:
-        type: string
-      Url:
-        type: string
-      Value:
-        type: number
-      VariantId:
-        type: integer
-      VoucherId:
-        type: integer
-      id:
-        type: integer
-    type: object
   models.ProductStore:
     properties:
       ActiveElement:
@@ -2354,19 +2323,6 @@ definitions:
       data:
         items:
           $ref: '#/definitions/models.Permission'
-        type: array
-      message:
-        type: string
-      total:
-        type: integer
-    type: object
-  responses.ProductInPromotionSearch:
-    properties:
-      code:
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/models.ProductInPromotionItem'
         type: array
       message:
         type: string
@@ -5003,7 +4959,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.ProductInPromotionSearch'
+            $ref: '#/definitions/responses.ProductSearch'
         "400":
           description: Bad Request
           schema:
@@ -5061,7 +5017,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.ProductInPromotionSearch'
+            $ref: '#/definitions/responses.ProductSearch'
         "400":
           description: Bad Request
           schema:

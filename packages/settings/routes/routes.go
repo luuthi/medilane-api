@@ -12,7 +12,7 @@ func ConfigureSettingtRoutes(appRoute *echo.Group, server *s.Server) {
 	bannerHandler := handlers.NewBannerHandler(server)
 
 	settings := appRoute.Group("/setting")
-	settings.POST("/find", settingHandler.GetSetting, authentication.CheckPermission(server, []string{"read:setting_app"}, true))
+	settings.POST("/find", settingHandler.GetSetting)
 	settings.POST("", settingHandler.CreateAppSetting, authentication.CheckPermission(server, []string{"manage:setting_app"}, true))
 	settings.PUT("/:id", settingHandler.EditAppSetting, authentication.CheckPermission(server, []string{"manage:setting_app"}, true))
 

@@ -3550,7 +3550,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.ProductInPromotionSearch"
+                            "$ref": "#/definitions/responses.ProductSearch"
                         }
                     },
                     "400": {
@@ -3997,7 +3997,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/responses.ProductInPromotionSearch"
+                            "$ref": "#/definitions/responses.ProductSearch"
                         }
                     },
                     "400": {
@@ -6084,53 +6084,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "updated_at": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.ProductInPromotionItem": {
-            "type": "object",
-            "properties": {
-                "Barcode": {
-                    "type": "string"
-                },
-                "Code": {
-                    "type": "string"
-                },
-                "Condition": {
-                    "type": "string"
-                },
-                "Cost": {
-                    "type": "number"
-                },
-                "Name": {
-                    "type": "string"
-                },
-                "Percent": {
-                    "type": "number"
-                },
-                "ProductId": {
-                    "type": "integer"
-                },
-                "Type": {
-                    "type": "string"
-                },
-                "Unit": {
-                    "type": "string"
-                },
-                "Url": {
-                    "type": "string"
-                },
-                "Value": {
-                    "type": "number"
-                },
-                "VariantId": {
-                    "type": "integer"
-                },
-                "VoucherId": {
-                    "type": "integer"
-                },
-                "id": {
                     "type": "integer"
                 }
             }
@@ -8706,26 +8659,6 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Permission"
-                    }
-                },
-                "message": {
-                    "type": "string"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "responses.ProductInPromotionSearch": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.ProductInPromotionItem"
                     }
                 },
                 "message": {

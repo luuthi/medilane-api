@@ -388,7 +388,7 @@ func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) erro
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchProductPromotion true "Filter promotion"
-// @Success 200 {object} responses.ProductInPromotionSearch
+// @Success 200 {object} responses.ProductSearch
 // @Failure 400 {object} responses.Error
 // @Router /promotion/top-product [post]
 // @Security BearerAuth
@@ -399,7 +399,7 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 	}
 
 	promoHandler.server.Logger.Info("search product in promotion")
-	var products []models.ProductInPromotionItem
+	var products []models.Product
 
 	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
 	if err != nil {
@@ -412,16 +412,16 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	var total int64
-	rs := promoRepo.GetTopProductPromotion(&products, &total, searchRequest, claims.UserId, claims.Type)
-	if rs != nil {
-		return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+	products, err = promoRepo.GetTopProductPromotion(&total, searchRequest, claims.UserId, claims.Type)
+	if err != nil {
+		return responses.Response(c, http.StatusOK, responses.ProductSearch{
 			Code:    http.StatusOK,
 			Message: "",
 			Total:   0,
 			Data:    nil,
 		})
 	}
-	return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+	return responses.Response(c, http.StatusOK, responses.ProductSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -438,7 +438,7 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 // @Produce json
 // @Param params body requests.SearchProductByPromotion true "Filter promotion"
 // @Param id path uint true "id promotion"
-// @Success 200 {object} responses.ProductInPromotionSearch
+// @Success 200 {object} responses.ProductSearch
 // @Failure 400 {object} responses.Error
 // @Router /promotion/{id}/product [post]
 // @Security BearerAuth
@@ -456,7 +456,7 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 	}
 
 	promoHandler.server.Logger.Info("search product in promotion")
-	var products []models.ProductInPromotionItem
+	var products []models.Product
 
 	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
 	if err != nil {
@@ -476,20 +476,20 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 			Limit:  searchRequest.Limit,
 			AreaId: 0,
 		}
-		errRes = promoRepo.GetTopProductPromotion(&products, &total, s2, claims.UserId, claims.Type)
+		products, errRes = promoRepo.GetTopProductPromotion(&total, s2, claims.UserId, claims.Type)
 	} else {
-		errRes = promoRepo.GetProductByPromotion(&products, &total, id, searchRequest, claims.UserId, claims.Type)
+		products, errRes = promoRepo.GetProductByPromotion(&total, id, searchRequest, claims.UserId, claims.Type)
 	}
 
 	if errRes != nil {
-		return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+		return responses.Response(c, http.StatusOK, responses.ProductSearch{
 			Code:    http.StatusOK,
 			Message: "",
 			Total:   0,
 			Data:    nil,
 		})
 	}
-	return responses.Response(c, http.StatusOK, responses2.ProductInPromotionSearch{
+	return responses.Response(c, http.StatusOK, responses.ProductSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,

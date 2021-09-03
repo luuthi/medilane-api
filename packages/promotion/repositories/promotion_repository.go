@@ -145,7 +145,7 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 		Find(promotionDetails)
 }
 
-func (promotionRepo *PromotionRepository) GetProductByPromotion(resp *[]models.ProductInPromotionItem, total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) error {
+func (promotionRepo *PromotionRepository) GetProductByPromotion(total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) ([]models.Product, error) {
 	// check user area
 	var areaId uint
 	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
@@ -184,10 +184,54 @@ func (promotionRepo *PromotionRepository) GetProductByPromotion(resp *[]models.P
 
 	promotionRepo.DB.Raw(countSql, promotionId).Count(total)
 
-	return promotionRepo.DB.Raw(sqlRaw, promotionId, areaId, request.Limit, request.Offset).Find(resp).Error
+	var productPro []models.ProductInPromotionItem
+	err := promotionRepo.DB.Raw(sqlRaw, promotionId, areaId, request.Limit, request.Offset).Find(&productPro).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]models.Product, 0)
+	for _, item := range productPro {
+		prod := models.Product{
+			CommonModelFields: models.CommonModelFields{
+				ID:        item.ProductId,
+				CreatedAt: 0,
+				UpdatedAt: 0,
+			},
+			Code:    item.Code,
+			Name:    item.Name,
+			Unit:    item.Unit,
+			Barcode: item.Barcode,
+			Avatar:  item.Url,
+			Variants: []*models.Variant{
+				{
+					CommonModelFields: models.CommonModelFields{
+						ID: item.VariantId,
+					},
+					Name: item.Unit,
+				},
+			},
+			Images: []*models.Image{
+				{
+					Url: item.Url,
+				},
+			},
+			Cost:              item.Cost,
+			Percent:           item.Percent,
+			HasPromote:        true,
+			HasPromoteVoucher: false,
+			ConditionVoucher:  "",
+			ValueVoucher:      0,
+			VoucherId:         item.VoucherId,
+		}
+
+		products = append(products, prod)
+	}
+	return products, nil
 }
 
-func (promotionRepo *PromotionRepository) GetTopProductPromotion(resp *[]models.ProductInPromotionItem, total *int64, request *requests.SearchProductPromotion, userId uint, userType string) error {
+func (promotionRepo *PromotionRepository) GetTopProductPromotion(total *int64, request *requests.SearchProductPromotion, userId uint, userType string) ([]models.Product, error) {
 	// check user area
 	var areaId uint
 	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
@@ -204,6 +248,7 @@ func (promotionRepo *PromotionRepository) GetTopProductPromotion(resp *[]models.
 	} else {
 		areaId = request.AreaId
 	}
+
 	countSql := "SELECT  count(*) as count FROM promotion p " +
 		"INNER JOIN promotion_detail pd ON p.id = pd.promotion_id " +
 		"INNER JOIN product p2 ON p2.id = pd.product_id " +
@@ -227,5 +272,49 @@ func (promotionRepo *PromotionRepository) GetTopProductPromotion(resp *[]models.
 		"WHERE area_id = ? AND start_time <= ? AND end_time >= ? AND status = true AND deleted = 0) " +
 		"AND ac.area_id = ?  LIMIT ?"
 
-	return promotionRepo.DB.Raw(sqlRaw, areaId, now, now, areaId, request.Limit).Find(resp).Error
+	var productPro []models.ProductInPromotionItem
+	err := promotionRepo.DB.Raw(sqlRaw, areaId, now, now, areaId, request.Limit).Find(&productPro).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	products := make([]models.Product, 0)
+	for _, item := range productPro {
+		prod := models.Product{
+			CommonModelFields: models.CommonModelFields{
+				ID:        item.ProductId,
+				CreatedAt: 0,
+				UpdatedAt: 0,
+			},
+			Code:    item.Code,
+			Name:    item.Name,
+			Unit:    item.Unit,
+			Barcode: item.Barcode,
+			Avatar:  item.Url,
+			Variants: []*models.Variant{
+				{
+					CommonModelFields: models.CommonModelFields{
+						ID: item.VariantId,
+					},
+					Name: item.Unit,
+				},
+			},
+			Images: []*models.Image{
+				{
+					Url: item.Url,
+				},
+			},
+			Cost:              item.Cost,
+			Percent:           item.Percent,
+			HasPromote:        true,
+			HasPromoteVoucher: false,
+			ConditionVoucher:  "",
+			ValueVoucher:      0,
+			VoucherId:         item.VoucherId,
+		}
+
+		products = append(products, prod)
+	}
+	return products, nil
 }
