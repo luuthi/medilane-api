@@ -75,8 +75,8 @@ func (rr SearchProductRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Limit, validation.Min(0)),
 		validation.Field(&rr.Offset, validation.Min(0)),
-		validation.Field(&rr.TimeFrom, validation.Min(0)),
-		validation.Field(&rr.TimeTo, validation.Min(0)),
+		validation.Field(&rr.TimeFrom, validation.Min(int64(0))),
+		validation.Field(&rr.TimeTo, validation.Min(int64(0))),
 		validation.Field(&rr.TimeTo, validation.By(checkTimeTimeFromTo(rr.TimeFrom, rr.TimeTo))),
 	)
 }

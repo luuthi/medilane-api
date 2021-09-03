@@ -20,12 +20,12 @@ type CartItemRequest struct {
 
 func (rr CartItemRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
-		validation.Field(&rr.Cost, validation.Min(0)),
-		validation.Field(&rr.Quantity, validation.Min(0)),
-		validation.Field(&rr.Discount, validation.Min(0)),
-		validation.Field(&rr.CartID, validation.Min(0)),
-		validation.Field(&rr.ProductID, validation.Min(0)),
-		validation.Field(&rr.VariantID, validation.Min(0)),
+		validation.Field(&rr.Cost, validation.Min(float32(0))),
+		validation.Field(&rr.Quantity, validation.Min(int(0))),
+		validation.Field(&rr.Discount, validation.Min(float32(0))),
+		validation.Field(&rr.CartID, validation.Min(uint(0))),
+		validation.Field(&rr.ProductID, validation.Min(uint(0))),
+		validation.Field(&rr.VariantID, validation.Min(uint(0))),
 	)
 }
 

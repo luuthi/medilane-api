@@ -38,7 +38,7 @@ type SetCostProductsOfAreaRequest struct {
 
 func (rr CostProductOfArea) Validate() error {
 	return validation.ValidateStruct(&rr,
-		validation.Field(&rr.Cost, validation.Min(0)),
+		validation.Field(&rr.Cost, validation.Min(float64(0))),
 	)
 }
 

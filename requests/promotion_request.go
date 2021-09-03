@@ -35,7 +35,7 @@ func (rr PromotionRequest) Validate() error {
 		validation.Field(&rr.AreaId, validation.Required),
 		validation.Field(&rr.Name, validation.Required),
 		validation.Field(&rr.Status, validation.NotNil),
-		validation.Field(&rr.StartTime, validation.Required, validation.Min(0)),
+		validation.Field(&rr.StartTime, validation.Required, validation.Min(int64(0))),
 		validation.Field(&rr.EndTime, validation.Required, validation.Min(0), validation.By(checkStartTimeEndTime(rr.StartTime, rr.EndTime))),
 	)
 }
