@@ -22,7 +22,7 @@ func NewCartRepository(db *gorm.DB) *CartRepository {
 	return &CartRepository{DB: db}
 }
 
-func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, userType string) *models.Cart {
+func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, userType string) (*models.Cart, error) {
 	cart := &models.Cart{
 		CartDetails: make([]models.CartDetail, 0),
 	}
@@ -32,14 +32,17 @@ func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, u
 	spec = append(spec, "user_id = ?")
 	values = append(values, userId)
 
-	CartRepository.DB.Table(utils.TblCart).
+	err := CartRepository.DB.Table(utils.TblCart).
 		Count(count).
 		Where(strings.Join(spec, " AND "), values...).
 		Preload(clause.Associations).
 		Preload("CartDetails.Product").
 		Preload("CartDetails.Variant").
 		Preload("CartDetails.Product.Images").
-		First(&cart)
+		First(&cart).Error
+	if err != nil {
+		return nil, err
+	}
 
 	productIds := make([]uint, 0)
 	for _, item := range cart.CartDetails {
@@ -48,19 +51,26 @@ func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, u
 	areaRepo := repositories3.NewOrderRepository(CartRepository.DB)
 	err, areaId := areaRepo.GetAreaByUser(userType, userId)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	prodRepo := repositories2.NewProductRepository(CartRepository.DB)
 	var promotionResp []models.ProductInPromotionItem
-	prodRepo.CheckProductPromotionPercent(productIds, areaId, &promotionResp)
+	err = prodRepo.CheckProductPromotionPercent(productIds, areaId, &promotionResp)
+	if err != nil {
+		return nil, err
+	}
 	var promotionMap = make(map[uint]float32)
 	for _, p := range promotionResp {
 		promotionMap[p.ProductId] = p.Percent
 	}
 
 	var productCost []models.AreaCost
-	productCost = prodRepo.GetCostProduct(productIds, areaId)
+	productCost, err = prodRepo.GetCostProduct(productIds, areaId)
+	if err != nil {
+		return nil, err
+	}
+
 	var costMap = make(map[uint]float64)
 	for _, p := range productCost {
 		costMap[p.ProductId] = p.Cost
@@ -75,13 +85,13 @@ func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, u
 			item.Product.Cost = cost
 		}
 	}
-	return cart
+	return cart, nil
 }
 
-func (CartRepository *CartRepository) GetCartById(cart *models.Cart, id uint) {
-	CartRepository.DB.Table(utils.TblCart).First(&cart, id)
+func (CartRepository *CartRepository) GetCartById(cart *models.Cart, id uint) error {
+	return CartRepository.DB.Table(utils.TblCart).First(&cart, id).Error
 }
 
-func (CartRepository *CartRepository) GetCartItemById(cart *models.CartDetail, id uint) {
-	CartRepository.DB.Table(utils.TblCartDetail).First(&cart, id)
+func (CartRepository *CartRepository) GetCartItemById(cart *models.CartDetail, id uint) error {
+	return CartRepository.DB.Table(utils.TblCartDetail).First(&cart, id).Error
 }

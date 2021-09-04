@@ -104,7 +104,6 @@ func (backend *JWTAuthenticationBackend) Logout(tokenString string, token *jwt.T
 	ttl := time.Duration(backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]) * 1e9)
 	_, err := redisCon.GetInstance().Set(ctx, tokenString, tokenString, ttl)
 	return err
-	//return backend.conn.SetValue(tokenString, tokenString, backend.getTokenRemainingValidity(token.Claims.(jwt.MapClaims)["exp"]))
 }
 
 func (backend *JWTAuthenticationBackend) IsInBlacklist(token string) bool {
@@ -134,7 +133,7 @@ func getPrivateKey(config *config.Config) *rsa.PrivateKey {
 
 	data, _ := pem.Decode([]byte(pembytes))
 
-	privateKeyFile.Close()
+	_ = privateKeyFile.Close()
 
 	privateKeyImported, err := x509.ParsePKCS1PrivateKey(data.Bytes)
 
@@ -160,7 +159,7 @@ func getPublicKey(config *config.Config) *rsa.PublicKey {
 
 	data, _ := pem.Decode([]byte(pembytes))
 
-	publicKeyFile.Close()
+	_ = publicKeyFile.Close()
 
 	publicKeyImported, err := x509.ParsePKIXPublicKey(data.Bytes)
 

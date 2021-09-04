@@ -16,11 +16,10 @@ func NewDrugStoreRelationshipRepository(db *gorm.DB) *DrugStoreRelationshipRepos
 	return &DrugStoreRelationshipRepository{DB: db}
 }
 
-func (DrugStoreRelationshipRepository *DrugStoreRelationshipRepository) GetDrugstoreParentByID(perm *models.DrugStoreRelationship, id uint) {
-	DrugStoreRelationshipRepository.DB.Where("parent_store_id = ?", id).First(&perm)
+func (DrugStoreRelationshipRepository *DrugStoreRelationshipRepository) GetDrugstoreParentByID(perm *models.DrugStoreRelationship, id uint) error {
+	return DrugStoreRelationshipRepository.DB.Where("parent_store_id = ?", id).First(&perm).Error
 }
 
-func (DrugStoreRelationshipRepository *DrugStoreRelationshipRepository) GetDrugstoreChildByID(perm *models.DrugStoreRelationship, id uint) {
-	DrugStoreRelationshipRepository.DB.Where("child_store_id = ?", id).First(&perm)
+func (DrugStoreRelationshipRepository *DrugStoreRelationshipRepository) GetDrugstoreChildByID(perm *models.DrugStoreRelationship, id uint) error {
+	return DrugStoreRelationshipRepository.DB.Where("child_store_id = ?", id).First(&perm).Error
 }
-

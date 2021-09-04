@@ -16,6 +16,34 @@ import (
 	"strings"
 )
 
+func CheckUserType(server *s.Server, allowedUserType []string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			token, err := VerifyToken(context.Request(), server)
+			if err != nil {
+				return context.JSON(http.StatusUnauthorized, responses.Data{
+					Code:    http.StatusUnauthorized,
+					Message: "invalid token",
+				})
+			}
+
+			claims, ok := token.Claims.(*JwtCustomClaims)
+			if !ok {
+				return context.JSON(http.StatusUnauthorized, responses.Data{
+					Code:    http.StatusUnauthorized,
+					Message: "invalid token",
+				})
+			}
+			if allowedUserType != nil && len(allowedUserType) > 0 && !funcHelpers2.StringContain(allowedUserType, claims.Type) {
+				return echo.NewHTTPError(http.StatusForbidden, "Tài khoản không được thực hiện thao tác!")
+			} else {
+				return next(context)
+			}
+
+		}
+	}
+}
+
 func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin bool) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(context echo.Context) error {
@@ -34,6 +62,7 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 					Message: "invalid token",
 				})
 			}
+
 			userName := claims.Name
 			isAdmin := claims.IsAdmin
 			if requiredAdmin && !isAdmin {
@@ -41,7 +70,13 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 			}
 			permRepo := repositories.NewPermissionRepository(server.DB)
 			var rs []models.Permission
-			permRepo.GetPermissionByUsername(&rs, userName)
+			err = permRepo.GetPermissionByUsername(&rs, userName)
+			if err != nil {
+				return context.JSON(http.StatusUnauthorized, responses.Data{
+					Code:    http.StatusUnauthorized,
+					Message: "invalid token",
+				})
+			}
 			var count int
 			for _, perm := range rs {
 				if funcHelpers2.StringContain(requiredScope, perm.PermissionName) {
@@ -49,10 +84,11 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 				}
 			}
 			if count < len(requiredScope) {
-				return echo.NewHTTPError(http.StatusForbidden, "access denied")
+				return echo.NewHTTPError(http.StatusForbidden, "Tài khoản không có quyền truy cập!")
 			} else {
 				return next(context)
 			}
+
 		}
 	}
 }

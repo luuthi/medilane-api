@@ -15,7 +15,7 @@ func NewSettingRepository(db *gorm.DB) *SettingRepository {
 	return &SettingRepository{DB: db}
 }
 
-func (settingRepo *SettingRepository) GetSetting(setting *models.AppSetting, filter *requests.SearchSettingRequest) {
-	settingRepo.DB.Table(utils.TblSetting).Where("`key` = ?", filter.Key).
-		First(&setting)
+func (settingRepo *SettingRepository) GetSetting(setting *models.AppSetting, filter *requests.SearchSettingRequest) error {
+	return settingRepo.DB.Table(utils.TblSetting).Where("`key` = ?", filter.Key).
+		First(&setting).Error
 }

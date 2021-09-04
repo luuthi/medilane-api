@@ -23,7 +23,7 @@ func NewRoleRepository(db *gorm.DB) *RoleRepository {
 	return &RoleRepository{DB: db}
 }
 
-func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, count *int64, filter requests2.SearchRoleRequest) {
+func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, count *int64, filter requests2.SearchRoleRequest) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -40,13 +40,13 @@ func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, count *int64, fi
 		filter.Sort.SortDirection = "desc"
 	}
 
-	roleRepo.DB.Table(utils2.TblRole).Where(strings.Join(spec, " AND "), values...).
+	return roleRepo.DB.Table(utils2.TblRole).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload(clause.Associations).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&perms)
+		Find(&perms).Error
 }
 
 func (roleRepo *RoleRepository) GetRoleByID(perm *models2.Role, id uint) {

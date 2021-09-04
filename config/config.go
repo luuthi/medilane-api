@@ -9,6 +9,7 @@ import (
 )
 
 type Config struct {
+	DevMode       bool                  `yaml:"DEV_MODE"`
 	Auth          AuthConfig            `yaml:"AUTH"`
 	DB            DBConfig              `yaml:"DATABASE"`
 	HTTP          HTTPConfig            `yaml:"HTTP"`

@@ -1,16 +1,15 @@
 package handlers
 
 import (
-	"fmt"
+	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
 	user2 "medilane-api/packages/accounts/services/account"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"net/http"
-
-	"github.com/labstack/echo/v4"
 )
 
 type RegisterHandler struct {
@@ -30,7 +29,10 @@ func NewRegisterHandler(server *s.Server) *RegisterHandler {
 // @Produce json
 // @Param params body requests.RegisterRequest true "User's email, user's password"
 // @Success 201 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /register [post]
 // @Security BearerAuth
 func (registerHandler *RegisterHandler) Register(c echo.Context) error {
@@ -41,23 +43,26 @@ func (registerHandler *RegisterHandler) Register(c echo.Context) error {
 	}
 
 	if err := accRequest.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("request data not valid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	existUser := models.User{}
 	AccountRepository := repositories2.NewAccountRepository(registerHandler.server.DB)
-	AccountRepository.GetUserByEmail(&existUser, accRequest.AccountRequest.Email)
+	err := AccountRepository.GetUserByEmail(&existUser, accRequest.AccountRequest.Email)
+	if err != nil {
+		panic(err)
+	}
 
 	if existUser.ID != 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, "User already exists")
+		panic(errorHandling.ErrEntityNotFound(utils.TblAccount, nil))
 	}
 
 	userService := user2.NewAccountService(registerHandler.server.DB, registerHandler.server.Config)
 
 	rs := userService.RegisterDrugStore(accRequest)
 	if err := rs; err != nil {
-		return responses.ErrorResponse(c, http.StatusInternalServerError, "Error insert drugstore")
+		panic(err)
 	}
 
-	return responses.MessageResponse(c, http.StatusCreated, "User successfully created")
+	return responses.CreateResponse(c, utils.TblAccount)
 }

@@ -24,15 +24,15 @@ func NewCategoryRepository(db *gorm.DB) *CategoryRepository {
 	return &CategoryRepository{DB: db}
 }
 
-func (categoryRepository *CategoryRepository) GetCategoryBySlug(category *models2.Category, Slug string) {
-	categoryRepository.DB.Table(utils.TblCategory).Where("Slug = ?", Slug).Find(category)
+func (categoryRepository *CategoryRepository) GetCategoryBySlug(category *models2.Category, Slug string) error {
+	return categoryRepository.DB.Table(utils.TblCategory).Where("Slug = ?", Slug).Find(category).Error
 }
 
-func (categoryRepository *CategoryRepository) GetCategoryById(category *models2.Category, id uint) {
-	categoryRepository.DB.Table(utils.TblCategory).Where("id = ?", id).Find(category)
+func (categoryRepository *CategoryRepository) GetCategoryById(category *models2.Category, id uint) error {
+	return categoryRepository.DB.Table(utils.TblCategory).Where("id = ?", id).Find(category).Error
 }
 
-func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.Category, count *int64, filter *requests2.SearchCategoryRequest) {
+func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.Category, count *int64, filter *requests2.SearchCategoryRequest) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -54,10 +54,10 @@ func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.
 		filter.Sort.SortDirection = "desc"
 	}
 
-	categoryRepository.DB.Table(utils.TblCategory).Where(strings.Join(spec, " AND "), values...).
+	return categoryRepository.DB.Table(utils.TblCategory).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&category)
+		Find(&category).Error
 }

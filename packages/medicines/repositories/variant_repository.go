@@ -24,13 +24,13 @@ func NewVariantRepository(db *gorm.DB) *VariantRepository {
 	return &VariantRepository{DB: db}
 }
 
-func (variantRepository *VariantRepository) GetVariantById(variant *models2.Variant, id uint) {
-	variantRepository.DB.Table(utils.TblVariant).
+func (variantRepository *VariantRepository) GetVariantById(variant *models2.Variant, id uint) error {
+	return variantRepository.DB.Table(utils.TblVariant).
 		Preload(clause.Associations).
-		First(&variant, id)
+		First(&variant, id).Error
 }
 
-func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, count *int64, filter *requests2.SearchVariantRequest) {
+func (variantRepository *VariantRepository) GetVariants(category *[]models2.Variant, count *int64, filter *requests2.SearchVariantRequest) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -47,10 +47,10 @@ func (variantRepository *VariantRepository) GetVariants(category *[]models2.Vari
 		filter.Sort.SortDirection = "desc"
 	}
 
-	variantRepository.DB.Table(utils.TblVariant).Where(strings.Join(spec, " AND "), values...).
+	return variantRepository.DB.Table(utils.TblVariant).Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Count(count).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&category)
+		Find(&category).Error
 }

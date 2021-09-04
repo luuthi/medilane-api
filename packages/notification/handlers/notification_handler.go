@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/notification/repositories"
 	responses3 "medilane-api/packages/notification/responses"
@@ -31,13 +32,16 @@ func NewNotificationHandler(server *s.Server) *NotificationHandler {
 // @Produce json
 // @Param params body requests.SearchNotificationRequest true "Notification's credentials"
 // @Success 200 {object} responses.NotificationSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /notification/find [post]
 // @Security BearerAuth
 func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Context) error {
 	searchRequest := new(requests2.SearchNotificationRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	NotificationHandler.server.Logger.Info("search notification")
@@ -45,9 +49,12 @@ func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Contex
 	var total int64
 
 	notificationsRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)
-	notifications = notificationsRepo.GetNotifications(&total, searchRequest)
+	notifications, err := notificationsRepo.GetNotifications(&total, searchRequest)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses3.NotificationSearch{
+	return responses.SearchResponse(c, responses3.NotificationSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -64,30 +71,35 @@ func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Contex
 // @Produce json
 // @Param id path uint true "id notification"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /notification/{id} [put]
 // @Security BearerAuth
 func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id notification: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var notification models.Notification
 	permRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)
-	permRepo.GetNotificationByID(&notification, id)
-	if notification.Status == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found notification with ID: %v", id))
+	err = permRepo.GetNotificationByID(&notification, id)
+	if err != nil {
+		panic(err)
 	}
-
+	if notification.ID == -0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblNotification, nil))
+	}
 
 	notificationService := services.NewNotificationService(NotificationHandler.server.DB)
 	if err := notificationService.MarkNotificationAsRead(notification); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update notification: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Notification updated!")
+	return responses.DeleteResponse(c, utils.TblNotification)
 }
 
 // MarkAllNotificationAsRead Mark all notification as read godoc
@@ -99,27 +111,34 @@ func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Co
 // @Produce json
 // @Param id path uint true "id user"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /notification/all/seen/{id} [put]
 // @Security BearerAuth
 func (NotificationHandler *NotificationHandler) MarkAllNotificationAsRead(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id user: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var notifications []models.Notification
 	permRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)
-	permRepo.GetNotificationByUserID(&notifications, id)
+	err = permRepo.GetNotificationByUserID(&notifications, id)
+	if err != nil {
+		panic(err)
+	}
 
 	notificationService := services.NewNotificationService(NotificationHandler.server.DB)
 
-	for _,notification := range notifications {
+	for _, notification := range notifications {
 		if err := notificationService.MarkNotificationAsRead(notification); err != nil {
+			panic(err)
 		}
 	}
 
-	return responses.MessageResponse(c, http.StatusOK, "Notifications updated!")
+	return responses.UpdateResponse(c, utils.TblNotification)
 }

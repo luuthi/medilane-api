@@ -27,15 +27,15 @@ type VoucherDetail struct {
 type Promotion struct {
 	CommonModelFields
 
-	AreaId           uint               `json:"AreaId"`
-	Name             string             `json:"Name" gorm:"type:varchar(200)"`
-	Note             string             `json:"Note" gorm:"type:varchar(200)"`
-	StartTime        int64              `json:"StartTime" gorm:"type:bigint(64)"`
-	EndTime          int64              `json:"EndTime" gorm:"type:bigint(64)"`
-	Deleted          *bool              `json:"Deleted" gorm:"type:bool"`
-	Status           *bool              `json:"Status" gorm:"type:bool"`
-	Avatar           string             `json:"Avatar" gorm:"varchar(255);not null"`
-	PromotionDetails []*PromotionDetail `gorm:"foreignKey:PromotionID"`
+	AreaId           uint              `json:"AreaId"`
+	Name             string            `json:"Name" gorm:"type:varchar(200)"`
+	Note             string            `json:"Note" gorm:"type:varchar(200)"`
+	StartTime        int64             `json:"StartTime" gorm:"type:bigint(64)"`
+	EndTime          int64             `json:"EndTime" gorm:"type:bigint(64)"`
+	Deleted          *bool             `json:"Deleted" gorm:"type:bool"`
+	Status           *bool             `json:"Status" gorm:"type:bool"`
+	Avatar           string            `json:"Avatar" gorm:"varchar(255);not null"`
+	PromotionDetails []PromotionDetail `gorm:"foreignKey:PromotionID"`
 }
 
 type PromotionDetail struct {

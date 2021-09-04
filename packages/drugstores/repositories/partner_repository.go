@@ -22,7 +22,7 @@ func NewPartnerRepository(db *gorm.DB) *PartnerRepository {
 	return &PartnerRepository{DB: db}
 }
 
-func (partnerRepo *PartnerRepository) GetPartners(count *int64, filter *requests2.SearchPartnerRequest) []models.Partner {
+func (partnerRepo *PartnerRepository) GetPartners(count *int64, filter *requests2.SearchPartnerRequest) ([]models.Partner, error) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -61,14 +61,18 @@ func (partnerRepo *PartnerRepository) GetPartners(count *int64, filter *requests
 
 	var partners []models.Partner
 
-	partnerRepo.DB.Table(utils.TblPartner).
+	err := partnerRepo.DB.Table(utils.TblPartner).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload("Address").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&partners)
+		Find(&partners).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	// get info user
 	var partnerIds []uint
@@ -76,10 +80,13 @@ func (partnerRepo *PartnerRepository) GetPartners(count *int64, filter *requests
 		partnerIds = append(partnerIds, partner.ID)
 	}
 	var pus []models.PartnerUser
-	partnerRepo.DB.Table(utils.TblPartnerUser).
+	err = partnerRepo.DB.Table(utils.TblPartnerUser).
 		Preload(clause.Associations).
 		Where("partner_id IN ?", partnerIds).
-		Find(&pus)
+		Find(&pus).Error
+	if err != nil {
+		return nil, err
+	}
 
 	var rs []models.Partner
 	for _, partner := range partners {
@@ -98,17 +105,17 @@ func (partnerRepo *PartnerRepository) GetPartners(count *int64, filter *requests
 		rs = append(rs, partner)
 	}
 
-	return rs
+	return rs, nil
 }
 
-func (partnerRepo *PartnerRepository) GetPartnerByID(partner *models.Partner, id uint) {
-	partnerRepo.DB.First(&partner, id)
+func (partnerRepo *PartnerRepository) GetPartnerByID(partner *models.Partner, id uint) error {
+	return partnerRepo.DB.First(&partner, id).Error
 }
 
-func (partnerRepo *PartnerRepository) GetUsersByPartner(users *[]models.User, total *int64, partnerID uint) {
-	partnerRepo.DB.Table(utils.TblAccount).Select("user.* ").
+func (partnerRepo *PartnerRepository) GetUsersByPartner(users *[]models.User, total *int64, partnerID uint) error {
+	return partnerRepo.DB.Table(utils.TblAccount).Select("user.* ").
 		Count(total).
 		Preload("Roles").
 		Joins("JOIN partner_user pu ON pu.user_id = user.id ").
-		Where(fmt.Sprintf("du.partner_id = \"%v\"", partnerID)).Find(&users)
+		Where(fmt.Sprintf("du.partner_id = \"%v\"", partnerID)).Find(&users).Error
 }

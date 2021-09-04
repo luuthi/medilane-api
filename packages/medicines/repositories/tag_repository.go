@@ -24,15 +24,15 @@ func NewTagRepository(db *gorm.DB) *TagRepository {
 	return &TagRepository{DB: db}
 }
 
-func (tagRepository *TagRepository) GetTagBySlug(tag *models2.Tag, Slug string) {
-	tagRepository.DB.Where("Slug = ?", Slug).Find(tag)
+func (tagRepository *TagRepository) GetTagBySlug(tag *models2.Tag, Slug string) error {
+	return tagRepository.DB.Where("Slug = ?", Slug).Find(tag).Error
 }
 
-func (tagRepository *TagRepository) GetTagById(tag *models2.Tag, id uint) {
-	tagRepository.DB.Where("id = ?", id).Find(tag)
+func (tagRepository *TagRepository) GetTagById(tag *models2.Tag, id uint) error {
+	return tagRepository.DB.Where("id = ?", id).Find(tag).Error
 }
 
-func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, count *int64, filter *requests2.SearchTagRequest) {
+func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, count *int64, filter *requests2.SearchTagRequest) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -46,10 +46,10 @@ func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, count *int64, fi
 		values = append(values, filter.Slug)
 	}
 
-	tagRepository.DB.Table(utils.TblTag).Where(strings.Join(spec, " AND "), values...).
+	return tagRepository.DB.Table(utils.TblTag).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&tag)
+		Find(&tag).Error
 }

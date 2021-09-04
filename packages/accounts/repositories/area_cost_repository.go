@@ -22,11 +22,11 @@ func (AreaCostRepository *AreaCostRepository) GetAreaCostByID(area *models2.Area
 	AreaCostRepository.DB.Table(utils2.TblAreaCost).Where("area_id = ? AND product_id = ?", areaId, productId).First(&area)
 }
 
-func (AreaCostRepository *AreaCostRepository) GetProductsOfArea(areas *[]models2.AreaCost, count *int64, areaId uint) {
-	AreaCostRepository.DB.Table(utils2.TblAreaCost).
+func (AreaCostRepository *AreaCostRepository) GetProductsOfArea(areas *[]models2.AreaCost, count *int64, areaId uint) error {
+	return AreaCostRepository.DB.Table(utils2.TblAreaCost).
 		Where("area_id = ?", areaId).
 		Count(count).
-		Find(&areas)
+		Find(&areas).Error
 }
 
 func (AreaCostRepository *AreaCostRepository) GetProductsDetailOfArea(area *[]models2.AreaCost, total *int64, areaId uint, offset int, limit int) {
