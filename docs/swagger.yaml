@@ -1,5 +1,16 @@
 basePath: /api/v1
 definitions:
+  errorHandling.AppError:
+    properties:
+      code:
+        type: integer
+      key:
+        type: string
+      log:
+        type: string
+      message:
+        type: string
+    type: object
   models.Address:
     properties:
       Address:
@@ -2125,15 +2136,8 @@ definitions:
     properties:
       code:
         type: integer
-      message:
+      key:
         type: string
-    type: object
-  responses.DataSearch:
-    properties:
-      code:
-        type: integer
-      data:
-        type: object
       message:
         type: string
     type: object
@@ -2167,20 +2171,6 @@ definitions:
         type: array
       message:
         type: string
-    type: object
-  responses.Error:
-    properties:
-      code:
-        type: integer
-      error:
-        type: string
-    type: object
-  responses.GetRelationshipResponse:
-    properties:
-      data:
-        items:
-          $ref: '#/definitions/models.DrugStore'
-        type: array
     type: object
   responses.LoginResponse:
     properties:
@@ -2515,7 +2505,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create account in system
@@ -2543,7 +2545,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete account in system
@@ -2570,7 +2584,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get account in system
@@ -2603,7 +2629,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit account in system
@@ -2637,7 +2675,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: assign staff for drugstore in system
@@ -2647,7 +2697,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Perform search all permission of accoun
+      description: Perform search all permission of account
       operationId: search-permission-account
       parameters:
       - description: username
@@ -2661,11 +2711,25 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.DataSearch'
+            items:
+              type: string
+            type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search all permission of account in system
@@ -2694,7 +2758,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search account in system
@@ -2723,7 +2799,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create address in system
@@ -2751,7 +2839,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete address in system
@@ -2778,7 +2878,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get address in system
@@ -2811,7 +2923,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit address in system
@@ -2840,7 +2964,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search address in system
@@ -2869,7 +3005,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create area in system
@@ -2897,7 +3045,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete area in system
@@ -2924,7 +3084,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit area in system
@@ -2957,7 +3129,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit area in system
@@ -2991,7 +3175,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Config area contain which province and district in system
@@ -3025,7 +3221,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get products of area in system
@@ -3054,7 +3262,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Set cost products of area in system
@@ -3083,7 +3303,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search area in system
@@ -3112,7 +3344,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create banner
@@ -3141,7 +3385,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete banner
@@ -3170,7 +3426,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit banner
@@ -3199,7 +3467,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search banner in system
@@ -3221,7 +3501,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get banner in system
@@ -3250,7 +3542,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create cart in system
@@ -3278,7 +3582,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete cart in system
@@ -3306,7 +3622,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete cart item in system
@@ -3335,7 +3663,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create cart in system
@@ -3354,10 +3694,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.CartSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search cart item by username in system
@@ -3383,10 +3735,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create category in system
@@ -3411,10 +3775,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete category in system
@@ -3444,10 +3820,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit category in system
@@ -3473,10 +3861,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.CategorySearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search category in system
@@ -3502,10 +3902,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create drugstore in system
@@ -3530,10 +3942,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete drugstore in system
@@ -3557,10 +3981,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.DrugStore'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get drugstore in system
@@ -3590,10 +4026,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit drugstore in system
@@ -3618,10 +4066,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.UserSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search account in drugstore in system
@@ -3647,10 +4107,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Connective drugstore in system
@@ -3674,11 +4146,23 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/responses.GetRelationshipResponse'
+            $ref: '#/definitions/responses.DrugStoreSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get list connective drugstore in system
@@ -3703,10 +4187,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get type connective drugstore in system
@@ -3732,10 +4228,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.DrugStoreSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search drugstores in system
@@ -3754,10 +4262,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.StatisticNewDrugStoreResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Statistic new drugstore in system
@@ -3783,10 +4303,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       summary: Create fcm token in system
       tags:
       - FcmToken Management
@@ -3810,10 +4342,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       summary: Authenticate a user
       tags:
       - User Actions
@@ -3829,11 +4373,23 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.LoginResponse'
+            $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Refresh access token
@@ -3858,10 +4414,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Mark notification as read
@@ -3886,10 +4454,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Mark all notification as read
@@ -3915,10 +4495,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.NotificationSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search notification in system
@@ -3947,7 +4539,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create order in system
@@ -3975,7 +4579,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete order in system
@@ -4002,7 +4618,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit order in system
@@ -4035,7 +4663,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit order in system
@@ -4064,7 +4704,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Export order in system
@@ -4090,10 +4742,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.OrderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search order in system
@@ -4115,7 +4779,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get payment method in system
@@ -4141,10 +4817,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create partner in system
@@ -4169,10 +4857,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete partner in system
@@ -4196,10 +4896,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Partner'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get partner in system
@@ -4229,10 +4941,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit partner in system
@@ -4258,10 +4982,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.PartnerSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search partner in system
@@ -4290,7 +5026,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create permission in system
@@ -4318,7 +5066,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete permission in system
@@ -4351,7 +5111,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit permission in system
@@ -4380,7 +5152,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search permission in system
@@ -4409,7 +5193,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create product in system
@@ -4437,7 +5233,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete product in system
@@ -4468,7 +5276,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get product in system
@@ -4501,7 +5321,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit product in system
@@ -4529,7 +5361,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get pure product in system
@@ -4558,7 +5402,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search product in system
@@ -4587,7 +5443,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search only product in system
@@ -4616,7 +5484,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Suggest product in system
@@ -4645,7 +5525,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Change status of list product in system
@@ -4674,7 +5566,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create promotion with list details in system
@@ -4702,7 +5606,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete promotion (soft delete) in system
@@ -4729,7 +5645,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get promotion in system
@@ -4763,7 +5691,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit promotion with list detail in system
@@ -4791,7 +5731,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete promotion detail by promotion in system
@@ -4824,7 +5776,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create multi promotion detail in system
@@ -4857,7 +5821,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete promotion detail in system
@@ -4895,7 +5871,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit promotion detail in system
@@ -4929,7 +5917,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search promotion detail in system
@@ -4963,7 +5963,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search product by promotion in system
@@ -4992,7 +6004,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search promotion in system
@@ -5021,7 +6045,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search product in promotion in system
@@ -5047,10 +6083,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Refresh access token
@@ -5079,7 +6127,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Register
@@ -5108,7 +6168,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create role in system
@@ -5136,7 +6208,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete role in system
@@ -5169,7 +6253,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit role in system
@@ -5198,7 +6294,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search role in system
@@ -5227,7 +6335,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create setting
@@ -5261,7 +6381,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit setting
@@ -5290,7 +6422,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search setting in system
@@ -5316,10 +6460,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.DrugStoreStatisticResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Statistic drugstore in system
@@ -5345,10 +6501,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.OrderStatisticCountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Statistic order count in system
@@ -5374,10 +6542,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.OrderDrugstoreCountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Statistic product count top by time and area in system
@@ -5403,10 +6583,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.ProductStatisticCountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Statistic product count top by time and area in system
@@ -5432,10 +6624,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create Tag in system
@@ -5460,10 +6664,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete Tag in system
@@ -5493,10 +6709,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit Tag in system
@@ -5522,10 +6750,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.TagSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search Tag in system
@@ -5551,10 +6791,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create variant in system
@@ -5579,10 +6831,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete variant in system
@@ -5606,10 +6870,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Variant'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit variant in system
@@ -5639,10 +6915,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.Data'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit variant in system
@@ -5668,10 +6956,22 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/responses.VariantSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search variant in system
@@ -5700,7 +7000,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Create voucher  in system
@@ -5728,7 +7040,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Delete voucher (soft delete) in system
@@ -5755,7 +7079,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Get voucher in system
@@ -5788,7 +7124,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Edit voucher in system
@@ -5817,7 +7165,19 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/responses.Error'
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
       summary: Search voucher in system

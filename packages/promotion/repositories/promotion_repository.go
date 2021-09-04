@@ -8,6 +8,7 @@ import (
 	"medilane-api/models"
 	"medilane-api/requests"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -26,7 +27,7 @@ func NewPromotionRepository(db *gorm.DB) *PromotionRepository {
 	return &PromotionRepository{DB: db}
 }
 
-func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Promotion, filter *requests.SearchPromotionRequest, total *int64) {
+func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchPromotionRequest, total *int64) (promotions []models.Promotion, err error) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -79,34 +80,83 @@ func (promotionRepo *PromotionRepository) GetPromotions(promotions *[]models.Pro
 	promo := promotionRepo.DB.Table(utils2.TblPromotion).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(total)
-	//Preload("PromotionDetails").
-	//Preload("PromotionDetails.Product").
-	//Preload("PromotionDetails.Variant").
-	//Preload("PromotionDetails.Product.Images")
 
 	if filter.Limit != 0 {
 		promo.Limit(filter.Limit)
 	}
 
-	promo.Offset(filter.Offset).
+	err = promo.Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&promotions)
+		Find(&promotions).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	type mappingPromotionDetail struct {
+		details     []models.PromotionDetail
+		promotionId uint
+	}
+	var wg sync.WaitGroup
+	promotionDetailChan := make(chan *mappingPromotionDetail, len(promotions))
+	go func(wg *sync.WaitGroup, promotionDetailChan chan *mappingPromotionDetail) {
+		wg.Wait()
+		close(promotionDetailChan)
+	}(&wg, promotionDetailChan)
+
+	mapPromo := make(map[uint]models.Promotion)
+	for _, item := range promotions {
+		mapPromo[item.ID] = item
+		go func(promotionDetailChan chan *mappingPromotionDetail, wg *sync.WaitGroup, id uint) {
+			wg.Add(1)
+			defer wg.Done()
+			var details []models.PromotionDetail
+			var f = requests.SearchPromotionDetail{
+				Limit:  10,
+				Offset: 0,
+			}
+			var t int64
+			err = promotionRepo.GetPromotionDetailByPromotion(&details, &t, id, f)
+			if err != nil {
+				promotionDetailChan <- &mappingPromotionDetail{
+					details:     make([]models.PromotionDetail, 0),
+					promotionId: id,
+				}
+			}
+			promotionDetailChan <- &mappingPromotionDetail{
+				details:     details,
+				promotionId: id,
+			}
+		}(promotionDetailChan, &wg, item.ID)
+	}
+	wg.Wait()
+
+	var rs = make([]models.Promotion, 0)
+	for details := range promotionDetailChan {
+		if details != nil {
+			if p, ok := mapPromo[details.promotionId]; ok {
+				p.PromotionDetails = details.details
+				rs = append(rs, p)
+			}
+		}
+	}
+	return rs, nil
 }
 
-func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promotion, id uint) {
-	promotionRepo.DB.Table(utils2.TblPromotion).
+func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promotion, id uint) error {
+	return promotionRepo.DB.Table(utils2.TblPromotion).
 		Preload(clause.Associations).
 		Preload("PromotionDetails.Product.Images").
 		Preload("PromotionDetails.Variant").
 		Preload("PromotionDetails.Voucher").
-		First(&promotion, id)
+		First(&promotion, id).Error
 }
 
-func (promotionRepo *PromotionRepository) GetPromotionDetail(promotion *models.PromotionDetail, id uint) {
-	promotionRepo.DB.Table(utils2.TblPromotionDetail).Preload(clause.Associations).First(&promotion, id)
+func (promotionRepo *PromotionRepository) GetPromotionDetail(promotion *models.PromotionDetail, id uint) error {
+	return promotionRepo.DB.Table(utils2.TblPromotionDetail).Preload(clause.Associations).First(&promotion, id).Error
 }
 
-func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotionDetails *[]models.PromotionDetail, total *int64, promotionID uint, filter requests.SearchPromotionDetail) {
+func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotionDetails *[]models.PromotionDetail, total *int64, promotionID uint, filter requests.SearchPromotionDetail) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -130,7 +180,7 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 		values = append(values, filter.Type)
 	}
 
-	promotionRepo.DB.Table(utils2.TblPromotionDetail).
+	return promotionRepo.DB.Table(utils2.TblPromotionDetail).
 		Where("promotion_id = ?", promotionID).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(total).
@@ -142,7 +192,7 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", "updated_at", "asc")).
-		Find(promotionDetails)
+		Find(promotionDetails).Error
 }
 
 func (promotionRepo *PromotionRepository) GetProductByPromotion(total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) ([]models.Product, error) {

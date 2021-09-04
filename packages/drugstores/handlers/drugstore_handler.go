@@ -3,7 +3,10 @@ package handlers
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	drugstores2 "medilane-api/core/utils/drugstores"
 	"medilane-api/models"
 	responses3 "medilane-api/packages/accounts/responses"
@@ -34,13 +37,16 @@ func NewDrugStoreHandler(server *s.Server) *DrugStoreHandler {
 // @Produce json
 // @Param params body requests.SearchDrugStoreRequest true "Drugstore's credentials"
 // @Success 200 {object} responses.DrugStoreSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/find [post]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error {
 	searchRequest := new(requests2.SearchDrugStoreRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	drugStoreHandler.server.Logger.Info("search account")
@@ -48,9 +54,12 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 	var total int64
 
 	drugStoresRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	drugstores = drugStoresRepo.GetDrugStores(&total, searchRequest)
+	drugstores, err := drugStoresRepo.GetDrugStores(&total, searchRequest)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses2.DrugStoreSearch{
+	return responses.SearchResponse(c, responses2.DrugStoreSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -67,21 +76,28 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 // @Produce json
 // @Param id path uint true "id drugstore"
 // @Success 200 {object} models.DrugStore
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/{id} [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) GetDrugstoreById(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id drugstore: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	permRepo.GetDrugstoreByID(&existedDrugstore, id)
-	return responses.Response(c, http.StatusOK, existedDrugstore)
+	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if err != nil {
+		panic(err)
+	}
+
+	return responses.SearchResponse(c, existedDrugstore)
 }
 
 // CreateDrugStore Create drugstore godoc
@@ -93,24 +109,27 @@ func (drugStoreHandler *DrugStoreHandler) GetDrugstoreById(c echo.Context) error
 // @Produce json
 // @Param params body requests.DrugStoreRequest true "Filter drugstore"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore [post]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error {
 	var drugstore requests2.DrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := drugstore.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreService.CreateDrugStore(&drugstore); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert drug store: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Drugstore created!")
+	return responses.CreateResponse(c, utils.TblDrugstore)
 
 }
 
@@ -124,38 +143,44 @@ func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error 
 // @Param params body requests.EditDrugStoreRequest true "body drugstore"
 // @Param id path uint true "id drugstore"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/{id} [put]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id drugstore: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var drugstore requests2.EditDrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := drugstore.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	permRepo.GetDrugstoreByID(&existedDrugstore, id)
-	if existedDrugstore.StoreName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %v", id))
+	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if err != nil {
+		panic(err)
+	}
+	if existedDrugstore.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreService.EditDrugstore(&drugstore, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update drugstore: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Drugstore updated!")
+	return responses.UpdateResponse(c, utils.TblDrugstore)
 }
 
 // DeleteDrugstore Delete drugstore godoc
@@ -167,22 +192,25 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id drugstore"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/{id} [delete]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id drugstore: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreService.DeleteDrugstore(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete drugstore: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Drugstore deleted!")
+	return responses.DeleteResponse(c, utils.TblDrugstore)
 }
 
 // ConnectiveDrugStore Connective drugstore godoc
@@ -194,63 +222,79 @@ func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error 
 // @Produce json
 // @Param params body requests.ConnectiveDrugStoreRequest true "Filter role"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/connective [post]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) error {
 	var drugstore requests2.ConnectiveDrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := drugstore.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	drugstoreRepository := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	var parentStore, childStore models.DrugStore
-	drugstoreRepository.GetDrugstoreByID(&parentStore, drugstore.ParentStoreId)
-	drugstoreRepository.GetDrugstoreByID(&childStore, drugstore.ChildStoreId)
-
-	if parentStore.StoreName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ParentStoreId))
+	var err error
+	err = drugstoreRepository.GetDrugstoreByID(&parentStore, drugstore.ParentStoreId)
+	if err != nil {
+		panic(err)
+	}
+	err = drugstoreRepository.GetDrugstoreByID(&childStore, drugstore.ChildStoreId)
+	if err != nil {
+		panic(err)
 	}
 
-	if childStore.StoreName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ChildStoreId))
+	if parentStore.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, errors.New(fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ParentStoreId))))
+	}
+
+	if childStore.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, errors.New(fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ChildStoreId))))
 	}
 
 	if parentStore.Type != drugstores2.DRUGSTORES {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))))
 	}
 
 	if childStore.Type != drugstores2.DRUGSTORES {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("Drugstore with ID: %d isn't drugstores", drugstore.ParentStoreId))))
 	}
 
 	if parentStore.ID == childStore.ID {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't connective drugstores same id"))
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("Can't connective drugstores same id"))))
 	}
 
-	typeStore, _ := checkTypeOfDrugStoreInRelationship(drugstore.ChildStoreId, drugStoreHandler.server.DB)
+	typeStore, _, err := checkTypeOfDrugStoreInRelationship(drugstore.ChildStoreId, drugStoreHandler.server.DB)
+	if err != nil {
+		panic(err)
+	}
 	if typeStore == string(drugstores2.PARENT) {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Can't connective 2 drugstore is parent"))
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("Can't connective 2 drugstore is parent"))))
 	}
 
 	var childStoreRelationship models.DrugStoreRelationship
 	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(drugStoreHandler.server.DB)
-	storeRelationshipRepo.GetDrugstoreChildByID(&childStoreRelationship, drugstore.ChildStoreId)
+	err = storeRelationshipRepo.GetDrugstoreChildByID(&childStoreRelationship, drugstore.ChildStoreId)
+	if err != nil {
+		panic(err)
+	}
 
 	if childStoreRelationship.ChildStoreID != 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("The store is already in the relationship"))
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("The store is already in the relationship"))))
 	}
 
 	drugstoreRelationshipService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreRelationshipService.ConnectiveDrugStore(&drugstore); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when connective drug store: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("Error when connective drug store: %v", err.Error()))))
 	}
 
-	return responses.MessageResponse(c, http.StatusCreated, "Connective drugstore successfully!")
+	return responses.UpdateResponse(c, utils.TblDrugstoreRelationship)
 }
 
 // GetListConnectiveDrugStore Get list connective drugstore godoc
@@ -261,37 +305,56 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 // @Accept json
 // @Produce json
 // @Param id path uint true "id drugstore"
-// @Success 201 {object} responses.GetRelationshipResponse
-// @Failure 401 {object} responses.Error
+// @Success 201 {object} responses.DrugStoreSearch
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/connective/{id} [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	// check exist drugstore
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	permRepo.GetDrugstoreByID(&existedDrugstore, id)
-	if existedDrugstore.StoreName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", id))
+	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if err != nil {
+		panic(err)
+	}
+	if existedDrugstore.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, nil))
 	}
 
-	typeOfStoreInRelationship, parentStoreId := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
+	typeOfStoreInRelationship, parentStoreId, err := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
+	if err != nil {
+		panic(err)
+	}
+
 	var relationshipStores []models.DrugStore
 	if typeOfStoreInRelationship == string(drugstores2.PARENT) {
-		relationshipStores = permRepo.GetListChildStoreOfParent(id)
+		relationshipStores, err = permRepo.GetListChildStoreOfParent(id)
+		if err != nil {
+			panic(err)
+		}
 	} else if typeOfStoreInRelationship == string(drugstores2.CHILD) {
-		relationshipStores = permRepo.GetListRelationshipStore(parentStoreId, id)
+		relationshipStores, err = permRepo.GetListRelationshipStore(parentStoreId, id)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	res := responses2.NewGetRelationshipResponse(relationshipStores)
-
-	return responses.Response(c, http.StatusOK, res)
+	return responses.SearchResponse(c, responses2.DrugStoreSearch{
+		Code:    0,
+		Message: "",
+		Total:   int64(len(relationshipStores)),
+		Data:    relationshipStores,
+	})
 }
 
 // GetTypeConnectiveDrugStore Get type connective drugstore godoc
@@ -303,45 +366,61 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 // @Produce json
 // @Param id path uint true "id drugstore"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/connective/type/{id} [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) GetTypeConnectiveDrugStore(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	// check exist drugstore
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	permRepo.GetDrugstoreByID(&existedDrugstore, id)
-	if existedDrugstore.StoreName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found drugstore with ID: %d", id))
+	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if err != nil {
+		panic(err)
+	}
+	if existedDrugstore.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, nil))
 	}
 
-	typeOfStoreInRelationship, _ := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
+	typeOfStoreInRelationship, _, err := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, typeOfStoreInRelationship)
+	return responses.SearchResponse(c, typeOfStoreInRelationship)
 }
 
-func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
+func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint, error) {
 	var parentStore models.DrugStoreRelationship
+	var err error
 	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(db)
-	storeRelationshipRepo.GetDrugstoreParentByID(&parentStore, id)
+	err = storeRelationshipRepo.GetDrugstoreParentByID(&parentStore, id)
+	if err != nil {
+		return "", 0, err
+	}
 	if parentStore.ParentStoreID != 0 {
-		return string(drugstores2.PARENT), 0
+		return string(drugstores2.PARENT), 0, nil
 	}
 
 	var childStore models.DrugStoreRelationship
-	storeRelationshipRepo.GetDrugstoreChildByID(&childStore, id)
+	err = storeRelationshipRepo.GetDrugstoreChildByID(&childStore, id)
+	if err != nil {
+		return "", 0, err
+	}
 	if childStore.ChildStoreID != 0 {
-		return string(drugstores2.CHILD), childStore.ParentStoreID
+		return string(drugstores2.CHILD), childStore.ParentStoreID, nil
 	}
 
-	return string(drugstores2.NONE), 0
+	return string(drugstores2.NONE), 0, nil
 }
 
 // SearchAccountByDrugStore Search account in drugstore godoc
@@ -353,14 +432,17 @@ func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint) {
 // @Produce json
 // @Param id path uint true "id of drugstore"
 // @Success 200 {object} responses.UserSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/{id}/accounts [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	idStore := uint(paramUrl)
 
@@ -369,10 +451,12 @@ func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Contex
 	var total int64
 
 	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	drugStoreRepo.GetUsersByDrugstore(&accounts, &total, idStore)
+	err = drugStoreRepo.GetUsersByDrugstore(&accounts, &total, idStore)
+	if err != nil {
+		panic(err)
+	}
 
-	//return responses.SearchResponse(c, http.StatusOK, "", accounts)
-	return responses.Response(c, http.StatusOK, responses3.UserSearch{
+	return responses.SearchResponse(c, responses3.UserSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -388,7 +472,10 @@ func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Contex
 // @Accept json
 // @Produce json
 // @Success 200 {object} responses.StatisticNewDrugStoreResult
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /drugstore/statistic-new [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) StatisticNewStore(c echo.Context) error {
@@ -396,11 +483,11 @@ func (drugStoreHandler *DrugStoreHandler) StatisticNewStore(c echo.Context) erro
 	var err error
 	timeFrom, err = strconv.ParseUint(c.QueryParam("time_from"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	timeTo, err = strconv.ParseUint(c.QueryParam("time_to"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	//idStore := uint(paramUrl)
 
@@ -408,10 +495,12 @@ func (drugStoreHandler *DrugStoreHandler) StatisticNewStore(c echo.Context) erro
 	var drugStore []responses2.StatisticNewDrugStore
 
 	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	drugStoreRepo.StatisticNewDrugStore(&drugStore, timeFrom, timeTo)
+	err = drugStoreRepo.StatisticNewDrugStore(&drugStore, timeFrom, timeTo)
+	if err != nil {
+		panic(err)
+	}
 
-	//return responses.SearchResponse(c, http.StatusOK, "", drugStore)
-	return responses.Response(c, http.StatusOK, responses2.StatisticNewDrugStoreResult{
+	return responses.SearchResponse(c, responses2.StatisticNewDrugStoreResult{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   0,

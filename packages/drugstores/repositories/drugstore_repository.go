@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"database/sql"
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -23,7 +24,7 @@ func NewDrugStoreRepository(db *gorm.DB) *DrugStoreRepository {
 	return &DrugStoreRepository{DB: db}
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filter *requests2.SearchDrugStoreRequest) []models.DrugStore {
+func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filter *requests2.SearchDrugStoreRequest) ([]models.DrugStore, error) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -72,14 +73,18 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filt
 
 	var drugStores []models.DrugStore
 
-	DrugStoreRepository.DB.Table(utils2.TblDrugstore).
+	err := DrugStoreRepository.DB.Table(utils2.TblDrugstore).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload("Address").
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&drugStores)
+		Find(&drugStores).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	// get info user
 	var drugstoreIds []uint
@@ -87,10 +92,14 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filt
 		drugstoreIds = append(drugstoreIds, drugstore.ID)
 	}
 	var dsus []models.DrugStoreUser
-	DrugStoreRepository.DB.Table(utils2.TblDrugstoreUser).
+	err = DrugStoreRepository.DB.Table(utils2.TblDrugstoreUser).
 		Preload(clause.Associations).
 		Where("drug_store_id IN ?", drugstoreIds).
-		Find(&dsus)
+		Find(&dsus).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	var rs []models.DrugStore
 	for _, drugstore := range drugStores {
@@ -112,41 +121,53 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filt
 		rs = append(rs, drugstore)
 	}
 
-	return rs
-
+	return rs, nil
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetDrugstoreByID(perm *models.DrugStore, id uint) {
-	DrugStoreRepository.DB.First(&perm, id)
+func (DrugStoreRepository *DrugStoreRepository) GetDrugstoreByID(perm *models.DrugStore, id uint) error {
+	return DrugStoreRepository.DB.First(&perm, id).Error
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetListChildStoreOfParent(id uint) (drugStores []models.DrugStore) {
-	rows, _ := DrugStoreRepository.DB.Table(utils2.TblDrugstore).
+func (DrugStoreRepository *DrugStoreRepository) GetListChildStoreOfParent(id uint) (drugStores []models.DrugStore, err error) {
+	rows, err := DrugStoreRepository.DB.Table(utils2.TblDrugstore).
 		Select("*").
 		Joins("inner join drug_store_relationship "+
 			"on drug_store_relationship.child_store_id = drug_store.id").
 		Where("drug_store_relationship.parent_store_id = ?", id).
 		Rows()
-	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	defer func(rows *sql.Rows) {
+		_ = rows.Close()
+	}(rows)
 	for rows.Next() {
 		var drugstore models.DrugStore
-		DrugStoreRepository.DB.ScanRows(rows, &drugstore)
+		err = DrugStoreRepository.DB.ScanRows(rows, &drugstore)
+		if err != nil {
+			return nil, err
+		}
 		drugStores = append(drugStores, drugstore)
 	}
 	return
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(parentStoreId uint, childStoreId uint) (drugstores []models.DrugStore) {
+func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(parentStoreId uint, childStoreId uint) (drugstores []models.DrugStore, err error) {
 	rows, _ := DrugStoreRepository.DB.Table(utils2.TblDrugstore).
 		Select("*").
 		Joins("inner join drug_store_relationship "+
 			"on drug_store_relationship.child_store_id = drug_store.id").
 		Where("drug_store_relationship.parent_store_id = ?", parentStoreId).
 		Rows()
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		_ = rows.Close()
+	}(rows)
 	for rows.Next() {
 		var drugstore models.DrugStore
-		DrugStoreRepository.DB.ScanRows(rows, &drugstore)
+		err = DrugStoreRepository.DB.ScanRows(rows, &drugstore)
+		if err != nil {
+			return nil, err
+		}
 		if drugstore.ID != childStoreId {
 			drugstores = append(drugstores, drugstore)
 		}
@@ -154,18 +175,18 @@ func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(parentS
 	return
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetUsersByDrugstore(users *[]models.User, total *int64, drugStoreID uint) {
-	DrugStoreRepository.DB.Table(utils2.TblAccount).Select("user.* ").
+func (DrugStoreRepository *DrugStoreRepository) GetUsersByDrugstore(users *[]models.User, total *int64, drugStoreID uint) error {
+	return DrugStoreRepository.DB.Table(utils2.TblAccount).Select("user.* ").
 		Count(total).
 		Preload("Roles").
 		Joins("JOIN drug_store_user du ON du.user_id = user.id ").
-		Where(fmt.Sprintf("du.drug_store_id = \"%v\"", drugStoreID)).Find(&users)
+		Where(fmt.Sprintf("du.drug_store_id = \"%v\"", drugStoreID)).Find(&users).Error
 }
 
-func (DrugStoreRepository *DrugStoreRepository) StatisticNewDrugStore(drugstore *[]responses.StatisticNewDrugStore, timeFrom, timeTo uint64) {
-	DrugStoreRepository.DB.Table(utils2.TblDrugstore).Raw("SELECT DATE(FROM_UNIXTIME((ds.created_at / 1000))) AS created_date , "+
+func (DrugStoreRepository *DrugStoreRepository) StatisticNewDrugStore(drugstore *[]responses.StatisticNewDrugStore, timeFrom, timeTo uint64) error {
+	return DrugStoreRepository.DB.Table(utils2.TblDrugstore).Raw("SELECT DATE(FROM_UNIXTIME((ds.created_at / 1000))) AS created_date , "+
 		" COUNT(*) AS number_store FROM drug_store ds  "+
 		" WHERE ds.created_at > ? AND ds.created_at < ? "+
 		" GROUP BY DATE(FROM_UNIXTIME((ds.created_at / 1000)))"+
-		" ORDER BY created_date ASC", timeFrom, timeTo).Scan(&drugstore)
+		" ORDER BY created_date ASC", timeFrom, timeTo).Scan(&drugstore).Error
 }

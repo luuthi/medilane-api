@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"medilane-api/core/authentication"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	repositories2 "medilane-api/packages/cart/repositories"
 	responses2 "medilane-api/packages/cart/responses"
@@ -31,30 +32,36 @@ func NewCartHandler(server *s.Server) *CartHandler {
 // @Accept json
 // @Produce json
 // @Success 200 {object} responses.CartSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /cart/find [post]
 // @Security BearerAuth
 func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 	token, err := authentication.VerifyToken(c.Request(), cartHandler.server)
 	if err != nil {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(err))
 	}
 	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
 	if !ok {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(nil))
 	}
 
 	cartHandler.server.Logger.Info("cart product")
-	var cart *models2.Cart
+	var cartUser *models2.Cart
 	var total int64
 
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	cart = cartRepo.GetCartByUser(&total, claims.UserId, claims.Type)
+	cartUser, err = cartRepo.GetCartByUser(&total, claims.UserId, claims.Type)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses2.CartSearch{
+	return responses.SearchResponse(c, responses2.CartSearch{
 		Code:    http.StatusOK,
 		Message: "",
-		Data:    *cart,
+		Data:    *cartUser,
 	})
 }
 
@@ -67,35 +74,38 @@ func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 // @Produce json
 // @Param params body requests.CartRequest true "Create cart"
 // @Success 201 {object} responses.CreatedCart
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /cart [post]
 // @Security BearerAuth
 func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 	var newCart requests2.CartRequest
 	if err := c.Bind(&newCart); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	token, err := authentication.VerifyToken(c.Request(), cartHandler.server)
 	if err != nil {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(err))
 	}
 	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
 	if !ok {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(nil))
 	}
 
 	if err := newCart.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
 	rs, data := cartService.AddCart(&newCart, claims.UserId)
 	if err := rs; err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert cart: %v", err.Error()))
+		panic(err)
 	}
 
-	return responses.Response(c, http.StatusCreated, responses2.CreatedCart{
+	return responses.SearchResponse(c, responses2.CreatedCart{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   int64(len(data.CartDetails)),
@@ -112,25 +122,28 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 // @Produce json
 // @Param params body requests.CartItemRequest true "Create cart item"
 // @Success 201 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /cart/details [post]
 // @Security BearerAuth
 func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 	var cartItem requests2.CartItemRequest
 	if err := c.Bind(&cartItem); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := cartItem.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	cartService := cart.NewCartService(cartHandler.server.DB)
 	rs, _ := cartService.AddCartItem(&cartItem)
 	if err := rs; err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert cart: %v", err.Error()))
+		panic(err)
 	}
 
-	return responses.MessageResponse(c, http.StatusCreated, "Cart item created!")
+	return responses.CreateResponse(c, utils.TblCart)
 
 }
 
@@ -143,29 +156,35 @@ func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id cart"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /cart/{id} [delete]
 // @Security BearerAuth
 func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existCart models2.Cart
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	cartRepo.GetCartById(&existCart, id)
+	err = cartRepo.GetCartById(&existCart, id)
+	if err != nil {
+		panic(err)
+	}
 	if existCart.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found cart with ID: %v", string(id)))
+		panic(errorHandling.ErrEntityNotFound(utils.TblCart, err))
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
 	if err := cartService.DeleteCart(existCart); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "User deleted!")
+	return responses.DeleteResponse(c, utils.TblCart)
 }
 
 // DeleteItemCart Delete cart item godoc
@@ -177,27 +196,33 @@ func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id cart item"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /cart/{id}/details [delete]
 // @Security BearerAuth
 func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existCart models2.CartDetail
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	cartRepo.GetCartItemById(&existCart, id)
+	err = cartRepo.GetCartItemById(&existCart, id)
+	if err != nil {
+		panic(err)
+	}
 	if existCart.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found cart with ID: %v", string(id)))
+		panic(errorHandling.ErrEntityNotFound(utils.TblCart, err))
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
 	if err := cartService.DeleteCartItem(existCart); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete user: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "User deleted!")
+	return responses.DeleteResponse(c, utils.TblCartDetail)
 }

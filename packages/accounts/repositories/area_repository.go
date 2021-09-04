@@ -22,7 +22,7 @@ func NewAreaRepository(db *gorm.DB) *AreaRepository {
 	return &AreaRepository{DB: db}
 }
 
-func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, filter requests2.SearchAreaRequest) {
+func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, filter requests2.SearchAreaRequest) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -34,16 +34,16 @@ func (areaRepo *AreaRepository) GetAreas(areas *[]models2.Area, total *int64, fi
 		filter.Sort.SortDirection = "desc"
 	}
 
-	areaRepo.DB.Table(utils2.TblArea).Where(strings.Join(spec, " AND "), values...).
+	return areaRepo.DB.Table(utils2.TblArea).Where(strings.Join(spec, " AND "), values...).
 		Count(total).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&areas)
+		Find(&areas).Error
 }
 
-func (areaRepo *AreaRepository) GetAreaByID(area *models2.Area, id uint) {
-	areaRepo.DB.Table(utils2.TblArea).
+func (areaRepo *AreaRepository) GetAreaByID(area *models2.Area, id uint) error {
+	return areaRepo.DB.Table(utils2.TblArea).
 		Preload("AreaConfig").
-		First(&area, id)
+		First(&area, id).Error
 }

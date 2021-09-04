@@ -1,13 +1,13 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/packages/notification/services"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"net/http"
 )
 
 type FcmTokenHandler struct {
@@ -27,21 +27,24 @@ func NewFcmTokenHandler(server *s.Server) *FcmTokenHandler {
 // @Produce json
 // @Param params body requests.CreateFcmToken true "Notification's credentials"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /fcm-token [post]
 func (fcmTokenHandler *FcmTokenHandler) CreateFcmToken(c echo.Context) error {
 	var fcmToken requests2.CreateFcmToken
 	if err := c.Bind(&fcmToken); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := fcmToken.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	fcmService := services.NewFcmTokenService(fcmTokenHandler.server.DB)
 	if err := fcmService.CreateToken(&fcmToken); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert fcm token: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Fcm token created!")
+	return responses.CreateResponse(c, utils.TblFcmToken)
 }

@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/drugstores/repositories"
 	responses2 "medilane-api/packages/drugstores/responses"
@@ -31,7 +32,10 @@ func NewPartnerHandler(server *s.Server) *PartnerHandler {
 // @Produce json
 // @Param params body requests.SearchPartnerRequest true "search partner"
 // @Success 200 {object} responses.PartnerSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /partner/find [post]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) SearchPartner(c echo.Context) error {
@@ -45,9 +49,12 @@ func (partnerHandler *PartnerHandler) SearchPartner(c echo.Context) error {
 	var total int64
 
 	partnerRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
-	partners = partnerRepo.GetPartners(&total, searchRequest)
+	partners, err := partnerRepo.GetPartners(&total, searchRequest)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses2.PartnerSearch{
+	return responses.SearchResponse(c, responses2.PartnerSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -64,21 +71,28 @@ func (partnerHandler *PartnerHandler) SearchPartner(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id partner"
 // @Success 200 {object} models.Partner
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /partner/{id} [get]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) GetPartnerById(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id partner: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existedPartner models.Partner
 	partnerRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
-	partnerRepo.GetPartnerByID(&existedPartner, id)
-	return responses.Response(c, http.StatusOK, existedPartner)
+	err = partnerRepo.GetPartnerByID(&existedPartner, id)
+	if err != nil {
+		panic(err)
+	}
+
+	return responses.SearchResponse(c, existedPartner)
 }
 
 // CreatePartner Create partner godoc
@@ -90,24 +104,27 @@ func (partnerHandler *PartnerHandler) GetPartnerById(c echo.Context) error {
 // @Produce json
 // @Param params body requests.CreatePartnerRequest true "Filter partner"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /partner [post]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) CreatePartner(c echo.Context) error {
 	var partner requests2.CreatePartnerRequest
 	if err := c.Bind(&partner); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := partner.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(partnerHandler.server.DB)
 	if err := drugstoreService.CreatePartner(&partner); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert partner: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Partner created!")
+	return responses.CreateResponse(c, utils.TblPartner)
 
 }
 
@@ -121,38 +138,44 @@ func (partnerHandler *PartnerHandler) CreatePartner(c echo.Context) error {
 // @Param params body requests.EditPartnerRequest true "body partner"
 // @Param id path uint true "id partner"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /partner/{id} [put]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id partner: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var partner requests2.EditPartnerRequest
 	if err := c.Bind(&partner); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := partner.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedPartner models.Partner
 	permRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
-	permRepo.GetPartnerByID(&existedPartner, id)
+	err = permRepo.GetPartnerByID(&existedPartner, id)
+	if err != nil {
+		panic(err)
+	}
 	if existedPartner.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found partner with ID: %v", id))
+		panic(errorHandling.ErrEntityNotFound(utils.TblPartner, nil))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(partnerHandler.server.DB)
 	if err := drugstoreService.EditPartner(&partner, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update partner: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Partner updated!")
+	return responses.UpdateResponse(c, utils.TblPartner)
 }
 
 // DeletePartner Delete partner godoc
@@ -164,20 +187,23 @@ func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id partner"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /partner/{id} [delete]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) DeletePartner(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id partner: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	drugstoreService := drugServices.NewDrugStoreService(partnerHandler.server.DB)
 	if err := drugstoreService.DeletePartner(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete partner: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Partner deleted!")
+	return responses.DeleteResponse(c, utils.TblPartner)
 }

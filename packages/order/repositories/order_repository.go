@@ -26,7 +26,7 @@ func NewOrderRepository(db *gorm.DB) *OrderRepository {
 	return &OrderRepository{DB: db}
 }
 
-func (OrderRepository *OrderRepository) CountOrder(count *int64, userId uint, searchByUser bool, filter *requests2.ExportOrderRequest) {
+func (OrderRepository *OrderRepository) CountOrder(count *int64, userId uint, searchByUser bool, filter *requests2.ExportOrderRequest) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -60,16 +60,19 @@ func (OrderRepository *OrderRepository) CountOrder(count *int64, userId uint, se
 		values = append(values, *filter.TimeFrom)
 	}
 
-	OrderRepository.DB.Table(utils.TblOrder).
+	return OrderRepository.DB.Table(utils.TblOrder).
 		Where(strings.Join(spec, " AND "), values...).
-		Count(count)
+		Count(count).Error
 }
 
-func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, searchByUser bool, filter *requests2.SearchOrderRequest) {
+func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count *int64, userId uint, searchByUser bool, filter *requests2.SearchOrderRequest) error {
 	// get user info
 	accountRepo := repositories2.NewAccountRepository(OrderRepository.DB)
 	var user models2.User
-	accountRepo.GetUserByID(&user, userId)
+	err := accountRepo.GetUserByID(&user, userId)
+	if err != nil {
+		return err
+	}
 
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
@@ -112,7 +115,7 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 		filter.Sort.SortDirection = "desc"
 	}
 
-	OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).
+	return OrderRepository.DB.Table(utils.TblOrder).Where(strings.Join(spec, " AND "), values...).
 		Count(count).
 		Preload(clause.Associations).
 		Preload("OrderDetails.Product").
@@ -120,26 +123,26 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&orders)
+		Find(&orders).Error
 }
 
-func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, orderId uint) {
-	OrderRepository.DB.Table(utils.TblOrder).
+func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, orderId uint) error {
+	return OrderRepository.DB.Table(utils.TblOrder).
 		Preload(clause.Associations).
 		Preload("OrderDetails.Product").
 		Preload("OrderDetails.Variant").
 		Preload("OrderDetails.Product.Images").
 		Preload("Drugstore").
-		First(&orders, orderId)
+		First(&orders, orderId).Error
 }
 
-func (OrderRepository *OrderRepository) GetOrderCodeByTime(orderCode *models2.OrderCode, time string) {
-	OrderRepository.DB.Table(utils.TblOrderCode).Where("time = ?", time).
-		First(&orderCode)
+func (OrderRepository *OrderRepository) GetOrderCodeByTime(orderCode *models2.OrderCode, time string) error {
+	return OrderRepository.DB.Table(utils.TblOrderCode).Where("time = ?", time).
+		First(&orderCode).Error
 }
 
-func (OrderRepository *OrderRepository) GetPaymentMethod(methods *[]models2.PaymentMethod) {
-	OrderRepository.DB.Table(utils.TblPaymentMethod).Find(&methods)
+func (OrderRepository *OrderRepository) GetPaymentMethod(methods *[]models2.PaymentMethod) error {
+	return OrderRepository.DB.Table(utils.TblPaymentMethod).Find(&methods).Error
 }
 
 func (OrderRepository *OrderRepository) GetAreaByUser(userType string, userId uint) (err error, areaId uint) {

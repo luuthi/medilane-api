@@ -20,7 +20,7 @@ func NewNotificationRepository(db *gorm.DB) *NotificationRepository {
 	return &NotificationRepository{DB: db}
 }
 
-func (NotificationRepository *NotificationRepository) GetNotifications(count *int64, filter *requests2.SearchNotificationRequest) []models.Notification {
+func (NotificationRepository *NotificationRepository) GetNotifications(count *int64, filter *requests2.SearchNotificationRequest) ([]models.Notification, error) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -34,20 +34,24 @@ func (NotificationRepository *NotificationRepository) GetNotifications(count *in
 		Count(count).
 		Find(&notifications)
 
-	NotificationRepository.DB.Table(utils.TblNotification).
+	err := NotificationRepository.DB.Table(utils.TblNotification).
 		Where(strings.Join(spec, " AND "), values...).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order("created_at desc").
-		Find(&notifications)
+		Find(&notifications).Error
 
-	return notifications
+	if err != nil {
+		return nil, err
+	}
+
+	return notifications, nil
 }
 
-func (NotificationRepository *NotificationRepository) GetNotificationByID(perm *models.Notification, id uint) {
-	NotificationRepository.DB.First(&perm, id)
+func (NotificationRepository *NotificationRepository) GetNotificationByID(perm *models.Notification, id uint) error {
+	return NotificationRepository.DB.First(&perm, id).Error
 }
 
-func (NotificationRepository *NotificationRepository) GetNotificationByUserID(perm *[]models.Notification, id uint) {
-	NotificationRepository.DB.Table(utils.TblNotification).Where("user_id", id).Find(&perm)
+func (NotificationRepository *NotificationRepository) GetNotificationByUserID(perm *[]models.Notification, id uint) error {
+	return NotificationRepository.DB.Table(utils.TblNotification).Where("user_id", id).Find(&perm).Error
 }

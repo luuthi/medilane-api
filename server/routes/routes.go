@@ -1,10 +1,9 @@
 package routes
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
-	log2 "github.com/labstack/gommon/log"
 	"medilane-api/config"
+	"medilane-api/core/errorHandling"
 	accRoute "medilane-api/packages/accounts/routes"
 	cartRoute "medilane-api/packages/cart/routes"
 	drugStoreRoute "medilane-api/packages/drugstores/routes"
@@ -14,7 +13,6 @@ import (
 	promotionRoute "medilane-api/packages/promotion/routes"
 	settingRoute "medilane-api/packages/settings/routes"
 	s "medilane-api/server"
-	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4/middleware"
@@ -24,13 +22,17 @@ import (
 
 func ConfigureRoutes(server *s.Server, config *config.Config) {
 	// middleware
+	server.Echo.Debug = config.DevMode
 
 	server.Echo.Use(middlewareLogging)
-	server.Echo.HTTPErrorHandler = errorHandler
-	server.Echo.Logger.SetLevel(log2.DEBUG)
-
+	server.Echo.Use(middleware.Recover())
+	server.Echo.Use(errorHandling.Recover)
 	server.Echo.Use(middleware.CORS())
 	server.Echo.Use(middleware.RemoveTrailingSlash())
+	server.Echo.Use(middleware.Secure())
+	server.Echo.Use(middleware.Gzip())
+	server.Echo.Use(middleware.RequestID())
+
 	// Or can use EchoWrapHandler func with configurations.
 	url := echoSwagger.URL(config.SwaggerDocUrl) //The url pointing to API definition
 	server.Echo.GET("/swagger/*", echoSwagger.EchoWrapHandler(url))
@@ -67,14 +69,14 @@ func middlewareLogging(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func errorHandler(err error, c echo.Context) {
-	report, ok := err.(*echo.HTTPError)
-	if ok {
-		report.Message = fmt.Sprintf("http error %d - %v", report.Code, report.Message)
-	} else {
-		report = echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	makeLogEntry(c).Error(report.Message)
-	c.HTML(report.Code, report.Message.(string))
-}
+//func errorHandler(err error, c echo.Context) {
+//	report, ok := err.(*echo.HTTPError)
+//	if ok {
+//		report.Message = fmt.Sprintf("http error %d - %v", report.Code, report.Message)
+//	} else {
+//		report = echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+//	}
+//
+//	makeLogEntry(c).Error(report.Message)
+//	c.HTML(report.Code, report.Message.(string))
+//}

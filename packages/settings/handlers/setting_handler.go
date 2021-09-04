@@ -1,15 +1,14 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/settings/repositories"
 	"medilane-api/packages/settings/services"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"net/http"
 	"strconv"
 )
 
@@ -30,20 +29,26 @@ func NewSettingHandler(server *s.Server) *SettingHandler {
 // @Produce json
 // @Param params body requests.SearchSettingRequest true "Filter setting"
 // @Success 200 {object} models.AppSetting
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /setting/find [post]
 // @Security BearerAuth
 func (settingHandler *SettingHandler) GetSetting(c echo.Context) error {
 
 	searchRequest := new(requests2.SearchSettingRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var setting models.AppSetting
 	settingRepo := repositories2.NewSettingRepository(settingHandler.server.DB)
-	settingRepo.GetSetting(&setting, searchRequest)
-	return responses.Response(c, http.StatusOK, setting)
+	err := settingRepo.GetSetting(&setting, searchRequest)
+	if err != nil {
+		panic(err)
+	}
+	return responses.SearchResponse(c, setting)
 }
 
 // CreateAppSetting Create setting godoc
@@ -55,26 +60,29 @@ func (settingHandler *SettingHandler) GetSetting(c echo.Context) error {
 // @Produce json
 // @Param params body requests.SettingRequest true "Create setting"
 // @Success 201 {object} models.AppSetting
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /setting [post]
 // @Security BearerAuth
 func (settingHandler *SettingHandler) CreateAppSetting(c echo.Context) error {
 	var set requests2.SettingRequest
 	if err := c.Bind(&set); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := set.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	settingService := services.NewAppSettingService(settingHandler.server.DB)
 	err, newSetting := settingService.CreateAppSetting(&set)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert app setting: %v", err.Error()))
+		panic(err)
 	}
 
-	return responses.Response(c, http.StatusCreated, newSetting)
+	return responses.SearchResponse(c, newSetting)
 }
 
 // EditAppSetting Edit setting godoc
@@ -87,31 +95,34 @@ func (settingHandler *SettingHandler) CreateAppSetting(c echo.Context) error {
 // @Param params body requests.SettingRequest true "Create setting"
 // @Param id path uint true "id account"
 // @Success 201 {object} models.AppSetting
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /setting/{id} [put]
 // @Security BearerAuth
 func (settingHandler *SettingHandler) EditAppSetting(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id promotion: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var set requests2.SettingRequest
 	if err := c.Bind(&set); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := set.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	settingService := services.NewAppSettingService(settingHandler.server.DB)
 	err, editedSetting := settingService.EditAppSetting(&set, id)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert app setting: %v", err.Error()))
+		panic(err)
 	}
 
-	return responses.Response(c, http.StatusCreated, editedSetting)
+	return responses.SearchResponse(c, editedSetting)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 	"medilane-api/core/authentication"
+	"medilane-api/core/errorHandling"
 	excelWriter2 "medilane-api/core/excel"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
@@ -39,21 +40,24 @@ func NewOrderHandler(server *s.Server) *OrderHandler {
 // @Produce json
 // @Param params body requests.SearchOrderRequest true "Create cart"
 // @Success 200 {object} responses.OrderResponse
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order/find [post]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
 	if err != nil {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(err))
 	}
 	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
 	if !ok {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(nil))
 	}
 	searchRequest := new(requests2.SearchOrderRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var orders []models2.Order
@@ -62,11 +66,17 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
 
 	if claims.Type == string(utils.USER) {
-		orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchRequest)
+		err := orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchRequest)
+		if err != nil {
+			panic(err)
+		}
 	} else {
-		orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchRequest)
+		err := orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchRequest)
+		if err != nil {
+			panic(err)
+		}
 	}
-	return responses.Response(c, http.StatusOK, responses2.OrderResponse{
+	return responses.SearchResponse(c, responses2.OrderResponse{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -83,32 +93,35 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 // @Produce json
 // @Param params body requests.OrderRequest true "Create account"
 // @Success 201 {object} responses.OrderCreatedResponse
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order [post]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
 	if err != nil {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(err))
 	}
 	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
 	if !ok {
-		return responses.Response(c, http.StatusUnauthorized, nil)
+		panic(errorHandling.ErrUnauthorized(nil))
 	}
 
 	var orderRequest requests2.OrderRequest
 	if err := c.Bind(&orderRequest); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := orderRequest.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	orderService := order.NewOrderService(orderHandler.server.DB)
 	err = orderService.PreOrder(&orderRequest, claims.UserId, claims.Type)
 	rs, newOrder := orderService.AddOrder(&orderRequest, claims.UserId)
 	if err := rs; err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))
+		panic(err)
 	}
 	//  after order , add voucher if order meet condition
 	go func(tx *gorm.DB, order *models2.Order) {
@@ -118,7 +131,7 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 		orderService.AddPromotion(conn, order)
 	}(orderHandler.server.DB, newOrder)
 
-	return responses.Response(c, http.StatusCreated, responses2.OrderCreatedResponse{
+	return responses.SearchResponse(c, responses2.OrderCreatedResponse{
 		Code:    http.StatusCreated,
 		Message: "",
 		Data:    *newOrder,
@@ -134,23 +147,29 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id order"
 // @Success 200 {object} models.Order
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order/{id} [get]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
-	orderRepo.GetOrderDetail(&existedOrder, id)
-	if existedOrder.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found order with ID: %v", id))
+	err = orderRepo.GetOrderDetail(&existedOrder, id)
+	if err != nil {
+		panic(err)
 	}
-	return responses.Response(c, http.StatusOK, existedOrder)
+	if existedOrder.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblOrder, nil))
+	}
+	return responses.SearchResponse(c, existedOrder)
 
 }
 
@@ -164,38 +183,45 @@ func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 // @Param params body requests.EditOrderRequest true "body order"
 // @Param id path uint true "id order"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order/{id} [put]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 	var orderRequest requests2.EditOrderRequest
 	if err := c.Bind(&orderRequest); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := orderRequest.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
-	orderRepo.GetOrderDetail(&existedOrder, id)
+	err = orderRepo.GetOrderDetail(&existedOrder, id)
+	if err != nil {
+		panic(err)
+	}
+
 	if existedOrder.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found order with ID: %v", id))
+		panic(errorHandling.ErrEntityNotFound(utils.TblOrder, nil))
 	}
 
 	orderService := order.NewOrderService(orderHandler.server.DB)
 	rs, _ := orderService.EditOrder(&orderRequest, id, &existedOrder)
 	if err := rs; err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert order: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Order updated!")
+	return responses.UpdateResponse(c, utils.TblOrder)
 }
 
 // DeleteOrder Delete order godoc
@@ -207,29 +233,35 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id order"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order/{id} [delete]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
-	orderRepo.GetOrderDetail(&existedOrder, id)
+	err = orderRepo.GetOrderDetail(&existedOrder, id)
+	if err != nil {
+		panic(err)
+	}
 	if existedOrder.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found order with ID: %v", id))
+		panic(errorHandling.ErrEntityNotFound(utils.TblOrder, nil))
 	}
 
 	orderService := order.NewOrderService(orderHandler.server.DB)
 	if err := orderService.DeleteOrder(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete order: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Order deleted!")
+	return responses.SearchResponse(c, utils.TblOrder)
 }
 
 // GetPaymentMethod Get payment method godoc
@@ -240,15 +272,22 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200 {object} responses.PaymentMethodResponse
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order/payment-methods [get]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
 
 	var methods []models2.PaymentMethod
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
-	orderRepo.GetPaymentMethod(&methods)
-	return responses.Response(c, http.StatusOK, responses2.PaymentMethodResponse{
+	err := orderRepo.GetPaymentMethod(&methods)
+	if err != nil {
+		panic(err)
+	}
+
+	return responses.SearchResponse(c, responses2.PaymentMethodResponse{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   int64(len(methods)),
@@ -266,7 +305,10 @@ func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
 // @Param params body requests.ExportOrderRequest true "search order"
 // @Produce application/zip
 // @Success 200 {file} binary
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /order/export [post]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
@@ -281,7 +323,7 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 	}
 	searchRequest := new(requests2.ExportOrderRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var total int64
@@ -289,9 +331,15 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
 
 	if claims.Type == string(utils.USER) {
-		orderRepo.CountOrder(&total, claims.UserId, true, searchRequest)
+		err := orderRepo.CountOrder(&total, claims.UserId, true, searchRequest)
+		if err != nil {
+			panic(err)
+		}
 	} else {
-		orderRepo.CountOrder(&total, claims.UserId, false, searchRequest)
+		err := orderRepo.CountOrder(&total, claims.UserId, false, searchRequest)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	if total > 1000 {
@@ -356,41 +404,47 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 			OrderCode: searchRequest.OrderCode,
 		}
 		if claims.Type == string(utils.USER) {
-			orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchOrder)
+			err = orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchOrder)
+			if err != nil {
+				panic(err)
+			}
 		} else {
-			orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchOrder)
+			err = orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchOrder)
+			if err != nil {
+				panic(err)
+			}
 		}
 
 		for _, o := range orders {
 			var fileName = fmt.Sprintf("order-%s.xlsx", o.OrderCode)
 			excelWriter, err := excelWriter2.NewExcelWriter(fileName, headers, columns)
 			if err != nil {
-				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+				panic(err)
 			}
 			excelWriter.SetSheetActive(o.OrderCode)
 			if err != nil {
-				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+				panic(err)
 			}
 
 			err = excelWriter.WriteOrderHeader(&o)
 			if err != nil {
-				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+				panic(err)
 			}
 
 			err = excelWriter.WriteOrderBody(&o)
 			if err != nil {
-				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+				panic(err)
 			}
 
 			err = excelWriter.WriteOrderFooter(&o)
 			if err != nil {
-				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+				panic(err)
 			}
 			excelWriter.File.DeleteSheet("Sheet1")
 
 			var b bytes.Buffer
 			if err := excelWriter.File.Write(&b); err != nil {
-				return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+				panic(err)
 			}
 			mapFile[fileName] = b
 		}
@@ -404,24 +458,24 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 	for name, file := range mapFile {
 		zipFile, err := zipWriter.Create(name)
 		if err != nil {
-			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			panic(err)
 		}
 		_, err = zipFile.Write(file.Bytes())
 		if err != nil {
-			return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+			panic(err)
 		}
 	}
 
 	// Make sure to check the error on Close.
 	err = zipWriter.Close()
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+		panic(err)
 	}
 
 	//write the zipped file to the disk
 	downloadNameFile := time.Now().UTC().Format("order-20060102150405.zip")
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when export data: %v", err.Error()))
+		panic(err)
 	}
 	c.Response().Header().Set("Content-Description", "File Transfer")
 	c.Response().Header().Set("Content-Disposition", "attachment; filename="+downloadNameFile)

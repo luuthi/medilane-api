@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
@@ -33,13 +34,16 @@ func NewTagHandler(server *s.Server) *TagHandler {
 // @Produce json
 // @Param params body requests.SearchTagRequest true "Filter Tag"
 // @Success 200 {object} responses.TagSearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /tag/find [post]
 // @Security BearerAuth
 func (tagHandler *TagHandler) SearchTag(c echo.Context) error {
 	searchRequest := new(requests2.SearchTagRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	tagHandler.server.Logger.Info("Search Tag")
@@ -47,9 +51,12 @@ func (tagHandler *TagHandler) SearchTag(c echo.Context) error {
 	var total int64
 
 	tagRepo := repositories2.NewTagRepository(tagHandler.server.DB)
-	tagRepo.GetTags(&tags, &total, searchRequest)
+	err := tagRepo.GetTags(&tags, &total, searchRequest)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses2.TagSearch{
+	return responses.SearchResponse(c, responses2.TagSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -66,24 +73,27 @@ func (tagHandler *TagHandler) SearchTag(c echo.Context) error {
 // @Produce json
 // @Param params body requests.TagRequest true "Filter Tag"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /tag [post]
 // @Security BearerAuth
 func (tagHandler *TagHandler) CreateTag(c echo.Context) error {
 	var tag requests2.TagRequest
 	if err := c.Bind(&tag); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := tag.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.CreateTag(&tag); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert Tag: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Tag created!")
+	return responses.CreateResponse(c, utils.TblTag)
 }
 
 // EditTag Edit Tag godoc
@@ -96,38 +106,44 @@ func (tagHandler *TagHandler) CreateTag(c echo.Context) error {
 // @Param params body requests.TagRequest true "body Tag"
 // @Param id path uint true "id Tag"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /tag/{id} [put]
 // @Security BearerAuth
 func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Tag: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var tag requests2.TagRequest
 	if err := c.Bind(&tag); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := tag.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedTag models.Tag
 	tagRepo := repositories.NewTagRepository(tagHandler.server.DB)
-	tagRepo.GetTagById(&existedTag, id)
-	if existedTag.Name == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found Tag with ID: %v", string(id)))
+	err = tagRepo.GetTagById(&existedTag, id)
+	if err != nil {
+		panic(err)
+	}
+	if existedTag.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblTag, nil))
 	}
 
 	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.EditTag(&tag, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update Tag: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Tag updated!")
+	return responses.UpdateResponse(c, utils.TblTag)
 }
 
 // DeleteTag Delete Tag godoc
@@ -139,20 +155,23 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id Tag"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /tag/{id} [delete]
 // @Security BearerAuth
 func (tagHandler *TagHandler) DeleteTag(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Tag: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.DeleteTag(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Tag: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Tag deleted!")
+	return responses.DeleteResponse(c, utils.TblTag)
 }

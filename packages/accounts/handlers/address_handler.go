@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	responses2 "medilane-api/packages/accounts/responses"
@@ -33,13 +34,16 @@ func NewAddressHandler(server *s.Server) *AddressHandler {
 // @Produce json
 // @Param params body requests.SearchAddressRequest true "Filter address"
 // @Success 200 {object} responses.AddressSearch
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /address/find [post]
 // @Security BearerAuth
 func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 	var searchReq requests2.SearchAddressRequest
 	if err := c.Bind(&searchReq); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	addHandler.server.Logger.Info("search address")
@@ -47,8 +51,12 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 	var total int64
 
 	addressRepo := repositories.NewAddressRepository(addHandler.server.DB)
-	addressRepo.GetAddresses(&addresses, &total, searchReq)
-	return responses.Response(c, http.StatusOK, responses2.AddressSearch{
+	err := addressRepo.GetAddresses(&addresses, &total, searchReq)
+	if err != nil {
+		panic(err)
+	}
+
+	return responses.SearchResponse(c, responses2.AddressSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -65,24 +73,32 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id address"
 // @Success 200 {object} models.Address
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /address/{id} [get]
 // @Security BearerAuth
 func (addHandler *AddressHandler) GetAddress(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id permission: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existedAddress models2.Address
 	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
-	addRepo.GetAddressByID(&existedAddress, id)
-	if existedAddress.ID == 0 {
-		return responses.Response(c, http.StatusOK, nil)
+	err = addRepo.GetAddressByID(&existedAddress, id)
+	if err != nil {
+		panic(err)
 	}
-	return responses.Response(c, http.StatusOK, existedAddress)
+
+	if existedAddress.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblAddress, nil))
+	}
+
+	return responses.SearchResponse(c, existedAddress)
 }
 
 // CreateAddress Create address godoc
@@ -94,24 +110,27 @@ func (addHandler *AddressHandler) GetAddress(c echo.Context) error {
 // @Produce json
 // @Param params body requests.AddressRequest true "Create address"
 // @Success 201 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /address [post]
 // @Security BearerAuth
 func (addHandler *AddressHandler) CreateAddress(c echo.Context) error {
 	var addr requests2.AddressRequest
 	if err := c.Bind(&addr); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := addr.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	addressService := address.NewAddressService(addHandler.server.DB)
 	if err := addressService.CreateAddress(&addr).Error; err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert address: %v", err.Error()))
+		panic(errorHandling.ErrCannotCreateEntity(utils.TblAddress, err))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Address created!")
+	return responses.CreateResponse(c, utils.TblAddress)
 }
 
 // EditAddress Edit address godoc
@@ -124,38 +143,44 @@ func (addHandler *AddressHandler) CreateAddress(c echo.Context) error {
 // @Param params body requests.AddressRequest true "Edit address"
 // @Param id path uint true "id address"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /address/{id} [put]
 // @Security BearerAuth
 func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id permission: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var addr requests2.AddressRequest
 	if err := c.Bind(&addr); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := addr.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedAddress models2.Address
 	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
-	addRepo.GetAddressByID(&existedAddress, id)
+	err = addRepo.GetAddressByID(&existedAddress, id)
+	if err != nil {
+		panic(err)
+	}
 	if existedAddress.ID == 0 {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found address with ID: %v", string(id)))
+		panic(errorHandling.ErrEntityNotFound(utils.TblAddress, nil))
 	}
 
 	addressService := address.NewAddressService(addHandler.server.DB)
 	if err := addressService.EditAddress(&addr, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update address: %v", err.Error()))
+		panic(errorHandling.ErrCannotUpdateEntity(utils.TblAddress, err))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Address updated!")
+	return responses.UpdateResponse(c, utils.TblAddress)
 }
 
 // DeleteAddress Delete address godoc
@@ -167,20 +192,23 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id address"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /address/{id} [delete]
 // @Security BearerAuth
 func (addHandler *AddressHandler) DeleteAddress(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id address: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	addService := address.NewAddressService(addHandler.server.DB)
 	if err := addService.DeleteAddress(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete address: %v", err.Error()))
+		panic(errorHandling.ErrCannotDeleteEntity(utils.TblAddress, err))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Address	 deleted!")
+	return responses.DeleteResponse(c, utils.TblAddress)
 }

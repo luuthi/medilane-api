@@ -17,7 +17,7 @@ func NewVoucherRepository(db *gorm.DB) *VoucherRepository {
 	return &VoucherRepository{DB: db}
 }
 
-func (voucherRepo *VoucherRepository) GetVouchers(vouchers *[]models.Voucher, filter *requests.SearchVoucherRequest, total *int64) {
+func (voucherRepo *VoucherRepository) GetVouchers(vouchers *[]models.Voucher, filter *requests.SearchVoucherRequest, total *int64) error {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -42,14 +42,14 @@ func (voucherRepo *VoucherRepository) GetVouchers(vouchers *[]models.Voucher, fi
 	spec = append(spec, "deleted = ?")
 	values = append(values, 0)
 
-	voucherRepo.DB.Table(utils.TblVoucher).
+	return voucherRepo.DB.Table(utils.TblVoucher).
 		Where(strings.Join(spec, " AND "), values...).
 		Count(total).
 		Limit(filter.Limit).
 		Offset(filter.Offset).
 		Order(fmt.Sprintf("%s %s", filter.Sort.SortField, filter.Sort.SortDirection)).
-		Find(&vouchers)
+		Find(&vouchers).Error
 }
-func (voucherRepo *VoucherRepository) GetVoucher(voucher *models.Voucher, id uint) {
-	voucherRepo.DB.Table(utils.TblVoucher).First(&voucher, id)
+func (voucherRepo *VoucherRepository) GetVoucher(voucher *models.Voucher, id uint) error {
+	return voucherRepo.DB.Table(utils.TblVoucher).First(&voucher, id).Error
 }

@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	responses2 "medilane-api/packages/accounts/responses"
@@ -33,13 +34,16 @@ func NewRoleHandler(server *s.Server) *RoleHandler {
 // @Produce json
 // @Param params body requests.SearchRoleRequest true "Filter role"
 // @Success 200 {object} responses.RoleSearch
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /role/find [post]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 	var searchReq requests2.SearchRoleRequest
 	if err := c.Bind(&searchReq); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	roleHandler.server.Logger.Info("search role")
@@ -47,9 +51,12 @@ func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 	var total int64
 
 	roleRepo := repositories.NewRoleRepository(roleHandler.server.DB)
-	roleRepo.GetRoles(&roles, &total, searchReq)
+	err := roleRepo.GetRoles(&roles, &total, searchReq)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses2.RoleSearch{
+	return responses.SearchResponse(c, responses2.RoleSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -66,25 +73,28 @@ func (roleHandler *RoleHandler) SearchRole(c echo.Context) error {
 // @Produce json
 // @Param params body requests.RoleRequest true "Filter role"
 // @Success 201 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /role [post]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 	var role requests2.RoleRequest
 	if err := c.Bind(&role); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := role.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
 	rs := roleService.CreateRole(&role)
 	if err := rs.Error; err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert role: %v", err.Error()))
+		panic(errorHandling.ErrCannotCreateEntity(utils.TblRole, err))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Role created!")
+	return responses.CreateResponse(c, utils.TblRole)
 
 }
 
@@ -98,38 +108,41 @@ func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 // @Param params body requests.RoleRequest true "body role"
 // @Param id path uint true "id role"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /role/{id} [put]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var role requests2.RoleRequest
 	if err := c.Bind(&role); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := role.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedRole models2.Role
 	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)
 	permRepo.GetRoleByID(&existedRole, id)
-	if existedRole.RoleName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found role with ID: %v", string(id)))
+	if existedRole.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblRole, err))
 	}
 
 	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
 	if err := roleService.EditRole(&role, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update role: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Role updated!")
+	return responses.UpdateResponse(c, utils.TblRole)
 }
 
 // DeleteRole Delete role godoc
@@ -141,27 +154,30 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id role"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /role/{id} [delete]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) DeleteRole(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id role: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var existedRole models2.Role
 	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)
 	permRepo.GetRoleByID(&existedRole, id)
-	if existedRole.RoleName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found role with ID: %v", string(id)))
+	if existedRole.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblRole, err))
 	}
 
 	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
 	if err := roleService.DeleteRole(id, existedRole.RoleName); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete role: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Role deleted!")
+	return responses.DeleteResponse(c, utils.TblRole)
 }

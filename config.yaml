@@ -1,3 +1,4 @@
+DEV_MODE: true
 HTTP:
   #The application host name
   HOST: localhost

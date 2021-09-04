@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	models2 "medilane-api/models"
 	"medilane-api/packages/medicines/repositories"
@@ -33,13 +34,16 @@ func NewCategoryHandler(server *s.Server) *CategoryHandler {
 // @Produce json
 // @Param params body requests.SearchCategoryRequest true "Filter Category"
 // @Success 200 {object} responses.CategorySearch
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /category/find [post]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 	searchRequest := new(requests2.SearchCategoryRequest)
 	if err := c.Bind(searchRequest); err != nil {
-		return err
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	categoryHandler.server.Logger.Info("Search Category")
@@ -47,9 +51,12 @@ func (categoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 	var total int64
 
 	categoryRepo := repositories2.NewCategoryRepository(categoryHandler.server.DB)
-	categoryRepo.GetCategories(&categories, &total, searchRequest)
+	err := categoryRepo.GetCategories(&categories, &total, searchRequest)
+	if err != nil {
+		panic(err)
+	}
 
-	return responses.Response(c, http.StatusOK, responses2.CategorySearch{
+	return responses.SearchResponse(c, responses2.CategorySearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -66,24 +73,27 @@ func (categoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 // @Produce json
 // @Param params body requests.CategoryRequest true "Filter Category"
 // @Success 201 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /category [post]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) CreateCategory(c echo.Context) error {
 	var category requests2.CategoryRequest
 	if err := c.Bind(&category); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := category.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	categoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := categoryService.CreateCategory(&category); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert Category: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Category created!")
+	return responses.CreateResponse(c, utils.TblCategory)
 }
 
 // EditCategory Edit category godoc
@@ -96,38 +106,44 @@ func (categoryHandler *CategoryHandler) CreateCategory(c echo.Context) error {
 // @Param params body requests.CategoryRequest true "body Category"
 // @Param id path uint true "id Category"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /category/{id} [put]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Category: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var category requests2.CategoryRequest
 	if err := c.Bind(&category); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := category.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedCategory models.Category
 	CategoryRepo := repositories.NewCategoryRepository(categoryHandler.server.DB)
-	CategoryRepo.GetCategoryById(&existedCategory, id)
-	if existedCategory.Name == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found Category with ID: %v", string(id)))
+	err = CategoryRepo.GetCategoryById(&existedCategory, id)
+	if err != nil {
+		panic(err)
+	}
+	if existedCategory.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblCategory, nil))
 	}
 
 	categoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := categoryService.EditCategory(&category, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update Category: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Category updated!")
+	return responses.UpdateResponse(c, utils.TblCategory)
 }
 
 // DeleteCategory Delete category godoc
@@ -139,20 +155,23 @@ func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id Category"
 // @Success 200 {object} responses.Data
-// @Failure 401 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /category/{id} [delete]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) DeleteCategory(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id Category: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	CategoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := CategoryService.DeleteCategory(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete Category: %v", err.Error()))
+		panic(err)
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Category deleted!")
+	return responses.DeleteResponse(c, utils.TblCategory)
 }

@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
+	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	responses2 "medilane-api/packages/accounts/responses"
@@ -33,13 +34,16 @@ func NewPermissionHandler(server *s.Server) *PermissionHandler {
 // @Produce json
 // @Param params body requests.SearchPermissionRequest true "Filter permission"
 // @Success 200 {object} responses.PermissionSearch
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /permission/find [post]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 	var searchReq requests2.SearchPermissionRequest
 	if err := c.Bind(&searchReq); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	permHandler.server.Logger.Info("search permission")
@@ -47,8 +51,12 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 	var total int64
 
 	permissionRepo := repositories.NewPermissionRepository(permHandler.server.DB)
-	permissionRepo.GetPermissions(&permissions, &total, searchReq)
-	return responses.Response(c, http.StatusOK, responses2.PermissionSearch{
+	err := permissionRepo.GetPermissions(&permissions, &total, searchReq)
+	if err != nil {
+		panic(err)
+	}
+
+	return responses.SearchResponse(c, responses2.PermissionSearch{
 		Code:    http.StatusOK,
 		Message: "",
 		Total:   total,
@@ -65,24 +73,27 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 // @Produce json
 // @Param params body requests.PermissionRequest true "Create permission"
 // @Success 201 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /permission [post]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
 	var perm requests2.PermissionRequest
 	if err := c.Bind(&perm); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := perm.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.CreatePermission(&perm); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when insert permission: %v", err.Error()))
+		panic(errorHandling.ErrCannotCreateEntity(utils.TblPermission, err))
 	}
-	return responses.MessageResponse(c, http.StatusCreated, "Permission created!")
+	return responses.CreateResponse(c, utils.TblPermission)
 }
 
 // EditPermission Edit permission godoc
@@ -95,38 +106,45 @@ func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
 // @Param params body requests.PermissionRequest true "body permission"
 // @Param id path uint true "id permission"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /permission/{id} [put]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id permission: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	var perm requests2.PermissionRequest
 	if err := c.Bind(&perm); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	if err := perm.Validate(); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Data invalid: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
 	var existedPerm models2.Permission
 	permRepo := repositories.NewPermissionRepository(permHandler.server.DB)
-	permRepo.GetPermissionByID(&existedPerm, id)
-	if existedPerm.PermissionName == "" {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Not found permission with ID: %v", string(id)))
+	err = permRepo.GetPermissionByID(&existedPerm, id)
+	if err != nil {
+		panic(err)
+	}
+
+	if existedPerm.ID == 0 {
+		panic(errorHandling.ErrEntityNotFound(utils.TblPermission, nil))
 	}
 
 	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.EditPermission(&perm, id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when update permission: %v", err.Error()))
+		panic(errorHandling.ErrCannotCreateEntity(utils.TblPermission, err))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Permission updated!")
+	return responses.UpdateResponse(c, utils.TblPermission)
 }
 
 // DeletePermission Delete permission godoc
@@ -138,20 +156,23 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 // @Produce json
 // @Param id path uint true "id permission"
 // @Success 200 {object} responses.Data
-// @Failure 400 {object} responses.Error
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
 // @Router /permission/{id} [delete]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) DeletePermission(c echo.Context) error {
 	var paramUrl uint64
 	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Invalid id permission: %v", err.Error()))
+		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(paramUrl)
 
 	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.DeletePermission(id); err != nil {
-		return responses.ErrorResponse(c, http.StatusBadRequest, fmt.Sprintf("Error when delete permission: %v", err.Error()))
+		panic(errorHandling.ErrCannotDeleteEntity(utils.TblPermission, err))
 	}
-	return responses.MessageResponse(c, http.StatusOK, "Permission deleted!")
+	return responses.DeleteResponse(c, utils.TblPermission)
 }

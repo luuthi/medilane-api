@@ -54,7 +54,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 	var defaultVoucher models.Voucher
 	tx.Table(utils2.TblVoucher).Where("name = \"default\"").First(&defaultVoucher)
 
-	promotionDetails := make([]*models.PromotionDetail, 0)
+	promotionDetails := make([]models.PromotionDetail, 0)
 	if len(request.PromotionDetails) > 0 {
 		for _, detail := range request.PromotionDetails {
 			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
@@ -73,7 +73,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 					SetVoucherID(detail.VoucherID)
 			}
 			promotionDetail := promotionDetailBuidler.Build()
-			promotionDetails = append(promotionDetails, &promotionDetail)
+			promotionDetails = append(promotionDetails, promotionDetail)
 		}
 		rsDetail := tx.Table(utils2.TblPromotionDetail).CreateInBatches(&promotionDetails, 100)
 		//rollback if error
@@ -120,7 +120,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 	tx.Table(utils2.TblVoucher).Where("name = \"default\"").First(&defaultVoucher)
 
 	var updatedItemID []uint
-	promotionDetails := make([]*models.PromotionDetail, 0)
+	promotionDetails := make([]models.PromotionDetail, 0)
 	for _, v := range request.PromotionDetails {
 		if v.ID == 0 {
 			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
@@ -145,7 +145,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				tx.Rollback()
 				return err, nil
 			}
-			promotionDetails = append(promotionDetails, &promotionDetail)
+			promotionDetails = append(promotionDetails, promotionDetail)
 		} else {
 			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 				SetPromotionID(id).
@@ -168,7 +168,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 
 			updatedItemID = append(updatedItemID, v.ID)
 			err := tx.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
-			promotionDetails = append(promotionDetails, &promotionDetail)
+			promotionDetails = append(promotionDetails, promotionDetail)
 			if err != nil {
 				tx.Rollback()
 				return err, nil
