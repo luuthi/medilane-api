@@ -47,7 +47,7 @@ func (categoryHandler *CategoryHandler) SearchCategory(c echo.Context) error {
 	}
 
 	categoryHandler.server.Logger.Info("Search Category")
-	var categories []models2.Category
+	var categories = make([]models2.Category, 0)
 	var total int64
 
 	categoryRepo := repositories2.NewCategoryRepository(categoryHandler.server.DB)

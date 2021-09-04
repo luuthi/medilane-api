@@ -43,7 +43,7 @@ func (statisticHandler *StatisticHandler) StatisticDrugStore(c echo.Context) err
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
-	var statisticDrugstore []responses2.DrugStoreStatistic
+	statisticDrugstore := make([]responses2.DrugStoreStatistic, 0)
 	statisticRepo := repositories.NewStatisticRepository(statisticHandler.server.DB)
 	err := statisticRepo.StatisticDrugStore(&statisticDrugstore, searchRequest)
 	if err != nil {
@@ -80,7 +80,7 @@ func (statisticHandler *StatisticHandler) StatisticProductTopCount(c echo.Contex
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
-	var statisticProduct []responses2.ProductStatisticCount
+	statisticProduct := make([]responses2.ProductStatisticCount, 0)
 	statisticRepo := repositories.NewStatisticRepository(statisticHandler.server.DB)
 	err := statisticRepo.StatisticProductTopCount(&statisticProduct, searchRequest)
 	if err != nil {
@@ -117,7 +117,7 @@ func (statisticHandler *StatisticHandler) StatisticOrderCount(c echo.Context) er
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
-	var statisticOrder []responses2.OrderStatisticCount
+	statisticOrder := make([]responses2.OrderStatisticCount, 0)
 	statisticRepo := repositories.NewStatisticRepository(statisticHandler.server.DB)
 	err := statisticRepo.StatisticOrderCount(&statisticOrder, searchRequest)
 	if err != nil {
@@ -154,7 +154,7 @@ func (statisticHandler *StatisticHandler) StatisticOrderStoreTopCount(c echo.Con
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
-	var statisticProduct []responses2.OrderDrugstoreCount
+	statisticProduct := make([]responses2.OrderDrugstoreCount, 0)
 	statisticRepo := repositories.NewStatisticRepository(statisticHandler.server.DB)
 	err := statisticRepo.StatisticDrugStoreOrderTopCount(&statisticProduct, searchRequest)
 	if err != nil {

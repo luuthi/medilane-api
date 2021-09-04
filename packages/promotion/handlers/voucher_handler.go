@@ -45,7 +45,7 @@ func (voucherHandler *VoucherHandler) SearchVoucher(c echo.Context) error {
 	}
 
 	voucherHandler.server.Logger.Info("search voucher")
-	var vouchers []models.Voucher
+	var vouchers = make([]models.Voucher, 0)
 	var total int64
 
 	voucherRepo := repositories2.NewVoucherRepository(voucherHandler.server.DB)

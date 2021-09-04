@@ -47,7 +47,7 @@ func (permHandler *PermissionHandler) SearchPermission(c echo.Context) error {
 	}
 
 	permHandler.server.Logger.Info("search permission")
-	var permissions []models2.Permission
+	permissions := make([]models2.Permission, 0)
 	var total int64
 
 	permissionRepo := repositories.NewPermissionRepository(permHandler.server.DB)

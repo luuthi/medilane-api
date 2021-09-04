@@ -44,7 +44,7 @@ func (bannerHandler *BannerHandler) SearchBanner(c echo.Context) error {
 	if err := c.Bind(searchRequest); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	var banners []models.Banner
+	var banners = make([]models.Banner, 0)
 	bannerRepo := repositories2.NewBannerRepository(bannerHandler.server.DB)
 	err := bannerRepo.SearchBanner(&banners, searchRequest)
 	if err != nil {

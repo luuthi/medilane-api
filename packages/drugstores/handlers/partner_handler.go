@@ -45,7 +45,7 @@ func (partnerHandler *PartnerHandler) SearchPartner(c echo.Context) error {
 	}
 
 	partnerHandler.server.Logger.Info("search partner")
-	var partners []models.Partner
+	var partners = make([]models.Partner, 0)
 	var total int64
 
 	partnerRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)

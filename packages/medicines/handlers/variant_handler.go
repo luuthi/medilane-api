@@ -47,7 +47,7 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 	}
 
 	variantHandler.server.Logger.Info("Search Variant")
-	var Variants []models2.Variant
+	var Variants = make([]models2.Variant, 0)
 	var total int64
 
 	variantRepo := repositories2.NewVariantRepository(variantHandler.server.DB)

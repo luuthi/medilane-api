@@ -50,7 +50,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 	}
 
 	drugStoreHandler.server.Logger.Info("search account")
-	var drugstores []models.DrugStore
+	var drugstores = make([]models.DrugStore, 0)
 	var total int64
 
 	drugStoresRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)

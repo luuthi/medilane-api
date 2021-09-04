@@ -57,7 +57,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	}
 
 	productHandler.server.Logger.Info("Search product")
-	var medicines []models2.Product
+	var medicines = make([]models2.Product, 0)
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
@@ -96,7 +96,7 @@ func (productHandler *ProductHandler) SearchPureProduct(c echo.Context) error {
 	}
 
 	productHandler.server.Logger.Info("Search product")
-	var medicines []models2.Product
+	var medicines = make([]models2.Product, 0)
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
@@ -181,7 +181,7 @@ func (productHandler *ProductHandler) SearchSuggestProduct(c echo.Context) error
 	}
 
 	productHandler.server.Logger.Info("Suggest product")
-	var medicines []models2.Product
+	var medicines = make([]models2.Product, 0)
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)

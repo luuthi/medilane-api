@@ -50,7 +50,7 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 	}
 
 	areaHandler.server.Logger.Info("search area")
-	var areas []models2.Area
+	areas := make([]models2.Area, 0)
 	var total int64
 
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
@@ -250,7 +250,7 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 	areaService := address.NewAddressService(areaHandler.server.DB)
 	areaCostRepo := repositories.NewAreaCostRepository(areaHandler.server.DB)
 
-	var productsOfArea []models2.AreaCost
+	productsOfArea := make([]models2.AreaCost, 0)
 	var total int64
 
 	err = areaCostRepo.GetProductsOfArea(&productsOfArea, &total, bodyRequest.AreaId)
@@ -265,7 +265,7 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 			}
 		}
 	} else {
-		var productsOfAreaRequest []models2.AreaCost
+		var productsOfAreaRequest = make([]models2.AreaCost, 0)
 		for _, v := range bodyRequest.Products {
 			productsOfAreaRequest = append(productsOfAreaRequest, models2.AreaCost{
 				AreaId:    bodyRequest.AreaId,
@@ -273,8 +273,8 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 				Cost:      v.Cost,
 			})
 		}
-		var productsAdd []models2.AreaCost
-		var productsUpdate []models2.AreaCost
+		var productsAdd = make([]models2.AreaCost, 0)
+		var productsUpdate = make([]models2.AreaCost, 0)
 
 		for _, v := range productsOfAreaRequest {
 			if checkStatusOfRecord(productsOfArea, v) == "add" {
@@ -349,7 +349,7 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	}
 
 	areaHandler.server.Logger.Info("Search product")
-	var medicines []models2.Product
+	var medicines = make([]models2.Product, 0)
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(areaHandler.server.DB)

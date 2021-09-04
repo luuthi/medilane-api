@@ -60,7 +60,7 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
-	var orders []models2.Order
+	var orders = make([]models2.Order, 0)
 	var total int64
 
 	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
@@ -280,7 +280,7 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 // @Security BearerAuth
 func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
 
-	var methods []models2.PaymentMethod
+	var methods = make([]models2.PaymentMethod, 0)
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
 	err := orderRepo.GetPaymentMethod(&methods)
 	if err != nil {
