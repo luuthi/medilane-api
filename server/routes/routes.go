@@ -30,7 +30,7 @@ func ConfigureRoutes(server *s.Server, config *config.Config) {
 	server.Echo.Use(middleware.CORS())
 	server.Echo.Use(middleware.RemoveTrailingSlash())
 	server.Echo.Use(middleware.Secure())
-	server.Echo.Use(middleware.Gzip())
+	//server.Echo.Use(middleware.Gzip())
 	server.Echo.Use(middleware.RequestID())
 
 	// Or can use EchoWrapHandler func with configurations.
