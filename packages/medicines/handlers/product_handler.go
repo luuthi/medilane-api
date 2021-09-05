@@ -337,7 +337,11 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 		panic(errorHandling.ErrUnauthorized(nil))
 	}
 
-	var paramUrl uint
+	var paramUrl uint64
+	paramUrl, err = strconv.ParseUint(c.Param("id"), 10, 64)
+	if err != nil {
+		panic(errorHandling.ErrInvalidRequest(err))
+	}
 	id := uint(paramUrl)
 
 	var paramUrl1 uint64

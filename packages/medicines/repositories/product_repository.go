@@ -330,6 +330,6 @@ func (productRepository *ProductRepository) CheckProductPromotionVoucher(product
 
 func (productRepository *ProductRepository) GetCostProduct(productIds []uint, areaId uint) ([]models2.AreaCost, error) {
 	var productCost []models2.AreaCost
-	err := productRepository.DB.Table(utils.TblAreaCost).Where("area_id = ? AND product_id = ?", areaId, productIds).Find(&productCost).Error
+	err := productRepository.DB.Table(utils.TblAreaCost).Where("area_id = ? AND product_id IN ?", areaId, productIds).Find(&productCost).Error
 	return productCost, err
 }
