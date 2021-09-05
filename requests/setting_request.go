@@ -3,10 +3,10 @@ package requests
 import validation "github.com/go-ozzo/ozzo-validation"
 
 type SettingRequest struct {
-	Key     string `json:"Key"`
-	Ios     string `json:"Ios"`
-	Android string `json:"Android"`
-	Config  string `json:"Config"`
+	Key     string                 `json:"Key"`
+	Ios     map[string]interface{} `json:"Ios"`
+	Android map[string]interface{} `json:"Android"`
+	Config  map[string]interface{} `json:"Config"`
 }
 
 func (rr SettingRequest) Validate() error {

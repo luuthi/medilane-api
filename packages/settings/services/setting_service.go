@@ -31,7 +31,7 @@ func (settingService *Service) CreateAppSetting(request *requests.SettingRequest
 		SetKey(request.Key).Build()
 
 	// Delete all setting with key inserted
-	rs := tx.Table(utils.TblSetting).Delete(&appSetting)
+	rs := tx.Table(utils.TblSetting).Where("`key` = ?", appSetting.Key).Delete(&appSetting)
 	if rs.Error != nil {
 		tx.Rollback()
 		return rs.Error, nil

@@ -3,10 +3,10 @@ package models
 type AppSetting struct {
 	CommonModelFields
 
-	Ios     string `json:"Ios" gorm:"varchar(500)"`
-	Android string `json:"Android" gorm:"varchar(500)"`
-	Config  string `json:"Config" gorm:"varchar(500)"`
-	Key     string `json:"Key" gorm:"varchar(100)"`
+	Ios     map[string]interface{} `json:"Ios" gorm:"varchar(500)"`
+	Android map[string]interface{} `json:"Android" gorm:"varchar(500)"`
+	Config  map[string]interface{} `json:"Config" gorm:"varchar(500)"`
+	Key     string                 `json:"Key" gorm:"varchar(100)"`
 }
 
 type Banner struct {

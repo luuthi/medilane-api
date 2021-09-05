@@ -3,9 +3,9 @@ package builders
 import "medilane-api/models"
 
 type SettingBuilder struct {
-	ios     string
-	android string
-	config  string
+	ios     map[string]interface{}
+	android map[string]interface{}
+	config  map[string]interface{}
 	key     string
 	id      uint
 }
@@ -14,17 +14,17 @@ func NewSettingBuilder() *SettingBuilder {
 	return &SettingBuilder{}
 }
 
-func (settingBuilder *SettingBuilder) SetIOS(ios string) *SettingBuilder {
+func (settingBuilder *SettingBuilder) SetIOS(ios map[string]interface{}) *SettingBuilder {
 	settingBuilder.ios = ios
 	return settingBuilder
 }
 
-func (settingBuilder *SettingBuilder) SetAndroid(android string) *SettingBuilder {
+func (settingBuilder *SettingBuilder) SetAndroid(android map[string]interface{}) *SettingBuilder {
 	settingBuilder.android = android
 	return settingBuilder
 }
 
-func (settingBuilder *SettingBuilder) SetConfig(config string) *SettingBuilder {
+func (settingBuilder *SettingBuilder) SetConfig(config map[string]interface{}) *SettingBuilder {
 	settingBuilder.config = config
 	return settingBuilder
 }
