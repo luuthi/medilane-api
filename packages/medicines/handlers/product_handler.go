@@ -15,7 +15,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type ProductHandler struct {
@@ -345,13 +344,12 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 	}
 	id := uint(uid.GetLocalID())
 
-	var paramUrl1 uint64
 	var areaId uint
-	paramUrl1, err = strconv.ParseUint(c.QueryParam("area_id"), 10, 64)
+	paramUrl1, err := models.FromBase58(c.QueryParam("area_id"))
 	if err != nil {
 		areaId = 0
 	} else {
-		areaId = uint(paramUrl1)
+		areaId = uint(paramUrl1.GetLocalID())
 	}
 
 	var existedProduct *models.Product

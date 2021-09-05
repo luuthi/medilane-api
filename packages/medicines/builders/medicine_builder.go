@@ -166,8 +166,8 @@ func (productBuilder *ProductBuilder) SetTags(ids []uint) (r *ProductBuilder) {
 	return productBuilder
 }
 
-func (productBuilder *ProductBuilder) Build() models2.Product {
-	product := models2.Product{
+func (productBuilder *ProductBuilder) Build() models2.EditProduct {
+	product := models2.EditProduct{
 		Code:                   productBuilder.Code,
 		Name:                   productBuilder.Name,
 		RegistrationNo:         productBuilder.RegistrationNo,

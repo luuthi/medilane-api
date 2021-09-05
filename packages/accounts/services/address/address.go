@@ -19,7 +19,7 @@ func (areaCostService *Service) CreateAddress(request *requests2.AddressRequest)
 		SetDistrict(request.District).
 		SetWard(request.Ward).
 		SetStreet(request.Address).
-		SetDefault(*request.IsDefault).
+		SetDefault(true).
 		Build()
 	return areaCostService.DB.Table(utils2.TblAddress).Create(&address)
 }
@@ -34,7 +34,7 @@ func (areaCostService *Service) EditAddress(request *requests2.AddressRequest, i
 		SetDistrict(request.District).
 		SetWard(request.Ward).
 		SetStreet(request.Address).
-		SetDefault(*request.IsDefault).
+		SetDefault(true).
 		SetID(id).
 		Build()
 	return areaCostService.DB.Table(utils2.TblAddress).Updates(&address).Error

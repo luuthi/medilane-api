@@ -36,10 +36,9 @@ type EditAddressRequest struct {
 	Phone       string      `json:"Phone" validate:"required" example:"0345532343"`
 	ContactName string      `json:"ContactName" validate:"required" example:"Jackie"`
 	Coordinates string      `json:"Coordinates" validate:"required" example:"Jackie"`
-	AreaID      *models.UID `json:"AreaID" validate:"required"`
+	AreaID      *models.UID `json:"AreaID"`
 	Country     string      `json:"Country" validate:"required" example:"Vietnam"`
-	IsDefault   *bool       `json:"IsDefault" validate:"required" example:"true"`
-	Id          *models.UID `json:"Id" validate:"required"`
+	Id          *models.UID `json:"Id"`
 }
 
 func (rr EditAddressRequest) Validate() error {
@@ -47,8 +46,9 @@ func (rr EditAddressRequest) Validate() error {
 		validation.Field(&rr.Province, validation.Required),
 		validation.Field(&rr.District, validation.Required),
 		validation.Field(&rr.Ward, validation.Required),
+		validation.Field(&rr.AreaID, validation.NotNil),
 		validation.Field(&rr.Address, validation.Required),
-		validation.Field(&rr.Id, validation.Required),
+		validation.Field(&rr.Id, validation.NotNil),
 	)
 }
 

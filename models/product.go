@@ -43,6 +43,33 @@ type Product struct {
 	Voucher                Voucher     `json:"Voucher" gorm:"-"`
 }
 
+type EditProduct struct {
+	CommonModelFields
+
+	Code                   string      `json:"Code" gorm:"varchar(32);not null"`
+	Name                   string      `json:"Name" gorm:"varchar(255);not null"`
+	RegistrationNo         string      `json:"RegistrationNo" gorm:"varchar(255);not null"`
+	Content                string      `json:"Content" gorm:"varchar(500);not null"`
+	Description            string      `json:"Description" gorm:"varchar(500);not null"`
+	IndicationsOfTheDrug   string      `json:"IndicationsOfTheDrug" gorm:"varchar(500);not null"`
+	GlobalManufacturerName string      `json:"GlobalManufacturerName" gorm:"varchar(500);not null"`
+	Direction              string      `json:"Direction" gorm:"varchar(500);not null"`
+	DoNotUse               string      `json:"DoNotUse" gorm:"varchar(500);not null"`
+	DrugInteractions       string      `json:"DrugInteractions" gorm:"varchar(500);not null"`
+	Storage                string      `json:"Storage" gorm:"varchar(500);not null"`
+	Overdose               string      `json:"Overdose" gorm:"varchar(500);not null"`
+	PackagingSize          string      `json:"PackagingSize" gorm:"varchar(255);not null"`
+	Unit                   string      `json:"Unit" gorm:"varchar(32);not null"`
+	Barcode                string      `json:"Barcode" gorm:"varchar(64);not null"`
+	Status                 string      `json:"Status" gorm:"varchar(32);not null"`
+	ActiveElement          string      `json:"ActiveElement" gorm:"varchar(255);not null"`
+	Avatar                 string      `json:"Avatar" gorm:"varchar(255);not null"`
+	BasePrice              float64     `json:"BasePrice" gorm:"float(8);not null"`
+	Manufacturer           string      `json:"Manufacturer" gorm:"varchar(255);not null"`
+	Tags                   []*Tag      `json:"Tags" gorm:"many2many:product_tag"`
+	Category               []*Category `json:"Category" gorm:"many2many:product_category"`
+}
+
 func (p *Product) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil

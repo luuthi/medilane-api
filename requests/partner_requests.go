@@ -45,12 +45,12 @@ func (rr CreatePartnerRequest) Validate() error {
 }
 
 type EditPartnerRequest struct {
-	Name    string             `json:"Name"  validate:"required" example:"MeTri"`
-	Status  string             `json:"Status"  validate:"required" example:"new"`
-	Email   string             `json:"Email"  validate:"required" example:"abc@gmail.com"`
-	Note    string             `json:"Note"  validate:"required" example:"acbasd"`
-	Type    string             `json:"Type"  validate:"required" example:"supplier/manufacturer"`
-	Address EditAddressRequest `json:"Address" validate:"required"`
+	Name    string              `json:"Name"  validate:"required" example:"MeTri"`
+	Status  string              `json:"Status"  validate:"required" example:"new"`
+	Email   string              `json:"Email"  validate:"required" example:"abc@gmail.com"`
+	Note    string              `json:"Note"  validate:"required" example:"acbasd"`
+	Type    string              `json:"Type"  validate:"required" example:"supplier/manufacturer"`
+	Address *EditAddressRequest `json:"Address" validate:"required"`
 }
 
 func (rr EditPartnerRequest) Validate() error {

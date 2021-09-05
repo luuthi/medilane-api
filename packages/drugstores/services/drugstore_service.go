@@ -62,7 +62,7 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 		SetDistrict(infoAddr.District).
 		SetWard(infoAddr.Ward).
 		SetStreet(infoAddr.Address).
-		SetDefault(*infoAddr.IsDefault).
+		SetDefault(true).
 		SetID(uint(infoAddr.Id.GetLocalID())).
 		Build()
 
