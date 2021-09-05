@@ -103,7 +103,7 @@ func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.PermissionRequest true "body permission"
-// @Param id path uint true "id permission"
+// @Param id path string true "id permission"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -152,7 +152,7 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 // @Tags Permission Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id permission"
+// @Param id path string true "id permission"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

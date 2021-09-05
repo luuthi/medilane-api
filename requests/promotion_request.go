@@ -4,16 +4,17 @@ import (
 	"errors"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"medilane-api/core/utils"
+	"medilane-api/models"
 )
 
 type PromotionRequest struct {
-	AreaId    uint   `json:"AreaId" validate:"required"`
-	Name      string `json:"Name" validate:"required" example:"Khuyến mại hè"`
-	Note      string `json:"Note" example:"Khuyến mại hè nè"`
-	StartTime int64  `json:"StartTime" validate:"required"`
-	EndTime   int64  `json:"EndTime" validate:"required"`
-	Status    *bool  `json:"Status" validate:"required"`
-	Avatar    string `json:"Avatar"`
+	AreaId    *models.UID `json:"AreaId" validate:"required"`
+	Name      string      `json:"Name" validate:"required" example:"Khuyến mại hè"`
+	Note      string      `json:"Note" example:"Khuyến mại hè nè"`
+	StartTime int64       `json:"StartTime" validate:"required"`
+	EndTime   int64       `json:"EndTime" validate:"required"`
+	Status    *bool       `json:"Status" validate:"required"`
+	Avatar    string      `json:"Avatar"`
 }
 
 type PromotionWithDetailRequest struct {
@@ -41,16 +42,16 @@ func (rr PromotionRequest) Validate() error {
 }
 
 type SearchPromotionRequest struct {
-	Name          string     `json:"Name"`
-	AreaId        uint       `json:"AreaId"`
-	Status        *bool      `json:"Status"`
-	TimeFromStart *int64     `json:"TimeFromStart"`
-	TimeToStart   *int64     `json:"TimeToStart"`
-	TimeFromEnd   *int64     `json:"TimeFromEnd"`
-	TimeToEnd     *int64     `json:"TimeToEnd"`
-	Limit         int        `json:"limit" example:"10"`
-	Offset        int        `json:"offset" example:"0"`
-	Sort          SortOption `json:"sort"`
+	Name          string      `json:"Name"`
+	AreaId        *models.UID `json:"AreaId"`
+	Status        *bool       `json:"Status"`
+	TimeFromStart *int64      `json:"TimeFromStart"`
+	TimeToStart   *int64      `json:"TimeToStart"`
+	TimeFromEnd   *int64      `json:"TimeFromEnd"`
+	TimeToEnd     *int64      `json:"TimeToEnd"`
+	Limit         int         `json:"limit" example:"10"`
+	Offset        int         `json:"offset" example:"0"`
+	Sort          SortOption  `json:"sort"`
 }
 
 func (rr SearchPromotionRequest) Validate() error {
@@ -65,12 +66,12 @@ func (rr SearchPromotionRequest) Validate() error {
 }
 
 type SearchPromotionDetail struct {
-	Limit     int    `json:"limit" example:"10"`
-	Offset    int    `json:"offset" example:"0"`
-	ProductID uint   `json:"ProductID"`
-	VariantID uint   `json:"VariantID"`
-	Type      string `json:"Type"`
-	Condition string `json:"Condition" `
+	Limit     int         `json:"limit" example:"10"`
+	Offset    int         `json:"offset" example:"0"`
+	ProductID *models.UID `json:"ProductID"`
+	VariantID *models.UID `json:"VariantID"`
+	Type      string      `json:"Type"`
+	Condition string      `json:"Condition" `
 }
 
 func (rr SearchPromotionDetail) Validate() error {
@@ -107,15 +108,15 @@ type PromotionDetailRequestList struct {
 }
 
 type PromotionDetailRequest struct {
-	Type        string   `json:"Type" validate:"required"`
-	Percent     *float32 `json:"Percent" validate:"required"`
-	Condition   string   `json:"Condition" `
-	Value       *float32 `json:"Value" validate:"required"`
-	PromotionID uint     `json:"PromotionID"`
-	ProductID   uint     `json:"ProductID" validate:"required"`
-	VariantID   uint     `json:"VariantID" validate:"required"`
-	VoucherID   uint     `json:"VoucherID" validate:"required"`
-	ID          uint     `json:"id"`
+	Type        string      `json:"Type" validate:"required"`
+	Percent     *float32    `json:"Percent" validate:"required"`
+	Condition   string      `json:"Condition" `
+	Value       *float32    `json:"Value" validate:"required"`
+	PromotionID *models.UID `json:"PromotionID"`
+	ProductID   *models.UID `json:"ProductID" validate:"required"`
+	VariantID   *models.UID `json:"VariantID" validate:"required"`
+	VoucherID   *models.UID `json:"VoucherID" validate:"required"`
+	ID          *models.UID `json:"id"`
 }
 
 func (rr PromotionDetailRequest) Validate() error {
@@ -145,14 +146,14 @@ func validateByType(_type string, _percent float32, _value float32, _cond string
 }
 
 type SearchProductPromotion struct {
-	Limit  int  `json:"limit"`
-	AreaId uint `json:"AreaId"`
+	Limit  int         `json:"limit"`
+	AreaId *models.UID `json:"AreaId"`
 }
 
 type SearchProductByPromotion struct {
-	ProductName string     `json:"ProductName"`
-	Limit       int        `json:"limit" example:"10"`
-	Offset      int        `json:"offset" example:"0"`
-	AreaId      uint       `json:"AreaId"`
-	Sort        SortOption `json:"sort"`
+	ProductName string      `json:"ProductName"`
+	Limit       int         `json:"limit" example:"10"`
+	Offset      int         `json:"offset" example:"0"`
+	AreaId      *models.UID `json:"AreaId"`
+	Sort        SortOption  `json:"sort"`
 }

@@ -15,7 +15,8 @@ type Partner struct {
 	Type           string   `json:"Type" gorm:"varchar(32)"`
 	Users          []*User  `json:"Users,omitempty" gorm:"many2many:drug_store_user"`
 	Representative *User    `json:"Representative" gorm:"-"`
-	AddressID      uint     `json:"AddressID,omitempty"`
+	AddressID      uint     `json:"-"`
+	FakeAddressID  *UID     `json:"AddressID,omitempty" gorm:"-"`
 	Address        *Address `json:"Address,omitempty" gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
@@ -23,9 +24,14 @@ func (p *Partner) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil
 }
+func (p *Partner) GenAddressID() {
+	uid := NewUID(uint32(p.AddressID), utils.DBTypeAddress, 1)
+	p.FakeAddressID = &uid
+}
 
 func (p *Partner) Mask() {
 	p.GenUID(utils.DBTypePartner)
+	p.GenAddressID()
 }
 
 type PartnerUser struct {

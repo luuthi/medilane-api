@@ -23,7 +23,7 @@ func (s *Service) CreateToken(req *requests.CreateFcmToken) error {
 	var existedToken models.FcmToken
 	tx.Table(utils.TblFcmToken).Where("user = ? AND token = ?", req.User, req.Token).First(&existedToken)
 	if existedToken.ID == 0 {
-		fcm := builders.NewFcmTokenBuilder().SetToken(req.Token).SetUser(req.User).Build()
+		fcm := builders.NewFcmTokenBuilder().SetToken(req.Token).SetUser(uint(req.User.GetLocalID())).Build()
 		rs := s.DB.Table(utils.TblFcmToken).Create(&fcm)
 		if rs.Error != nil {
 			tx.Rollback()

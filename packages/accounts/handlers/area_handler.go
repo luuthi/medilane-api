@@ -73,7 +73,7 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.AreaRequest true "Edit area"
-// @Param id path uint true "id area"
+// @Param id path string true "id area"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -153,7 +153,7 @@ func (areaHandler *AreaHandler) CreateArea(c echo.Context) error {
 // @Tags Area Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id area"
+// @Param id path string true "id area"
 // @Success 200 {object} models.Area
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -189,7 +189,7 @@ func (areaHandler *AreaHandler) GetArea(c echo.Context) error {
 // @Tags Area Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id area"
+// @Param id path string true "id area"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -232,9 +232,14 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
+	var areaId uint
+	if bodyRequest.AreaId != nil {
+		areaId = uint(bodyRequest.AreaId.GetLocalID())
+	}
+
 	var areaInDB models2.Area
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
-	err := areaRepo.GetAreaByID(&areaInDB, bodyRequest.AreaId)
+	err := areaRepo.GetAreaByID(&areaInDB, areaId)
 	if err != nil {
 		panic(err)
 	}
@@ -249,23 +254,25 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 	productsOfArea := make([]models2.AreaCost, 0)
 	var total int64
 
-	err = areaCostRepo.GetProductsOfArea(&productsOfArea, &total, bodyRequest.AreaId)
+	err = areaCostRepo.GetProductsOfArea(&productsOfArea, &total, areaId)
 	if err != nil {
 		panic(err)
 	}
 
 	if total == 0 {
 		for _, v := range bodyRequest.Products {
-			if err := areaService.SetCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
+			var productId = uint(v.ProductId.GetLocalID())
+			if err := areaService.SetCostProductOfArea(areaId, productId, v.Cost); err != nil {
 				panic(err)
 			}
 		}
 	} else {
 		var productsOfAreaRequest = make([]models2.AreaCost, 0)
 		for _, v := range bodyRequest.Products {
+			var productId = uint(v.ProductId.GetLocalID())
 			productsOfAreaRequest = append(productsOfAreaRequest, models2.AreaCost{
-				AreaId:    bodyRequest.AreaId,
-				ProductId: v.ProductId,
+				AreaId:    areaId,
+				ProductId: productId,
 				Cost:      v.Cost,
 			})
 		}
@@ -281,13 +288,13 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 		}
 
 		for _, v := range productsAdd {
-			if err := areaService.SetCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
+			if err := areaService.SetCostProductOfArea(areaId, v.ProductId, v.Cost); err != nil {
 				panic(err)
 			}
 		}
 
 		for _, v := range productsUpdate {
-			if err := areaService.UpdateCostProductOfArea(bodyRequest.AreaId, v.ProductId, v.Cost); err != nil {
+			if err := areaService.UpdateCostProductOfArea(areaId, v.ProductId, v.Cost); err != nil {
 				panic(err)
 			}
 		}
@@ -313,7 +320,7 @@ func checkStatusOfRecord(arr []models2.AreaCost, record models2.AreaCost) string
 // @Tags Area Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id area"
+// @Param id path string true "id area"
 // @Param params body requests.SearchProductRequest true "Filter product"
 // @Success 200 {object} responses.ProductSearch
 // @Failure 400 {object} errorHandling.AppError
@@ -348,7 +355,7 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(areaHandler.server.DB)
-	medicines, err = productRepo.GetProducts(&total, searchRequest, claims.UserId, claims.Type, areaId)
+	medicines, err = productRepo.GetProducts(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type, areaId)
 	if err != nil {
 		panic(err)
 	}
@@ -367,7 +374,7 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 // @Tags Area Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id area"
+// @Param id path string true "id area"
 // @Param params body requests.AreaConfigListRequest true "Config area"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError

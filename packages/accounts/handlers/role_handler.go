@@ -105,7 +105,7 @@ func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.RoleRequest true "body role"
-// @Param id path uint true "id role"
+// @Param id path string true "id role"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -150,7 +150,7 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 // @Tags Role Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id role"
+// @Param id path string true "id role"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

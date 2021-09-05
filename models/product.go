@@ -38,7 +38,8 @@ type Product struct {
 	HasPromoteVoucher      bool        `json:"HasPromoteVoucher" gorm:"-"`
 	ConditionVoucher       string      `json:"ConditionVoucher" gorm:"-"`
 	ValueVoucher           float32     `json:"ValueVoucher" gorm:"-"`
-	VoucherId              uint        `json:"VoucherId" gorm:"-"`
+	VoucherId              uint        `json:"-" gorm:"-"`
+	FakeVoucherId          *UID        `json:"VoucherId" gorm:"-"`
 	Voucher                Voucher     `json:"Voucher" gorm:"-"`
 }
 
@@ -46,9 +47,14 @@ func (p *Product) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil
 }
+func (p *Product) GenVoucherId() {
+	uid := NewUID(uint32(p.VoucherId), utils.DBTypeVoucher, 1)
+	p.FakeVoucherId = &uid
+}
 
 func (p *Product) Mask() {
 	p.GenUID(utils.DBTypeProduct)
+	p.GenVoucherId()
 }
 
 type ProductStore struct {

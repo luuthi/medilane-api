@@ -21,10 +21,10 @@ type JWTAuthenticationBackend struct {
 }
 
 type JwtCustomClaims struct {
-	Name    string `json:"name"`
-	IsAdmin bool   `json:"is_admin"`
-	Type    string `json:"type"`
-	UserId  uint   `json:"user_id"`
+	Name    string      `json:"name"`
+	IsAdmin bool        `json:"is_admin"`
+	Type    string      `json:"type"`
+	UserId  *models.UID `json:"user_id"`
 	jwt.StandardClaims
 }
 
@@ -55,11 +55,12 @@ func InitJWTAuthenticationBackend(cfg *config.Config) *JWTAuthenticationBackend 
 
 func (backend *JWTAuthenticationBackend) GenerateToken(user *models.User) (accessToken string, exp int64, err error) {
 	exp = time.Now().Add(time.Hour * tokenDuration).Unix()
+	user.Mask()
 	claims := &JwtCustomClaims{
 		user.Username,
 		*user.IsAdmin,
 		user.Type,
-		user.ID,
+		user.FakeId,
 		jwt.StandardClaims{
 			ExpiresAt: exp,
 		},

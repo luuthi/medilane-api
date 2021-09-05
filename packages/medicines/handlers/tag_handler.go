@@ -103,7 +103,7 @@ func (tagHandler *TagHandler) CreateTag(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.TagRequest true "body Tag"
-// @Param id path uint true "id Tag"
+// @Param id path string true "id Tag"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -151,7 +151,7 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 // @Tags Tag Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id Tag"
+// @Param id path string true "id Tag"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

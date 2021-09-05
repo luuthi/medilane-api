@@ -65,7 +65,7 @@ var doc = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/responses.Data"
                         }
                     },
                     "400": {
@@ -180,7 +180,7 @@ var doc = `{
                 "operationId": "get-account",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -249,7 +249,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -309,7 +309,7 @@ var doc = `{
                 "operationId": "delete-account",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -380,7 +380,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -635,7 +635,7 @@ var doc = `{
                 "operationId": "get-address",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id address",
                         "name": "id",
                         "in": "path",
@@ -704,7 +704,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id address",
                         "name": "id",
                         "in": "path",
@@ -764,7 +764,7 @@ var doc = `{
                 "operationId": "delete-address",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id address",
                         "name": "id",
                         "in": "path",
@@ -1018,7 +1018,7 @@ var doc = `{
                 "operationId": "get-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1087,7 +1087,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1147,7 +1147,7 @@ var doc = `{
                 "operationId": "delete-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1209,7 +1209,7 @@ var doc = `{
                 "operationId": "config-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1280,7 +1280,7 @@ var doc = `{
                 "operationId": "get-products-of-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1841,7 +1841,7 @@ var doc = `{
                 "operationId": "delete-cart",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id cart",
                         "name": "id",
                         "in": "path",
@@ -1903,7 +1903,7 @@ var doc = `{
                 "operationId": "delete-cart-item",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id cart item",
                         "name": "id",
                         "in": "path",
@@ -2102,7 +2102,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Category",
                         "name": "id",
                         "in": "path",
@@ -2162,7 +2162,7 @@ var doc = `{
                 "operationId": "delete-category",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Category",
                         "name": "id",
                         "in": "path",
@@ -2352,7 +2352,7 @@ var doc = `{
                 "operationId": "get-type-connective-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2414,7 +2414,7 @@ var doc = `{
                 "operationId": "get-list-connective-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2593,7 +2593,7 @@ var doc = `{
                 "operationId": "get-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2662,7 +2662,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2722,7 +2722,7 @@ var doc = `{
                 "operationId": "delete-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2784,7 +2784,7 @@ var doc = `{
                 "operationId": "search-account-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id of drugstore",
                         "name": "id",
                         "in": "path",
@@ -3017,7 +3017,7 @@ var doc = `{
                 "operationId": "mark-all-notification-as-read",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id user",
                         "name": "id",
                         "in": "path",
@@ -3143,7 +3143,7 @@ var doc = `{
                 "operationId": "mark-notification-as-read",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id notification",
                         "name": "id",
                         "in": "path",
@@ -3450,7 +3450,7 @@ var doc = `{
                 "operationId": "get-order",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id order",
                         "name": "id",
                         "in": "path",
@@ -3519,7 +3519,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id order",
                         "name": "id",
                         "in": "path",
@@ -3579,7 +3579,7 @@ var doc = `{
                 "operationId": "delete-order",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id order",
                         "name": "id",
                         "in": "path",
@@ -3769,7 +3769,7 @@ var doc = `{
                 "operationId": "get-partner",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id partner",
                         "name": "id",
                         "in": "path",
@@ -3838,7 +3838,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id partner",
                         "name": "id",
                         "in": "path",
@@ -3898,7 +3898,7 @@ var doc = `{
                 "operationId": "delete-partner",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id partner",
                         "name": "id",
                         "in": "path",
@@ -4097,7 +4097,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id permission",
                         "name": "id",
                         "in": "path",
@@ -4157,7 +4157,7 @@ var doc = `{
                 "operationId": "delete-permission",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id permission",
                         "name": "id",
                         "in": "path",
@@ -4475,7 +4475,7 @@ var doc = `{
                 "operationId": "get-product",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4550,7 +4550,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4610,7 +4610,7 @@ var doc = `{
                 "operationId": "delete-product",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4672,7 +4672,7 @@ var doc = `{
                 "operationId": "get-pure-product",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4990,7 +4990,7 @@ var doc = `{
                 "operationId": "get-promotion",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5059,7 +5059,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5119,7 +5119,7 @@ var doc = `{
                 "operationId": "delete-promotion",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5181,7 +5181,7 @@ var doc = `{
                 "operationId": "create-promotion-detail",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5250,7 +5250,7 @@ var doc = `{
                 "operationId": "delete-promotion-detail-by-promotion",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5321,7 +5321,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5392,7 +5392,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5459,7 +5459,7 @@ var doc = `{
                 "operationId": "delete-promotion-detail",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5537,7 +5537,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5864,7 +5864,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id role",
                         "name": "id",
                         "in": "path",
@@ -5924,7 +5924,7 @@ var doc = `{
                 "operationId": "delete-role",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id role",
                         "name": "id",
                         "in": "path",
@@ -6123,7 +6123,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -6578,7 +6578,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Tag",
                         "name": "id",
                         "in": "path",
@@ -6638,7 +6638,7 @@ var doc = `{
                 "operationId": "delete-tag",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Tag",
                         "name": "id",
                         "in": "path",
@@ -6828,7 +6828,7 @@ var doc = `{
                 "operationId": "get-variant",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Variant",
                         "name": "id",
                         "in": "path",
@@ -6897,7 +6897,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Variant",
                         "name": "id",
                         "in": "path",
@@ -6957,7 +6957,7 @@ var doc = `{
                 "operationId": "delete-variant",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Variant",
                         "name": "id",
                         "in": "path",
@@ -7147,7 +7147,7 @@ var doc = `{
                 "operationId": "get-voucher",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id voucher",
                         "name": "id",
                         "in": "path",
@@ -7216,7 +7216,7 @@ var doc = `{
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id voucher",
                         "name": "id",
                         "in": "path",
@@ -7276,7 +7276,7 @@ var doc = `{
                 "operationId": "delete-voucher",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id voucher",
                         "name": "id",
                         "in": "path",
@@ -7377,7 +7377,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7388,13 +7389,16 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Config": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Ios": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Key": {
                     "type": "string"
@@ -7403,7 +7407,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7435,7 +7440,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "products": {
                     "type": "array",
@@ -7456,7 +7462,8 @@ var doc = `{
                     "$ref": "#/definitions/models.Area"
                 },
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "District": {
                     "type": "string"
@@ -7464,7 +7471,14 @@ var doc = `{
                 "Province": {
                     "type": "string"
                 },
+                "created_at": {
+                    "type": "integer"
+                },
                 "id": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
+                },
+                "updated_at": {
                     "type": "integer"
                 }
             }
@@ -7485,7 +7499,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7505,13 +7520,15 @@ var doc = `{
                     }
                 },
                 "UserID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7522,7 +7539,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "CartID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Cost": {
                     "type": "number"
@@ -7535,7 +7553,8 @@ var doc = `{
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Quantity": {
                     "type": "integer"
@@ -7545,13 +7564,15 @@ var doc = `{
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7586,7 +7607,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7601,7 +7623,8 @@ var doc = `{
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ApproveBy": {
                     "type": "object",
@@ -7676,7 +7699,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7693,7 +7717,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7726,13 +7751,15 @@ var doc = `{
                     "$ref": "#/definitions/models.User"
                 },
                 "UserId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7747,13 +7774,15 @@ var doc = `{
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Discount": {
                     "type": "number"
                 },
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Drugstore": {
                     "type": "object",
@@ -7776,7 +7805,8 @@ var doc = `{
                     "$ref": "#/definitions/models.PaymentMethod"
                 },
                 "PaymentMethodID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ShippingFee": {
                     "type": "number"
@@ -7798,14 +7828,16 @@ var doc = `{
                     "$ref": "#/definitions/models.User"
                 },
                 "UserApproveID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "UserOrder": {
                     "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "UserOrderID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Vat": {
                     "type": "number"
@@ -7814,7 +7846,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "oldStatus": {
                     "type": "string"
@@ -7834,14 +7867,16 @@ var doc = `{
                     "type": "number"
                 },
                 "OrderID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Product": {
                     "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Quantity": {
                     "type": "integer"
@@ -7851,13 +7886,15 @@ var doc = `{
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7898,7 +7935,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "orderStoreDetails": {
                     "type": "array",
@@ -7944,7 +7982,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7959,7 +7998,8 @@ var doc = `{
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Email": {
                     "type": "string"
@@ -7990,7 +8030,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8010,7 +8051,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8030,7 +8072,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8147,13 +8190,15 @@ var doc = `{
                     "$ref": "#/definitions/models.Voucher"
                 },
                 "VoucherId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8251,7 +8296,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8262,7 +8308,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Avatar": {
                     "type": "string"
@@ -8289,7 +8336,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "promotionDetails": {
                     "type": "array",
@@ -8316,14 +8364,16 @@ var doc = `{
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Promotion": {
                     "type": "object",
                     "$ref": "#/definitions/models.Promotion"
                 },
                 "PromotionID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Type": {
                     "type": "string"
@@ -8336,16 +8386,19 @@ var doc = `{
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "VoucherID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8375,7 +8428,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "permissions": {
                     "type": "array",
@@ -8401,12 +8455,16 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
                 }
             }
+        },
+        "models.UID": {
+            "type": "object"
         },
         "models.User": {
             "type": "object",
@@ -8463,7 +8521,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8480,7 +8539,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8546,7 +8606,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8573,8 +8634,8 @@ var doc = `{
                     "example": "Quan Hoa"
                 },
                 "AreaID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ContactName": {
                     "type": "string",
@@ -8593,7 +8654,8 @@ var doc = `{
                     "example": "Cầu giấy"
                 },
                 "Id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsDefault": {
                     "type": "boolean",
@@ -8634,7 +8696,8 @@ var doc = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8660,7 +8723,7 @@ var doc = `{
                 "DrugStoresIdLst": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 }
             }
@@ -8672,7 +8735,8 @@ var doc = `{
                     "type": "integer"
                 },
                 "Id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "StartTime": {
                     "type": "integer"
@@ -8689,7 +8753,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "CartID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Cost": {
                     "type": "number"
@@ -8698,13 +8763,15 @@ var doc = `{
                     "type": "number"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Quantity": {
                     "type": "integer"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8714,7 +8781,7 @@ var doc = `{
                 "cart_details": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.CartDetail"
+                        "$ref": "#/definitions/requests.CartItemRequest"
                     }
                 }
             }
@@ -8742,7 +8809,7 @@ var doc = `{
                 "ProductsId": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 },
                 "Status": {
@@ -8755,12 +8822,12 @@ var doc = `{
             "type": "object",
             "properties": {
                 "ChildStoreId": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ParentStoreId": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8771,7 +8838,8 @@ var doc = `{
                     "type": "number"
                 },
                 "ProductId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8787,7 +8855,8 @@ var doc = `{
             ],
             "properties": {
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsAdmin": {
                     "type": "boolean",
@@ -8798,7 +8867,8 @@ var doc = `{
                     "example": "John Doe"
                 },
                 "PartnerID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Roles": {
                     "type": "array",
@@ -8842,7 +8912,8 @@ var doc = `{
                     "type": "string"
                 },
                 "User": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8889,7 +8960,7 @@ var doc = `{
                 "BannerListId": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 }
             }
@@ -8910,10 +8981,12 @@ var doc = `{
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "LicenseFile": {
                     "type": "string",
@@ -8941,7 +9014,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9005,8 +9079,8 @@ var doc = `{
                     "example": "Quan Hoa"
                 },
                 "AreaID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ContactName": {
                     "type": "string",
@@ -9025,7 +9099,8 @@ var doc = `{
                     "example": "Cầu giấy"
                 },
                 "Id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsDefault": {
                     "type": "boolean",
@@ -9067,8 +9142,8 @@ var doc = `{
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "AddressID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ApproveTime": {
                     "type": "integer",
@@ -9103,13 +9178,15 @@ var doc = `{
                     "type": "string"
                 },
                 "PaymentMethodID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Status": {
                     "type": "string"
                 },
                 "UserApproveID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -9192,13 +9269,15 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Discount": {
                     "type": "number"
                 },
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Note": {
                     "type": "string"
@@ -9213,7 +9292,8 @@ var doc = `{
                     }
                 },
                 "PaymentMethodID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ShippingFee": {
                     "type": "number"
@@ -9231,10 +9311,12 @@ var doc = `{
                     "type": "string"
                 },
                 "UserApproveID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "UserOrderID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Vat": {
                     "type": "number"
@@ -9245,7 +9327,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9265,7 +9348,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9323,7 +9407,7 @@ var doc = `{
                 "Categories": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 },
                 "Code": {
@@ -9389,7 +9473,7 @@ var doc = `{
                 "Tags": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 },
                 "Unit": {
@@ -9399,7 +9483,7 @@ var doc = `{
                 "Variants": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 }
             }
@@ -9408,7 +9492,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9446,10 +9531,12 @@ var doc = `{
                     "type": "number"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "PromotionID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Type": {
                     "type": "string"
@@ -9458,13 +9545,16 @@ var doc = `{
                     "type": "number"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "VoucherID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -9490,7 +9580,8 @@ var doc = `{
             ],
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Avatar": {
                     "type": "string"
@@ -9544,7 +9635,8 @@ var doc = `{
             ],
             "properties": {
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsAdmin": {
                     "type": "boolean",
@@ -9555,7 +9647,8 @@ var doc = `{
                     "example": "John Doe"
                 },
                 "PartnerID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Roles": {
                     "type": "array",
@@ -9676,8 +9769,8 @@ var doc = `{
                     "example": "Hanoi"
                 },
                 "AreaID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ContactName": {
                     "type": "string",
@@ -9771,8 +9864,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AddressID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ApproveTime": {
                     "type": "integer",
@@ -9826,7 +9919,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "UserId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "limit": {
                     "type": "integer",
@@ -9931,7 +10025,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ProductName": {
                     "type": "string"
@@ -9954,7 +10049,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "limit": {
                     "type": "integer"
@@ -9965,14 +10061,16 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Barcode": {
                     "type": "string",
                     "example": "example"
                 },
                 "Category": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Code": {
                     "type": "string",
@@ -10013,13 +10111,15 @@ var doc = `{
                     "type": "string"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Type": {
                     "type": "string"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "limit": {
                     "type": "integer",
@@ -10035,7 +10135,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Name": {
                     "type": "string"
@@ -10077,7 +10178,8 @@ var doc = `{
                     "example": "example"
                 },
                 "Category": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Code": {
                     "type": "string",
@@ -10222,7 +10324,8 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Products": {
                     "type": "array",
@@ -10236,13 +10339,16 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Config": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Ios": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Key": {
                     "type": "string"

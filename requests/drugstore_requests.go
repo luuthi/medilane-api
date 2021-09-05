@@ -3,22 +3,23 @@ package requests
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	drugstores2 "medilane-api/core/utils/drugstores"
+	"medilane-api/models"
 )
 
 type SearchDrugStoreRequest struct {
-	StoreName   string     `json:"StoreName"  example:"MeTri"`
-	PhoneNumber string     `json:"PhoneNumber"  example:"0988272123"`
-	TaxNumber   string     `json:"TaxNumber" example:"12341231"`
-	LicenseFile string     `json:"LicenseFile" example:"image.img"`
-	Status      string     `json:"Status" example:"active"`
-	Type        string     `json:"Type" example:"parent"`
-	ApproveTime int64      `json:"ApproveTime" example:"1621866181"`
-	AddressID   uint       `json:"AddressID" example:"1"`
-	Limit       int        `json:"limit" example:"10"`
-	Offset      int        `json:"offset" example:"0"`
-	Sort        SortOption `json:"sort"`
-	TimeFrom    *int64     `json:"time_from"`
-	TimeTo      *int64     `json:"time_to"`
+	StoreName   string      `json:"StoreName"  example:"MeTri"`
+	PhoneNumber string      `json:"PhoneNumber"  example:"0988272123"`
+	TaxNumber   string      `json:"TaxNumber" example:"12341231"`
+	LicenseFile string      `json:"LicenseFile" example:"image.img"`
+	Status      string      `json:"Status" example:"active"`
+	Type        string      `json:"Type" example:"parent"`
+	ApproveTime int64       `json:"ApproveTime" example:"1621866181"`
+	AddressID   *models.UID `json:"AddressID"`
+	Limit       int         `json:"limit" example:"10"`
+	Offset      int         `json:"offset" example:"0"`
+	Sort        SortOption  `json:"sort"`
+	TimeFrom    *int64      `json:"time_from"`
+	TimeTo      *int64      `json:"time_to"`
 }
 
 func (rr SearchDrugStoreRequest) Validate() error {
@@ -37,8 +38,8 @@ type DrugStoreRequest struct {
 	TaxNumber   string         `json:"TaxNumber" validate:"required" example:"01293123233"`
 	LicenseFile string         `json:"LicenseFile" validate:"required" example:"asdasdasdasd"`
 	Type        string         `json:"Type" validate:"required" example:"drugstores"`
-	DrugStoreID uint           `json:"DrugStoreID"`
-	AddressID   uint           `json:"AddressID"`
+	DrugStoreID *models.UID    `json:"DrugStoreID"`
+	AddressID   *models.UID    `json:"AddressID"`
 	Address     AddressRequest `json:"Address" validate:"required"`
 }
 
@@ -54,7 +55,7 @@ type EditDrugStoreRequest struct {
 	PhoneNumber string             `json:"PhoneNumber"  example:"0988272123"`
 	TaxNumber   string             `json:"TaxNumber" example:"12341231"`
 	LicenseFile string             `json:"LicenseFile" example:"image.img"`
-	AddressID   uint               `json:"AddressID" example:"1"`
+	AddressID   *models.UID        `json:"AddressID"`
 	Status      string             `json:"Status" example:"active"`
 	ApproveTime int64              `json:"ApproveTime" example:"1622128376"`
 	Address     EditAddressRequest `json:"Address" validate:"required"`
@@ -68,8 +69,8 @@ func (rr EditDrugStoreRequest) Validate() error {
 }
 
 type ConnectiveDrugStoreRequest struct {
-	ParentStoreId uint `json:"ParentStoreId" example:"1"`
-	ChildStoreId  uint `json:"ChildStoreId" example:"1"`
+	ParentStoreId *models.UID `json:"ParentStoreId"`
+	ChildStoreId  *models.UID `json:"ChildStoreId"`
 }
 
 func (rr ConnectiveDrugStoreRequest) Validate() error {

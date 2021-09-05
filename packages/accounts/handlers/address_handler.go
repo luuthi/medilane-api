@@ -70,7 +70,7 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 // @Tags Address Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id address"
+// @Param id path string true "id address"
 // @Success 200 {object} models.Address
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -139,7 +139,7 @@ func (addHandler *AddressHandler) CreateAddress(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.AddressRequest true "Edit address"
-// @Param id path uint true "id address"
+// @Param id path string true "id address"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -187,7 +187,7 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 // @Tags Address Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id address"
+// @Param id path string true "id address"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

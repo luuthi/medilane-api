@@ -73,11 +73,13 @@ func (userService *Service) CreateUser(request *requests2.CreateAccountRequest) 
 			ud := builders2.NewUserDrugStoreBuilder().
 				SetUser(user.ID)
 			if *(request.IsAdmin) {
-				ud.SetDrugStoreId(*request.DrugStoreID).
+				did := uint(request.DrugStoreID.GetLocalID())
+				ud.SetDrugStoreId(did).
 					SetRelationship(string(utils2.IS_MANAGER)).
 					Build()
 			} else {
-				ud.SetDrugStoreId(*request.DrugStoreID).
+				did := uint(request.DrugStoreID.GetLocalID())
+				ud.SetDrugStoreId(did).
 					SetRelationship(string(utils2.IS_STAFF)).
 					Build()
 			}
@@ -94,11 +96,13 @@ func (userService *Service) CreateUser(request *requests2.CreateAccountRequest) 
 			up := builders.NewUserPartnerBuilder().
 				SetUser(user.ID)
 			if *(request.IsAdmin) {
-				up.SetPartnerID(*request.PartnerID).
+				pid := uint(request.PartnerID.GetLocalID())
+				up.SetPartnerID(pid).
 					SetRelationship(string(utils2.IS_MANAGER)).
 					Build()
 			} else {
-				up.SetPartnerID(*request.PartnerID).
+				pid := uint(request.PartnerID.GetLocalID())
+				up.SetPartnerID(pid).
 					SetRelationship(string(utils2.IS_STAFF)).
 					Build()
 			}
@@ -133,17 +137,20 @@ func (userService *Service) RegisterDrugStore(request *requests2.RegisterRequest
 	// query area config
 	var areaConfig models.AreaConfig
 	tx.Table(utils2.TblAreaConfig).Where("province = ?", drugStoreReq.Address.Province).First(&areaConfig)
+	areaConfig.Mask()
 	if areaConfig.District == "All" {
-		drugStoreReq.Address.AreaID = areaConfig.AreaID
+		drugStoreReq.Address.AreaID = areaConfig.FakeAreaID
 	} else {
 		var areaConfig1 models.AreaConfig
 		tx.Table(utils2.TblAreaConfig).
 			Where("province = ? AND district = ?", drugStoreReq.Address.Province, drugStoreReq.Address.District).
 			First(&areaConfig1)
+		areaConfig1.Mask()
 		if areaConfig1.ID != 0 {
-			drugStoreReq.Address.AreaID = areaConfig1.AreaID
+			drugStoreReq.Address.AreaID = areaConfig1.FakeAreaID
 		} else {
-			drugStoreReq.Address.AreaID = 1
+			defaultAreaId := models.NewUID(1, utils2.DBTypeArea, 1)
+			drugStoreReq.Address.AreaID = &defaultAreaId
 		}
 	}
 

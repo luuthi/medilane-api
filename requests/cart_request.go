@@ -6,16 +6,16 @@ import (
 )
 
 //type SearchCartItemRequest struct {
-//	UserID uint `json:"UserID"`
+//	UserID *models.UID `json:"UserID"`
 //}
 
 type CartItemRequest struct {
-	Cost      float32 `json:"Cost"`
-	Quantity  int     `json:"Quantity"`
-	Discount  float32 `json:"Discount"`
-	CartID    uint    `json:"CartID"`
-	ProductID uint    `json:"ProductID"`
-	VariantID uint    `json:"VariantID"`
+	Cost      float32     `json:"Cost"`
+	Quantity  int         `json:"Quantity"`
+	Discount  float32     `json:"Discount"`
+	CartID    *models.UID `json:"CartID"`
+	ProductID *models.UID `json:"ProductID"`
+	VariantID *models.UID `json:"VariantID"`
 }
 
 func (rr CartItemRequest) Validate() error {
@@ -23,14 +23,14 @@ func (rr CartItemRequest) Validate() error {
 		validation.Field(&rr.Cost, validation.Min(float32(0))),
 		validation.Field(&rr.Quantity, validation.Min(int(0))),
 		validation.Field(&rr.Discount, validation.Min(float32(0))),
-		validation.Field(&rr.CartID, validation.Min(uint(0))),
-		validation.Field(&rr.ProductID, validation.Min(uint(0))),
-		validation.Field(&rr.VariantID, validation.Min(uint(0))),
+		validation.Field(&rr.CartID, validation.NotNil),
+		validation.Field(&rr.ProductID, validation.NotNil),
+		validation.Field(&rr.VariantID, validation.NotNil),
 	)
 }
 
 type CartRequest struct {
-	CartDetails []models.CartDetail `json:"cart_details"`
+	CartDetails []CartItemRequest `json:"cart_details"`
 }
 
 func (rr CartRequest) Validate() error {
@@ -38,9 +38,9 @@ func (rr CartRequest) Validate() error {
 }
 
 type CartItemDelete struct {
-	CartItemId uint `json:"CartItemId"`
+	CartItemId *models.UID `json:"CartItemId"`
 }
 
 type CartDelete struct {
-	CartId uint `json:"CartId"`
+	CartId *models.UID `json:"CartId"`
 }

@@ -50,7 +50,7 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/responses.Data"
                         }
                     },
                     "400": {
@@ -165,7 +165,7 @@
                 "operationId": "get-account",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -234,7 +234,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -294,7 +294,7 @@
                 "operationId": "delete-account",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -365,7 +365,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -620,7 +620,7 @@
                 "operationId": "get-address",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id address",
                         "name": "id",
                         "in": "path",
@@ -689,7 +689,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id address",
                         "name": "id",
                         "in": "path",
@@ -749,7 +749,7 @@
                 "operationId": "delete-address",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id address",
                         "name": "id",
                         "in": "path",
@@ -1003,7 +1003,7 @@
                 "operationId": "get-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1072,7 +1072,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1132,7 +1132,7 @@
                 "operationId": "delete-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1194,7 +1194,7 @@
                 "operationId": "config-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1265,7 +1265,7 @@
                 "operationId": "get-products-of-area",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id area",
                         "name": "id",
                         "in": "path",
@@ -1826,7 +1826,7 @@
                 "operationId": "delete-cart",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id cart",
                         "name": "id",
                         "in": "path",
@@ -1888,7 +1888,7 @@
                 "operationId": "delete-cart-item",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id cart item",
                         "name": "id",
                         "in": "path",
@@ -2087,7 +2087,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Category",
                         "name": "id",
                         "in": "path",
@@ -2147,7 +2147,7 @@
                 "operationId": "delete-category",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Category",
                         "name": "id",
                         "in": "path",
@@ -2337,7 +2337,7 @@
                 "operationId": "get-type-connective-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2399,7 +2399,7 @@
                 "operationId": "get-list-connective-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2578,7 +2578,7 @@
                 "operationId": "get-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2647,7 +2647,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2707,7 +2707,7 @@
                 "operationId": "delete-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id drugstore",
                         "name": "id",
                         "in": "path",
@@ -2769,7 +2769,7 @@
                 "operationId": "search-account-drugstore",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id of drugstore",
                         "name": "id",
                         "in": "path",
@@ -3002,7 +3002,7 @@
                 "operationId": "mark-all-notification-as-read",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id user",
                         "name": "id",
                         "in": "path",
@@ -3128,7 +3128,7 @@
                 "operationId": "mark-notification-as-read",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id notification",
                         "name": "id",
                         "in": "path",
@@ -3435,7 +3435,7 @@
                 "operationId": "get-order",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id order",
                         "name": "id",
                         "in": "path",
@@ -3504,7 +3504,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id order",
                         "name": "id",
                         "in": "path",
@@ -3564,7 +3564,7 @@
                 "operationId": "delete-order",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id order",
                         "name": "id",
                         "in": "path",
@@ -3754,7 +3754,7 @@
                 "operationId": "get-partner",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id partner",
                         "name": "id",
                         "in": "path",
@@ -3823,7 +3823,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id partner",
                         "name": "id",
                         "in": "path",
@@ -3883,7 +3883,7 @@
                 "operationId": "delete-partner",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id partner",
                         "name": "id",
                         "in": "path",
@@ -4082,7 +4082,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id permission",
                         "name": "id",
                         "in": "path",
@@ -4142,7 +4142,7 @@
                 "operationId": "delete-permission",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id permission",
                         "name": "id",
                         "in": "path",
@@ -4460,7 +4460,7 @@
                 "operationId": "get-product",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4535,7 +4535,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4595,7 +4595,7 @@
                 "operationId": "delete-product",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4657,7 +4657,7 @@
                 "operationId": "get-pure-product",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id product",
                         "name": "id",
                         "in": "path",
@@ -4975,7 +4975,7 @@
                 "operationId": "get-promotion",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5044,7 +5044,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5104,7 +5104,7 @@
                 "operationId": "delete-promotion",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5166,7 +5166,7 @@
                 "operationId": "create-promotion-detail",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5235,7 +5235,7 @@
                 "operationId": "delete-promotion-detail-by-promotion",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5306,7 +5306,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5377,7 +5377,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5444,7 +5444,7 @@
                 "operationId": "delete-promotion-detail",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5522,7 +5522,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion",
                         "name": "id",
                         "in": "path",
@@ -5849,7 +5849,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id role",
                         "name": "id",
                         "in": "path",
@@ -5909,7 +5909,7 @@
                 "operationId": "delete-role",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id role",
                         "name": "id",
                         "in": "path",
@@ -6108,7 +6108,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id account",
                         "name": "id",
                         "in": "path",
@@ -6563,7 +6563,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Tag",
                         "name": "id",
                         "in": "path",
@@ -6623,7 +6623,7 @@
                 "operationId": "delete-tag",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Tag",
                         "name": "id",
                         "in": "path",
@@ -6813,7 +6813,7 @@
                 "operationId": "get-variant",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Variant",
                         "name": "id",
                         "in": "path",
@@ -6882,7 +6882,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Variant",
                         "name": "id",
                         "in": "path",
@@ -6942,7 +6942,7 @@
                 "operationId": "delete-variant",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id Variant",
                         "name": "id",
                         "in": "path",
@@ -7132,7 +7132,7 @@
                 "operationId": "get-voucher",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id voucher",
                         "name": "id",
                         "in": "path",
@@ -7201,7 +7201,7 @@
                         }
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id voucher",
                         "name": "id",
                         "in": "path",
@@ -7261,7 +7261,7 @@
                 "operationId": "delete-voucher",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id voucher",
                         "name": "id",
                         "in": "path",
@@ -7362,7 +7362,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7373,13 +7374,16 @@
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Config": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Ios": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Key": {
                     "type": "string"
@@ -7388,7 +7392,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7420,7 +7425,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "products": {
                     "type": "array",
@@ -7441,7 +7447,8 @@
                     "$ref": "#/definitions/models.Area"
                 },
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "District": {
                     "type": "string"
@@ -7449,7 +7456,14 @@
                 "Province": {
                     "type": "string"
                 },
+                "created_at": {
+                    "type": "integer"
+                },
                 "id": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
+                },
+                "updated_at": {
                     "type": "integer"
                 }
             }
@@ -7470,7 +7484,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7490,13 +7505,15 @@
                     }
                 },
                 "UserID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7507,7 +7524,8 @@
             "type": "object",
             "properties": {
                 "CartID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Cost": {
                     "type": "number"
@@ -7520,7 +7538,8 @@
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Quantity": {
                     "type": "integer"
@@ -7530,13 +7549,15 @@
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7571,7 +7592,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7586,7 +7608,8 @@
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ApproveBy": {
                     "type": "object",
@@ -7661,7 +7684,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7678,7 +7702,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7711,13 +7736,15 @@
                     "$ref": "#/definitions/models.User"
                 },
                 "UserId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7732,13 +7759,15 @@
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Discount": {
                     "type": "number"
                 },
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Drugstore": {
                     "type": "object",
@@ -7761,7 +7790,8 @@
                     "$ref": "#/definitions/models.PaymentMethod"
                 },
                 "PaymentMethodID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ShippingFee": {
                     "type": "number"
@@ -7783,14 +7813,16 @@
                     "$ref": "#/definitions/models.User"
                 },
                 "UserApproveID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "UserOrder": {
                     "type": "object",
                     "$ref": "#/definitions/models.User"
                 },
                 "UserOrderID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Vat": {
                     "type": "number"
@@ -7799,7 +7831,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "oldStatus": {
                     "type": "string"
@@ -7819,14 +7852,16 @@
                     "type": "number"
                 },
                 "OrderID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Product": {
                     "type": "object",
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Quantity": {
                     "type": "integer"
@@ -7836,13 +7871,15 @@
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7883,7 +7920,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "orderStoreDetails": {
                     "type": "array",
@@ -7929,7 +7967,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7944,7 +7983,8 @@
                     "$ref": "#/definitions/models.Address"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Email": {
                     "type": "string"
@@ -7975,7 +8015,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -7995,7 +8036,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8015,7 +8057,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8132,13 +8175,15 @@
                     "$ref": "#/definitions/models.Voucher"
                 },
                 "VoucherId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8236,7 +8281,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8247,7 +8293,8 @@
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Avatar": {
                     "type": "string"
@@ -8274,7 +8321,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "promotionDetails": {
                     "type": "array",
@@ -8301,14 +8349,16 @@
                     "$ref": "#/definitions/models.Product"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Promotion": {
                     "type": "object",
                     "$ref": "#/definitions/models.Promotion"
                 },
                 "PromotionID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Type": {
                     "type": "string"
@@ -8321,16 +8371,19 @@
                     "$ref": "#/definitions/models.Variant"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "VoucherID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "created_at": {
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8360,7 +8413,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "permissions": {
                     "type": "array",
@@ -8386,12 +8440,16 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
                 }
             }
+        },
+        "models.UID": {
+            "type": "object"
         },
         "models.User": {
             "type": "object",
@@ -8448,7 +8506,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8465,7 +8524,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8531,7 +8591,8 @@
                     "type": "integer"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "updated_at": {
                     "type": "integer"
@@ -8558,8 +8619,8 @@
                     "example": "Quan Hoa"
                 },
                 "AreaID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ContactName": {
                     "type": "string",
@@ -8578,7 +8639,8 @@
                     "example": "Cầu giấy"
                 },
                 "Id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsDefault": {
                     "type": "boolean",
@@ -8619,7 +8681,8 @@
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8645,7 +8708,7 @@
                 "DrugStoresIdLst": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 }
             }
@@ -8657,7 +8720,8 @@
                     "type": "integer"
                 },
                 "Id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "StartTime": {
                     "type": "integer"
@@ -8674,7 +8738,8 @@
             "type": "object",
             "properties": {
                 "CartID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Cost": {
                     "type": "number"
@@ -8683,13 +8748,15 @@
                     "type": "number"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Quantity": {
                     "type": "integer"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8699,7 +8766,7 @@
                 "cart_details": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.CartDetail"
+                        "$ref": "#/definitions/requests.CartItemRequest"
                     }
                 }
             }
@@ -8727,7 +8794,7 @@
                 "ProductsId": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 },
                 "Status": {
@@ -8740,12 +8807,12 @@
             "type": "object",
             "properties": {
                 "ChildStoreId": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ParentStoreId": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8756,7 +8823,8 @@
                     "type": "number"
                 },
                 "ProductId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8772,7 +8840,8 @@
             ],
             "properties": {
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsAdmin": {
                     "type": "boolean",
@@ -8783,7 +8852,8 @@
                     "example": "John Doe"
                 },
                 "PartnerID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Roles": {
                     "type": "array",
@@ -8827,7 +8897,8 @@
                     "type": "string"
                 },
                 "User": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -8874,7 +8945,7 @@
                 "BannerListId": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 }
             }
@@ -8895,10 +8966,12 @@
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "LicenseFile": {
                     "type": "string",
@@ -8926,7 +8999,8 @@
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -8990,8 +9064,8 @@
                     "example": "Quan Hoa"
                 },
                 "AreaID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ContactName": {
                     "type": "string",
@@ -9010,7 +9084,8 @@
                     "example": "Cầu giấy"
                 },
                 "Id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsDefault": {
                     "type": "boolean",
@@ -9052,8 +9127,8 @@
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "AddressID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ApproveTime": {
                     "type": "integer",
@@ -9088,13 +9163,15 @@
                     "type": "string"
                 },
                 "PaymentMethodID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Status": {
                     "type": "string"
                 },
                 "UserApproveID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -9177,13 +9254,15 @@
             "type": "object",
             "properties": {
                 "AddressID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Discount": {
                     "type": "number"
                 },
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Note": {
                     "type": "string"
@@ -9198,7 +9277,8 @@
                     }
                 },
                 "PaymentMethodID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ShippingFee": {
                     "type": "number"
@@ -9216,10 +9296,12 @@
                     "type": "string"
                 },
                 "UserApproveID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "UserOrderID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Vat": {
                     "type": "number"
@@ -9230,7 +9312,8 @@
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9250,7 +9333,8 @@
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9308,7 +9392,7 @@
                 "Categories": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 },
                 "Code": {
@@ -9374,7 +9458,7 @@
                 "Tags": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 },
                 "Unit": {
@@ -9384,7 +9468,7 @@
                 "Variants": {
                     "type": "array",
                     "items": {
-                        "type": "integer"
+                        "$ref": "#/definitions/models.UID"
                     }
                 }
             }
@@ -9393,7 +9477,8 @@
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "interval": {
                     "type": "string",
@@ -9431,10 +9516,12 @@
                     "type": "number"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "PromotionID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Type": {
                     "type": "string"
@@ -9443,13 +9530,16 @@
                     "type": "number"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "VoucherID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "id": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },
@@ -9475,7 +9565,8 @@
             ],
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Avatar": {
                     "type": "string"
@@ -9529,7 +9620,8 @@
             ],
             "properties": {
                 "DrugStoreID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "IsAdmin": {
                     "type": "boolean",
@@ -9540,7 +9632,8 @@
                     "example": "John Doe"
                 },
                 "PartnerID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Roles": {
                     "type": "array",
@@ -9661,8 +9754,8 @@
                     "example": "Hanoi"
                 },
                 "AreaID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ContactName": {
                     "type": "string",
@@ -9756,8 +9849,8 @@
             "type": "object",
             "properties": {
                 "AddressID": {
-                    "type": "integer",
-                    "example": 1
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ApproveTime": {
                     "type": "integer",
@@ -9811,7 +9904,8 @@
             "type": "object",
             "properties": {
                 "UserId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "limit": {
                     "type": "integer",
@@ -9916,7 +10010,8 @@
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "ProductName": {
                     "type": "string"
@@ -9939,7 +10034,8 @@
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "limit": {
                     "type": "integer"
@@ -9950,14 +10046,16 @@
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Barcode": {
                     "type": "string",
                     "example": "example"
                 },
                 "Category": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Code": {
                     "type": "string",
@@ -9998,13 +10096,15 @@
                     "type": "string"
                 },
                 "ProductID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Type": {
                     "type": "string"
                 },
                 "VariantID": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "limit": {
                     "type": "integer",
@@ -10020,7 +10120,8 @@
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Name": {
                     "type": "string"
@@ -10062,7 +10163,8 @@
                     "example": "example"
                 },
                 "Category": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Code": {
                     "type": "string",
@@ -10207,7 +10309,8 @@
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "integer"
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 },
                 "Products": {
                     "type": "array",
@@ -10221,13 +10324,16 @@
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Config": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Ios": {
-                    "type": "string"
+                    "type": "object",
+                    "additionalProperties": true
                 },
                 "Key": {
                     "type": "string"

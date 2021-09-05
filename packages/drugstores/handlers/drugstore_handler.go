@@ -74,7 +74,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id drugstore"
+// @Param id path string true "id drugstore"
 // @Success 200 {object} models.DrugStore
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -140,7 +140,7 @@ func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error 
 // @Accept json
 // @Produce json
 // @Param params body requests.EditDrugStoreRequest true "body drugstore"
-// @Param id path uint true "id drugstore"
+// @Param id path string true "id drugstore"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -188,7 +188,7 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id drugstore"
+// @Param id path string true "id drugstore"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -238,11 +238,11 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 	drugstoreRepository := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	var parentStore, childStore models.DrugStore
 	var err error
-	err = drugstoreRepository.GetDrugstoreByID(&parentStore, drugstore.ParentStoreId)
+	err = drugstoreRepository.GetDrugstoreByID(&parentStore, uint(drugstore.ParentStoreId.GetLocalID()))
 	if err != nil {
 		panic(err)
 	}
-	err = drugstoreRepository.GetDrugstoreByID(&childStore, drugstore.ChildStoreId)
+	err = drugstoreRepository.GetDrugstoreByID(&childStore, uint(drugstore.ChildStoreId.GetLocalID()))
 	if err != nil {
 		panic(err)
 	}
@@ -267,7 +267,7 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("Can't connective drugstores same id"))))
 	}
 
-	typeStore, _, err := checkTypeOfDrugStoreInRelationship(drugstore.ChildStoreId, drugStoreHandler.server.DB)
+	typeStore, _, err := checkTypeOfDrugStoreInRelationship(uint(drugstore.ChildStoreId.GetLocalID()), drugStoreHandler.server.DB)
 	if err != nil {
 		panic(err)
 	}
@@ -277,7 +277,7 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 
 	var childStoreRelationship models.DrugStoreRelationship
 	storeRelationshipRepo := repositories2.NewDrugStoreRelationshipRepository(drugStoreHandler.server.DB)
-	err = storeRelationshipRepo.GetDrugstoreChildByID(&childStoreRelationship, drugstore.ChildStoreId)
+	err = storeRelationshipRepo.GetDrugstoreChildByID(&childStoreRelationship, uint(drugstore.ChildStoreId.GetLocalID()))
 	if err != nil {
 		panic(err)
 	}
@@ -301,7 +301,7 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id drugstore"
+// @Param id path string true "id drugstore"
 // @Success 201 {object} responses.DrugStoreSearch
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -360,7 +360,7 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id drugstore"
+// @Param id path string true "id drugstore"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -425,7 +425,7 @@ func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint, err
 // @Tags Drugstore Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id of drugstore"
+// @Param id path string true "id of drugstore"
 // @Success 200 {object} responses.UserSearch
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -442,10 +442,9 @@ func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Contex
 
 	drugStoreHandler.server.Logger.Info("search account in store")
 	var accounts []models.User
-	var total int64
 
 	drugStoreRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
-	err = drugStoreRepo.GetUsersByDrugstore(&accounts, &total, idStore)
+	err = drugStoreRepo.GetUsersByDrugstore(&accounts, idStore)
 	if err != nil {
 		panic(err)
 	}
@@ -453,7 +452,7 @@ func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Contex
 	return responses.SearchResponse(c, responses3.UserSearch{
 		Code:    http.StatusOK,
 		Message: "",
-		Total:   total,
+		Total:   int64(len(accounts)),
 		Data:    accounts,
 	})
 }

@@ -61,7 +61,12 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	medicines, err = productRepo.GetProducts(&total, searchRequest, claims.UserId, claims.Type, searchRequest.AreaId)
+
+	var areaId uint
+	if searchRequest.AreaId != nil {
+		areaId = uint(searchRequest.AreaId.GetLocalID())
+	}
+	medicines, err = productRepo.GetProducts(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type, areaId)
 	if err != nil {
 		panic(err)
 	}
@@ -120,7 +125,7 @@ func (productHandler *ProductHandler) SearchPureProduct(c echo.Context) error {
 // @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id product"
+// @Param id path string true "id product"
 // @Success 200 {object} models.Product
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -184,7 +189,7 @@ func (productHandler *ProductHandler) SearchSuggestProduct(c echo.Context) error
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	medicines, err = productRepo.GetSuggestProducts(searchRequest, claims.UserId, claims.Type)
+	medicines, err = productRepo.GetSuggestProducts(searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
 	if err != nil {
 		panic(err)
 	}
@@ -237,7 +242,7 @@ func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.ProductRequest true "body product"
-// @Param id path uint true "id product"
+// @Param id path string true "id product"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -286,7 +291,7 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 // @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id product"
+// @Param id path string true "id product"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -315,7 +320,7 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Tags Product Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id product"
+// @Param id path string true "id product"
 // @Param area_id query uint false "area id"
 // @Success 200 {object} models.Product
 // @Failure 400 {object} errorHandling.AppError
@@ -351,7 +356,7 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 
 	var existedProduct *models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
-	existedProduct, err = medicineRepo.GetProductByIdCost(id, claims.UserId, claims.Type, areaId)
+	existedProduct, err = medicineRepo.GetProductByIdCost(id, uint(claims.UserId.GetLocalID()), claims.Type, areaId)
 	if err != nil {
 		panic(err)
 	}
@@ -396,19 +401,20 @@ func (productHandler *ProductHandler) ChangeStatusProducts(c echo.Context) error
 
 	for _, v := range medi.ProductsId {
 		var product models.Product
-		err := productRepo.GetProductById(&product, v)
+		var id = uint(v.GetLocalID())
+		err := productRepo.GetProductById(&product, id)
 		if err != nil {
 			panic(err)
 		}
 
 		if product.Code == "" {
-			listErrNotFoundProduct = append(listErrNotFoundProduct, v)
+			listErrNotFoundProduct = append(listErrNotFoundProduct, id)
 		}
 		mediService := medicine.NewProductService(productHandler.server.DB)
-		if err := mediService.ChangeStatusProduct(v, medi.Status); err != nil {
-			listErrChangeStatus = append(listErrChangeStatus, v)
+		if err := mediService.ChangeStatusProduct(id, medi.Status); err != nil {
+			listErrChangeStatus = append(listErrChangeStatus, id)
 		} else {
-			listChangeStatusSuccess = append(listChangeStatusSuccess, v)
+			listChangeStatusSuccess = append(listChangeStatusSuccess, id)
 		}
 	}
 	messageDetail := response2.MessageDetail{

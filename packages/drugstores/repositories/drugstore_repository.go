@@ -175,12 +175,12 @@ func (DrugStoreRepository *DrugStoreRepository) GetListRelationshipStore(parentS
 	return
 }
 
-func (DrugStoreRepository *DrugStoreRepository) GetUsersByDrugstore(users *[]models.User, total *int64, drugStoreID uint) error {
-	return DrugStoreRepository.DB.Table(utils2.TblAccount).Select("user.* ").
-		Count(total).
+func (DrugStoreRepository *DrugStoreRepository) GetUsersByDrugstore(users *[]models.User, drugStoreID uint) error {
+	return DrugStoreRepository.DB.Table(utils2.TblAccount).
 		Preload("Roles").
 		Joins("JOIN drug_store_user du ON du.user_id = user.id ").
-		Where(fmt.Sprintf("du.drug_store_id = \"%v\"", drugStoreID)).Find(&users).Error
+		Where("du.drug_store_id = ?", drugStoreID).
+		Find(&users).Error
 }
 
 func (DrugStoreRepository *DrugStoreRepository) StatisticNewDrugStore(drugstore *[]responses.StatisticNewDrugStore, timeFrom, timeTo uint64) error {

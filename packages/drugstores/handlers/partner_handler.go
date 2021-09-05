@@ -68,7 +68,7 @@ func (partnerHandler *PartnerHandler) SearchPartner(c echo.Context) error {
 // @Tags Partner Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id partner"
+// @Param id path string true "id partner"
 // @Success 200 {object} models.Partner
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -134,7 +134,7 @@ func (partnerHandler *PartnerHandler) CreatePartner(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.EditPartnerRequest true "body partner"
-// @Param id path uint true "id partner"
+// @Param id path string true "id partner"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -182,7 +182,7 @@ func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
 // @Tags Partner Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id partner"
+// @Param id path string true "id partner"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

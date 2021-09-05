@@ -70,7 +70,7 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 // @Tags Variant-Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id Variant"
+// @Param id path string true "id Variant"
 // @Success 200 {object} models.Variant
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -137,7 +137,7 @@ func (variantHandler *VariantHandler) CreateVariant(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.VariantRequest true "body Variant"
-// @Param id path uint true "id Variant"
+// @Param id path string true "id Variant"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -185,7 +185,7 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 // @Tags Variant-Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id Variant"
+// @Param id path string true "id Variant"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

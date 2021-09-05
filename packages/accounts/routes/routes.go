@@ -70,5 +70,6 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	address.POST("/find", addressHandler.SearchAddress, authentication.CheckPermission(server, []string{"read:address"}, false))
 	address.POST("", addressHandler.CreateAddress, authentication.CheckPermission(server, []string{"create:address"}, false))
 	address.PUT("/:id", addressHandler.EditAddress, authentication.CheckPermission(server, []string{"edit:address"}, false))
+	address.GET("/:id", addressHandler.GetAddress, authentication.CheckPermission(server, []string{"read:address"}, false))
 	address.DELETE("/:id", addressHandler.DeleteAddress, authentication.CheckPermission(server, []string{"delete:address"}, false))
 }

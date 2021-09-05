@@ -3,8 +3,8 @@ package builders
 import "medilane-api/models"
 
 type DrugStoreUserBuilder struct {
-	DrugStoreId uint
-	UserId uint
+	DrugStoreId  uint
+	UserId       uint
 	Relationship string
 }
 
@@ -29,8 +29,8 @@ func (DrugStoreUserBuilder *DrugStoreUserBuilder) SetRelationship(relationship s
 
 func (DrugStoreUserBuilder *DrugStoreUserBuilder) Build() models.DrugStoreUser {
 	addr := models.DrugStoreUser{
-		DrugStoreID: DrugStoreUserBuilder.DrugStoreId,
-		UserID: DrugStoreUserBuilder.UserId,
+		DrugStoreID:  DrugStoreUserBuilder.DrugStoreId,
+		UserID:       DrugStoreUserBuilder.UserId,
 		Relationship: DrugStoreUserBuilder.Relationship,
 	}
 

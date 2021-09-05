@@ -19,7 +19,8 @@ type DrugStore struct {
 	Status         string          `json:"Status,omitempty" gorm:"type:varchar(200)"`
 	Type           string          `json:"Type,omitempty" gorm:"type:varchar(200)"`
 	ApproveTime    int64           `json:"ApproveTime,omitempty"`
-	AddressID      uint            `json:"AddressID,omitempty"`
+	AddressID      uint            `json:"-"`
+	FakeAddressID  *UID            `json:"AddressID" gorm:"-"`
 	Users          []*User         `json:"Users,omitempty" gorm:"many2many:drug_store_user"`
 	ChildStores    []*DrugStore    `json:"ChildStores,omitempty" gorm:"-"`
 	Vouchers       []*Voucher      `json:"Vouchers,omitempty" gorm:"-"`
@@ -34,8 +35,14 @@ func (ds *DrugStore) AfterFind(tx *gorm.DB) (err error) {
 	return nil
 }
 
+func (ds *DrugStore) GenAddressID() {
+	uid := NewUID(uint32(ds.AddressID), utils.DBTypeAddress, 1)
+	ds.FakeAddressID = &uid
+}
+
 func (ds *DrugStore) Mask() {
 	ds.GenUID(utils.DBTypeDrugstore)
+	ds.GenAddressID()
 }
 
 func (ds *DrugStore) AfterCreate(tx *gorm.DB) (err error) {

@@ -35,7 +35,7 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 		SetNote(request.Note).
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
-		SetAreaId(request.AreaId).
+		SetAreaId(uint(request.AreaId.GetLocalID())).
 		SetStatus(true).
 		SetDeleted(false).
 		SetAvatar(request.Avatar).
@@ -63,14 +63,14 @@ func (promoService *Service) CreatePromotion(request *requests.PromotionWithDeta
 				SetCondition(detail.Condition).
 				SetPercent(*detail.Percent).
 				SetValue(*detail.Value).
-				SetProductId(detail.ProductID).
-				SetVariantId(detail.VariantID)
+				SetProductId(uint(detail.ProductID.GetLocalID())).
+				SetVariantId(uint(detail.VariantID.GetLocalID()))
 			if detail.Type == string(utils2.PERCENT) {
 				promotionDetailBuidler.
 					SetVoucherID(defaultVoucher.ID)
 			} else {
 				promotionDetailBuidler.
-					SetVoucherID(detail.VoucherID)
+					SetVoucherID(uint(detail.VoucherID.GetLocalID()))
 			}
 			promotionDetail := promotionDetailBuidler.Build()
 			promotionDetails = append(promotionDetails, promotionDetail)
@@ -97,7 +97,7 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 		SetEndTime(request.EndTime).
 		SetStatus(*request.Status).
 		SetDeleted(false).
-		SetAreaId(request.AreaId).
+		SetAreaId(uint(request.AreaId.GetLocalID())).
 		SetAvatar(request.Avatar).
 		SetID(id).
 		Build()
@@ -122,22 +122,22 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 	var updatedItemID []uint
 	promotionDetails := make([]models.PromotionDetail, 0)
 	for _, v := range request.PromotionDetails {
-		if v.ID == 0 {
+		if v.ID == nil {
 			promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 				SetPromotionID(id).
 				SetType(v.Type).
 				SetCondition(v.Condition).
 				SetPercent(*v.Percent).
 				SetValue(*v.Value).
-				SetProductId(v.ProductID).
-				SetVariantId(v.VariantID)
+				SetProductId(uint(v.ProductID.GetLocalID())).
+				SetVariantId(uint(v.VariantID.GetLocalID()))
 
 			if v.Type == string(utils2.PERCENT) {
 				promotionDetailBuidler.
 					SetVoucherID(defaultVoucher.ID)
 			} else {
 				promotionDetailBuidler.
-					SetVoucherID(v.VoucherID)
+					SetVoucherID(uint(v.VoucherID.GetLocalID()))
 			}
 			promotionDetail := promotionDetailBuidler.Build()
 			err := tx.Table(utils2.TblPromotionDetail).Create(&promotionDetail).Error
@@ -153,20 +153,20 @@ func (promoService *Service) EditPromotionWithDetail(request *requests.Promotion
 				SetCondition(v.Condition).
 				SetPercent(*v.Percent).
 				SetValue(*v.Value).
-				SetProductId(v.ProductID).
-				SetVariantId(v.VariantID).
-				SetId(v.ID)
+				SetProductId(uint(v.ProductID.GetLocalID())).
+				SetVariantId(uint(v.VariantID.GetLocalID())).
+				SetId(uint(v.ID.GetLocalID()))
 
 			if v.Type == string(utils2.PERCENT) {
 				promotionDetailBuidler.
 					SetVoucherID(defaultVoucher.ID)
 			} else {
 				promotionDetailBuidler.
-					SetVoucherID(v.VoucherID)
+					SetVoucherID(uint(v.VoucherID.GetLocalID()))
 			}
 			promotionDetail := promotionDetailBuidler.Build()
 
-			updatedItemID = append(updatedItemID, v.ID)
+			updatedItemID = append(updatedItemID, uint(v.ID.GetLocalID()))
 			err := tx.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error
 			promotionDetails = append(promotionDetails, promotionDetail)
 			if err != nil {
@@ -195,7 +195,7 @@ func (promoService *Service) EditPromotion(request *requests.PromotionRequest, i
 		SetNote(request.Note).
 		SetStartTime(request.StartTime).
 		SetEndTime(request.EndTime).
-		SetAreaId(request.AreaId).
+		SetAreaId(uint(request.AreaId.GetLocalID())).
 		SetStatus(*request.Status).
 		SetAvatar(request.Avatar).
 		SetDeleted(false).
@@ -223,20 +223,20 @@ func (promoService *Service) CreatePromotionDetail(request []*requests.Promotion
 	promotionDetails := make([]models.PromotionDetail, len(request))
 	for _, detail := range request {
 		promotionDetailBuidler := builders.NewPromotionDetailBuilder().
-			SetPromotionID(detail.PromotionID).
+			SetPromotionID(uint(detail.PromotionID.GetLocalID())).
 			SetType(detail.Type).
 			SetCondition(detail.Condition).
 			SetPercent(*detail.Percent).
 			SetValue(*detail.Value).
-			SetProductId(detail.ProductID).
-			SetVariantId(detail.VariantID)
+			SetProductId(uint(detail.ProductID.GetLocalID())).
+			SetVariantId(uint(detail.VariantID.GetLocalID()))
 
 		if detail.Type == string(utils2.PERCENT) {
 			promotionDetailBuidler.
 				SetVoucherID(defaultVoucher.ID)
 		} else {
 			promotionDetailBuidler.
-				SetVoucherID(detail.VoucherID)
+				SetVoucherID(uint(detail.VoucherID.GetLocalID()))
 		}
 		promotionDetail := promotionDetailBuidler.Build()
 
@@ -255,20 +255,20 @@ func (promoService *Service) EditPromotionDetail(request *requests.PromotionDeta
 
 	promotionDetailBuidler := builders.NewPromotionDetailBuilder().
 		SetId(promotionDetailID).
-		SetPromotionID(request.PromotionID).
+		SetPromotionID(uint(request.PromotionID.GetLocalID())).
 		SetType(request.Type).
 		SetCondition(request.Condition).
 		SetPercent(*request.Percent).
 		SetValue(*request.Value).
-		SetProductId(request.ProductID).
-		SetVariantId(request.VariantID)
+		SetProductId(uint(request.ProductID.GetLocalID())).
+		SetVariantId(uint(request.VariantID.GetLocalID()))
 
 	if request.Type == string(utils2.PERCENT) {
 		promotionDetailBuidler.
 			SetVoucherID(defaultVoucher.ID)
 	} else {
 		promotionDetailBuidler.
-			SetVoucherID(request.VoucherID)
+			SetVoucherID(uint(request.VoucherID.GetLocalID()))
 	}
 	promotionDetail := promotionDetailBuidler.Build()
 	return promoService.DB.Table(utils2.TblPromotionDetail).Updates(&promotionDetail).Error

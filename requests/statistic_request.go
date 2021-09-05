@@ -3,13 +3,14 @@ package requests
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"medilane-api/core/utils"
+	"medilane-api/models"
 )
 
 type DrugStoreStatisticRequest struct {
-	TimeFrom int64  `json:"time_from" example:"1603012735651"`
-	TimeTo   int64  `json:"time_to" example:"1696192735651"`
-	AreaId   uint   `json:"area_id"`
-	Interval string `json:"interval" example:"day/month"`
+	TimeFrom int64       `json:"time_from" example:"1603012735651"`
+	TimeTo   int64       `json:"time_to" example:"1696192735651"`
+	AreaId   *models.UID `json:"area_id"`
+	Interval string      `json:"interval" example:"day/month"`
 }
 
 func (rr DrugStoreStatisticRequest) Validate() error {
@@ -21,11 +22,11 @@ func (rr DrugStoreStatisticRequest) Validate() error {
 }
 
 type ProductStatisticCountRequest struct {
-	TimeFrom int64  `json:"time_from" example:"1603012735651"`
-	TimeTo   int64  `json:"time_to" example:"1696192735651"`
-	AreaId   uint   `json:"area_id"`
-	Interval string `json:"interval" example:"day/month"`
-	Top      int64  `json:"top" example:"5"`
+	TimeFrom int64       `json:"time_from" example:"1603012735651"`
+	TimeTo   int64       `json:"time_to" example:"1696192735651"`
+	AreaId   *models.UID `json:"area_id"`
+	Interval string      `json:"interval" example:"day/month"`
+	Top      int64       `json:"top" example:"5"`
 }
 
 func (rr ProductStatisticCountRequest) Validate() error {
@@ -38,10 +39,10 @@ func (rr ProductStatisticCountRequest) Validate() error {
 }
 
 type OrderStatisticCountRequest struct {
-	TimeFrom int64  `json:"time_from" example:"1603012735651"`
-	TimeTo   int64  `json:"time_to" example:"1696192735651"`
-	AreaId   uint   `json:"area_id"`
-	Interval string `json:"interval" example:"day/month"`
+	TimeFrom int64       `json:"time_from" example:"1603012735651"`
+	TimeTo   int64       `json:"time_to" example:"1696192735651"`
+	AreaId   *models.UID `json:"area_id"`
+	Interval string      `json:"interval" example:"day/month"`
 }
 
 func (rr OrderStatisticCountRequest) Validate() error {
@@ -53,11 +54,11 @@ func (rr OrderStatisticCountRequest) Validate() error {
 }
 
 type OrderStoreStatisticCountRequest struct {
-	TimeFrom int64  `json:"time_from" example:"1603012735651"`
-	TimeTo   int64  `json:"time_to" example:"1696192735651"`
-	AreaId   uint   `json:"area_id"`
-	Interval string `json:"interval" example:"day/month"`
-	Top      int64  `json:"top" example:"5"`
+	TimeFrom int64       `json:"time_from" example:"1603012735651"`
+	TimeTo   int64       `json:"time_to" example:"1696192735651"`
+	AreaId   *models.UID `json:"area_id"`
+	Interval string      `json:"interval" example:"day/month"`
+	Top      int64       `json:"top" example:"5"`
 }
 
 func (rr OrderStoreStatisticCountRequest) Validate() error {

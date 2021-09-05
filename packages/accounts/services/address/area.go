@@ -42,7 +42,7 @@ func (areaCostService *Service) ConfigArea(areaId uint, request requests2.AreaCo
 	confDetails := make([]*models.AreaConfig, 0)
 	var updatedItemID []uint
 	for _, conf := range request.AreaConfigs {
-		if conf.ID == 0 {
+		if conf.ID == nil {
 			aConf := builders.NewAreaConfigBuilder().
 				SetDistrict(conf.District).
 				SetProvince(conf.Province).
@@ -58,10 +58,10 @@ func (areaCostService *Service) ConfigArea(areaId uint, request requests2.AreaCo
 			aConf := builders.NewAreaConfigBuilder().
 				SetDistrict(conf.District).
 				SetProvince(conf.Province).
-				SetID(conf.ID).
+				SetID(uint(conf.ID.GetLocalID())).
 				Build()
 
-			updatedItemID = append(updatedItemID, conf.ID)
+			updatedItemID = append(updatedItemID, uint(conf.ID.GetLocalID()))
 			err := tx.Table(utils2.TblAreaConfig).Updates(&aConf).Error
 			confDetails = append(confDetails, &aConf)
 			if err != nil {

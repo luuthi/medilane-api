@@ -1,6 +1,9 @@
 package requests
 
-import validation "github.com/go-ozzo/ozzo-validation"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	"medilane-api/models"
+)
 
 type AreaRequest struct {
 	Name string `json:"Name" validate:"required" example:"Ngoại thành"`
@@ -27,13 +30,13 @@ func (rr SearchAreaRequest) Validate() error {
 }
 
 type CostProductOfArea struct {
-	Cost      float64 `json:"Cost"`
-	ProductId uint    `json:"ProductId"`
+	Cost      float64     `json:"Cost"`
+	ProductId *models.UID `json:"ProductId"`
 }
 
 type SetCostProductsOfAreaRequest struct {
 	Products []CostProductOfArea `json:"Products"`
-	AreaId   uint                `json:"AreaId"`
+	AreaId   *models.UID         `json:"AreaId"`
 }
 
 func (rr CostProductOfArea) Validate() error {
@@ -47,9 +50,9 @@ type AreaConfigListRequest struct {
 }
 
 type AreaConfigRequest struct {
-	Province string `json:"Province"`
-	District string `json:"District"`
-	ID       uint   `json:"id"`
+	Province string      `json:"Province"`
+	District string      `json:"District"`
+	ID       *models.UID `json:"id"`
 }
 
 func (rr AreaConfigRequest) Validate() error {

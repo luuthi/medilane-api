@@ -70,7 +70,7 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 // @Tags Account Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id account"
+// @Param id path string true "id account"
 // @Success 200 {object} models.User
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -142,7 +142,7 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.EditAccountRequest true "body account"
-// @Param id path uint true "id account"
+// @Param id path string true "id account"
 // @Success 200 {object} models.User
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -191,7 +191,7 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 // @Tags Account Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id account"
+// @Param id path string true "id account"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -232,7 +232,7 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.AssignStaffRequest true "body account"
-// @Param id path uint true "id account"
+// @Param id path string true "id account"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -278,7 +278,8 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 
 	if total == 0 {
 		for _, v := range requestBody.DrugStoresIdLst {
-			err := userService.AssignStaffToDrugStore(id, v, string(utils2.IS_CARESTAFF))
+			u := uint(v.GetLocalID())
+			err := userService.AssignStaffToDrugStore(id, u, string(utils2.IS_CARESTAFF))
 			if err != nil {
 				panic(err)
 			}
@@ -286,9 +287,10 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	} else {
 		var drugStoreUserRequest []models.DrugStoreUser
 		for _, v := range requestBody.DrugStoresIdLst {
+			u := uint(v.GetLocalID())
 			drugStoreUserRequest = append(drugStoreUserRequest, models.DrugStoreUser{
 				UserID:       id,
-				DrugStoreID:  v,
+				DrugStoreID:  u,
 				Relationship: string(utils2.IS_CARESTAFF),
 			})
 		}

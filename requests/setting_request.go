@@ -1,6 +1,9 @@
 package requests
 
-import validation "github.com/go-ozzo/ozzo-validation"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	"medilane-api/models"
+)
 
 type SettingRequest struct {
 	Key     string                 `json:"Key"`
@@ -40,11 +43,11 @@ func (rr EditBannerRequest) Validate() error {
 }
 
 type BannerRequest struct {
-	Id         uint   `json:"Id"`
-	Url        string `json:"Url" `
-	StartTime  int64  `json:"StartTime"`
-	ExpireTime int64  `json:"ExpireTime" `
-	Visible    *bool  `json:"Visible"`
+	Id         *models.UID `json:"Id"`
+	Url        string      `json:"Url" `
+	StartTime  int64       `json:"StartTime"`
+	ExpireTime int64       `json:"ExpireTime" `
+	Visible    *bool       `json:"Visible"`
 }
 
 func (rr BannerRequest) Validate() error {
@@ -56,7 +59,7 @@ func (rr BannerRequest) Validate() error {
 }
 
 type DeleteBanner struct {
-	BannerListId []uint `json:"BannerListId"`
+	BannerListId []*models.UID `json:"BannerListId"`
 }
 
 func (rr DeleteBanner) Validate() error {

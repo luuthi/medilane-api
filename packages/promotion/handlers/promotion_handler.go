@@ -69,7 +69,7 @@ func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Success 200 {object} models.Promotion
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -147,7 +147,7 @@ func (promoHandler *PromotionHandler) CreatePromotion(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.PromotionWithDetailRequest true "body promotion"
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Success 200 {object} models.Promotion
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -192,7 +192,7 @@ func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) er
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -231,7 +231,7 @@ func (promoHandler *PromotionHandler) DeletePromotion(c echo.Context) error {
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Param params body requests.PromotionDetailRequestList true "Create promotion"
 // @Success 201 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
@@ -268,7 +268,7 @@ func (promoHandler *PromotionHandler) CreatePromotionPromotionDetails(c echo.Con
 // @Accept json
 // @Produce json
 // @Param params body requests.PromotionDetailRequest true "body promotion"
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Param d_id path uint true "id promotion detail"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
@@ -307,7 +307,7 @@ func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error 
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Param d_id path uint true "id promotion detail"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
@@ -347,7 +347,7 @@ func (promoHandler *PromotionHandler) DeletePromotionDetail(c echo.Context) erro
 // @Tags Promotion Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -377,7 +377,7 @@ func (promoHandler *PromotionHandler) DeletePromotionDetailByPromotion(c echo.Co
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchPromotionDetail true "Filter promotion"
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Success 200 {object} responses.PromotionDetailSearch
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -453,7 +453,7 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	var total int64
-	products, err = promoRepo.GetTopProductPromotion(&total, searchRequest, claims.UserId, claims.Type)
+	products, err = promoRepo.GetTopProductPromotion(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
 	if err != nil {
 		panic(err)
 	}
@@ -473,7 +473,7 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 // @Accept json
 // @Produce json
 // @Param params body requests.SearchProductByPromotion true "Filter promotion"
-// @Param id path uint true "id promotion"
+// @Param id path string true "id promotion"
 // @Success 200 {object} responses.ProductSearch
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -512,11 +512,11 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 	if id == 0 {
 		s2 := &requests2.SearchProductPromotion{
 			Limit:  searchRequest.Limit,
-			AreaId: 0,
+			AreaId: nil,
 		}
-		products, errRes = promoRepo.GetTopProductPromotion(&total, s2, claims.UserId, claims.Type)
+		products, errRes = promoRepo.GetTopProductPromotion(&total, s2, uint(claims.UserId.GetLocalID()), claims.Type)
 	} else {
-		products, errRes = promoRepo.GetProductByPromotion(&total, id, searchRequest, claims.UserId, claims.Type)
+		products, errRes = promoRepo.GetProductByPromotion(&total, id, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
 	}
 
 	if errRes != nil {

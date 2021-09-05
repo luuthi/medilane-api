@@ -68,7 +68,7 @@ func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Contex
 // @Tags Notification Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id notification"
+// @Param id path string true "id notification"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -107,7 +107,7 @@ func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Co
 // @Tags Notification Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id user"
+// @Param id path string true "id user"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

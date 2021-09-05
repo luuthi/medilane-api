@@ -65,12 +65,12 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
 
 	if claims.Type == string(utils.USER) {
-		err := orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchRequest)
+		err := orderRepo.GetOrder(&orders, &total, uint(claims.UserId.GetLocalID()), true, searchRequest)
 		if err != nil {
 			panic(err)
 		}
 	} else {
-		err := orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchRequest)
+		err := orderRepo.GetOrder(&orders, &total, uint(claims.UserId.GetLocalID()), false, searchRequest)
 		if err != nil {
 			panic(err)
 		}
@@ -117,8 +117,8 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	orderService := order.NewOrderService(orderHandler.server.DB)
-	err = orderService.PreOrder(&orderRequest, claims.UserId, claims.Type)
-	rs, newOrder := orderService.AddOrder(&orderRequest, claims.UserId)
+	err = orderService.PreOrder(&orderRequest, uint(claims.UserId.GetLocalID()), claims.Type)
+	rs, newOrder := orderService.AddOrder(&orderRequest, uint(claims.UserId.GetLocalID()))
 	if err := rs; err != nil {
 		panic(err)
 	}
@@ -144,7 +144,7 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 // @Tags Order Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id order"
+// @Param id path string true "id order"
 // @Success 200 {object} models.Order
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -180,7 +180,7 @@ func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.EditOrderRequest true "body order"
-// @Param id path uint true "id order"
+// @Param id path string true "id order"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -230,7 +230,7 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 // @Tags Order Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id order"
+// @Param id path string true "id order"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -329,12 +329,12 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 	orderRepo := repositories.NewOrderRepository(orderHandler.server.DB)
 
 	if claims.Type == string(utils.USER) {
-		err := orderRepo.CountOrder(&total, claims.UserId, true, searchRequest)
+		err := orderRepo.CountOrder(&total, uint(claims.UserId.GetLocalID()), true, searchRequest)
 		if err != nil {
 			panic(err)
 		}
 	} else {
-		err := orderRepo.CountOrder(&total, claims.UserId, false, searchRequest)
+		err := orderRepo.CountOrder(&total, uint(claims.UserId.GetLocalID()), false, searchRequest)
 		if err != nil {
 			panic(err)
 		}
@@ -402,12 +402,12 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 			OrderCode: searchRequest.OrderCode,
 		}
 		if claims.Type == string(utils.USER) {
-			err = orderRepo.GetOrder(&orders, &total, claims.UserId, true, searchOrder)
+			err = orderRepo.GetOrder(&orders, &total, uint(claims.UserId.GetLocalID()), true, searchOrder)
 			if err != nil {
 				panic(err)
 			}
 		} else {
-			err = orderRepo.GetOrder(&orders, &total, claims.UserId, false, searchOrder)
+			err = orderRepo.GetOrder(&orders, &total, uint(claims.UserId.GetLocalID()), false, searchOrder)
 			if err != nil {
 				panic(err)
 			}

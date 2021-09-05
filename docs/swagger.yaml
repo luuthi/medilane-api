@@ -39,24 +39,29 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
   models.AppSetting:
     properties:
       Android:
-        type: string
+        additionalProperties: true
+        type: object
       Config:
-        type: string
+        additionalProperties: true
+        type: object
       Ios:
-        type: string
+        additionalProperties: true
+        type: object
       Key:
         type: string
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -77,7 +82,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       products:
         items:
           $ref: '#/definitions/models.Product'
@@ -91,12 +97,18 @@ definitions:
         $ref: '#/definitions/models.Area'
         type: object
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       District:
         type: string
       Province:
         type: string
+      created_at:
+        type: integer
       id:
+        $ref: '#/definitions/models.UID'
+        type: object
+      updated_at:
         type: integer
     type: object
   models.Banner:
@@ -110,7 +122,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
       url:
@@ -123,18 +136,21 @@ definitions:
           $ref: '#/definitions/models.CartDetail'
         type: array
       UserID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
   models.CartDetail:
     properties:
       CartID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Cost:
         type: number
       Discount:
@@ -143,18 +159,21 @@ definitions:
         $ref: '#/definitions/models.Product'
         type: object
       ProductID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
         type: object
       VariantID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -177,7 +196,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -187,7 +207,8 @@ definitions:
         $ref: '#/definitions/models.Address'
         type: object
       AddressID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ApproveBy:
         $ref: '#/definitions/models.User'
         type: object
@@ -238,7 +259,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -249,7 +271,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -271,11 +294,13 @@ definitions:
         $ref: '#/definitions/models.User'
         type: object
       UserId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -285,11 +310,13 @@ definitions:
         $ref: '#/definitions/models.Address'
         type: object
       AddressID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Discount:
         type: number
       DrugStoreID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Drugstore:
         $ref: '#/definitions/models.DrugStore'
         type: object
@@ -305,7 +332,8 @@ definitions:
         $ref: '#/definitions/models.PaymentMethod'
         type: object
       PaymentMethodID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ShippingFee:
         type: number
       Status:
@@ -320,18 +348,21 @@ definitions:
         $ref: '#/definitions/models.User'
         type: object
       UserApproveID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       UserOrder:
         $ref: '#/definitions/models.User'
         type: object
       UserOrderID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Vat:
         type: number
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       oldStatus:
         type: string
       updated_at:
@@ -344,23 +375,27 @@ definitions:
       Discount:
         type: number
       OrderID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Product:
         $ref: '#/definitions/models.Product'
         type: object
       ProductID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Quantity:
         type: integer
       Variant:
         $ref: '#/definitions/models.Variant'
         type: object
       VariantID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -387,7 +422,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       orderStoreDetails:
         items:
           $ref: '#/definitions/models.OrderStoreDetail'
@@ -418,7 +454,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -428,7 +465,8 @@ definitions:
         $ref: '#/definitions/models.Address'
         type: object
       AddressID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Email:
         type: string
       Name:
@@ -449,7 +487,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -462,7 +501,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -475,7 +515,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -553,11 +594,13 @@ definitions:
         $ref: '#/definitions/models.Voucher'
         type: object
       VoucherId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -622,14 +665,16 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
   models.Promotion:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Avatar:
         type: string
       Deleted:
@@ -647,7 +692,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       promotionDetails:
         items:
           $ref: '#/definitions/models.PromotionDetail'
@@ -665,12 +711,14 @@ definitions:
         $ref: '#/definitions/models.Product'
         type: object
       ProductID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Promotion:
         $ref: '#/definitions/models.Promotion'
         type: object
       PromotionID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Type:
         type: string
       Value:
@@ -679,13 +727,16 @@ definitions:
         $ref: '#/definitions/models.Variant'
         type: object
       VariantID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       VoucherID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
       voucher:
@@ -705,7 +756,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       permissions:
         items:
           $ref: '#/definitions/models.Permission'
@@ -722,9 +774,12 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
+    type: object
+  models.UID:
     type: object
   models.User:
     properties:
@@ -764,7 +819,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -775,7 +831,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
       variantValue:
@@ -819,7 +876,8 @@ definitions:
       created_at:
         type: integer
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       updated_at:
         type: integer
     type: object
@@ -829,8 +887,8 @@ definitions:
         example: Quan Hoa
         type: string
       AreaID:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ContactName:
         example: Jackie
         type: string
@@ -844,7 +902,8 @@ definitions:
         example: Cầu giấy
         type: string
       Id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       IsDefault:
         example: true
         type: boolean
@@ -883,7 +942,8 @@ definitions:
       Province:
         type: string
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.AreaRequest:
     properties:
@@ -900,7 +960,7 @@ definitions:
     properties:
       DrugStoresIdLst:
         items:
-          type: integer
+          $ref: '#/definitions/models.UID'
         type: array
     type: object
   requests.BannerRequest:
@@ -908,7 +968,8 @@ definitions:
       ExpireTime:
         type: integer
       Id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       StartTime:
         type: integer
       Url:
@@ -919,23 +980,26 @@ definitions:
   requests.CartItemRequest:
     properties:
       CartID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Cost:
         type: number
       Discount:
         type: number
       ProductID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Quantity:
         type: integer
       VariantID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.CartRequest:
     properties:
       cart_details:
         items:
-          $ref: '#/definitions/models.CartDetail'
+          $ref: '#/definitions/requests.CartItemRequest'
         type: array
     type: object
   requests.CategoryRequest:
@@ -954,7 +1018,7 @@ definitions:
     properties:
       ProductsId:
         items:
-          type: integer
+          $ref: '#/definitions/models.UID'
         type: array
       Status:
         example: show/hide/approve/cancel/outofstock
@@ -963,23 +1027,25 @@ definitions:
   requests.ConnectiveDrugStoreRequest:
     properties:
       ChildStoreId:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ParentStoreId:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.CostProductOfArea:
     properties:
       Cost:
         type: number
       ProductId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.CreateAccountRequest:
     properties:
       DrugStoreID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       IsAdmin:
         example: true
         type: boolean
@@ -987,7 +1053,8 @@ definitions:
         example: John Doe
         type: string
       PartnerID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Roles:
         items:
           type: string
@@ -1024,7 +1091,8 @@ definitions:
       Token:
         type: string
       User:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.CreatePartnerRequest:
     properties:
@@ -1058,7 +1126,7 @@ definitions:
     properties:
       BannerListId:
         items:
-          type: integer
+          $ref: '#/definitions/models.UID'
         type: array
     type: object
   requests.DrugStoreRequest:
@@ -1067,9 +1135,11 @@ definitions:
         $ref: '#/definitions/requests.AddressRequest'
         type: object
       AddressID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       DrugStoreID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       LicenseFile:
         example: asdasdasdasd
         type: string
@@ -1096,7 +1166,8 @@ definitions:
   requests.DrugStoreStatisticRequest:
     properties:
       area_id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       interval:
         example: day/month
         type: string
@@ -1132,8 +1203,8 @@ definitions:
         example: Quan Hoa
         type: string
       AreaID:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ContactName:
         example: Jackie
         type: string
@@ -1147,7 +1218,8 @@ definitions:
         example: Cầu giấy
         type: string
       Id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       IsDefault:
         example: true
         type: boolean
@@ -1186,8 +1258,8 @@ definitions:
         $ref: '#/definitions/requests.EditAddressRequest'
         type: object
       AddressID:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ApproveTime:
         example: 1622128376
         type: integer
@@ -1214,11 +1286,13 @@ definitions:
       Note:
         type: string
       PaymentMethodID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Status:
         type: string
       UserApproveID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.EditPartnerRequest:
     properties:
@@ -1277,11 +1351,13 @@ definitions:
   requests.OrderRequest:
     properties:
       AddressID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Discount:
         type: number
       DrugStoreID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Note:
         type: string
       OrderCode:
@@ -1291,7 +1367,8 @@ definitions:
           $ref: '#/definitions/models.OrderDetail'
         type: array
       PaymentMethodID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ShippingFee:
         type: number
       Status:
@@ -1303,16 +1380,19 @@ definitions:
       Type:
         type: string
       UserApproveID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       UserOrderID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Vat:
         type: number
     type: object
   requests.OrderStatisticCountRequest:
     properties:
       area_id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       interval:
         example: day/month
         type: string
@@ -1326,7 +1406,8 @@ definitions:
   requests.OrderStoreStatisticCountRequest:
     properties:
       area_id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       interval:
         example: day/month
         type: string
@@ -1367,7 +1448,7 @@ definitions:
         type: number
       Categories:
         items:
-          type: integer
+          $ref: '#/definitions/models.UID'
         type: array
       Code:
         example: MD01
@@ -1416,20 +1497,21 @@ definitions:
         type: string
       Tags:
         items:
-          type: integer
+          $ref: '#/definitions/models.UID'
         type: array
       Unit:
         example: example
         type: string
       Variants:
         items:
-          type: integer
+          $ref: '#/definitions/models.UID'
         type: array
     type: object
   requests.ProductStatisticCountRequest:
     properties:
       area_id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       interval:
         example: day/month
         type: string
@@ -1450,19 +1532,24 @@ definitions:
       Percent:
         type: number
       ProductID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       PromotionID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Type:
         type: string
       Value:
         type: number
       VariantID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       VoucherID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       id:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
     required:
     - Percent
     - ProductID
@@ -1481,7 +1568,8 @@ definitions:
   requests.PromotionWithDetailRequest:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Avatar:
         type: string
       EndTime:
@@ -1518,7 +1606,8 @@ definitions:
   requests.RegisterAccountRequest:
     properties:
       DrugStoreID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       IsAdmin:
         example: true
         type: boolean
@@ -1526,7 +1615,8 @@ definitions:
         example: John Doe
         type: string
       PartnerID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Roles:
         items:
           type: string
@@ -1618,8 +1708,8 @@ definitions:
         example: Hanoi
         type: string
       AreaID:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ContactName:
         example: Hanoi
         type: string
@@ -1686,8 +1776,8 @@ definitions:
   requests.SearchDrugStoreRequest:
     properties:
       AddressID:
-        example: 1
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ApproveTime:
         example: 1621866181
         type: integer
@@ -1726,7 +1816,8 @@ definitions:
   requests.SearchNotificationRequest:
     properties:
       UserId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       limit:
         example: 10
         type: integer
@@ -1800,7 +1891,8 @@ definitions:
   requests.SearchProductByPromotion:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       ProductName:
         type: string
       limit:
@@ -1816,19 +1908,22 @@ definitions:
   requests.SearchProductPromotion:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       limit:
         type: integer
     type: object
   requests.SearchProductRequest:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Barcode:
         example: example
         type: string
       Category:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Code:
         example: MD01
         type: string
@@ -1857,11 +1952,13 @@ definitions:
       Condition:
         type: string
       ProductID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Type:
         type: string
       VariantID:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       limit:
         example: 10
         type: integer
@@ -1872,7 +1969,8 @@ definitions:
   requests.SearchPromotionRequest:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Name:
         type: string
       Status:
@@ -1901,7 +1999,8 @@ definitions:
         example: example
         type: string
       Category:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Code:
         example: MD01
         type: string
@@ -2003,7 +2102,8 @@ definitions:
   requests.SetCostProductsOfAreaRequest:
     properties:
       AreaId:
-        type: integer
+        $ref: '#/definitions/models.UID'
+        type: object
       Products:
         items:
           $ref: '#/definitions/requests.CostProductOfArea'
@@ -2012,11 +2112,14 @@ definitions:
   requests.SettingRequest:
     properties:
       Android:
-        type: string
+        additionalProperties: true
+        type: object
       Config:
-        type: string
+        additionalProperties: true
+        type: object
       Ios:
-        type: string
+        additionalProperties: true
+        type: object
       Key:
         type: string
     type: object
@@ -2501,7 +2604,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.User'
+            $ref: '#/definitions/responses.Data'
         "400":
           description: Bad Request
           schema:
@@ -2534,7 +2637,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -2573,7 +2676,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -2618,7 +2721,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -2664,7 +2767,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -2828,7 +2931,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -2867,7 +2970,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -2912,7 +3015,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3034,7 +3137,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3073,7 +3176,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3118,7 +3221,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3158,7 +3261,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: Config area
         in: body
         name: params
@@ -3204,7 +3307,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: Filter product
         in: body
         name: params
@@ -3571,7 +3674,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3611,7 +3714,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3767,7 +3870,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3812,7 +3915,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3934,7 +4037,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -3973,7 +4076,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4018,7 +4121,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4058,7 +4161,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4139,7 +4242,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4179,7 +4282,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4406,7 +4509,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4446,7 +4549,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4568,7 +4671,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4607,7 +4710,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4652,7 +4755,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4849,7 +4952,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4888,7 +4991,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -4933,7 +5036,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5055,7 +5158,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5100,7 +5203,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5222,7 +5325,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5261,7 +5364,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: area id
         in: query
         name: area_id
@@ -5310,7 +5413,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5350,7 +5453,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5595,7 +5698,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5634,7 +5737,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5680,7 +5783,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5720,7 +5823,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5759,7 +5862,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: Create promotion
         in: body
         name: params
@@ -5805,7 +5908,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: id promotion detail
         in: path
         name: d_id
@@ -5855,7 +5958,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       - description: id promotion detail
         in: path
         name: d_id
@@ -5906,7 +6009,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -5952,7 +6055,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6197,7 +6300,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6242,7 +6345,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6370,7 +6473,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6656,7 +6759,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6701,7 +6804,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6823,7 +6926,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6862,7 +6965,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6907,7 +7010,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -7029,7 +7132,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -7068,7 +7171,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -7113,7 +7216,7 @@ paths:
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:

@@ -93,7 +93,7 @@ func (settingHandler *SettingHandler) CreateAppSetting(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.SettingRequest true "Create setting"
-// @Param id path uint true "id account"
+// @Param id path string true "id account"
 // @Success 201 {object} models.AppSetting
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

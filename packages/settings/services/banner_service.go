@@ -33,7 +33,7 @@ func (settingService *Service) EditBanner(request *requests.EditBannerRequest) e
 	tx := settingService.DB.Begin()
 
 	for _, item := range request.BannerList {
-		if item.Id == 0 {
+		if item.Id == nil {
 			banner := builders.NewBannerBuilder().
 				SetStartTime(item.StartTime).
 				SetExpireTime(item.ExpireTime).
@@ -51,7 +51,7 @@ func (settingService *Service) EditBanner(request *requests.EditBannerRequest) e
 			banner := builders.NewBannerBuilder().
 				SetStartTime(item.StartTime).
 				SetExpireTime(item.ExpireTime).
-				SetId(item.Id).
+				SetId(uint(item.Id.GetLocalID())).
 				SetVisible(item.Visible).
 				SetURL(item.Url).Build()
 
@@ -72,7 +72,7 @@ func (settingService *Service) DeleteBanner(request *requests.DeleteBanner) erro
 
 	for _, item := range request.BannerListId {
 		banner := builders.NewBannerBuilder().
-			SetId(item).Build()
+			SetId(uint(item.GetLocalID())).Build()
 
 		// update new setting with key
 		rs := tx.Table(utils.TblBanner).Delete(&banner)

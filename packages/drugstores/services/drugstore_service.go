@@ -17,10 +17,10 @@ func (drugstoreService *Service) CreateDrugStore(request *requests2.DrugStoreReq
 		SetLicenseFile(request.LicenseFile).
 		SetStatus(string(drugstores2.NEW)).
 		SetType(request.Type).
-		SetAddressId(request.AddressID).
+		SetAddressId(uint(request.AddressID.GetLocalID())).
 		Build()
 
-	if request.AddressID == 0 {
+	if request.AddressID == nil {
 		return drugstoreService.DB.Table(utils2.TblDrugstore).Omit("address_id").Create(&drugstore).Error
 	}
 
@@ -34,17 +34,20 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 	// query area config
 	var areaConfig models.AreaConfig
 	tx.Table(utils2.TblAreaConfig).Where("province = ?", request.Address.Province).First(&areaConfig)
+	areaConfig.Mask()
 	if areaConfig.District == "All" {
-		request.Address.AreaID = areaConfig.AreaID
+		request.Address.AreaID = areaConfig.FakeAreaID
 	} else {
 		var areaConfig1 models.AreaConfig
 		tx.Table(utils2.TblAreaConfig).
 			Where("province = ? AND district = ?", request.Address.Province, request.Address.District).
 			First(&areaConfig1)
+		areaConfig1.Mask()
 		if areaConfig1.ID != 0 {
-			request.Address.AreaID = areaConfig1.AreaID
+			request.Address.AreaID = areaConfig1.FakeAreaID
 		} else {
-			request.Address.AreaID = 1
+			defaultAreaId := models.NewUID(1, utils2.DBTypeArea, 1)
+			request.Address.AreaID = &defaultAreaId
 		}
 	}
 
@@ -52,7 +55,7 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 	infoAddr := request.Address
 	addr := builders2.NewAddressBuilder().
 		SetProvince(infoAddr.Province).
-		SetArea(infoAddr.AreaID).
+		SetArea(uint(infoAddr.AreaID.GetLocalID())).
 		SetCoordinate(infoAddr.Coordinates).
 		SetCountry(infoAddr.Country).
 		SetContactName(infoAddr.ContactName).
@@ -60,7 +63,7 @@ func (drugstoreService *Service) EditDrugstore(request *requests2.EditDrugStoreR
 		SetWard(infoAddr.Ward).
 		SetStreet(infoAddr.Address).
 		SetDefault(*infoAddr.IsDefault).
-		SetID(infoAddr.Id).
+		SetID(uint(infoAddr.Id.GetLocalID())).
 		Build()
 
 	rs := tx.Table(utils2.TblAddress).Updates(&addr)
@@ -97,8 +100,8 @@ func (drugstoreService *Service) DeleteDrugstore(id uint) error {
 
 func (drugstoreService *Service) ConnectiveDrugStore(request *requests2.ConnectiveDrugStoreRequest) error {
 	drugstoreRelationship := builders.NewDrugStoreRelationshipBuilder().
-		SetParentID(request.ParentStoreId).
-		SetChildID(request.ChildStoreId).
+		SetParentID(uint(request.ParentStoreId.GetLocalID())).
+		SetChildID(uint(request.ChildStoreId.GetLocalID())).
 		Build()
 
 	return drugstoreService.DB.Table(utils2.TblDrugstoreRelationship).Create(&drugstoreRelationship).Error

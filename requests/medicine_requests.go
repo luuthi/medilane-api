@@ -3,6 +3,7 @@ package requests
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	utils2 "medilane-api/core/utils"
+	"medilane-api/models"
 )
 
 type SearchSuggestRequest struct {
@@ -10,12 +11,12 @@ type SearchSuggestRequest struct {
 }
 
 type SearchProductRequest struct {
-	Code     string `json:"Code" example:"MD01"`
-	Name     string `json:"Name" example:"name"`
-	Barcode  string `json:"Barcode"  example:"example"`
-	Status   string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	Category uint   `json:"Category"`
-	AreaId   uint   `json:"AreaId"`
+	Code     string      `json:"Code" example:"MD01"`
+	Name     string      `json:"Name" example:"name"`
+	Barcode  string      `json:"Barcode"  example:"example"`
+	Status   string      `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	Category *models.UID `json:"Category"`
+	AreaId   *models.UID `json:"AreaId"`
 
 	Limit    int        `json:"limit" example:"10"`
 	Offset   int        `json:"offset" example:"0"`
@@ -25,11 +26,11 @@ type SearchProductRequest struct {
 }
 
 type SearchPureProductRequest struct {
-	Code     string `json:"Code" example:"MD01"`
-	Name     string `json:"Name" example:"name"`
-	Barcode  string `json:"Barcode"  example:"example"`
-	Status   string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	Category uint   `json:"Category"`
+	Code     string      `json:"Code" example:"MD01"`
+	Name     string      `json:"Name" example:"name"`
+	Barcode  string      `json:"Barcode"  example:"example"`
+	Status   string      `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	Category *models.UID `json:"Category"`
 
 	Limit    int        `json:"limit" example:"10"`
 	Offset   int        `json:"offset" example:"0"`
@@ -61,14 +62,14 @@ type ProductRequest struct {
 	BasePrice            float64 `json:"BasePrice" example:"1"`
 	Manufacturer         string  `json:"Manufacturer" example:"abc"`
 
-	Categories []uint `json:"Categories"`
-	Variants   []uint `json:"Variants"`
-	Tags       []uint `json:"Tags"`
+	Categories []*models.UID `json:"Categories"`
+	Variants   []*models.UID `json:"Variants"`
+	Tags       []*models.UID `json:"Tags"`
 }
 
 type ChangeStatusProductsRequest struct {
-	Status     string `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	ProductsId []uint `json:"ProductsId"`
+	Status     string        `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
+	ProductsId []*models.UID `json:"ProductsId"`
 }
 
 func (rr SearchProductRequest) Validate() error {

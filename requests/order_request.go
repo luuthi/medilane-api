@@ -39,11 +39,11 @@ type OrderRequest struct {
 	Status          string                `json:"Status" `
 	Type            string                `json:"Type"`
 	ShippingFee     float64               `json:"ShippingFee" `
-	DrugStoreID     uint                  `json:"DrugStoreID"`
-	AddressID       uint                  `json:"AddressID"`
-	PaymentMethodID uint                  `json:"PaymentMethodID"`
-	UserOrderID     uint                  `json:"UserOrderID"`
-	UserApproveID   uint                  `json:"UserApproveID"`
+	DrugStoreID     *models.UID           `json:"DrugStoreID"`
+	AddressID       *models.UID           `json:"AddressID"`
+	PaymentMethodID *models.UID           `json:"PaymentMethodID"`
+	UserOrderID     *models.UID           `json:"UserOrderID"`
+	UserApproveID   *models.UID           `json:"UserApproveID"`
 	OrderDetails    []*models.OrderDetail `json:"OrderDetails"`
 }
 
@@ -65,10 +65,10 @@ func (rr OrderRequest) Validate() error {
 }
 
 type EditOrderRequest struct {
-	Note            string `json:"Note" `
-	Status          string `json:"Status" `
-	PaymentMethodID uint   `json:"PaymentMethodID"`
-	UserApproveID   *uint  `json:"UserApproveID"`
+	Note            string      `json:"Note" `
+	Status          string      `json:"Status" `
+	PaymentMethodID *models.UID `json:"PaymentMethodID"`
+	UserApproveID   *models.UID `json:"UserApproveID"`
 }
 
 func (rr EditOrderRequest) Validate() error {

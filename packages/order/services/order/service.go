@@ -83,13 +83,13 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 		SetShippingFee(request.ShippingFee).
 		SetDiscount(request.Discount).
 		SetNote(request.Note).
-		SetAddressID(request.AddressID).
-		SetDrugStoreID(request.DrugStoreID).
-		SetPaymentMethodID(request.PaymentMethodID).
+		SetAddressID(uint(request.AddressID.GetLocalID())).
+		SetDrugStoreID(uint(request.DrugStoreID.GetLocalID())).
+		SetPaymentMethodID(uint(request.PaymentMethodID.GetLocalID())).
 		SetUserOrderID(userId).
 		SetOrderCode(code).
 		SetType(request.Type).
-		SetDrugStoreID(request.DrugStoreID).Build()
+		SetDrugStoreID(uint(request.DrugStoreID.GetLocalID())).Build()
 
 	rs := tx.Create(&order)
 
@@ -103,10 +103,10 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 	for _, item := range request.OrderDetails {
 		od := builders.NewOrderDetailBuilder().
 			SetCost(item.Cost).
-			SetVariantID(item.VariantID).
+			SetVariantID(uint(item.FakeVariantID.GetLocalID())).
 			SetDiscount(item.Discount).
 			SetOrderID(order.ID).
-			SetProductID(item.ProductID).
+			SetProductID(uint(item.FakeProductID.GetLocalID())).
 			SetQuantity(item.Quantity).
 			Build()
 
@@ -161,7 +161,10 @@ func (s *Service) PreOrder(request *requests2.OrderRequest, userId uint, userTyp
 
 	// check promotion of product
 	var promotionResp []models.ProductInPromotionItem
-	prodRepo.CheckProductPromotionPercent(productIds, areaId, &promotionResp)
+	err = prodRepo.CheckProductPromotionPercent(productIds, areaId, &promotionResp)
+	if err != nil {
+		return err
+	}
 
 	var promotionMap = make(map[uint]float32)
 	for _, p := range promotionResp {
@@ -201,10 +204,10 @@ func (s *Service) EditOrder(request *requests2.EditOrderRequest, orderId uint, e
 		SetStatus(request.Status).
 		SetNote(request.Note).
 		SetOrderCode(existedOrder.OrderCode).
-		SetUserOrderID(existedOrder.UserOrderID).
-		SetPaymentMethodID(request.PaymentMethodID)
+		SetUserOrderID(uint(existedOrder.FakeUserOrderID.GetLocalID())).
+		SetPaymentMethodID(uint(request.PaymentMethodID.GetLocalID()))
 	if request.UserApproveID != nil {
-		orderBuilder.SetUserApproveID(*request.UserApproveID)
+		orderBuilder.SetUserApproveID(uint(request.UserApproveID.GetLocalID()))
 	}
 	order := orderBuilder.Build()
 
@@ -272,7 +275,7 @@ func (s *Service) AddPromotion(tx *gorm.DB, order *models.Order) {
 					voucherDetail := builders2.NewVoucherDetailBuilder().
 						SetPromoDetailId(promotionMap1[item.ProductID].Id).
 						SetOrderId(order.ID).
-						SetDrugstoreId(order.DrugStoreID).
+						SetDrugstoreId(uint(order.FakeDrugStoreID.GetLocalID())).
 						SetVoucherId(promotionMap1[item.ProductID].VoucherId).Builder()
 					tx.Model(&voucherDetail).Create(&voucherDetail)
 				}
@@ -282,7 +285,7 @@ func (s *Service) AddPromotion(tx *gorm.DB, order *models.Order) {
 					voucherDetail := builders2.NewVoucherDetailBuilder().
 						SetPromoDetailId(promotionMap1[item.ProductID].Id).
 						SetOrderId(order.ID).
-						SetDrugstoreId(order.DrugStoreID).
+						SetDrugstoreId(uint(order.FakeDrugStoreID.GetLocalID())).
 						SetVoucherId(promotionMap1[item.ProductID].VoucherId).Builder()
 					tx.Model(&voucherDetail).Create(&voucherDetail)
 				}

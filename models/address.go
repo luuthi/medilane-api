@@ -64,17 +64,23 @@ func (*AreaCost) TableName() string {
 type AreaConfig struct {
 	CommonModelFields
 
-	AreaID   uint   `json:"AreaId"`
-	Area     *Area  `json:"Area" gorm:"foreignKey:AreaID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Province string `json:"Province" gorm:"type:varchar(200)"`
-	District string `json:"District" gorm:"type:varchar(200)"`
+	AreaID     uint   `json:"-"`
+	FakeAreaID *UID   `json:"AreaId" gorm:"-"`
+	Area       *Area  `json:"Area" gorm:"foreignKey:AreaID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Province   string `json:"Province" gorm:"type:varchar(200)"`
+	District   string `json:"District" gorm:"type:varchar(200)"`
 }
 
 func (a *AreaConfig) AfterFind(tx *gorm.DB) (err error) {
 	a.Mask()
 	return nil
 }
+func (a *AreaConfig) GenAreaUID(dbType int) {
+	uid := NewUID(uint32(a.ID), dbType, 1)
+	a.FakeAreaID = &uid
+}
 
 func (a *AreaConfig) Mask() {
 	a.GenUID(utils.DBTypeAreaConfig)
+	a.GenAreaUID(utils.DBTypeArea)
 }

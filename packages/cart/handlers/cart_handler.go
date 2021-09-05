@@ -52,7 +52,7 @@ func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 	var total int64
 
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	cartUser, err = cartRepo.GetCartByUser(&total, claims.UserId, claims.Type)
+	cartUser, err = cartRepo.GetCartByUser(&total, uint(claims.UserId.GetLocalID()), claims.Type)
 	if err != nil {
 		panic(err)
 	}
@@ -99,7 +99,7 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
-	rs, data := cartService.AddCart(&newCart, claims.UserId)
+	rs, data := cartService.AddCart(&newCart, uint(claims.UserId.GetLocalID()))
 	if err := rs; err != nil {
 		panic(err)
 	}
@@ -153,7 +153,7 @@ func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 // @Tags Cart Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id cart"
+// @Param id path string true "id cart"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -192,7 +192,7 @@ func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
 // @Tags Cart Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id cart item"
+// @Param id path string true "id cart item"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

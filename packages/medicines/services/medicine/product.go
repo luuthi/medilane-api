@@ -7,6 +7,14 @@ import (
 )
 
 func (productService *Service) CreateProduct(request *requests2.ProductRequest) error {
+	var categories []uint
+	for _, item := range request.Categories {
+		categories = append(categories, uint(item.GetLocalID()))
+	}
+	var tags []uint
+	for _, item := range request.Tags {
+		tags = append(tags, uint(item.GetLocalID()))
+	}
 	product := builders2.NewProductBuilder().SetCode(request.Code).
 		SetName(request.Name).
 		SetBarcode(request.Barcode).
@@ -27,8 +35,8 @@ func (productService *Service) CreateProduct(request *requests2.ProductRequest) 
 		SetAvatar(request.Avatar).
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
-		SetCategories(request.Categories).
-		SetTags(request.Tags).
+		SetCategories(categories).
+		SetTags(tags).
 		Build()
 
 	return productService.DB.Create(&product).Error

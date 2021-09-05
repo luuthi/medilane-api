@@ -168,9 +168,9 @@ func (productRepository *ProductRepository) GetPureProduct(products *[]models2.P
 		values = append(values, filter.Barcode)
 	}
 
-	if filter.Category != 0 {
+	if filter.Category != nil {
 		spec = append(spec, "pc.category_id = ?")
-		values = append(values, filter.Category)
+		values = append(values, uint(filter.Category.GetLocalID()))
 	}
 
 	if filter.TimeTo != nil {
@@ -240,9 +240,9 @@ func (productRepository *ProductRepository) GetProducts(count *int64, filter *re
 		values = append(values, filter.Barcode)
 	}
 
-	if filter.Category != 0 {
+	if filter.Category != nil {
 		spec = append(spec, "cat.id = ?")
-		values = append(values, filter.Category)
+		values = append(values, uint(filter.Category.GetLocalID()))
 	}
 
 	if filter.TimeTo != nil {

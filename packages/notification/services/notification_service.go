@@ -17,5 +17,5 @@ func NewNotificationService(db *gorm.DB) *NotificationService {
 }
 
 func (s *NotificationService) MarkNotificationAsRead(notification models.Notification) error {
-	return s.DB.Table(utils.TblNotification).Model(&notification).Update("status","seen").Error
+	return s.DB.Table(utils.TblNotification).Model(&notification).Update("status", "seen").Error
 }

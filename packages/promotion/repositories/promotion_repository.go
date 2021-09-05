@@ -36,9 +36,9 @@ func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchP
 		values = append(values, fmt.Sprintf("%%%s%%", filter.Name))
 	}
 
-	if filter.AreaId != 0 {
+	if filter.AreaId != nil {
 		spec = append(spec, "area_id = ?")
-		values = append(values, filter.AreaId)
+		values = append(values, uint(filter.AreaId.GetLocalID()))
 	}
 
 	if filter.TimeFromStart != nil {
@@ -160,14 +160,14 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
-	if filter.ProductID != 0 {
+	if filter.ProductID != nil {
 		spec = append(spec, "product_id = ?")
-		values = append(values, filter.ProductID)
+		values = append(values, uint(filter.ProductID.GetLocalID()))
 	}
 
-	if filter.VariantID != 0 {
+	if filter.VariantID != nil {
 		spec = append(spec, "variant_id = ?")
-		values = append(values, filter.VariantID)
+		values = append(values, uint(filter.VariantID.GetLocalID()))
 	}
 
 	if filter.Type != "" {
@@ -198,7 +198,7 @@ func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotio
 func (promotionRepo *PromotionRepository) GetProductByPromotion(total *int64, promotionId uint, request *requests.SearchProductByPromotion, userId uint, userType string) ([]models.Product, error) {
 	// check user area
 	var areaId uint
-	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
+	if userType == string(utils2.USER) {
 		var address models.Address
 		var user models.User
 		promotionRepo.DB.Table(utils2.TblAccount).
@@ -210,7 +210,7 @@ func (promotionRepo *PromotionRepository) GetProductByPromotion(total *int64, pr
 
 		areaId = address.AreaID
 	} else {
-		areaId = request.AreaId
+		areaId = uint(request.AreaId.GetLocalID())
 	}
 
 	countSql := "SELECT count(*) FROM promotion_detail pd " +
@@ -284,7 +284,7 @@ func (promotionRepo *PromotionRepository) GetProductByPromotion(total *int64, pr
 func (promotionRepo *PromotionRepository) GetTopProductPromotion(total *int64, request *requests.SearchProductPromotion, userId uint, userType string) ([]models.Product, error) {
 	// check user area
 	var areaId uint
-	if !(userType == string(utils2.SUPER_ADMIN) || userType == string(utils2.STAFF)) {
+	if userType == string(utils2.USER) {
 		var address models.Address
 		var user models.User
 		promotionRepo.DB.Table(utils2.TblAccount).
@@ -296,7 +296,7 @@ func (promotionRepo *PromotionRepository) GetTopProductPromotion(total *int64, r
 
 		areaId = address.AreaID
 	} else {
-		areaId = request.AreaId
+		areaId = uint(request.AreaId.GetLocalID())
 	}
 
 	countSql := "SELECT  count(*) as count FROM promotion p " +
@@ -331,30 +331,31 @@ func (promotionRepo *PromotionRepository) GetTopProductPromotion(total *int64, r
 
 	products := make([]models.Product, 0)
 	for _, item := range productPro {
+		var variant = &models.Variant{
+			CommonModelFields: models.CommonModelFields{
+				ID: item.VariantId,
+			},
+			Name: item.Unit,
+		}
+		variant.Mask()
+		var img = &models.Image{
+			Url: item.Url,
+		}
+		img.Mask()
+
 		prod := models.Product{
 			CommonModelFields: models.CommonModelFields{
 				ID:        item.ProductId,
 				CreatedAt: 0,
 				UpdatedAt: 0,
 			},
-			Code:    item.Code,
-			Name:    item.Name,
-			Unit:    item.Unit,
-			Barcode: item.Barcode,
-			Avatar:  item.Url,
-			Variants: []*models.Variant{
-				{
-					CommonModelFields: models.CommonModelFields{
-						ID: item.VariantId,
-					},
-					Name: item.Unit,
-				},
-			},
-			Images: []*models.Image{
-				{
-					Url: item.Url,
-				},
-			},
+			Code:              item.Code,
+			Name:              item.Name,
+			Unit:              item.Unit,
+			Barcode:           item.Barcode,
+			Avatar:            item.Url,
+			Variants:          []*models.Variant{variant},
+			Images:            []*models.Image{img},
 			Cost:              item.Cost,
 			Percent:           item.Percent,
 			HasPromote:        true,
@@ -363,7 +364,7 @@ func (promotionRepo *PromotionRepository) GetTopProductPromotion(total *int64, r
 			ValueVoucher:      0,
 			VoucherId:         item.VoucherId,
 		}
-
+		prod.Mask()
 		products = append(products, prod)
 	}
 	return products, nil

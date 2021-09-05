@@ -5,6 +5,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
 	utils2 "medilane-api/core/utils"
+	"medilane-api/models"
 )
 
 type SearchAccountRequest struct {
@@ -53,15 +54,15 @@ func (rr EditAccountRequest) Validate() error {
 }
 
 type RegisterAccountRequest struct {
-	Email       string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
-	Username    string   `json:"username" validate:"required" example:"JohnDoe"`
-	Password    string   `json:"password"  validate:"required" example:"123qweA@"`
-	FullName    string   `json:"Name" validate:"required" example:"John Doe"`
-	IsAdmin     *bool    `json:"IsAdmin" validate:"required" example:"true" `
-	Type        string   `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
-	DrugStoreID *uint    `json:"DrugStoreID"`
-	PartnerID   *uint    `json:"PartnerID"`
-	Roles       []string `json:"Roles"`
+	Email       string       `json:"email" validate:"required" example:"john.doe@gmail.com"`
+	Username    string       `json:"username" validate:"required" example:"JohnDoe"`
+	Password    string       `json:"password"  validate:"required" example:"123qweA@"`
+	FullName    string       `json:"Name" validate:"required" example:"John Doe"`
+	IsAdmin     *bool        `json:"IsAdmin" validate:"required" example:"true" `
+	Type        string       `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
+	DrugStoreID *models.UID  `json:"DrugStoreID"`
+	PartnerID   **models.UID `json:"PartnerID"`
+	Roles       []string     `json:"Roles"`
 }
 
 func (rr RegisterAccountRequest) Validate() error {
@@ -76,15 +77,15 @@ func (rr RegisterAccountRequest) Validate() error {
 }
 
 type CreateAccountRequest struct {
-	Email       string   `json:"email" validate:"required" example:"john.doe@gmail.com"`
-	Username    string   `json:"username" validate:"required" example:"JohnDoe"`
-	Password    string   `json:"password"  validate:"required" example:"123qweA@"`
-	FullName    string   `json:"Name" validate:"required" example:"John Doe"`
-	IsAdmin     *bool    `json:"IsAdmin" validate:"required" example:"true" `
-	Type        string   `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
-	DrugStoreID *uint    `json:"DrugStoreID"`
-	PartnerID   *uint    `json:"PartnerID"`
-	Roles       []string `json:"Roles"`
+	Email       string      `json:"email" validate:"required" example:"john.doe@gmail.com"`
+	Username    string      `json:"username" validate:"required" example:"JohnDoe"`
+	Password    string      `json:"password"  validate:"required" example:"123qweA@"`
+	FullName    string      `json:"Name" validate:"required" example:"John Doe"`
+	IsAdmin     *bool       `json:"IsAdmin" validate:"required" example:"true" `
+	Type        string      `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
+	DrugStoreID *models.UID `json:"DrugStoreID"`
+	PartnerID   *models.UID `json:"PartnerID"`
+	Roles       []string    `json:"Roles"`
 }
 
 func (rr CreateAccountRequest) Validate() error {
@@ -98,7 +99,7 @@ func (rr CreateAccountRequest) Validate() error {
 			validation.By(checkRequireByType(rr.Type, rr.DrugStoreID, rr.PartnerID))),
 	)
 }
-func checkRequireByType(_type string, DrugStoreID *uint, PartnerID *uint) validation.RuleFunc {
+func checkRequireByType(_type string, DrugStoreID *models.UID, PartnerID *models.UID) validation.RuleFunc {
 	return func(value interface{}) error {
 		if _type == string(utils2.USER) {
 			if DrugStoreID == nil {
@@ -114,12 +115,12 @@ func checkRequireByType(_type string, DrugStoreID *uint, PartnerID *uint) valida
 }
 
 type StaffRelationship struct {
-	DrugStoreId  uint   `json:"DrugStoresId"`
-	Relationship string `json:"Relationship"`
+	DrugStoreId  *models.UID `json:"DrugStoresId"`
+	Relationship string      `json:"Relationship"`
 }
 
 type AssignStaffRequest struct {
-	DrugStoresIdLst []uint `json:"DrugStoresIdLst"`
+	DrugStoresIdLst []*models.UID `json:"DrugStoresIdLst"`
 }
 
 func (rr AssignStaffRequest) Validate() error {

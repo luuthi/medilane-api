@@ -68,7 +68,7 @@ func (voucherHandler *VoucherHandler) SearchVoucher(c echo.Context) error {
 // @Tags Voucher Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id voucher"
+// @Param id path string true "id voucher"
 // @Success 200 {object} models.Voucher
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -137,7 +137,7 @@ func (voucherHandler *VoucherHandler) CreateVoucher(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.VoucherRequest true "body voucher"
-// @Param id path uint true "id voucher"
+// @Param id path string true "id voucher"
 // @Success 200 {object} models.Promotion
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -176,7 +176,7 @@ func (voucherHandler *VoucherHandler) EditVoucher(c echo.Context) error {
 // @Tags Voucher Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id voucher"
+// @Param id path string true "id voucher"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

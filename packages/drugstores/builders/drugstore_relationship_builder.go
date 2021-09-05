@@ -4,7 +4,7 @@ import "medilane-api/models"
 
 type DrugStoreRelationshipBuilder struct {
 	ParentStoreId uint
-	ChildStoreId uint
+	ChildStoreId  uint
 }
 
 func NewDrugStoreRelationshipBuilder() *DrugStoreRelationshipBuilder {
@@ -24,9 +24,8 @@ func (DrugStoreRelationshipBuilder *DrugStoreRelationshipBuilder) SetChildID(id 
 func (DrugStoreRelationshipBuilder *DrugStoreRelationshipBuilder) Build() models.DrugStoreRelationship {
 	drugstoreRelationship := models.DrugStoreRelationship{
 		ParentStoreID: DrugStoreRelationshipBuilder.ParentStoreId,
-		ChildStoreID: DrugStoreRelationshipBuilder.ChildStoreId,
+		ChildStoreID:  DrugStoreRelationshipBuilder.ChildStoreId,
 	}
 
 	return drugstoreRelationship
 }
-

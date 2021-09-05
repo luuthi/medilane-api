@@ -1,11 +1,14 @@
 package requests
 
-import validation "github.com/go-ozzo/ozzo-validation"
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	"medilane-api/models"
+)
 
 type SearchNotificationRequest struct {
-	UserId uint `json:"UserId"`
-	Limit  int  `json:"limit" example:"10"`
-	Offset int  `json:"offset" example:"0"`
+	UserId *models.UID `json:"UserId"`
+	Limit  int         `json:"limit" example:"10"`
+	Offset int         `json:"offset" example:"0"`
 }
 
 func (rr SearchNotificationRequest) Validate() error {
@@ -16,8 +19,8 @@ func (rr SearchNotificationRequest) Validate() error {
 }
 
 type CreateFcmToken struct {
-	Token string `json:"Token"`
-	User  uint   `json:"User"`
+	Token string      `json:"Token"`
+	User  *models.UID `json:"User"`
 }
 
 func (rr CreateFcmToken) Validate() error {

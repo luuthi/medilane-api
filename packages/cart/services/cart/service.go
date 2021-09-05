@@ -56,8 +56,8 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 	for _, item := range request.CartDetails {
 		var existedCartDetail models.CartDetail
 		tx.Table(utils.TblCartDetail).
-			Where("product_id = ?", item.ProductID).
-			Where("variant_id = ?", item.VariantID).
+			Where("product_id = ?", item.ProductID.GetLocalID()).
+			Where("variant_id = ?", item.VariantID.GetLocalID()).
 			Where("cart_id = ?", cart.ID).
 			First(&existedCartDetail)
 
@@ -65,9 +65,9 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 			// not exist
 			existedCartDetail = builders2.NewCartDetailBuilder().
 				SetCartID(cart.ID).
-				SetProductID(item.ProductID).
+				SetProductID(uint(item.ProductID.GetLocalID())).
 				SetCost(item.Cost).
-				SetVariantID(item.VariantID).
+				SetVariantID(uint(item.VariantID.GetLocalID())).
 				SetDiscount(item.Discount).
 				SetQuantity(item.Quantity).
 				Build()
@@ -100,15 +100,18 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) (error, *m
 func (s *Service) AddCartItem(request *requests.CartItemRequest) (error, *models.CartDetail) {
 	var cart models.Cart
 	cartRepo := repositories.NewCartRepository(s.DB)
-	cartRepo.GetCartById(&cart, request.CartID)
+	err := cartRepo.GetCartById(&cart, uint(request.CartID.GetLocalID()))
+	if err != nil {
+		return err, nil
+	}
 	if cart.ID == 0 {
 		return errors.New("not found cart"), nil
 	}
 	cd := builders2.NewCartDetailBuilder().
 		SetCartID(cart.ID).
-		SetProductID(request.ProductID).
+		SetProductID(uint(request.ProductID.GetLocalID())).
 		SetCost(request.Cost).
-		SetVariantID(request.VariantID).
+		SetVariantID(uint(request.VariantID.GetLocalID())).
 		SetDiscount(request.Discount).
 		SetQuantity(request.Quantity).
 		Build()

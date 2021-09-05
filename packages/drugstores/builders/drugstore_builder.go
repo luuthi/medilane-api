@@ -68,6 +68,7 @@ func (drugStoreBuilder *DrugStoreBuilder) SetAddressId(addressId uint) (u *DrugS
 }
 
 func (drugStoreBuilder *DrugStoreBuilder) SetAddress(Address *requests2.AddressRequest) (u *DrugStoreBuilder) {
+	areaId := uint(Address.AreaID.GetLocalID())
 	addModel := models.Address{
 		Street:      Address.Address,
 		Province:    Address.Province,
@@ -77,7 +78,7 @@ func (drugStoreBuilder *DrugStoreBuilder) SetAddress(Address *requests2.AddressR
 		Phone:       Address.Phone,
 		ContactName: Address.ContactName,
 		Coordinates: Address.Coordinates,
-		AreaID:      Address.AreaID,
+		AreaID:      areaId,
 	}
 	drugStoreBuilder.Address = &addModel
 	return drugStoreBuilder

@@ -103,7 +103,7 @@ func (categoryHandler *CategoryHandler) CreateCategory(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.CategoryRequest true "body Category"
-// @Param id path uint true "id Category"
+// @Param id path string true "id Category"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -151,7 +151,7 @@ func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 // @Tags Category-Management
 // @Accept json
 // @Produce json
-// @Param id path uint true "id Category"
+// @Param id path string true "id Category"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError

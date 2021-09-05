@@ -12,7 +12,7 @@ import (
 func (areaCostService *Service) CreateAddress(request *requests2.AddressRequest) *gorm.DB {
 	address := builders.NewAddressBuilder().
 		SetProvince(request.Province).
-		SetArea(request.AreaID).
+		SetArea(uint(request.AreaID.GetLocalID())).
 		SetCoordinate(request.Coordinates).
 		SetCountry(request.Country).
 		SetContactName(request.ContactName).
@@ -27,7 +27,7 @@ func (areaCostService *Service) CreateAddress(request *requests2.AddressRequest)
 func (areaCostService *Service) EditAddress(request *requests2.AddressRequest, id uint) error {
 	address := builders.NewAddressBuilder().
 		SetProvince(request.Province).
-		SetArea(request.AreaID).
+		SetArea(uint(request.AreaID.GetLocalID())).
 		SetCoordinate(request.Coordinates).
 		SetCountry(request.Country).
 		SetContactName(request.ContactName).
