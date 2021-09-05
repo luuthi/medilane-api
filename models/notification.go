@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type Notification struct {
 	CommonModelFields
 
@@ -13,10 +17,28 @@ type Notification struct {
 	User     *User  `json:"User" gorm:"foreignKey:UserId;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+func (n *Notification) AfterFind() (err error) {
+	n.Mask()
+	return nil
+}
+
+func (n *Notification) Mask() {
+	n.GenUID(utils.DBTypeNotification)
+}
+
 type FcmToken struct {
 	CommonModelFields
 	Token string `json:"Token"`
 	User  uint   `json:"User"`
+}
+
+func (fc *FcmToken) AfterFind() (err error) {
+	fc.Mask()
+	return nil
+}
+
+func (fc *FcmToken) Mask() {
+	fc.GenUID(utils.DBTypeDrugstore)
 }
 
 type NotificationQueue struct {

@@ -83,12 +83,11 @@ func (drugStoreHandler *DrugStoreHandler) SearchDrugStore(c echo.Context) error 
 // @Router /drugstore/{id} [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) GetDrugstoreById(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
@@ -150,12 +149,11 @@ func (drugStoreHandler *DrugStoreHandler) CreateDrugStore(c echo.Context) error 
 // @Router /drugstore/{id} [put]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var drugstore requests2.EditDrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
@@ -199,12 +197,11 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 // @Router /drugstore/{id} [delete]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreService.DeleteDrugstore(id); err != nil {
@@ -313,12 +310,11 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 // @Router /drugstore/connective/{id} [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	// check exist drugstore
 	var existedDrugstore models.DrugStore
@@ -373,12 +369,11 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 // @Router /drugstore/connective/type/{id} [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) GetTypeConnectiveDrugStore(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	// check exist drugstore
 	var existedDrugstore models.DrugStore
@@ -439,12 +434,11 @@ func checkTypeOfDrugStoreInRelationship(id uint, db *gorm.DB) (string, uint, err
 // @Router /drugstore/{id}/accounts [get]
 // @Security BearerAuth
 func (drugStoreHandler *DrugStoreHandler) SearchAccountByDrugStore(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	idStore := uint(paramUrl)
+	idStore := uint(uid.GetLocalID())
 
 	drugStoreHandler.server.Logger.Info("search account in store")
 	var accounts []models.User

@@ -19,7 +19,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -154,12 +153,12 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 // @Router /order/{id} [get]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
+
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
 	err = orderRepo.GetOrderDetail(&existedOrder, id)
@@ -190,12 +189,12 @@ func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 // @Router /order/{id} [put]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
+
 	var orderRequest requests2.EditOrderRequest
 	if err := c.Bind(&orderRequest); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
@@ -240,12 +239,11 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 // @Router /order/{id} [delete]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
@@ -261,7 +259,7 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 	if err := orderService.DeleteOrder(id); err != nil {
 		panic(err)
 	}
-	return responses.SearchResponse(c, utils.TblOrder)
+	return responses.DeleteResponse(c, utils.TblOrder)
 }
 
 // GetPaymentMethod Get payment method godoc

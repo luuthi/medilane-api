@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type NotificationHandler struct {
@@ -78,12 +77,11 @@ func (NotificationHandler *NotificationHandler) SearchNotification(c echo.Contex
 // @Router /notification/{id} [put]
 // @Security BearerAuth
 func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var notification models.Notification
 	permRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)
@@ -118,12 +116,11 @@ func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Co
 // @Router /notification/all/seen/{id} [put]
 // @Security BearerAuth
 func (NotificationHandler *NotificationHandler) MarkAllNotificationAsRead(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var notifications []models.Notification
 	permRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)

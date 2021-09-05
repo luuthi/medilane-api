@@ -13,7 +13,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type CartHandler struct {
@@ -163,12 +162,11 @@ func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 // @Router /cart/{id} [delete]
 // @Security BearerAuth
 func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existCart models2.Cart
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
@@ -203,12 +201,11 @@ func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
 // @Router /cart/{id}/details [delete]
 // @Security BearerAuth
 func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existCart models2.CartDetail
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)

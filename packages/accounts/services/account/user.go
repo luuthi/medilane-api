@@ -235,6 +235,9 @@ func (userService *Service) EditUser(request *requests2.EditAccountRequest, id u
 	if request.FullName != nil {
 		userBuild.SetFullName(*request.FullName)
 	}
+	if request.Email != nil {
+		userBuild.SetEmail(*request.Email)
+	}
 	if request.IsAdmin != nil {
 		userBuild.SetIsAdmin(*request.IsAdmin)
 	}

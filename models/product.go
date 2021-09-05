@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type Product struct {
 	CommonModelFields
 
@@ -37,6 +41,15 @@ type Product struct {
 	Voucher                Voucher     `json:"Voucher" gorm:"-"`
 }
 
+func (p *Product) AfterFind() (err error) {
+	p.Mask()
+	return nil
+}
+
+func (p *Product) Mask() {
+	p.GenUID(utils.DBTypeProduct)
+}
+
 type ProductStore struct {
 	CommonModelFields
 
@@ -66,6 +79,15 @@ type ProductStore struct {
 	Category               []*Category `json:"Category" gorm:"many2many:product_store_category"`
 }
 
+func (p *ProductStore) AfterFind() (err error) {
+	p.Mask()
+	return nil
+}
+
+func (p *ProductStore) Mask() {
+	p.GenUID(utils.DBTypeProductStore)
+}
+
 // Variant
 
 type Variant struct {
@@ -73,6 +95,15 @@ type Variant struct {
 
 	Name         string `json:"Name" gorm:"type:varchar(255);not null"`
 	VariantValue []*VariantValue
+}
+
+func (v *Variant) AfterFind() (err error) {
+	v.Mask()
+	return nil
+}
+
+func (v *Variant) Mask() {
+	v.GenUID(utils.DBTypeVariant)
 }
 
 type VariantValue struct {
@@ -113,6 +144,15 @@ type Category struct {
 	ProductsStore []*ProductStore `json:"ProductsStore" gorm:"many2many:product_store_category"`
 }
 
+func (c *Category) AfterFind() (err error) {
+	c.Mask()
+	return nil
+}
+
+func (c *Category) Mask() {
+	c.GenUID(utils.DBTypeCategory)
+}
+
 type CategoryProduct struct {
 	ProductID  uint `gorm:"primaryKey"`
 	CategoryID uint `gorm:"primaryKey"`
@@ -140,6 +180,15 @@ func (*CategoryProductStore) TableName() string {
 type Image struct {
 	CommonModelFields
 	Url string `json:"Url" gorm:"type:varchar(500);"`
+}
+
+func (i *Image) AfterFind() (err error) {
+	i.Mask()
+	return nil
+}
+
+func (i *Image) Mask() {
+	i.GenUID(utils.DBTypeImage)
 }
 
 type ProductImage struct {
@@ -173,6 +222,15 @@ type Tag struct {
 
 	Name string `json:"Name" gorm:"type:varchar(100)"`
 	Slug string `json:"Slug" gorm:"type:varchar(100)"`
+}
+
+func (t *Tag) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *Tag) Mask() {
+	t.GenUID(utils.DBTypeTag)
 }
 
 type ProductTag struct {

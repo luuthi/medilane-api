@@ -6,10 +6,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/pkg/errors"
 	"io/ioutil"
+	"medilane-api/core/errorHandling"
 	funcHelpers2 "medilane-api/core/funcHelpers"
 	"medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
-	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
 
@@ -21,21 +21,15 @@ func CheckUserType(server *s.Server, allowedUserType []string) echo.MiddlewareFu
 		return func(context echo.Context) error {
 			token, err := VerifyToken(context.Request(), server)
 			if err != nil {
-				return context.JSON(http.StatusUnauthorized, responses.Data{
-					Code:    http.StatusUnauthorized,
-					Message: "invalid token",
-				})
+				panic(errorHandling.ErrUnauthorized(err))
 			}
 
 			claims, ok := token.Claims.(*JwtCustomClaims)
 			if !ok {
-				return context.JSON(http.StatusUnauthorized, responses.Data{
-					Code:    http.StatusUnauthorized,
-					Message: "invalid token",
-				})
+				panic(errorHandling.ErrUnauthorized(nil))
 			}
 			if allowedUserType != nil && len(allowedUserType) > 0 && !funcHelpers2.StringContain(allowedUserType, claims.Type) {
-				return echo.NewHTTPError(http.StatusForbidden, "Tài khoản không được thực hiện thao tác!")
+				panic(errorHandling.ErrForbidden(errors.New("Tài khoản không được thực hiện thao tác!")))
 			} else {
 				return next(context)
 			}
@@ -49,18 +43,12 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 		return func(context echo.Context) error {
 			token, err := VerifyToken(context.Request(), server)
 			if err != nil {
-				return context.JSON(http.StatusUnauthorized, responses.Data{
-					Code:    http.StatusUnauthorized,
-					Message: "invalid token",
-				})
+				panic(errorHandling.ErrUnauthorized(err))
 			}
 
 			claims, ok := token.Claims.(*JwtCustomClaims)
 			if !ok {
-				return context.JSON(http.StatusUnauthorized, responses.Data{
-					Code:    http.StatusUnauthorized,
-					Message: "invalid token",
-				})
+				panic(errorHandling.ErrUnauthorized(nil))
 			}
 
 			userName := claims.Name
@@ -72,10 +60,7 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 			var rs []models.Permission
 			err = permRepo.GetPermissionByUsername(&rs, userName)
 			if err != nil {
-				return context.JSON(http.StatusUnauthorized, responses.Data{
-					Code:    http.StatusUnauthorized,
-					Message: "invalid token",
-				})
+				panic(errorHandling.ErrForbidden(errors.New("Tài khoản không có quyền truy cập!")))
 			}
 			var count int
 			for _, perm := range rs {
@@ -84,7 +69,8 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 				}
 			}
 			if count < len(requiredScope) {
-				return echo.NewHTTPError(http.StatusForbidden, "Tài khoản không có quyền truy cập!")
+				panic(errorHandling.ErrForbidden(errors.New("Tài khoản không có quyền truy cập!")))
+				//return echo.NewHTTPError(http.StatusForbidden, "Tài khoản không có quyền truy cập!")
 			} else {
 				return next(context)
 			}

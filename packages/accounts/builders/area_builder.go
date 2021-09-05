@@ -66,10 +66,13 @@ func (areaBuilder *AreaConfigBuilder) SetID(id uint) (z *AreaConfigBuilder) {
 }
 
 func (areaBuilder *AreaConfigBuilder) Build() models.AreaConfig {
+	common := models.CommonModelFields{
+		ID: areaBuilder.id,
+	}
 	area := models.AreaConfig{
-		ID:       areaBuilder.id,
-		Province: areaBuilder.Province,
-		District: areaBuilder.District,
+		CommonModelFields: common,
+		Province:          areaBuilder.Province,
+		District:          areaBuilder.District,
 	}
 
 	return area

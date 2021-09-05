@@ -14,7 +14,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type TagHandler struct {
@@ -113,12 +112,11 @@ func (tagHandler *TagHandler) CreateTag(c echo.Context) error {
 // @Router /tag/{id} [put]
 // @Security BearerAuth
 func (tagHandler *TagHandler) EditTag(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var tag requests2.TagRequest
 	if err := c.Bind(&tag); err != nil {
@@ -162,12 +160,11 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 // @Router /tag/{id} [delete]
 // @Security BearerAuth
 func (tagHandler *TagHandler) DeleteTag(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.DeleteTag(id); err != nil {

@@ -13,7 +13,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type PromotionHandler struct {
@@ -79,12 +78,11 @@ func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 // @Router /promotion/{id} [get]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) GetPromotion(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var promo models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
@@ -132,12 +130,12 @@ func (promoHandler *PromotionHandler) CreatePromotion(c echo.Context) error {
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
-	err, newPromotion := promoService.CreatePromotion(&promo)
+	err, _ := promoService.CreatePromotion(&promo)
 	if err != nil {
 		panic(err)
 	}
 
-	return responses.SearchResponse(c, newPromotion)
+	return responses.CreateResponse(c, utils.TblPromotion)
 
 }
 
@@ -158,12 +156,11 @@ func (promoHandler *PromotionHandler) CreatePromotion(c echo.Context) error {
 // @Router /promotion/{id} [put]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var promo requests2.PromotionWithDetailRequest
 	if err := c.Bind(&promo); err != nil {
@@ -181,11 +178,11 @@ func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) er
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
-	err, editedPro := promoService.EditPromotionWithDetail(&promo, id)
+	err, _ = promoService.EditPromotionWithDetail(&promo, id)
 	if err != nil {
 		panic(err)
 	}
-	return responses.SearchResponse(c, editedPro)
+	return responses.UpdateResponse(c, utils.TblPromotion)
 }
 
 // DeletePromotion Delete promotion godoc
@@ -204,12 +201,11 @@ func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) er
 // @Router /promotion/{id} [delete]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) DeletePromotion(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedPromotion models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
@@ -282,12 +278,11 @@ func (promoHandler *PromotionHandler) CreatePromotionPromotionDetails(c echo.Con
 // @Router /promotion/{id}/details/{d_id} [put]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("d_id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	dId := uint(paramUrl)
+	dId := uint(uid.GetLocalID())
 
 	var acc requests2.PromotionDetailRequest
 	if err := c.Bind(&acc); err != nil {
@@ -322,12 +317,11 @@ func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error 
 // @Router /promotion/{id}/details/{d_id} [delete]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) DeletePromotionDetail(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("d_id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	dId := uint(paramUrl)
+	dId := uint(uid.GetLocalID())
 
 	var existedPromotionDetail models.PromotionDetail
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
@@ -362,12 +356,11 @@ func (promoHandler *PromotionHandler) DeletePromotionDetail(c echo.Context) erro
 // @Router /promotion/{id}/details [delete]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) DeletePromotionDetailByPromotion(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
 	if err := promoService.DeletePromotionDetailByPromotion(id); err != nil {
@@ -393,12 +386,11 @@ func (promoHandler *PromotionHandler) DeletePromotionDetailByPromotion(c echo.Co
 // @Router /promotion/{id}/details/find [post]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var searchReq requests2.SearchPromotionDetail
 	if err := c.Bind(&searchReq); err != nil {
@@ -490,12 +482,11 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 // @Router /promotion/{id}/product [post]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	searchRequest := new(requests2.SearchProductByPromotion)
 	if err := c.Bind(searchRequest); err != nil {

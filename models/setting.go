@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type AppSetting struct {
 	CommonModelFields
 
@@ -9,6 +13,15 @@ type AppSetting struct {
 	Key     string                 `json:"Key" gorm:"varchar(100)"`
 }
 
+func (t *AppSetting) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *AppSetting) Mask() {
+	t.GenUID(utils.DBTypeSetting)
+}
+
 type Banner struct {
 	CommonModelFields
 
@@ -16,4 +29,13 @@ type Banner struct {
 	StartTime  int64  `json:"StartTime" gorm:"bigint"`
 	ExpireTime int64  `json:"ExpireTime" gorm:"bigint"`
 	Visible    *bool  `json:"Visible" gorm:"bool"`
+}
+
+func (t *Banner) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *Banner) Mask() {
+	t.GenUID(utils.DBTypeBanner)
 }

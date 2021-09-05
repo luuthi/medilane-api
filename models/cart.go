@@ -1,10 +1,23 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type Cart struct {
 	CommonModelFields
 
 	CartDetails []CartDetail `json:"CartDetails" gorm:"foreignKey:CartID"`
 	UserID      uint         `json:"UserID"`
+}
+
+func (r *Cart) AfterFind() (err error) {
+	r.Mask()
+	return nil
+}
+
+func (r *Cart) Mask() {
+	r.GenUID(utils.DBTypeCart)
 }
 
 type CartDetail struct {
@@ -18,4 +31,13 @@ type CartDetail struct {
 	VariantID uint     `json:"VariantID"`
 	Product   *Product `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Variant   *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+func (r *CartDetail) AfterFind() (err error) {
+	r.Mask()
+	return nil
+}
+
+func (r *CartDetail) Mask() {
+	r.GenUID(utils.DBTypeCartDetail)
 }

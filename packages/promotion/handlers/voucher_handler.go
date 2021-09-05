@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type VoucherHandler struct {
@@ -78,12 +77,11 @@ func (voucherHandler *VoucherHandler) SearchVoucher(c echo.Context) error {
 // @Router /voucher/{id} [get]
 // @Security BearerAuth
 func (voucherHandler *VoucherHandler) GetVoucher(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var voucher models.Voucher
 	voucherRepo := repositories2.NewVoucherRepository(voucherHandler.server.DB)
@@ -123,12 +121,12 @@ func (voucherHandler *VoucherHandler) CreateVoucher(c echo.Context) error {
 	}
 
 	voucherService := services.NewPromotionService(voucherHandler.server.DB)
-	err, newVoucher := voucherService.CreateVoucher(&voucher)
+	err, _ := voucherService.CreateVoucher(&voucher)
 	if err != nil {
 		panic(err)
 	}
 
-	return responses.SearchResponse(c, newVoucher)
+	return responses.CreateResponse(c, utils.TblVoucher)
 }
 
 // EditVoucher Edit voucher godoc
@@ -148,12 +146,11 @@ func (voucherHandler *VoucherHandler) CreateVoucher(c echo.Context) error {
 // @Router /voucher/{id} [put]
 // @Security BearerAuth
 func (voucherHandler *VoucherHandler) EditVoucher(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var voucher requests2.VoucherRequest
 	if err := c.Bind(&voucher); err != nil {
@@ -165,11 +162,11 @@ func (voucherHandler *VoucherHandler) EditVoucher(c echo.Context) error {
 	}
 
 	voucherService := services.NewPromotionService(voucherHandler.server.DB)
-	err, editVoucher := voucherService.EditVoucher(&voucher, id)
+	err, _ = voucherService.EditVoucher(&voucher, id)
 	if err != nil {
 		panic(err)
 	}
-	return responses.SearchResponse(c, editVoucher)
+	return responses.UpdateResponse(c, utils.TblVoucher)
 }
 
 // DeleteVoucher Delete voucher godoc
@@ -188,12 +185,11 @@ func (voucherHandler *VoucherHandler) EditVoucher(c echo.Context) error {
 // @Router /voucher/{id} [delete]
 // @Security BearerAuth
 func (voucherHandler *VoucherHandler) DeleteVoucher(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedVoucher models.Voucher
 	promoRepo := repositories2.NewVoucherRepository(voucherHandler.server.DB)

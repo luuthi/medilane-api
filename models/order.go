@@ -6,6 +6,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"medilane-api/core/utils"
 	orderConst "medilane-api/core/utils/order"
 )
 
@@ -33,6 +34,15 @@ type Order struct {
 	UserApproveID   *uint          `json:"UserApproveID,omitempty"`
 	UserApprove     *User          `json:"UserApprove" gorm:"foreignKey:UserApproveID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	OldStatus       string         ` gorm:"-"`
+}
+
+func (order *Order) AfterFind() (err error) {
+	order.Mask()
+	return nil
+}
+
+func (order *Order) Mask() {
+	order.GenUID(utils.DBTypeOrder)
 }
 
 func (order *Order) AfterCreate(tx *gorm.DB) (err error) {
@@ -165,6 +175,15 @@ type OrderDetail struct {
 	Variant   *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+func (od *OrderDetail) AfterFind() (err error) {
+	od.Mask()
+	return nil
+}
+
+func (od *OrderDetail) Mask() {
+	od.GenUID(utils.DBTypeOrderDetail)
+}
+
 func (od *OrderDetail) MarshalJson() ([]byte, error) {
 	return jsoniter.Marshal(od)
 }
@@ -174,6 +193,15 @@ type PaymentMethod struct {
 
 	Name string `json:"Name" gorm:"type:varchar(200)"`
 	Note string `json:"Note" gorm:"type:varchar(500)"`
+}
+
+func (pm *PaymentMethod) AfterFind() (err error) {
+	pm.Mask()
+	return nil
+}
+
+func (pm *PaymentMethod) Mask() {
+	pm.GenUID(utils.DBTypePaymentMethod)
 }
 
 type OrderCode struct {

@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type Voucher struct {
 	CommonModelFields
 
@@ -10,6 +14,15 @@ type Voucher struct {
 	Unit     string  `json:"Unit" gorm:"type:varchar(8)"`
 	Note     string  `json:"Note" gorm:"type:varchar(200)"`
 	Deleted  *bool   `json:"Deleted" gorm:"type:bool"`
+}
+
+func (t *Voucher) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *Voucher) Mask() {
+	t.GenUID(utils.DBTypeVoucher)
 }
 
 type VoucherDetail struct {
@@ -24,6 +37,15 @@ type VoucherDetail struct {
 	PromotionDetail   *PromotionDetail `json:"PromotionDetail" gorm:"foreignKey:PromotionDetailID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+func (t *VoucherDetail) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *VoucherDetail) Mask() {
+	t.GenUID(utils.DBTypeVoucherDetail)
+}
+
 type Promotion struct {
 	CommonModelFields
 
@@ -36,6 +58,15 @@ type Promotion struct {
 	Status           *bool             `json:"Status" gorm:"type:bool"`
 	Avatar           string            `json:"Avatar" gorm:"varchar(255);not null"`
 	PromotionDetails []PromotionDetail `gorm:"foreignKey:PromotionID"`
+}
+
+func (t *Promotion) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *Promotion) Mask() {
+	t.GenUID(utils.DBTypePromotion)
 }
 
 type PromotionDetail struct {
@@ -53,6 +84,15 @@ type PromotionDetail struct {
 	Product     *Product   `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	VariantID   uint       `json:"VariantID"`
 	Variant     *Variant   `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+func (t *PromotionDetail) AfterFind() (err error) {
+	t.Mask()
+	return nil
+}
+
+func (t *PromotionDetail) Mask() {
+	t.GenUID(utils.DBTypePromotionDetail)
 }
 
 type ProductInPromotionItem struct {

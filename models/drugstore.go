@@ -3,6 +3,7 @@ package models
 import (
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
+	"medilane-api/core/utils"
 )
 
 type DrugStore struct {
@@ -26,6 +27,15 @@ type DrugStore struct {
 	Orders         []*Order        `json:"Orders,omitempty" gorm:"-"`
 	OrdersStore    []*OrderStore   `json:"OrdersStore,omitempty" gorm:"foreignKey:DrugStoreID"`
 	Products       []*ProductStore `json:"Products,omitempty" gorm:"many2many:drug_store_product"`
+}
+
+func (ds *DrugStore) AfterFind() (err error) {
+	ds.Mask()
+	return nil
+}
+
+func (ds *DrugStore) Mask() {
+	ds.GenUID(utils.DBTypeDrugstore)
 }
 
 func (ds *DrugStore) AfterCreate(tx *gorm.DB) (err error) {

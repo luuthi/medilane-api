@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type Partner struct {
 	CommonModelFields
 
@@ -12,6 +16,15 @@ type Partner struct {
 	Representative *User    `json:"Representative" gorm:"-"`
 	AddressID      uint     `json:"AddressID,omitempty"`
 	Address        *Address `json:"Address,omitempty" gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+func (p *Partner) AfterFind() (err error) {
+	p.Mask()
+	return nil
+}
+
+func (p *Partner) Mask() {
+	p.GenUID(utils.DBTypePartner)
 }
 
 type PartnerUser struct {

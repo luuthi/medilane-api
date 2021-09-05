@@ -14,7 +14,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type AreaHandler struct {
@@ -83,12 +82,11 @@ func (areaHandler *AreaHandler) SearchArea(c echo.Context) error {
 // @Router /area/{id} [put]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) EditArea(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var area requests2.AreaRequest
 	if err := c.Bind(&area); err != nil {
@@ -164,12 +162,11 @@ func (areaHandler *AreaHandler) CreateArea(c echo.Context) error {
 // @Router /area/{id} [get]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) GetArea(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedArea models2.Area
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
@@ -201,12 +198,11 @@ func (areaHandler *AreaHandler) GetArea(c echo.Context) error {
 // @Router /area/{id} [delete]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	areaService := address.NewAddressService(areaHandler.server.DB)
 	if err := areaService.DeleteArea(id); err != nil {
@@ -327,12 +323,11 @@ func checkStatusOfRecord(arr []models2.AreaCost, record models2.AreaCost) string
 // @Router /area/{id}/cost [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	areaId := uint(paramUrl)
+	areaId := uint(uid.GetLocalID())
 
 	token, err := authentication.VerifyToken(c.Request(), areaHandler.server)
 	if err != nil {
@@ -382,12 +377,11 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 // @Router /area/{id}/config [post]
 // @Security BearerAuth
 func (areaHandler *AreaHandler) ConfigArea(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var areaConf requests2.AreaConfigListRequest
 	if err := c.Bind(&areaConf); err != nil {

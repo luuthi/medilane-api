@@ -14,7 +14,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type VariantHandler struct {
@@ -80,12 +79,11 @@ func (variantHandler *VariantHandler) SearchVariant(c echo.Context) error {
 // @Router /variant/{id} [get]
 // @Security BearerAuth
 func (variantHandler *VariantHandler) GetVariant(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedVariant models.Variant
 	variantRepo := repositories.NewVariantRepository(variantHandler.server.DB)
@@ -148,12 +146,11 @@ func (variantHandler *VariantHandler) CreateVariant(c echo.Context) error {
 // @Router /variant/{id} [put]
 // @Security BearerAuth
 func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var variant requests2.VariantRequest
 	if err := c.Bind(&variant); err != nil {
@@ -197,12 +194,11 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 // @Router /variant/{id} [delete]
 // @Security BearerAuth
 func (variantHandler *VariantHandler) DeleteVariant(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	variantService := medicine.NewProductService(variantHandler.server.DB)
 	if err := variantService.DeleteVariant(id); err != nil {

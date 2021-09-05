@@ -3,13 +3,13 @@ package handlers
 import (
 	"github.com/labstack/echo/v4"
 	"medilane-api/core/errorHandling"
+	"medilane-api/core/utils"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/settings/repositories"
 	"medilane-api/packages/settings/services"
 	requests2 "medilane-api/requests"
 	"medilane-api/responses"
 	s "medilane-api/server"
-	"strconv"
 )
 
 type SettingHandler struct {
@@ -77,12 +77,12 @@ func (settingHandler *SettingHandler) CreateAppSetting(c echo.Context) error {
 	}
 
 	settingService := services.NewAppSettingService(settingHandler.server.DB)
-	err, newSetting := settingService.CreateAppSetting(&set)
+	err, _ := settingService.CreateAppSetting(&set)
 	if err != nil {
 		panic(err)
 	}
 
-	return responses.SearchResponse(c, newSetting)
+	return responses.CreateResponse(c, utils.TblSetting)
 }
 
 // EditAppSetting Edit setting godoc
@@ -102,12 +102,11 @@ func (settingHandler *SettingHandler) CreateAppSetting(c echo.Context) error {
 // @Router /setting/{id} [put]
 // @Security BearerAuth
 func (settingHandler *SettingHandler) EditAppSetting(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var set requests2.SettingRequest
 	if err := c.Bind(&set); err != nil {
@@ -119,10 +118,10 @@ func (settingHandler *SettingHandler) EditAppSetting(c echo.Context) error {
 	}
 
 	settingService := services.NewAppSettingService(settingHandler.server.DB)
-	err, editedSetting := settingService.EditAppSetting(&set, id)
+	err, _ = settingService.EditAppSetting(&set, id)
 	if err != nil {
 		panic(err)
 	}
 
-	return responses.SearchResponse(c, editedSetting)
+	return responses.UpdateResponse(c, utils.TblSetting)
 }

@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type AddressHandler struct {
@@ -80,12 +79,11 @@ func (addHandler *AddressHandler) SearchAddress(c echo.Context) error {
 // @Router /address/{id} [get]
 // @Security BearerAuth
 func (addHandler *AddressHandler) GetAddress(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedAddress models2.Address
 	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
@@ -150,12 +148,11 @@ func (addHandler *AddressHandler) CreateAddress(c echo.Context) error {
 // @Router /address/{id} [put]
 // @Security BearerAuth
 func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var addr requests2.AddressRequest
 	if err := c.Bind(&addr); err != nil {
@@ -199,12 +196,11 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 // @Router /address/{id} [delete]
 // @Security BearerAuth
 func (addHandler *AddressHandler) DeleteAddress(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	addService := address.NewAddressService(addHandler.server.DB)
 	if err := addService.DeleteAddress(id); err != nil {

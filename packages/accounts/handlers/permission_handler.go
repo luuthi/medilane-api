@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type PermissionHandler struct {
@@ -113,12 +112,11 @@ func (permHandler *PermissionHandler) CreatePermission(c echo.Context) error {
 // @Router /permission/{id} [put]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var perm requests2.PermissionRequest
 	if err := c.Bind(&perm); err != nil {
@@ -163,12 +161,11 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 // @Router /permission/{id} [delete]
 // @Security BearerAuth
 func (permHandler *PermissionHandler) DeletePermission(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.DeletePermission(id); err != nil {

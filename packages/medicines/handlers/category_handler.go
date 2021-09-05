@@ -14,7 +14,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type CategoryHandler struct {
@@ -113,12 +112,11 @@ func (categoryHandler *CategoryHandler) CreateCategory(c echo.Context) error {
 // @Router /category/{id} [put]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var category requests2.CategoryRequest
 	if err := c.Bind(&category); err != nil {
@@ -162,12 +160,11 @@ func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 // @Router /category/{id} [delete]
 // @Security BearerAuth
 func (categoryHandler *CategoryHandler) DeleteCategory(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	CategoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := CategoryService.DeleteCategory(id); err != nil {

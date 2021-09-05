@@ -129,12 +129,11 @@ func (productHandler *ProductHandler) SearchPureProduct(c echo.Context) error {
 // @Router /product/{id}/pure [get]
 // @Security BearerAuth
 func (productHandler *ProductHandler) GetPureProductByID(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedProduct models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
@@ -247,12 +246,11 @@ func (productHandler *ProductHandler) CreateProduct(c echo.Context) error {
 // @Router /product/{id} [put]
 // @Security BearerAuth
 func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var pro requests2.ProductRequest
 	if err := c.Bind(&pro); err != nil {
@@ -297,12 +295,11 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 // @Router /product/{id} [delete]
 // @Security BearerAuth
 func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	productService := medicine.NewProductService(productHandler.server.DB)
 	if err := productService.DeleteMedicine(id); err != nil {
@@ -337,12 +334,11 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 		panic(errorHandling.ErrUnauthorized(nil))
 	}
 
-	var paramUrl uint64
-	paramUrl, err = strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var paramUrl1 uint64
 	var areaId uint

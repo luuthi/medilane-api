@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type OrderStore struct {
 	CommonModelFields
 
@@ -15,6 +19,15 @@ type OrderStore struct {
 	OrderStoreDetails []OrderStoreDetail `gorm:"foreignKey:OrderStoreID"`
 }
 
+func (os *OrderStore) AfterFind() (err error) {
+	os.Mask()
+	return nil
+}
+
+func (os *OrderStore) Mask() {
+	os.GenUID(utils.DBTypeOrderStore)
+}
+
 type OrderStoreDetail struct {
 	CommonModelFields
 
@@ -26,6 +39,15 @@ type OrderStoreDetail struct {
 	VariantID    uint     `json:"VariantID"`
 	Product      *Product `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Variant      *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+func (os *OrderStoreDetail) AfterFind() (err error) {
+	os.Mask()
+	return nil
+}
+
+func (os *OrderStoreDetail) Mask() {
+	os.GenUID(utils.DBTypeOrderStoreDetail)
 }
 
 type Consignment struct {
@@ -44,4 +66,13 @@ type DrugStoreConsignment struct {
 	VariantID     uint          `json:"VariantID"`
 	Product       *ProductStore `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Variant       *Variant      `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+}
+
+func (dss *DrugStoreConsignment) AfterFind() (err error) {
+	dss.Mask()
+	return nil
+}
+
+func (dss *DrugStoreConsignment) Mask() {
+	dss.GenUID(utils.DBTypeDrugStoreConsignment)
 }

@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type BannerHandler struct {
@@ -74,12 +73,11 @@ func (bannerHandler *BannerHandler) SearchBanner(c echo.Context) error {
 // @Router /banner/id [get]
 // @Security BearerAuth
 func (bannerHandler *BannerHandler) GetBanner(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var banner models.Banner
 	bannerRepo := repositories2.NewBannerRepository(bannerHandler.server.DB)

@@ -48,6 +48,15 @@ func NewUnauthorized(root error, msg, key string) *AppError {
 	}
 }
 
+func NewForbidden(root error, msg, key string) *AppError {
+	return &AppError{
+		Code:    http.StatusForbidden,
+		RootErr: root,
+		Message: msg,
+		Key:     key,
+	}
+}
+
 func NewCustomError(root error, msg string, key string) *AppError {
 	if root != nil {
 		return NewErrorResponse(root, msg, root.Error(), key)
@@ -68,16 +77,20 @@ func ErrUnauthorized(err error) *AppError {
 	if err != nil {
 		return NewUnauthorized(err, err.Error(), "INVALID_TOKEN")
 	}
-	return NewUnauthorized(err, "token không hợp lệ", "INVALID_TOKEN")
+	return NewUnauthorized(err, "Token không hợp lệ", "INVALID_TOKEN")
+}
+
+func ErrForbidden(err error) *AppError {
+	return NewForbidden(err, "Không có quyền truy cập", "ACCESS_DENIED")
 }
 
 func ErrInvalidRequest(err error) *AppError {
-	return NewErrorResponse(err, "invalid request", err.Error(), "ErrInvalidRequest")
+	return NewErrorResponse(err, "Yêu cầu không hợp lệ", err.Error(), "ErrInvalidRequest")
 }
 
 func ErrInternal(err error) *AppError {
 	return NewFullErrorResponse(http.StatusInternalServerError, err,
-		"something went wrong in the server", err.Error(), "ErrInternal")
+		"Server đã xảy ra lỗi", err.Error(), "ErrInternal")
 }
 
 func ErrCannotDeleteEntity(entity string, err error) *AppError {

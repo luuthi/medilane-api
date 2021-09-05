@@ -1,5 +1,9 @@
 package models
 
+import (
+	"medilane-api/core/utils"
+)
+
 type Address struct {
 	CommonModelFields
 
@@ -16,6 +20,15 @@ type Address struct {
 	Area        *Area  `json:"Area" gorm:"foreignKey:AreaID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
+func (a *Address) AfterFind() (err error) {
+	a.Mask()
+	return nil
+}
+
+func (a *Address) Mask() {
+	a.GenUID(utils.DBTypeAddress)
+}
+
 type Area struct {
 	CommonModelFields
 
@@ -24,6 +37,15 @@ type Area struct {
 	Addresses  []*Address    `json:"Addresses"`
 	Products   []*Product    `gorm:"many2many:area_cost"`
 	AreaConfig []*AreaConfig `json:"AreaConfig"`
+}
+
+func (a *Area) AfterFind() (err error) {
+	a.Mask()
+	return nil
+}
+
+func (a *Area) Mask() {
+	a.GenUID(utils.DBTypeArea)
 }
 
 type AreaCost struct {
@@ -39,9 +61,19 @@ func (*AreaCost) TableName() string {
 }
 
 type AreaConfig struct {
-	ID       uint   `json:"id" gorm:"primary_key"`
+	CommonModelFields
+
 	AreaID   uint   `json:"AreaId"`
 	Area     *Area  `json:"Area" gorm:"foreignKey:AreaID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	Province string `json:"Province" gorm:"type:varchar(200)"`
 	District string `json:"District" gorm:"type:varchar(200)"`
+}
+
+func (a *AreaConfig) AfterFind() (err error) {
+	a.Mask()
+	return nil
+}
+
+func (a *AreaConfig) Mask() {
+	a.GenUID(utils.DBTypeAreaConfig)
 }

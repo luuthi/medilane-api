@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type PartnerHandler struct {
@@ -78,12 +77,11 @@ func (partnerHandler *PartnerHandler) SearchPartner(c echo.Context) error {
 // @Router /partner/{id} [get]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) GetPartnerById(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedPartner models.Partner
 	partnerRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
@@ -145,12 +143,11 @@ func (partnerHandler *PartnerHandler) CreatePartner(c echo.Context) error {
 // @Router /partner/{id} [put]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var partner requests2.EditPartnerRequest
 	if err := c.Bind(&partner); err != nil {
@@ -194,12 +191,11 @@ func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
 // @Router /partner/{id} [delete]
 // @Security BearerAuth
 func (partnerHandler *PartnerHandler) DeletePartner(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	drugstoreService := drugServices.NewDrugStoreService(partnerHandler.server.DB)
 	if err := drugstoreService.DeletePartner(id); err != nil {

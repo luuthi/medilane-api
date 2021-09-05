@@ -34,6 +34,38 @@ const (
 	TblFcmToken              = "fcm_token"
 )
 
+const (
+	DBTypeAccount              = 1
+	DBTypeRole                 = 2
+	DBTypePermission           = 3
+	DBTypeProduct              = 5
+	DBTypeCategory             = 6
+	DBTypeTag                  = 7
+	DBTypeVariant              = 8
+	DBTypeArea                 = 10
+	DBTypeAreaConfig           = 11
+	DBTypeAddress              = 12
+	DBTypeDrugstore            = 13
+	DBTypePromotion            = 17
+	DBTypePromotionDetail      = 19
+	DBTypeCart                 = 20
+	DBTypeCartDetail           = 21
+	DBTypeOrder                = 22
+	DBTypeOrderDetail          = 24
+	DBTypePaymentMethod        = 25
+	DBTypeVoucher              = 26
+	DBTypePartner              = 27
+	DBTypeSetting              = 29
+	DBTypeBanner               = 30
+	DBTypeNotification         = 31
+	DBTypeOrderStore           = 33
+	DBTypeOrderStoreDetail     = 34
+	DBTypeDrugStoreConsignment = 35
+	DBTypeProductStore         = 36
+	DBTypeImage                = 37
+	DBTypeVoucherDetail        = 38
+)
+
 type AccountType string
 
 const (

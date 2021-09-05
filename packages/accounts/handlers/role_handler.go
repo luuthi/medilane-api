@@ -12,7 +12,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type RoleHandler struct {
@@ -115,12 +114,11 @@ func (roleHandler *RoleHandler) CreateRole(c echo.Context) error {
 // @Router /role/{id} [put]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var role requests2.RoleRequest
 	if err := c.Bind(&role); err != nil {
@@ -161,12 +159,11 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 // @Router /role/{id} [delete]
 // @Security BearerAuth
 func (roleHandler *RoleHandler) DeleteRole(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models2.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedRole models2.Role
 	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)

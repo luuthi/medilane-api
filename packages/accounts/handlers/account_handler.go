@@ -14,7 +14,6 @@ import (
 	"medilane-api/responses"
 	s "medilane-api/server"
 	"net/http"
-	"strconv"
 )
 
 type AccountHandler struct {
@@ -80,12 +79,11 @@ func (accHandler *AccountHandler) SearchAccount(c echo.Context) error {
 // @Router /account/{id} [get]
 // @Security BearerAuth
 func (accHandler *AccountHandler) GetAccount(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
@@ -109,7 +107,7 @@ func (accHandler *AccountHandler) GetAccount(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Param params body requests.CreateAccountRequest true "Create account"
-// @Success 201 {object} models.User
+// @Success 201 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
 // @Failure 401 {object} errorHandling.AppError
@@ -127,12 +125,12 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
-	rs, res := accService.CreateUser(&acc)
+	rs, _ := accService.CreateUser(&acc)
 	if err := rs; err != nil {
 		panic(errorHandling.ErrCannotCreateEntity(utils2.TblAccount, err))
 	}
 
-	return responses.SearchResponse(c, res)
+	return responses.CreateResponse(c, utils2.TblAccount)
 
 }
 
@@ -153,12 +151,11 @@ func (accHandler *AccountHandler) CreateAccount(c echo.Context) error {
 // @Router /account/{id} [put]
 // @Security BearerAuth
 func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var acc requests2.EditAccountRequest
 	if err := c.Bind(&acc); err != nil {
@@ -180,11 +177,11 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
-	err, res := accService.EditUser(&acc, id, existedUser.Username)
+	err, _ = accService.EditUser(&acc, id, existedUser.Username)
 	if err != nil {
 		panic(errorHandling.ErrCannotUpdateEntity(utils2.TblAccount, err))
 	}
-	return responses.SearchResponse(c, res)
+	return responses.UpdateResponse(c, utils2.TblAccount)
 }
 
 // DeleteAccount Delete account godoc
@@ -203,12 +200,11 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 // @Router /account/{id} [delete]
 // @Security BearerAuth
 func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
@@ -245,12 +241,11 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 // @Router /account/{id}/drugstore [post]
 // @Security BearerAuth
 func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error {
-	var paramUrl uint64
-	paramUrl, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(paramUrl)
+	id := uint(uid.GetLocalID())
 
 	var requestBody requests2.AssignStaffRequest
 	if err := c.Bind(&requestBody); err != nil {

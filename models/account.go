@@ -1,10 +1,8 @@
 package models
 
-type CommonModelFields struct {
-	ID        uint  `json:"id" gorm:"primary_key"`
-	CreatedAt int64 `json:"created_at" gorm:"autoCreateTime:milli"`
-	UpdatedAt int64 `json:"updated_at" gorm:"autoUpdateTime:milli"`
-}
+import (
+	"medilane-api/core/utils"
+)
 
 type User struct {
 	CommonModelFields
@@ -24,6 +22,15 @@ type User struct {
 	Address         *Address     `json:"Address" gorm:"-"`
 }
 
+func (user *User) AfterFind() (err error) {
+	user.Mask()
+	return nil
+}
+
+func (user *User) Mask() {
+	user.GenUID(utils.DBTypeAccount)
+}
+
 type Role struct {
 	CommonModelFields
 
@@ -33,9 +40,27 @@ type Role struct {
 	Permissions []*Permission `json:"permissions" yaml:"permissions" gorm:"many2many:role_permissions;ForeignKey:RoleName;References:PermissionName"`
 }
 
+func (r *Role) AfterFind() (err error) {
+	r.Mask()
+	return nil
+}
+
+func (r *Role) Mask() {
+	r.GenUID(utils.DBTypeRole)
+}
+
 type Permission struct {
 	CommonModelFields
 
 	PermissionName string `json:"PermissionName" yaml:"permission_name" gorm:"type:varchar(200);unique;not null"`
 	Description    string `json:"Description" yaml:"description" gorm:"type:varchar(200);"`
+}
+
+func (p *Permission) AfterFind() (err error) {
+	p.Mask()
+	return nil
+}
+
+func (p *Permission) Mask() {
+	p.GenUID(utils.DBTypePermission)
 }
