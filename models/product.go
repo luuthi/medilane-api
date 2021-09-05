@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -41,7 +42,7 @@ type Product struct {
 	Voucher                Voucher     `json:"Voucher" gorm:"-"`
 }
 
-func (p *Product) AfterFind() (err error) {
+func (p *Product) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil
 }
@@ -79,7 +80,7 @@ type ProductStore struct {
 	Category               []*Category `json:"Category" gorm:"many2many:product_store_category"`
 }
 
-func (p *ProductStore) AfterFind() (err error) {
+func (p *ProductStore) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil
 }
@@ -97,7 +98,7 @@ type Variant struct {
 	VariantValue []*VariantValue
 }
 
-func (v *Variant) AfterFind() (err error) {
+func (v *Variant) AfterFind(tx *gorm.DB) (err error) {
 	v.Mask()
 	return nil
 }
@@ -144,7 +145,7 @@ type Category struct {
 	ProductsStore []*ProductStore `json:"ProductsStore" gorm:"many2many:product_store_category"`
 }
 
-func (c *Category) AfterFind() (err error) {
+func (c *Category) AfterFind(tx *gorm.DB) (err error) {
 	c.Mask()
 	return nil
 }
@@ -182,7 +183,7 @@ type Image struct {
 	Url string `json:"Url" gorm:"type:varchar(500);"`
 }
 
-func (i *Image) AfterFind() (err error) {
+func (i *Image) AfterFind(tx *gorm.DB) (err error) {
 	i.Mask()
 	return nil
 }
@@ -224,7 +225,7 @@ type Tag struct {
 	Slug string `json:"Slug" gorm:"type:varchar(100)"`
 }
 
-func (t *Tag) AfterFind() (err error) {
+func (t *Tag) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }

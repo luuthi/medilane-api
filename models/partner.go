@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -18,7 +19,7 @@ type Partner struct {
 	Address        *Address `json:"Address,omitempty" gorm:"foreignKey:AddressID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (p *Partner) AfterFind() (err error) {
+func (p *Partner) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil
 }

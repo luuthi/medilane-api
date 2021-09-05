@@ -29,7 +29,7 @@ type DrugStore struct {
 	Products       []*ProductStore `json:"Products,omitempty" gorm:"many2many:drug_store_product"`
 }
 
-func (ds *DrugStore) AfterFind() (err error) {
+func (ds *DrugStore) AfterFind(tx *gorm.DB) (err error) {
 	ds.Mask()
 	return nil
 }

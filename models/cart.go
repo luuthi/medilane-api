@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -11,7 +12,7 @@ type Cart struct {
 	UserID      uint         `json:"UserID"`
 }
 
-func (r *Cart) AfterFind() (err error) {
+func (r *Cart) AfterFind(tx *gorm.DB) (err error) {
 	r.Mask()
 	return nil
 }
@@ -33,7 +34,7 @@ type CartDetail struct {
 	Variant   *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (r *CartDetail) AfterFind() (err error) {
+func (r *CartDetail) AfterFind(tx *gorm.DB) (err error) {
 	r.Mask()
 	return nil
 }

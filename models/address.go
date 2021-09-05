@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -20,7 +21,7 @@ type Address struct {
 	Area        *Area  `json:"Area" gorm:"foreignKey:AreaID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (a *Address) AfterFind() (err error) {
+func (a *Address) AfterFind(tx *gorm.DB) (err error) {
 	a.Mask()
 	return nil
 }
@@ -39,7 +40,7 @@ type Area struct {
 	AreaConfig []*AreaConfig `json:"AreaConfig"`
 }
 
-func (a *Area) AfterFind() (err error) {
+func (a *Area) AfterFind(tx *gorm.DB) (err error) {
 	a.Mask()
 	return nil
 }
@@ -69,7 +70,7 @@ type AreaConfig struct {
 	District string `json:"District" gorm:"type:varchar(200)"`
 }
 
-func (a *AreaConfig) AfterFind() (err error) {
+func (a *AreaConfig) AfterFind(tx *gorm.DB) (err error) {
 	a.Mask()
 	return nil
 }

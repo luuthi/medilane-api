@@ -36,7 +36,7 @@ type Order struct {
 	OldStatus       string         ` gorm:"-"`
 }
 
-func (order *Order) AfterFind() (err error) {
+func (order *Order) AfterFind(tx *gorm.DB) (err error) {
 	order.Mask()
 	return nil
 }
@@ -175,7 +175,7 @@ type OrderDetail struct {
 	Variant   *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (od *OrderDetail) AfterFind() (err error) {
+func (od *OrderDetail) AfterFind(tx *gorm.DB) (err error) {
 	od.Mask()
 	return nil
 }
@@ -195,7 +195,7 @@ type PaymentMethod struct {
 	Note string `json:"Note" gorm:"type:varchar(500)"`
 }
 
-func (pm *PaymentMethod) AfterFind() (err error) {
+func (pm *PaymentMethod) AfterFind(tx *gorm.DB) (err error) {
 	pm.Mask()
 	return nil
 }

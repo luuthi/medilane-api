@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -22,7 +23,7 @@ type User struct {
 	Address         *Address     `json:"Address" gorm:"-"`
 }
 
-func (user *User) AfterFind() (err error) {
+func (user *User) AfterFind(tx *gorm.DB) (err error) {
 	user.Mask()
 	return nil
 }
@@ -40,7 +41,7 @@ type Role struct {
 	Permissions []*Permission `json:"permissions" yaml:"permissions" gorm:"many2many:role_permissions;ForeignKey:RoleName;References:PermissionName"`
 }
 
-func (r *Role) AfterFind() (err error) {
+func (r *Role) AfterFind(tx *gorm.DB) (err error) {
 	r.Mask()
 	return nil
 }
@@ -56,7 +57,7 @@ type Permission struct {
 	Description    string `json:"Description" yaml:"description" gorm:"type:varchar(200);"`
 }
 
-func (p *Permission) AfterFind() (err error) {
+func (p *Permission) AfterFind(tx *gorm.DB) (err error) {
 	p.Mask()
 	return nil
 }

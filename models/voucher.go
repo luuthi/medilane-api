@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -16,7 +17,7 @@ type Voucher struct {
 	Deleted  *bool   `json:"Deleted" gorm:"type:bool"`
 }
 
-func (t *Voucher) AfterFind() (err error) {
+func (t *Voucher) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }
@@ -37,7 +38,7 @@ type VoucherDetail struct {
 	PromotionDetail   *PromotionDetail `json:"PromotionDetail" gorm:"foreignKey:PromotionDetailID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (t *VoucherDetail) AfterFind() (err error) {
+func (t *VoucherDetail) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }
@@ -60,7 +61,7 @@ type Promotion struct {
 	PromotionDetails []PromotionDetail `gorm:"foreignKey:PromotionID"`
 }
 
-func (t *Promotion) AfterFind() (err error) {
+func (t *Promotion) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }
@@ -86,7 +87,7 @@ type PromotionDetail struct {
 	Variant     *Variant   `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (t *PromotionDetail) AfterFind() (err error) {
+func (t *PromotionDetail) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }

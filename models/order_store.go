@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -19,7 +20,7 @@ type OrderStore struct {
 	OrderStoreDetails []OrderStoreDetail `gorm:"foreignKey:OrderStoreID"`
 }
 
-func (os *OrderStore) AfterFind() (err error) {
+func (os *OrderStore) AfterFind(tx *gorm.DB) (err error) {
 	os.Mask()
 	return nil
 }
@@ -41,7 +42,7 @@ type OrderStoreDetail struct {
 	Variant      *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (os *OrderStoreDetail) AfterFind() (err error) {
+func (os *OrderStoreDetail) AfterFind(tx *gorm.DB) (err error) {
 	os.Mask()
 	return nil
 }
@@ -68,7 +69,7 @@ type DrugStoreConsignment struct {
 	Variant       *Variant      `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
-func (dss *DrugStoreConsignment) AfterFind() (err error) {
+func (dss *DrugStoreConsignment) AfterFind(tx *gorm.DB) (err error) {
 	dss.Mask()
 	return nil
 }

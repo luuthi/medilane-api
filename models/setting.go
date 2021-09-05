@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
 
@@ -13,7 +14,7 @@ type AppSetting struct {
 	Key     string                 `json:"Key" gorm:"varchar(100)"`
 }
 
-func (t *AppSetting) AfterFind() (err error) {
+func (t *AppSetting) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }
@@ -31,7 +32,7 @@ type Banner struct {
 	Visible    *bool  `json:"Visible" gorm:"bool"`
 }
 
-func (t *Banner) AfterFind() (err error) {
+func (t *Banner) AfterFind(tx *gorm.DB) (err error) {
 	t.Mask()
 	return nil
 }
