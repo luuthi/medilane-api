@@ -9,9 +9,9 @@ import (
 type AppSetting struct {
 	CommonModelFields
 
-	Ios     datatypes.JSON `json:"Ios" gorm:"varchar(500)"`
-	Android datatypes.JSON `json:"Android" gorm:"varchar(500)"`
-	Config  datatypes.JSON `json:"Config" gorm:"varchar(500)"`
+	Ios     datatypes.JSON `json:"Ios" gorm:"varchar(500)" swaggertype:"object"`
+	Android datatypes.JSON `json:"Android" gorm:"varchar(500)" swaggertype:"object"`
+	Config  datatypes.JSON `json:"Config" gorm:"varchar(500)" swaggertype:"object"`
 	Key     string         `json:"Key" gorm:"varchar(100)"`
 }
 

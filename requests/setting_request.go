@@ -8,9 +8,9 @@ import (
 
 type SettingRequest struct {
 	Key     string         `json:"Key"`
-	Ios     datatypes.JSON `json:"Ios"`
-	Android datatypes.JSON `json:"Android"`
-	Config  datatypes.JSON `json:"Config"`
+	Ios     datatypes.JSON `json:"Ios" swaggertype:"object"`
+	Android datatypes.JSON `json:"Android" swaggertype:"object"`
+	Config  datatypes.JSON `json:"Config" swaggertype:"object"`
 }
 
 func (rr SettingRequest) Validate() error {

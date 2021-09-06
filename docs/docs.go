@@ -7389,13 +7389,13 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "Config": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "Ios": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "Key": {
                     "type": "string"
@@ -10329,13 +10329,13 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "Config": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "Ios": {
-                    "type": "string"
+                    "type": "object"
                 },
                 "Key": {
                     "type": "string"
