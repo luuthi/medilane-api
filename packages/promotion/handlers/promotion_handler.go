@@ -48,7 +48,7 @@ func (promoHandler *PromotionHandler) SearchPromotion(c echo.Context) error {
 	}
 
 	promoHandler.server.Logger.Info("search promotion")
-	var promotions []models.Promotion
+	var promotions []*models.Promotion
 	var total int64
 
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
@@ -506,18 +506,11 @@ func (promoHandler *PromotionHandler) SearchProductPromotion(c echo.Context) err
 	promoHandler.server.Logger.Info("search product in promotion")
 	var products []models.Product
 
-	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	var total int64
-	products, err = promoRepo.GetTopProductPromotion(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
+	products, err := promoRepo.GetTopProductPromotion(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
 	if err != nil {
 		panic(err)
 	}
@@ -563,14 +556,7 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 	promoHandler.server.Logger.Info("search product in promotion")
 	var products []models.Product
 
-	token, err := authentication.VerifyToken(c.Request(), promoHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	var promo models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)

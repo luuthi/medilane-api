@@ -17,12 +17,18 @@ func Init(cfg *config.Config) *gorm.DB {
 		cfg.DB.Port,
 		cfg.DB.Name)
 
+	var logLevel logger.LogLevel
+	if cfg.DevMode {
+		logLevel = logger.Info
+	} else {
+		logLevel = logger.Warn
+	}
 	db, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 			NoLowerCase:   false,
 		},
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logLevel),
 	})
 	if err != nil {
 		panic(err.Error())

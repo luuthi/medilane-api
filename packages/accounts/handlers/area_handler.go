@@ -362,14 +362,7 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
 	}
 
-	token, err := authentication.VerifyToken(c.Request(), areaHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	searchRequest := new(requests2.SearchProductRequest)
 	if err := c.Bind(searchRequest); err != nil {

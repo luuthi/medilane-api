@@ -85,7 +85,7 @@ func ErrUnauthorized(err error) *AppError {
 }
 
 func ErrForbidden(err error) *AppError {
-	return NewForbidden(err, "Không có quyền truy cập", "ACCESS_DENIED")
+	return NewForbidden(err, err.Error(), "ACCESS_DENIED")
 }
 
 func ErrInvalidRequest(err error) *AppError {

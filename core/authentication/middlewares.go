@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"medilane-api/core/errorHandling"
 	funcHelpers2 "medilane-api/core/funcHelpers"
+	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/accounts/repositories"
 	s "medilane-api/server"
@@ -16,18 +17,10 @@ import (
 	"strings"
 )
 
-func CheckUserType(server *s.Server, allowedUserType []string) echo.MiddlewareFunc {
+func CheckUserType(allowedUserType []string) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(context echo.Context) error {
-			token, err := VerifyToken(context.Request(), server)
-			if err != nil {
-				panic(errorHandling.ErrUnauthorized(err))
-			}
-
-			claims, ok := token.Claims.(*JwtCustomClaims)
-			if !ok {
-				panic(errorHandling.ErrUnauthorized(nil))
-			}
+			claims := context.Get(utils2.Metadata).(*JwtCustomClaims)
 			if allowedUserType != nil && len(allowedUserType) > 0 && !funcHelpers2.StringContain(allowedUserType, claims.Type) {
 				panic(errorHandling.ErrForbidden(errors.New("Tài khoản không được thực hiện thao tác!")))
 			} else {
@@ -38,7 +31,7 @@ func CheckUserType(server *s.Server, allowedUserType []string) echo.MiddlewareFu
 	}
 }
 
-func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin bool) echo.MiddlewareFunc {
+func CheckAuthentication(server *s.Server) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(context echo.Context) error {
 			token, err := VerifyToken(context.Request(), server)
@@ -50,6 +43,16 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 			if !ok {
 				panic(errorHandling.ErrUnauthorized(nil))
 			}
+			context.Set(utils2.Metadata, claims)
+			return next(context)
+		}
+	}
+}
+
+func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin bool) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(context echo.Context) error {
+			claims := context.Get(utils2.Metadata).(*JwtCustomClaims)
 
 			userName := claims.Name
 			isAdmin := claims.IsAdmin
@@ -58,7 +61,7 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 			}
 			permRepo := repositories.NewPermissionRepository(server.DB)
 			var rs []models.Permission
-			err = permRepo.GetPermissionByUsername(&rs, userName)
+			err := permRepo.GetPermissionByUsername(&rs, userName)
 			if err != nil {
 				panic(errorHandling.ErrForbidden(errors.New("Tài khoản không có quyền truy cập!")))
 			}
@@ -72,6 +75,7 @@ func CheckPermission(server *s.Server, requiredScope []string, requiredAdmin boo
 				panic(errorHandling.ErrForbidden(errors.New("Tài khoản không có quyền truy cập!")))
 				//return echo.NewHTTPError(http.StatusForbidden, "Tài khoản không có quyền truy cập!")
 			} else {
+				context.Set(utils2.Metadata, claims)
 				return next(context)
 			}
 

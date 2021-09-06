@@ -1,11 +1,14 @@
 package builders
 
-import "medilane-api/models"
+import (
+	"gorm.io/datatypes"
+	"medilane-api/models"
+)
 
 type SettingBuilder struct {
-	ios     map[string]interface{}
-	android map[string]interface{}
-	config  map[string]interface{}
+	ios     datatypes.JSON
+	android datatypes.JSON
+	config  datatypes.JSON
 	key     string
 	id      uint
 }
@@ -14,17 +17,17 @@ func NewSettingBuilder() *SettingBuilder {
 	return &SettingBuilder{}
 }
 
-func (settingBuilder *SettingBuilder) SetIOS(ios map[string]interface{}) *SettingBuilder {
+func (settingBuilder *SettingBuilder) SetIOS(ios datatypes.JSON) *SettingBuilder {
 	settingBuilder.ios = ios
 	return settingBuilder
 }
 
-func (settingBuilder *SettingBuilder) SetAndroid(android map[string]interface{}) *SettingBuilder {
+func (settingBuilder *SettingBuilder) SetAndroid(android datatypes.JSON) *SettingBuilder {
 	settingBuilder.android = android
 	return settingBuilder
 }
 
-func (settingBuilder *SettingBuilder) SetConfig(config map[string]interface{}) *SettingBuilder {
+func (settingBuilder *SettingBuilder) SetConfig(config datatypes.JSON) *SettingBuilder {
 	settingBuilder.config = config
 	return settingBuilder
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"medilane-api/config"
 	"medilane-api/core/errorHandling"
+	handlers2 "medilane-api/packages/accounts/handlers"
 	accRoute "medilane-api/packages/accounts/routes"
 	cartRoute "medilane-api/packages/cart/routes"
 	drugStoreRoute "medilane-api/packages/drugstores/routes"
@@ -11,6 +12,7 @@ import (
 	"medilane-api/packages/notification/routes"
 	orderRoute "medilane-api/packages/order/routes"
 	promotionRoute "medilane-api/packages/promotion/routes"
+	"medilane-api/packages/settings/handlers"
 	settingRoute "medilane-api/packages/settings/routes"
 	s "medilane-api/server"
 	"time"
@@ -37,6 +39,15 @@ func ConfigureRoutes(server *s.Server, config *config.Config) {
 	url := echoSwagger.URL(config.SwaggerDocUrl) //The url pointing to API definition
 	server.Echo.GET("/swagger/*", echoSwagger.EchoWrapHandler(url))
 	appRoute := server.Echo.Group("/api/v1")
+	// api not need check auth
+	authHandler := handlers2.NewAuthHandler(server)
+	registerHandler := handlers2.NewRegisterHandler(server)
+	appRoute.POST("/login", authHandler.Login)
+	appRoute.POST("/register", registerHandler.Register)
+
+	settingHandler := handlers.NewSettingHandler(server)
+	appRoute.POST("/setting/find", settingHandler.GetSetting)
+	// end api not need check auth
 
 	accRoute.ConfigureAccountRoutes(appRoute, server)
 	productRoute.ConfigureProductRoutes(appRoute, server)

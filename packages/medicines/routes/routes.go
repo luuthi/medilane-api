@@ -21,7 +21,7 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	//}
 
 	// medicine api
-	product := appRoute.Group("/product")
+	product := appRoute.Group("/product", authentication.CheckAuthentication(server))
 	//product.Use(middleware.JWTWithConfig(config))
 	product.POST("/find", productHandler.SearchProduct, authentication.CheckPermission(server, []string{"read:product"}, false))
 	product.POST("/pure-search", productHandler.SearchPureProduct, authentication.CheckPermission(server, []string{"read:product"}, false))
@@ -32,12 +32,12 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	product.PUT("/:id", productHandler.EditProduct, authentication.CheckPermission(server, []string{"edit:product"}, false))
 	product.DELETE("/:id", productHandler.DeleteProduct, authentication.CheckPermission(server, []string{"delete:product"}, false))
 
-	products := appRoute.Group("/products")
+	products := appRoute.Group("/products", authentication.CheckAuthentication(server))
 	//products.Use(middleware.JWTWithConfig(config))
 	products.POST("/status", productHandler.ChangeStatusProducts, authentication.CheckPermission(server, []string{"edit:product"}, false))
 
 	// category api
-	category := appRoute.Group("/category")
+	category := appRoute.Group("/category", authentication.CheckAuthentication(server))
 	//category.Use(middleware.JWTWithConfig(config))
 	category.POST("/find", categoryHandler.SearchCategory, authentication.CheckPermission(server, []string{"read:category"}, false))
 	category.POST("", categoryHandler.CreateCategory, authentication.CheckPermission(server, []string{"create:category"}, false))
@@ -45,7 +45,7 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	category.DELETE("/:id", categoryHandler.DeleteCategory, authentication.CheckPermission(server, []string{"delete:category"}, false))
 
 	// tag api
-	tag := appRoute.Group("/tag")
+	tag := appRoute.Group("/tag", authentication.CheckAuthentication(server))
 	//tag.Use(middleware.JWTWithConfig(config))
 	tag.POST("/find", tagHandler.SearchTag, authentication.CheckPermission(server, []string{"read:tag"}, false))
 	tag.POST("", tagHandler.CreateTag, authentication.CheckPermission(server, []string{"create:tag"}, false))
@@ -53,7 +53,7 @@ func ConfigureProductRoutes(appRoute *echo.Group, server *s.Server) {
 	tag.DELETE("/:id", tagHandler.DeleteTag, authentication.CheckPermission(server, []string{"delete:tag"}, false))
 
 	// variant api
-	variant := appRoute.Group("/variant")
+	variant := appRoute.Group("/variant", authentication.CheckAuthentication(server))
 	//variant.Use(middleware.JWTWithConfig(config))
 	variant.POST("/find", variantHandler.SearchVariant, authentication.CheckPermission(server, []string{"read:variant"}, false))
 	variant.POST("", variantHandler.CreateVariant, authentication.CheckPermission(server, []string{"create:variant"}, false))

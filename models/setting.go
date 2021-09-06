@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	"medilane-api/core/utils"
 )
@@ -8,10 +9,10 @@ import (
 type AppSetting struct {
 	CommonModelFields
 
-	Ios     map[string]interface{} `json:"Ios" gorm:"varchar(500)"`
-	Android map[string]interface{} `json:"Android" gorm:"varchar(500)"`
-	Config  map[string]interface{} `json:"Config" gorm:"varchar(500)"`
-	Key     string                 `json:"Key" gorm:"varchar(100)"`
+	Ios     datatypes.JSON `json:"Ios" gorm:"varchar(500)"`
+	Android datatypes.JSON `json:"Android" gorm:"varchar(500)"`
+	Config  datatypes.JSON `json:"Config" gorm:"varchar(500)"`
+	Key     string         `json:"Key" gorm:"varchar(100)"`
 }
 
 func (t *AppSetting) AfterFind(tx *gorm.DB) (err error) {

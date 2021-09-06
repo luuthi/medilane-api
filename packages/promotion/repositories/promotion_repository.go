@@ -28,7 +28,7 @@ func NewPromotionRepository(db *gorm.DB) *PromotionRepository {
 	return &PromotionRepository{DB: db}
 }
 
-func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchPromotionRequest, total *int64) (promotions []models.Promotion, err error) {
+func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchPromotionRequest, total *int64) (promotions []*models.Promotion, err error) {
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
 
@@ -105,9 +105,9 @@ func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchP
 		close(promotionDetailChan)
 	}(&wg, promotionDetailChan)
 
-	mapPromo := make(map[uint]models.Promotion)
+	//mapPromo := make(map[uint]*models.Promotion)
 	for _, item := range promotions {
-		mapPromo[item.ID] = item
+		//mapPromo[item.ID] = item
 		go func(promotionDetailChan chan *mappingPromotionDetail, wg *sync.WaitGroup, id uint) {
 			wg.Add(1)
 			defer wg.Done()
@@ -132,16 +132,24 @@ func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchP
 	}
 	wg.Wait()
 
-	var rs = make([]models.Promotion, 0)
+	//var rs = make([]models.Promotion, 0)
 	for details := range promotionDetailChan {
 		if details != nil {
-			if p, ok := mapPromo[details.promotionId]; ok {
-				p.PromotionDetails = details.details
-				rs = append(rs, p)
+			for _, i := range promotions {
+				if i.ID == details.promotionId {
+					i.PromotionDetails = make([]models.PromotionDetail, len(details.details))
+					for j := range details.details {
+						i.PromotionDetails[j] = details.details[j]
+					}
+				}
 			}
+			//if p, ok := mapPromo[details.promotionId]; ok {
+			//	p.PromotionDetails = details.details
+			//	rs = append(rs, p)
+			//}
 		}
 	}
-	return rs, nil
+	return promotions, nil
 }
 
 func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promotion, id uint) error {

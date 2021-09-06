@@ -2,19 +2,23 @@ package requests
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation"
+	"gorm.io/datatypes"
 	"medilane-api/models"
 )
 
 type SettingRequest struct {
-	Key     string                 `json:"Key"`
-	Ios     map[string]interface{} `json:"Ios"`
-	Android map[string]interface{} `json:"Android"`
-	Config  map[string]interface{} `json:"Config"`
+	Key     string         `json:"Key"`
+	Ios     datatypes.JSON `json:"Ios"`
+	Android datatypes.JSON `json:"Android"`
+	Config  datatypes.JSON `json:"Config"`
 }
 
 func (rr SettingRequest) Validate() error {
 	return validation.ValidateStruct(&rr,
 		validation.Field(&rr.Key, validation.Required),
+		validation.Field(&rr.Ios, validation.NotNil),
+		validation.Field(&rr.Android, validation.NotNil),
+		validation.Field(&rr.Config, validation.NotNil),
 	)
 }
 

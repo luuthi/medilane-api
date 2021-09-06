@@ -66,6 +66,8 @@ const (
 	DBTypeVoucherDetail        = 38
 )
 
+const Metadata = "metadata"
+
 type AccountType string
 
 const (

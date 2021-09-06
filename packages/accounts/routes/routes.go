@@ -11,24 +11,19 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	// handler
 	authHandler := handlers2.NewAuthHandler(server)
-	registerHandler := handlers2.NewRegisterHandler(server)
 	accountHandler := handlers2.NewAccountHandler(server)
 	permissionHandler := handlers2.NewPermissionHandler(server)
 	roleHandler := handlers2.NewRoleHandler(server)
 	areaHandler := handlers2.NewAreaHandler(server)
 	addressHandler := handlers2.NewAddressHandler(server)
 
-	// login api
-	appRoute.POST("/login", authHandler.Login)
-
 	// auth api
-	auth := appRoute.Group("")
-	auth.POST("/register", registerHandler.Register)
+	auth := appRoute.Group("/auth", authentication.CheckAuthentication(server))
 	auth.POST("/refresh", authHandler.RefreshToken, authentication.CheckPermission(server, []string{}, false))
 	auth.POST("/logout", authHandler.Logout, authentication.CheckPermission(server, []string{}, false))
 
 	// account api
-	acc := appRoute.Group("/account")
+	acc := appRoute.Group("/account", authentication.CheckAuthentication(server))
 	acc.POST("/find", accountHandler.SearchAccount, authentication.CheckPermission(server, []string{"read:user"}, false))
 	acc.GET("/:username/permissions", accountHandler.GetPermissionByUsername, authentication.CheckPermission(server, []string{}, false))
 	acc.POST("", accountHandler.CreateAccount, authentication.CheckPermission(server, []string{"create:user"}, false))
@@ -38,7 +33,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	acc.DELETE("/:id", accountHandler.DeleteAccount, authentication.CheckPermission(server, []string{"delete:user"}, false))
 
 	// permission api
-	perm := appRoute.Group("/permission")
+	perm := appRoute.Group("/permission", authentication.CheckAuthentication(server))
 	//perm.Use(middleware.JWTWithConfig(config))
 	perm.POST("/find", permissionHandler.SearchPermission, authentication.CheckPermission(server, []string{"read:permission"}, false))
 	perm.POST("", permissionHandler.CreatePermission, authentication.CheckPermission(server, []string{"create:permission"}, false))
@@ -46,7 +41,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	perm.DELETE("/:id", permissionHandler.DeletePermission, authentication.CheckPermission(server, []string{"delete:permission"}, false))
 
 	// role api
-	role := appRoute.Group("/role")
+	role := appRoute.Group("/role", authentication.CheckAuthentication(server))
 	//role.Use(middleware.JWTWithConfig(config))
 	role.POST("/find", roleHandler.SearchRole, authentication.CheckPermission(server, []string{"read:role"}, false))
 	role.POST("", roleHandler.CreateRole, authentication.CheckPermission(server, []string{"create:role"}, false))
@@ -54,7 +49,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	role.DELETE("/:id", roleHandler.DeleteRole, authentication.CheckPermission(server, []string{"delete:role"}, false))
 
 	// area api
-	area := appRoute.Group("/area")
+	area := appRoute.Group("/area", authentication.CheckAuthentication(server))
 	//area.Use(middleware.JWTWithConfig(config))
 	area.POST("/find", areaHandler.SearchArea, authentication.CheckPermission(server, []string{"read:area"}, false))
 	area.POST("", areaHandler.CreateArea, authentication.CheckPermission(server, []string{"create:area"}, false))
@@ -65,7 +60,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	area.DELETE("/:id", areaHandler.DeleteArea, authentication.CheckPermission(server, []string{"delete:area"}, false))
 
 	// address api
-	address := appRoute.Group("/address")
+	address := appRoute.Group("/address", authentication.CheckAuthentication(server))
 	//address.Use(middleware.JWTWithConfig(config))
 	address.POST("/find", addressHandler.SearchAddress, authentication.CheckPermission(server, []string{"read:address"}, false))
 	address.POST("", addressHandler.CreateAddress, authentication.CheckPermission(server, []string{"create:address"}, false))

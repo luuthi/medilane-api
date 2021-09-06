@@ -11,7 +11,7 @@ import (
 func ConfigureCartRoutes(appRoute *echo.Group, server *s.Server) {
 	cartHandler := handlers.NewCartHandler(server)
 
-	cart := appRoute.Group("/cart", authentication.CheckUserType(server, []string{string(utils.USER)}))
+	cart := appRoute.Group("/cart", authentication.CheckAuthentication(server), authentication.CheckUserType([]string{string(utils.USER)}))
 	cart.POST("/find", cartHandler.GetCartByUsername, authentication.CheckPermission(server, []string{"read:cart"}, false))
 	cart.POST("", cartHandler.CreateCart, authentication.CheckPermission(server, []string{"create:cart"}, false))
 	cart.POST("/details", cartHandler.AddCartItem, authentication.CheckPermission(server, []string{"create:cart"}, false))

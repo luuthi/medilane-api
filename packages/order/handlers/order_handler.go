@@ -47,14 +47,8 @@ func NewOrderHandler(server *s.Server) *OrderHandler {
 // @Router /order/find [post]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
+
 	searchRequest := new(requests2.SearchOrderRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
@@ -100,14 +94,7 @@ func (orderHandler *OrderHandler) SearchOrder(c echo.Context) error {
 // @Router /order [post]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	var orderRequest requests2.OrderRequest
 	if err := c.Bind(&orderRequest); err != nil {
@@ -118,7 +105,10 @@ func (orderHandler *OrderHandler) CreateOrder(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	orderService := order.NewOrderService(orderHandler.server.DB)
-	err = orderService.PreOrder(&orderRequest, uint(claims.UserId.GetLocalID()), claims.Type)
+	err := orderService.PreOrder(&orderRequest, uint(claims.UserId.GetLocalID()), claims.Type)
+	if err != nil {
+		panic(err)
+	}
 	rs, newOrder := orderService.AddOrder(&orderRequest, uint(claims.UserId.GetLocalID()))
 	if err := rs; err != nil {
 		panic(err)
@@ -320,15 +310,8 @@ func (orderHandler *OrderHandler) GetPaymentMethod(c echo.Context) error {
 // @Router /order/export [post]
 // @Security BearerAuth
 func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
-	token, err := authentication.VerifyToken(c.Request(), orderHandler.server)
-	if err != nil {
-		return responses.Response(c, http.StatusUnauthorized, nil)
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		return responses.Response(c, http.StatusUnauthorized, nil)
-	}
 	searchRequest := new(requests2.ExportOrderRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
@@ -401,6 +384,7 @@ func (orderHandler *OrderHandler) ExportOrder(c echo.Context) error {
 
 	var orders []models2.Order
 	var mapFile = make(map[string]bytes.Buffer)
+	var err error
 	for i := 0; i < int(total); i += 100 {
 		searchOrder := &requests2.SearchOrderRequest{
 			Limit:     100,

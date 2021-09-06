@@ -11,16 +11,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 	promotionHandler := handlers.NewPromotionHandler(server)
 	voucherHandler := handlers.NewVoucherHandler(server)
 
-	promotion := appRoute.Group("/promotion")
-	//config := middleware.JWTConfig{
-	//	Skipper:       middleware.DefaultSkipper,
-	//	SigningMethod: string(jwt.SigningMethodRS256),
-	//	Claims:        &token2.JwtCustomClaims{},
-	//	AuthScheme:    "Bearer",
-	//	SigningKey:    []byte(server.Config.Auth.AccessSecret),
-	//}
-	//promotion.Use(middleware.JWTWithConfig(config))
-
+	promotion := appRoute.Group("/promotion", authentication.CheckAuthentication(server))
 	promotion.POST("/find", promotionHandler.SearchPromotion, authentication.CheckPermission(server, []string{"read:promotion"}, false))
 	promotion.POST("", promotionHandler.CreatePromotion, authentication.CheckPermission(server, []string{"create:promotion"}, false))
 	promotion.PUT("/:id", promotionHandler.EditPromotionWithDetail, authentication.CheckPermission(server, []string{"edit:promotion"}, false))
@@ -36,8 +27,7 @@ func ConfigureAccountRoutes(appRoute *echo.Group, server *s.Server) {
 
 	promotion.POST("/top-product", promotionHandler.SearchProductPromotion, authentication.CheckPermission(server, []string{"read:promotion", "read:product"}, false))
 
-	voucher := appRoute.Group("/voucher")
-
+	voucher := appRoute.Group("/voucher", authentication.CheckAuthentication(server))
 	voucher.POST("/find", voucherHandler.SearchVoucher, authentication.CheckPermission(server, []string{"read:voucher"}, false))
 	voucher.POST("", voucherHandler.CreateVoucher, authentication.CheckPermission(server, []string{"create:voucher"}, false))
 	voucher.PUT("/:id", voucherHandler.EditVoucher, authentication.CheckPermission(server, []string{"edit:voucher"}, false))

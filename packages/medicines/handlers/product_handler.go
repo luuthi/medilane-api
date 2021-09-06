@@ -44,14 +44,7 @@ func NewProductHandler(server *s.Server) *ProductHandler {
 // @Router /product/find [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), productHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	searchRequest := new(requests2.SearchProductRequest)
 	if err := c.Bind(searchRequest); err != nil {
@@ -68,7 +61,7 @@ func (productHandler *ProductHandler) SearchProduct(c echo.Context) error {
 	if searchRequest.AreaId != nil {
 		areaId = uint(searchRequest.AreaId.GetLocalID())
 	}
-	medicines, err = productRepo.GetProducts(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type, areaId)
+	medicines, err := productRepo.GetProducts(&total, searchRequest, uint(claims.UserId.GetLocalID()), claims.Type, areaId)
 	if err != nil {
 		panic(err)
 	}
@@ -174,14 +167,7 @@ func (productHandler *ProductHandler) GetPureProductByID(c echo.Context) error {
 // @Router /product/suggest [post]
 // @Security BearerAuth
 func (productHandler *ProductHandler) SearchSuggestProduct(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), productHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	searchRequest := new(requests2.SearchSuggestRequest)
 	if err := c.Bind(searchRequest); err != nil {
@@ -193,7 +179,7 @@ func (productHandler *ProductHandler) SearchSuggestProduct(c echo.Context) error
 	var total int64
 
 	productRepo := repositories2.NewProductRepository(productHandler.server.DB)
-	medicines, err = productRepo.GetSuggestProducts(searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
+	medicines, err := productRepo.GetSuggestProducts(searchRequest, uint(claims.UserId.GetLocalID()), claims.Type)
 	if err != nil {
 		panic(err)
 	}
@@ -348,14 +334,7 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 // @Router /product/{id} [get]
 // @Security BearerAuth
 func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), productHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	uid, err := models.FromBase58(c.Param("id"))
 	if err != nil {

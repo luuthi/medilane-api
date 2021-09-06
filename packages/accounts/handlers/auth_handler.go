@@ -75,7 +75,7 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 			panic(errorHandling.ErrCannotGetEntity(utils2.TblDrugstore, err))
 		}
 
-		if user.Type != string(utils2.SUPER_ADMIN) && user.Type != string(utils2.STAFF) {
+		if drugStore.ID == 0 {
 			panic(errorHandling.ErrInvalidRequest(errors.New("user not in any active store")))
 		}
 

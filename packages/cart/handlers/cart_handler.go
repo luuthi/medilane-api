@@ -41,21 +41,14 @@ func NewCartHandler(server *s.Server) *CartHandler {
 // @Router /cart/find [post]
 // @Security BearerAuth
 func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
-	token, err := authentication.VerifyToken(c.Request(), cartHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	cartHandler.server.Logger.Info("cart product")
 	var cartUser *models2.Cart
 	var total int64
 
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	cartUser, err = cartRepo.GetCartByUser(&total, uint(claims.UserId.GetLocalID()), claims.Type)
+	cartUser, err := cartRepo.GetCartByUser(&total, uint(claims.UserId.GetLocalID()), claims.Type)
 	if err != nil {
 		panic(err)
 	}
@@ -88,14 +81,7 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
-	token, err := authentication.VerifyToken(c.Request(), cartHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 
 	if err := newCart.Validate(); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))

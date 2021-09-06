@@ -373,15 +373,7 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 func (accHandler *AccountHandler) GetPermissionByUsername(c echo.Context) error {
 	var username string
 	username = c.Param("username")
-
-	token, err := authentication.VerifyToken(c.Request(), accHandler.server)
-	if err != nil {
-		panic(errorHandling.ErrUnauthorized(err))
-	}
-	claims, ok := token.Claims.(*authentication.JwtCustomClaims)
-	if !ok {
-		panic(errorHandling.ErrUnauthorized(nil))
-	}
+	claims := c.Get(utils2.Metadata).(*authentication.JwtCustomClaims)
 
 	if claims.Name != username {
 		panic(errorHandling.ErrInvalidRequest(errors.New("cannot get permissions of other user")))
@@ -391,7 +383,7 @@ func (accHandler *AccountHandler) GetPermissionByUsername(c echo.Context) error 
 	var accounts []models.Permission
 
 	permRepo := repositories2.NewPermissionRepository(accHandler.server.DB)
-	err = permRepo.GetPermissionByUsername(&accounts, username)
+	err := permRepo.GetPermissionByUsername(&accounts, username)
 	if err != nil {
 		panic(err)
 	}
