@@ -73,6 +73,10 @@ func (e *AppError) RootError() error {
 	return e.RootErr
 }
 
+func ErrDB(err error) *AppError {
+	return NewErrorResponse(err, "something went wrong with DB", err.Error(), "DB_ERROR")
+}
+
 func ErrUnauthorized(err error) *AppError {
 	if err != nil {
 		return NewUnauthorized(err, err.Error(), "INVALID_TOKEN")
@@ -91,6 +95,14 @@ func ErrInvalidRequest(err error) *AppError {
 func ErrInternal(err error) *AppError {
 	return NewFullErrorResponse(http.StatusInternalServerError, err,
 		"Server đã xảy ra lỗi", err.Error(), "ErrInternal")
+}
+
+func ErrCannotGetEntity(entity string, err error) *AppError {
+	return NewCustomError(
+		err,
+		fmt.Sprintf("Không thể lấy %s", strings.ToLower(entity)),
+		fmt.Sprintf("ErrCannotGet%s", entity),
+	)
 }
 
 func ErrCannotDeleteEntity(entity string, err error) *AppError {
@@ -112,7 +124,7 @@ func ErrCannotUpdateEntity(entity string, err error) *AppError {
 func ErrEntityNotFound(entity string, err error) *AppError {
 	return NewCustomError(
 		err,
-		fmt.Sprintf("%s not found", strings.ToLower(entity)),
+		fmt.Sprintf("%s không tìm thấy", strings.ToLower(entity)),
 		fmt.Sprintf("Err%sNotFound", entity),
 	)
 }

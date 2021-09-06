@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -78,12 +81,18 @@ func (bannerHandler *BannerHandler) GetBanner(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeBanner {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblBanner))))
+	}
 
 	var banner models.Banner
 	bannerRepo := repositories2.NewBannerRepository(bannerHandler.server.DB)
 	err = bannerRepo.GetBanner(&banner, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblBanner, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblBanner, err))
 	}
 	return responses.SearchResponse(c, banner)
 }

@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/requests"
@@ -30,5 +31,12 @@ func (bannerRepo *BannerRepository) SearchBanner(banners *[]models.Banner, filte
 }
 
 func (bannerRepo *BannerRepository) GetBanner(banners *models.Banner, id uint) error {
-	return bannerRepo.DB.Table(utils.TblBanner).First(banners, id).Error
+	err := bannerRepo.DB.Table(utils.TblBanner).First(banners, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }

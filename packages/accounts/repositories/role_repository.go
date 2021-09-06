@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -49,6 +50,13 @@ func (roleRepo *RoleRepository) GetRoles(perms *[]models2.Role, count *int64, fi
 		Find(&perms).Error
 }
 
-func (roleRepo *RoleRepository) GetRoleByID(perm *models2.Role, id uint) {
-	roleRepo.DB.First(&perm, id)
+func (roleRepo *RoleRepository) GetRoleByID(perm *models2.Role, id uint) error {
+	err := roleRepo.DB.First(&perm, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }

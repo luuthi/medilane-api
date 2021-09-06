@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/authentication"
 	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
@@ -84,16 +86,19 @@ func (accHandler *AccountHandler) GetAccount(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils2.DBTypeAccount {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils2.TblAccount))))
+	}
 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
-	err = accRepo.GetUserByID(&existedUser, id)
-	if err != nil {
-		panic(err)
-	}
+	errExist := accRepo.GetUserByID(&existedUser, id)
+	if errExist != nil {
+		if errExist == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, err))
+		}
 
-	if existedUser.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, nil))
+		panic(errorHandling.ErrCannotGetEntity(utils2.TblAccount, err))
 	}
 
 	return responses.SearchResponse(c, existedUser)
@@ -156,6 +161,9 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils2.DBTypeAccount {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils2.TblAccount))))
+	}
 
 	var acc requests2.EditAccountRequest
 	if err := c.Bind(&acc); err != nil {
@@ -168,12 +176,13 @@ func (accHandler *AccountHandler) EditAccount(c echo.Context) error {
 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
-	err = accRepo.GetUserByID(&existedUser, id)
-	if err != nil {
-		panic(err)
-	}
-	if existedUser.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, nil))
+	errExist := accRepo.GetUserByID(&existedUser, id)
+	if errExist != nil {
+		if errExist == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils2.TblAccount, err))
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
@@ -205,16 +214,19 @@ func (accHandler *AccountHandler) DeleteAccount(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils2.DBTypeAccount {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils2.TblAccount))))
+	}
 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	err = accRepo.GetUserByID(&existedUser, id)
 	if err != nil {
-		panic(err)
-	}
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, err))
+		}
 
-	if existedUser.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, nil))
+		panic(errorHandling.ErrCannotGetEntity(utils2.TblAccount, err))
 	}
 
 	accService := account.NewAccountService(accHandler.server.DB, accHandler.server.Config)
@@ -246,6 +258,9 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils2.DBTypeAccount {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils2.TblAccount))))
+	}
 
 	var requestBody requests2.AssignStaffRequest
 	if err := c.Bind(&requestBody); err != nil {
@@ -259,9 +274,14 @@ func (accHandler *AccountHandler) AssignStaffForDrugStore(c echo.Context) error 
 	var existedUser models.User
 	accRepo := repositories2.NewAccountRepository(accHandler.server.DB)
 	err = accRepo.GetUserByID(&existedUser, id)
-	if existedUser.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, nil))
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils2.TblAccount, err))
 	}
+
 	if existedUser.Type != string(utils2.STAFF) {
 		panic(errorHandling.ErrInvalidRequest(errors.New("user is not staff")))
 	}

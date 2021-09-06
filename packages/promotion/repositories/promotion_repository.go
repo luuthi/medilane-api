@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/requests"
@@ -144,16 +145,31 @@ func (promotionRepo *PromotionRepository) GetPromotions(filter *requests.SearchP
 }
 
 func (promotionRepo *PromotionRepository) GetPromotion(promotion *models.Promotion, id uint) error {
-	return promotionRepo.DB.Table(utils2.TblPromotion).
+	err := promotionRepo.DB.Table(utils2.TblPromotion).
 		Preload(clause.Associations).
 		Preload("PromotionDetails.Product.Images").
 		Preload("PromotionDetails.Variant").
 		Preload("PromotionDetails.Voucher").
 		First(&promotion, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (promotionRepo *PromotionRepository) GetPromotionDetail(promotion *models.PromotionDetail, id uint) error {
-	return promotionRepo.DB.Table(utils2.TblPromotionDetail).Preload(clause.Associations).First(&promotion, id).Error
+	err := promotionRepo.DB.Table(utils2.TblPromotionDetail).
+		Preload(clause.Associations).First(&promotion, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (promotionRepo *PromotionRepository) GetPromotionDetailByPromotion(promotionDetails *[]models.PromotionDetail, total *int64, promotionID uint, filter requests.SearchPromotionDetail) error {

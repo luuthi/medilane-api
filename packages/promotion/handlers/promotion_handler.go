@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/authentication"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
@@ -83,16 +86,20 @@ func (promoHandler *PromotionHandler) GetPromotion(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotion {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
 
 	var promo models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	err = promoRepo.GetPromotion(&promo, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotion, err))
 	}
-	if promo.ID == 0 {
-		return responses.Response(c, http.StatusOK, nil)
-	}
+
 	return responses.SearchResponse(c, promo)
 }
 
@@ -161,6 +168,9 @@ func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) er
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotion {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
 
 	var promo requests2.PromotionWithDetailRequest
 	if err := c.Bind(&promo); err != nil {
@@ -175,6 +185,16 @@ func (promoHandler *PromotionHandler) EditPromotionWithDetail(c echo.Context) er
 		if err := item.Validate(); err != nil {
 			panic(errorHandling.ErrInvalidRequest(err))
 		}
+	}
+
+	var existedPromo models.Promotion
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	err = promoRepo.GetPromotion(&existedPromo, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotion, err))
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
@@ -206,15 +226,18 @@ func (promoHandler *PromotionHandler) DeletePromotion(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotion {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
 
 	var existedPromotion models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	err = promoRepo.GetPromotion(&existedPromotion, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedPromotion.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotion, err))
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
@@ -275,14 +298,17 @@ func (promoHandler *PromotionHandler) CreatePromotionPromotionDetails(c echo.Con
 // @Failure 500 {object} errorHandling.AppError
 // @Failure 401 {object} errorHandling.AppError
 // @Failure 403 {object} errorHandling.AppError
-// @Router /promotion/{id}/details/{d_id} [put]
+// @Router /promotion/details/{d_id} [put]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error {
-	uid, err := models.FromBase58(c.Param("id"))
+	uid, err := models.FromBase58(c.Param("d_id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	dId := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotionDetail {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotionDetail))))
+	}
 
 	var acc requests2.PromotionDetailRequest
 	if err := c.Bind(&acc); err != nil {
@@ -291,6 +317,16 @@ func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error 
 
 	if err := acc.Validate(); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
+	}
+
+	var existedPromoDetail models.PromotionDetail
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	err = promoRepo.GetPromotionDetail(&existedPromoDetail, dId)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotionDetail, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotionDetail, err))
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
@@ -314,23 +350,26 @@ func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error 
 // @Failure 500 {object} errorHandling.AppError
 // @Failure 401 {object} errorHandling.AppError
 // @Failure 403 {object} errorHandling.AppError
-// @Router /promotion/{id}/details/{d_id} [delete]
+// @Router /promotion/details/{d_id} [delete]
 // @Security BearerAuth
 func (promoHandler *PromotionHandler) DeletePromotionDetail(c echo.Context) error {
-	uid, err := models.FromBase58(c.Param("id"))
+	uid, err := models.FromBase58(c.Param("d_id"))
 	if err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	dId := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotionDetail {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
 
 	var existedPromotionDetail models.PromotionDetail
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	err = promoRepo.GetPromotionDetail(&existedPromotionDetail, dId)
 	if err != nil {
-		panic(err)
-	}
-	if existedPromotionDetail.Type == "" {
-		panic(errorHandling.ErrEntityNotFound(utils.TblPromotionDetail, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotionDetail, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotionDetail, err))
 	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
@@ -361,6 +400,19 @@ func (promoHandler *PromotionHandler) DeletePromotionDetailByPromotion(c echo.Co
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotion {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
+
+	var promo models.Promotion
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	err = promoRepo.GetPromotion(&promo, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotion, err))
+	}
 
 	promoService := services.NewPromotionService(promoHandler.server.DB)
 	if err := promoService.DeletePromotionDetailByPromotion(id); err != nil {
@@ -391,6 +443,9 @@ func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) erro
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotion {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
 
 	var searchReq requests2.SearchPromotionDetail
 	if err := c.Bind(&searchReq); err != nil {
@@ -401,10 +456,19 @@ func (promoHandler *PromotionHandler) SearchPromotionDetail(c echo.Context) erro
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 
+	var promo models.Promotion
+	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	err = promoRepo.GetPromotion(&promo, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotion, err))
+	}
+
 	promoHandler.server.Logger.Info("search promotion")
 	var promotions []models.PromotionDetail
 	var total int64
-	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
 	err = promoRepo.GetPromotionDetailByPromotion(&promotions, &total, id, searchReq)
 	if err != nil {
 		panic(err)
@@ -487,6 +551,9 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePromotion {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPromotion))))
+	}
 
 	searchRequest := new(requests2.SearchProductByPromotion)
 	if err := c.Bind(searchRequest); err != nil {
@@ -505,7 +572,15 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 		panic(errorHandling.ErrUnauthorized(nil))
 	}
 
+	var promo models.Promotion
 	promoRepo := repositories2.NewPromotionRepository(promoHandler.server.DB)
+	err = promoRepo.GetPromotion(&promo, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPromotion, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPromotion, err))
+	}
 
 	var errRes error
 	var total int64
@@ -520,7 +595,7 @@ func (promoHandler *PromotionHandler) SearchProductByPromotion(c echo.Context) e
 	}
 
 	if errRes != nil {
-		panic(err)
+		panic(errRes)
 	}
 	return responses.SearchResponse(c, responses.ProductSearch{
 		Code:    http.StatusOK,

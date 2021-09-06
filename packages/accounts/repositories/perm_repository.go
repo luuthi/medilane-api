@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -49,7 +50,14 @@ func (permRepo *PermissionRepository) GetPermissions(perms *[]models2.Permission
 }
 
 func (permRepo *PermissionRepository) GetPermissionByID(perm *models2.Permission, id uint) error {
-	return permRepo.DB.First(&perm, id).Error
+	err := permRepo.DB.First(&perm, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (permRepo *PermissionRepository) GetPermissionByUsername(perms *[]models2.Permission, userName string) error {

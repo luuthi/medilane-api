@@ -65,7 +65,7 @@ func (productService *Service) EditProduct(request *requests2.ProductRequest, id
 		SetBasePrice(request.BasePrice).
 		SetManufacturer(request.Manufacturer).
 		Build()
-	return productService.DB.Table(utils2.TblProduct).Save(&product).Error
+	return productService.DB.Table(utils2.TblProduct).Updates(&product).Error
 }
 
 func (productService *Service) DeleteMedicine(id uint) error {

@@ -3,6 +3,7 @@ package repositories
 import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/medicines/repositories"
@@ -89,9 +90,23 @@ func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, u
 }
 
 func (CartRepository *CartRepository) GetCartById(cart *models.Cart, id uint) error {
-	return CartRepository.DB.Table(utils.TblCart).First(&cart, id).Error
+	err := CartRepository.DB.Table(utils.TblCart).First(&cart, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (CartRepository *CartRepository) GetCartItemById(cart *models.CartDetail, id uint) error {
-	return CartRepository.DB.Table(utils.TblCartDetail).First(&cart, id).Error
+	err := CartRepository.DB.Table(utils.TblCartDetail).First(&cart, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }

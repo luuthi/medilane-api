@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/packages/drugstores/responses"
@@ -125,7 +126,14 @@ func (DrugStoreRepository *DrugStoreRepository) GetDrugStores(count *int64, filt
 }
 
 func (DrugStoreRepository *DrugStoreRepository) GetDrugstoreByID(perm *models.DrugStore, id uint) error {
-	return DrugStoreRepository.DB.First(&perm, id).Error
+	err := DrugStoreRepository.DB.First(&perm, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (DrugStoreRepository *DrugStoreRepository) GetListChildStoreOfParent(id uint) (drugStores []models.DrugStore, err error) {

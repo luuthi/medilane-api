@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/authentication"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
@@ -138,16 +141,18 @@ func (productHandler *ProductHandler) GetPureProductByID(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeProduct {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblProduct))))
+	}
 
 	var existedProduct models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
 	err = medicineRepo.GetProductById(&existedProduct, id)
 	if err != nil {
-		panic(err)
-	}
-
-	if existedProduct.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblProduct, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblProduct, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblProduct, err))
 	}
 
 	return responses.SearchResponse(c, existedProduct)
@@ -255,6 +260,9 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeProduct {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblProduct))))
+	}
 
 	var pro requests2.ProductRequest
 	if err := c.Bind(&pro); err != nil {
@@ -269,11 +277,10 @@ func (productHandler *ProductHandler) EditProduct(c echo.Context) error {
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
 	err = medicineRepo.GetProductById(&existedProduct, id)
 	if err != nil {
-		panic(err)
-	}
-
-	if existedProduct.Code == "" {
-		panic(errorHandling.ErrEntityNotFound(utils.TblProduct, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblProduct, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblProduct, err))
 	}
 
 	productService := medicine.NewProductService(productHandler.server.DB)
@@ -304,6 +311,18 @@ func (productHandler *ProductHandler) DeleteProduct(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeProduct {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblProduct))))
+	}
+	var existedProduct models.Product
+	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
+	err = medicineRepo.GetProductById(&existedProduct, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblProduct, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblProduct, err))
+	}
 
 	productService := medicine.NewProductService(productHandler.server.DB)
 	if err := productService.DeleteMedicine(id); err != nil {
@@ -343,6 +362,9 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeProduct {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblProduct))))
+	}
 
 	var areaId uint
 	paramUrl1, err := models.FromBase58(c.QueryParam("area_id"))
@@ -350,17 +372,19 @@ func (productHandler *ProductHandler) GetProductByID(c echo.Context) error {
 		areaId = 0
 	} else {
 		areaId = uint(paramUrl1.GetLocalID())
+		if paramUrl1.GetObjectType() != utils.DBTypeArea {
+			panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+		}
 	}
 
 	var existedProduct *models.Product
 	medicineRepo := repositories.NewProductRepository(productHandler.server.DB)
 	existedProduct, err = medicineRepo.GetProductByIdCost(id, uint(claims.UserId.GetLocalID()), claims.Type, areaId)
 	if err != nil {
-		panic(err)
-	}
-
-	if existedProduct.ID == 0 {
-		return responses.Response(c, http.StatusOK, nil)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblProduct, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblProduct, err))
 	}
 
 	return responses.SearchResponse(c, existedProduct)

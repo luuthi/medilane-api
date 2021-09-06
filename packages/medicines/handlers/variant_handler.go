@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -84,16 +87,20 @@ func (variantHandler *VariantHandler) GetVariant(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeVariant {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblVariant))))
+	}
 
 	var existedVariant models.Variant
 	variantRepo := repositories.NewVariantRepository(variantHandler.server.DB)
 	err = variantRepo.GetVariantById(&existedVariant, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblVariant, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblVariant, err))
 	}
-	if existedVariant.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblVariant, nil))
-	}
+
 	return responses.SearchResponse(c, existedVariant)
 }
 
@@ -151,6 +158,9 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeVariant {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblVariant))))
+	}
 
 	var variant requests2.VariantRequest
 	if err := c.Bind(&variant); err != nil {
@@ -165,10 +175,10 @@ func (variantHandler *VariantHandler) EditVariant(c echo.Context) error {
 	variantRepo := repositories.NewVariantRepository(variantHandler.server.DB)
 	err = variantRepo.GetVariantById(&existedVariant, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedVariant.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblVariant, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblVariant, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblVariant, err))
 	}
 
 	variantService := medicine.NewProductService(variantHandler.server.DB)
@@ -199,6 +209,19 @@ func (variantHandler *VariantHandler) DeleteVariant(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeVariant {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblVariant))))
+	}
+
+	var existedVariant models.Variant
+	variantRepo := repositories.NewVariantRepository(variantHandler.server.DB)
+	err = variantRepo.GetVariantById(&existedVariant, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblVariant, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblVariant, err))
+	}
 
 	variantService := medicine.NewProductService(variantHandler.server.DB)
 	if err := variantService.DeleteVariant(id); err != nil {

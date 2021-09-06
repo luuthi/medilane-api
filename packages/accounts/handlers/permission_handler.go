@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
@@ -117,6 +120,9 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePermission {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPermission))))
+	}
 
 	var perm requests2.PermissionRequest
 	if err := c.Bind(&perm); err != nil {
@@ -131,11 +137,11 @@ func (permHandler *PermissionHandler) EditPermission(c echo.Context) error {
 	permRepo := repositories.NewPermissionRepository(permHandler.server.DB)
 	err = permRepo.GetPermissionByID(&existedPerm, id)
 	if err != nil {
-		panic(err)
-	}
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPermission, err))
+		}
 
-	if existedPerm.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblPermission, nil))
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPermission, err))
 	}
 
 	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
@@ -166,6 +172,19 @@ func (permHandler *PermissionHandler) DeletePermission(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePermission {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPermission))))
+	}
+
+	var existedPerm models2.Permission
+	permRepo := repositories.NewPermissionRepository(permHandler.server.DB)
+	err = permRepo.GetPermissionByID(&existedPerm, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPermission, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPermission, err))
+	}
 
 	permService := account.NewAccountService(permHandler.server.DB, permHandler.server.Config)
 	if err := permService.DeletePermission(id); err != nil {

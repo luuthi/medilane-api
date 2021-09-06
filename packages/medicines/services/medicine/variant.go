@@ -18,7 +18,7 @@ func (productService *Service) EditVariant(request *requests2.VariantRequest, id
 		SetID(id).
 		SetName(request.Name).
 		Build()
-	return productService.DB.Table(utils2.TblVariant).Save(&variant).Error
+	return productService.DB.Table(utils2.TblVariant).Updates(&variant).Error
 }
 
 func (productService *Service) DeleteVariant(id uint) error {

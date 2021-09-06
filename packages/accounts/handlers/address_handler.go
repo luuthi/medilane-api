@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
@@ -84,16 +87,19 @@ func (addHandler *AddressHandler) GetAddress(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeAddress {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblAddress))))
+	}
 
 	var existedAddress models2.Address
 	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
 	err = addRepo.GetAddressByID(&existedAddress, id)
 	if err != nil {
-		panic(err)
-	}
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblAddress, err))
+		}
 
-	if existedAddress.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblAddress, nil))
+		panic(errorHandling.ErrCannotGetEntity(utils.TblAddress, err))
 	}
 
 	return responses.SearchResponse(c, existedAddress)
@@ -153,6 +159,9 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeAddress {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblAddress))))
+	}
 
 	var addr requests2.AddressRequest
 	if err := c.Bind(&addr); err != nil {
@@ -167,10 +176,11 @@ func (addHandler *AddressHandler) EditAddress(c echo.Context) error {
 	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
 	err = addRepo.GetAddressByID(&existedAddress, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedAddress.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblAddress, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblAddress, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblAddress, err))
 	}
 
 	addressService := address.NewAddressService(addHandler.server.DB)
@@ -201,6 +211,20 @@ func (addHandler *AddressHandler) DeleteAddress(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeAddress {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblAddress))))
+	}
+
+	var existedAddress models2.Address
+	addRepo := repositories.NewAddressRepository(addHandler.server.DB)
+	err = addRepo.GetAddressByID(&existedAddress, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblAddress, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblAddress, err))
+	}
 
 	addService := address.NewAddressService(addHandler.server.DB)
 	if err := addService.DeleteAddress(id); err != nil {

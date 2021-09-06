@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/authentication"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
@@ -87,6 +90,9 @@ func (areaHandler *AreaHandler) EditArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeArea {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+	}
 
 	var area requests2.AreaRequest
 	if err := c.Bind(&area); err != nil {
@@ -101,10 +107,11 @@ func (areaHandler *AreaHandler) EditArea(c echo.Context) error {
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
 	err = areaRepo.GetAreaByID(&existedArea, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedArea.Name == "" {
-		panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
 	}
 
 	areaService := address.NewAddressService(areaHandler.server.DB)
@@ -167,16 +174,19 @@ func (areaHandler *AreaHandler) GetArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeArea {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+	}
 
 	var existedArea models2.Area
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
 	err = areaRepo.GetAreaByID(&existedArea, id)
 	if err != nil {
-		panic(errorHandling.ErrInvalidRequest(err))
-	}
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
 
-	if existedArea.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblArea, nil))
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
 	}
 
 	return responses.SearchResponse(c, existedArea)
@@ -203,6 +213,19 @@ func (areaHandler *AreaHandler) DeleteArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeArea {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+	}
+	var existedArea models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	err = areaRepo.GetAreaByID(&existedArea, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
+	}
 
 	areaService := address.NewAddressService(areaHandler.server.DB)
 	if err := areaService.DeleteArea(id); err != nil {
@@ -241,11 +264,11 @@ func (areaHandler *AreaHandler) SetCostProductsOfArea(c echo.Context) error {
 	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
 	err := areaRepo.GetAreaByID(&areaInDB, areaId)
 	if err != nil {
-		panic(err)
-	}
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
 
-	if areaInDB.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblArea, nil))
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
 	}
 
 	areaService := address.NewAddressService(areaHandler.server.DB)
@@ -335,6 +358,9 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	areaId := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeArea {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+	}
 
 	token, err := authentication.VerifyToken(c.Request(), areaHandler.server)
 	if err != nil {
@@ -348,6 +374,17 @@ func (areaHandler *AreaHandler) GetProductsOfArea(c echo.Context) error {
 	searchRequest := new(requests2.SearchProductRequest)
 	if err := c.Bind(searchRequest); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
+	}
+
+	// check exist area
+	var existedArea models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	err = areaRepo.GetAreaByID(&existedArea, areaId)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
 	}
 
 	areaHandler.server.Logger.Info("Search product")
@@ -389,6 +426,9 @@ func (areaHandler *AreaHandler) ConfigArea(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeArea {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+	}
 
 	var areaConf requests2.AreaConfigListRequest
 	if err := c.Bind(&areaConf); err != nil {
@@ -399,6 +439,17 @@ func (areaHandler *AreaHandler) ConfigArea(c echo.Context) error {
 		if err := v.Validate(); err != nil {
 			panic(errorHandling.ErrInvalidRequest(err))
 		}
+	}
+
+	var existedArea models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	err = areaRepo.GetAreaByID(&existedArea, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
 	}
 
 	areaService := address.NewAddressService(areaHandler.server.DB)

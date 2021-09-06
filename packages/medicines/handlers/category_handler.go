@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -117,6 +120,9 @@ func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeCategory {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblCategory))))
+	}
 
 	var category requests2.CategoryRequest
 	if err := c.Bind(&category); err != nil {
@@ -131,10 +137,10 @@ func (categoryHandler *CategoryHandler) EditCategory(c echo.Context) error {
 	CategoryRepo := repositories.NewCategoryRepository(categoryHandler.server.DB)
 	err = CategoryRepo.GetCategoryById(&existedCategory, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedCategory.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblCategory, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblCategory, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblCategory, err))
 	}
 
 	categoryService := medicine.NewProductService(categoryHandler.server.DB)
@@ -165,6 +171,19 @@ func (categoryHandler *CategoryHandler) DeleteCategory(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeCategory {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblCategory))))
+	}
+
+	var existedCategory models.Category
+	CategoryRepo := repositories.NewCategoryRepository(categoryHandler.server.DB)
+	err = CategoryRepo.GetCategoryById(&existedCategory, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblCategory, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblCategory, err))
+	}
 
 	CategoryService := medicine.NewProductService(categoryHandler.server.DB)
 	if err := CategoryService.DeleteCategory(id); err != nil {

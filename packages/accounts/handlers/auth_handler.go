@@ -7,6 +7,7 @@ import (
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 	"medilane-api/core/authentication"
 	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
@@ -68,10 +69,13 @@ func (authHandler *AuthHandler) Login(c echo.Context) error {
 	if user.Type != string(utils2.SUPER_ADMIN) && user.Type != string(utils2.STAFF) {
 		err = AccountRepository.GetDrugStoreByUser(&drugStore, user.ID)
 		if err != nil {
-			panic(err)
+			if err == gorm.ErrRecordNotFound {
+				panic(errorHandling.ErrEntityNotFound(utils2.TblDrugstore, err))
+			}
+			panic(errorHandling.ErrCannotGetEntity(utils2.TblDrugstore, err))
 		}
 
-		if drugStore.ID == 0 && user.Type != string(utils2.SUPER_ADMIN) && user.Type != string(utils2.STAFF) {
+		if user.Type != string(utils2.SUPER_ADMIN) && user.Type != string(utils2.STAFF) {
 			panic(errorHandling.ErrInvalidRequest(errors.New("user not in any active store")))
 		}
 
@@ -144,10 +148,15 @@ func (authHandler *AuthHandler) RefreshToken(c echo.Context) error {
 	}
 
 	user := new(models.User)
-	authHandler.server.DB.First(&user, claims.Id)
 
-	if user.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, nil))
+	accRepo := repositories2.NewAccountRepository(authHandler.server.DB)
+	errExist := accRepo.GetUserByID(user, uint(claims.UserId.GetLocalID()))
+	if errExist != nil {
+		if errExist == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils2.TblAccount, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils2.TblAccount, err))
 	}
 
 	tokenServ := tokenService.NewTokenService(authHandler.server.Config)

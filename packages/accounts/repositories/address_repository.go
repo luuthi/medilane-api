@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -85,7 +86,14 @@ func (addressRepo *AddressRepository) GetAddresses(addresses *[]models2.Address,
 }
 
 func (addressRepo *AddressRepository) GetAddressByID(address *models2.Address, id uint) error {
-	return addressRepo.DB.Table(utils2.TblAddress).First(&address, id).Error
+	err := addressRepo.DB.Table(utils2.TblAddress).First(&address, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (addressRepo *AddressRepository) GetAddressByArea(addresses []*models2.Address, id uint) error {

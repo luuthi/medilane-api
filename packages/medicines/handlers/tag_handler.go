@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -117,6 +120,9 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeTag {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblTag))))
+	}
 
 	var tag requests2.TagRequest
 	if err := c.Bind(&tag); err != nil {
@@ -129,12 +135,13 @@ func (tagHandler *TagHandler) EditTag(c echo.Context) error {
 
 	var existedTag models.Tag
 	tagRepo := repositories.NewTagRepository(tagHandler.server.DB)
-	err = tagRepo.GetTagById(&existedTag, id)
-	if err != nil {
-		panic(err)
-	}
-	if existedTag.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblTag, nil))
+	errExist := tagRepo.GetTagById(&existedTag, id)
+	if errExist != nil {
+		if errExist == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblTag, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblTag, err))
 	}
 
 	tagService := medicine.NewProductService(tagHandler.server.DB)
@@ -165,6 +172,20 @@ func (tagHandler *TagHandler) DeleteTag(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeTag {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblTag))))
+	}
+
+	var existedTag models.Tag
+	tagRepo := repositories.NewTagRepository(tagHandler.server.DB)
+	err = tagRepo.GetTagById(&existedTag, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblTag, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblTag, err))
+	}
 
 	tagService := medicine.NewProductService(tagHandler.server.DB)
 	if err := tagService.DeleteTag(id); err != nil {

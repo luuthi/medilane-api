@@ -3,6 +3,7 @@ package handlers
 import (
 	"archive/zip"
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -158,16 +159,20 @@ func (orderHandler *OrderHandler) GetOrder(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeOrder {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblOrder))))
+	}
 
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
 	err = orderRepo.GetOrderDetail(&existedOrder, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblOrder, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblOrder, err))
 	}
-	if existedOrder.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblOrder, nil))
-	}
+
 	return responses.SearchResponse(c, existedOrder)
 
 }
@@ -194,6 +199,9 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeOrder {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblOrder))))
+	}
 
 	var orderRequest requests2.EditOrderRequest
 	if err := c.Bind(&orderRequest); err != nil {
@@ -208,11 +216,10 @@ func (orderHandler *OrderHandler) EditOrder(c echo.Context) error {
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
 	err = orderRepo.GetOrderDetail(&existedOrder, id)
 	if err != nil {
-		panic(err)
-	}
-
-	if existedOrder.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblOrder, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblOrder, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblOrder, err))
 	}
 
 	orderService := order.NewOrderService(orderHandler.server.DB)
@@ -244,15 +251,18 @@ func (orderHandler *OrderHandler) DeleteOrder(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeOrder {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblOrder))))
+	}
 
 	var existedOrder models2.Order
 	orderRepo := repositories2.NewOrderRepository(orderHandler.server.DB)
 	err = orderRepo.GetOrderDetail(&existedOrder, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedOrder.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblOrder, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblOrder, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblOrder, err))
 	}
 
 	orderService := order.NewOrderService(orderHandler.server.DB)

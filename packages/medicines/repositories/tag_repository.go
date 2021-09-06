@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -29,7 +30,14 @@ func (tagRepository *TagRepository) GetTagBySlug(tag *models2.Tag, Slug string) 
 }
 
 func (tagRepository *TagRepository) GetTagById(tag *models2.Tag, id uint) error {
-	return tagRepository.DB.Where("id = ?", id).Find(tag).Error
+	err := tagRepository.DB.Where("id = ?", id).First(&tag).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (tagRepository *TagRepository) GetTags(tag *[]models2.Tag, count *int64, filter *requests2.SearchTagRequest) error {

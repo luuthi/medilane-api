@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -30,11 +31,18 @@ func (productRepository *ProductRepository) GetProductByCode(product *models2.Pr
 }
 
 func (productRepository *ProductRepository) GetProductById(product *models2.Product, id uint) error {
-	return productRepository.DB.Table(utils.TblProduct).
+	err := productRepository.DB.Table(utils.TblProduct).
 		Preload(clause.Associations).
 		Preload("Variants.VariantValue", "product_id = ?", id).
 		Where("id = ?", id).
-		Find(product).Error
+		First(product).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (productRepository *ProductRepository) GetProductByIdCost(id uint, userId uint, userType string, areaId uint) (*models2.Product, error) {
@@ -64,7 +72,10 @@ func (productRepository *ProductRepository) GetProductByIdCost(id uint, userId u
 		Where(" ac.area_id = ?", areaId).
 		Where("product.id = ?", id).Find(&product).Error
 	if err != nil {
-		return nil, err
+		if err == gorm.ErrRecordNotFound {
+			return nil, gorm.ErrRecordNotFound
+		}
+		return nil, errorHandling.ErrDB(err)
 	}
 
 	productIds := []uint{product.ID}
@@ -72,7 +83,8 @@ func (productRepository *ProductRepository) GetProductByIdCost(id uint, userId u
 	var promotionResp []models2.ProductInPromotionItem
 	err = productRepository.CheckProductPromotionPercent(productIds, areaId, &promotionResp)
 	if err != nil {
-		return nil, err
+		// if error just ignore and continue return
+		//return nil, errorHandling.ErrDB(err)
 	}
 
 	if len(promotionResp) == 1 {
@@ -82,7 +94,8 @@ func (productRepository *ProductRepository) GetProductByIdCost(id uint, userId u
 
 	err = productRepository.CheckProductPromotionVoucher(productIds, areaId, &promotionResp)
 	if err != nil {
-		return nil, err
+		// if error just ignore and continue return
+		//return nil, errorHandling.ErrDB(err)
 	}
 
 	if len(promotionResp) == 1 {

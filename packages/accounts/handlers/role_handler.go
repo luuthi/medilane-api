@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
@@ -119,6 +122,9 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeRole {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblRole))))
+	}
 
 	var role requests2.RoleRequest
 	if err := c.Bind(&role); err != nil {
@@ -131,9 +137,12 @@ func (roleHandler *RoleHandler) EditRole(c echo.Context) error {
 
 	var existedRole models2.Role
 	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)
-	permRepo.GetRoleByID(&existedRole, id)
-	if existedRole.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblRole, err))
+	err = permRepo.GetRoleByID(&existedRole, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblRole, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblRole, err))
 	}
 
 	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)
@@ -164,12 +173,19 @@ func (roleHandler *RoleHandler) DeleteRole(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeRole {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblRole))))
+	}
 
 	var existedRole models2.Role
 	permRepo := repositories.NewRoleRepository(roleHandler.server.DB)
-	permRepo.GetRoleByID(&existedRole, id)
-	if existedRole.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblRole, err))
+	err = permRepo.GetRoleByID(&existedRole, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblRole, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblRole, err))
 	}
 
 	roleService := account.NewAccountService(roleHandler.server.DB, roleHandler.server.Config)

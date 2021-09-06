@@ -3,6 +3,7 @@ package repositories
 import (
 	"fmt"
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	"medilane-api/requests"
@@ -51,5 +52,12 @@ func (voucherRepo *VoucherRepository) GetVouchers(vouchers *[]models.Voucher, fi
 		Find(&vouchers).Error
 }
 func (voucherRepo *VoucherRepository) GetVoucher(voucher *models.Voucher, id uint) error {
-	return voucherRepo.DB.Table(utils.TblVoucher).First(&voucher, id).Error
+	err := voucherRepo.DB.Table(utils.TblVoucher).First(&voucher, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }

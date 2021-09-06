@@ -20,7 +20,7 @@ func (productService *Service) EditTag(request *requests2.TagRequest, id uint) e
 		SetName(request.Name).
 		SetSlug(request.Slug).
 		Build()
-	return productService.DB.Table(utils2.TblTag).Save(&tag).Error
+	return productService.DB.Table(utils2.TblTag).Updates(&tag).Error
 }
 
 func (productService *Service) DeleteTag(id uint) error {

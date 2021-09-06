@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -82,15 +85,18 @@ func (NotificationHandler *NotificationHandler) MarkNotificationAsRead(c echo.Co
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeNotification {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblNotification))))
+	}
 
 	var notification models.Notification
 	permRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)
 	err = permRepo.GetNotificationByID(&notification, id)
 	if err != nil {
-		panic(err)
-	}
-	if notification.ID == -0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblNotification, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblNotification, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblNotification, err))
 	}
 
 	notificationService := services.NewNotificationService(NotificationHandler.server.DB)
@@ -121,6 +127,9 @@ func (NotificationHandler *NotificationHandler) MarkAllNotificationAsRead(c echo
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeAccount {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblAccount))))
+	}
 
 	var notifications []models.Notification
 	permRepo := repositories.NewNotificationRepository(NotificationHandler.server.DB)

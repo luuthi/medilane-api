@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -109,7 +110,14 @@ func (partnerRepo *PartnerRepository) GetPartners(count *int64, filter *requests
 }
 
 func (partnerRepo *PartnerRepository) GetPartnerByID(partner *models.Partner, id uint) error {
-	return partnerRepo.DB.First(&partner, id).Error
+	err := partnerRepo.DB.First(&partner, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (partnerRepo *PartnerRepository) GetUsersByPartner(users *[]models.User, total *int64, partnerID uint) error {

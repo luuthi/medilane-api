@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"fmt"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -29,7 +30,14 @@ func (categoryRepository *CategoryRepository) GetCategoryBySlug(category *models
 }
 
 func (categoryRepository *CategoryRepository) GetCategoryById(category *models2.Category, id uint) error {
-	return categoryRepository.DB.Table(utils.TblCategory).Where("id = ?", id).Find(category).Error
+	err := categoryRepository.DB.Table(utils.TblCategory).Find(category, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (categoryRepository *CategoryRepository) GetCategories(category *[]models2.Category, count *int64, filter *requests2.SearchCategoryRequest) error {

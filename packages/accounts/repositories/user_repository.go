@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	utils2 "medilane-api/core/utils"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -44,21 +45,32 @@ func (AccountRepository *AccountRepository) GetAddressByUser(address *models.Add
 }
 
 func (AccountRepository *AccountRepository) GetDrugStoreByUser(drugstore *models.DrugStore, userID uint) error {
-	return AccountRepository.DB.Table(utils2.TblAccount).Select("ds.*").
+	err := AccountRepository.DB.Table(utils2.TblAccount).Select("ds.*").
 		Joins("JOIN drug_store_user dsu ON dsu.user_id = user.id").
 		Joins("JOIN drug_store ds ON ds.id = dsu.drug_store_id").
 		Where("user.id = ?", userID).
 		Where("user.type = 'user'").
 		First(&drugstore).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id uint) error {
 	err := AccountRepository.DB.Where("id = ?", id).
 		Preload("Roles").
-		Find(&user).Error
+		First(&user).Error
 	if err != nil {
-		return err
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
 	}
+
 	if user.Type == string(utils2.USER) {
 		var drugstore models.DrugStore
 		err = AccountRepository.DB.Table(utils2.TblAccount).Select("ds.*").
@@ -67,7 +79,10 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 			Where("user.id = ?", user.ID).
 			First(&drugstore).Error
 		if err != nil {
-			return err
+			if err == gorm.ErrRecordNotFound {
+				return gorm.ErrRecordNotFound
+			}
+			return errorHandling.ErrDB(err)
 		}
 		user.DrugStore = &drugstore
 	} else if user.Type == string(utils2.SUPPLIER) || user.Type == string(utils2.MANUFACTURER) {
@@ -78,7 +93,10 @@ func (AccountRepository *AccountRepository) GetUserByID(user *models.User, id ui
 			Where("user.id = ?", user.ID).
 			First(&partner).Error
 		if err != nil {
-			return err
+			if err == gorm.ErrRecordNotFound {
+				return gorm.ErrRecordNotFound
+			}
+			return errorHandling.ErrDB(err)
 		}
 		user.Partner = &partner
 	}

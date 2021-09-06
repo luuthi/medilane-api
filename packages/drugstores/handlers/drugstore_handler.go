@@ -88,12 +88,18 @@ func (drugStoreHandler *DrugStoreHandler) GetDrugstoreById(c echo.Context) error
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeDrugstore {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblDrugstore))))
+	}
 
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
 	}
 
 	return responses.SearchResponse(c, existedDrugstore)
@@ -154,6 +160,9 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeDrugstore {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblDrugstore))))
+	}
 
 	var drugstore requests2.EditDrugStoreRequest
 	if err := c.Bind(&drugstore); err != nil {
@@ -168,10 +177,10 @@ func (drugStoreHandler *DrugStoreHandler) EditDrugstore(c echo.Context) error {
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedDrugstore.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
@@ -202,6 +211,19 @@ func (drugStoreHandler *DrugStoreHandler) DeleteDrugstore(c echo.Context) error 
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeDrugstore {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblDrugstore))))
+	}
+
+	var existedDrugstore models.DrugStore
+	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
+	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
+	}
 
 	drugstoreService := drugServices.NewDrugStoreService(drugStoreHandler.server.DB)
 	if err := drugstoreService.DeleteDrugstore(id); err != nil {
@@ -240,19 +262,17 @@ func (drugStoreHandler *DrugStoreHandler) ConnectiveDrugStore(c echo.Context) er
 	var err error
 	err = drugstoreRepository.GetDrugstoreByID(&parentStore, uint(drugstore.ParentStoreId.GetLocalID()))
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
 	}
 	err = drugstoreRepository.GetDrugstoreByID(&childStore, uint(drugstore.ChildStoreId.GetLocalID()))
 	if err != nil {
-		panic(err)
-	}
-
-	if parentStore.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, errors.New(fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ParentStoreId))))
-	}
-
-	if childStore.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, errors.New(fmt.Sprintf("Not found drugstore with ID: %d", drugstore.ChildStoreId))))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
 	}
 
 	if parentStore.Type != drugstores2.DRUGSTORES {
@@ -315,16 +335,19 @@ func (drugStoreHandler *DrugStoreHandler) GetListConnectiveDrugStore(c echo.Cont
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeDrugstore {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblDrugstore))))
+	}
 
 	// check exist drugstore
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedDrugstore.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
 	}
 
 	typeOfStoreInRelationship, parentStoreId, err := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)
@@ -374,16 +397,19 @@ func (drugStoreHandler *DrugStoreHandler) GetTypeConnectiveDrugStore(c echo.Cont
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeDrugstore {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblDrugstore))))
+	}
 
 	// check exist drugstore
 	var existedDrugstore models.DrugStore
 	permRepo := repositories2.NewDrugStoreRepository(drugStoreHandler.server.DB)
 	err = permRepo.GetDrugstoreByID(&existedDrugstore, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedDrugstore.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblDrugstore, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblDrugstore, err))
 	}
 
 	typeOfStoreInRelationship, _, err := checkTypeOfDrugStoreInRelationship(id, drugStoreHandler.server.DB)

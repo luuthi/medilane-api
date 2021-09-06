@@ -20,7 +20,7 @@ func (productService *Service) EditCategory(request *requests2.CategoryRequest, 
 		SetName(request.Name).
 		SetSlug(request.Slug).
 		Build()
-	return productService.DB.Table(utils2.TblCategory).Save(&category).Error
+	return productService.DB.Table(utils2.TblCategory).Updates(&category).Error
 }
 
 func (productService *Service) DeleteCategory(id uint) error {

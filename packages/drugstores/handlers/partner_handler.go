@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -82,12 +85,18 @@ func (partnerHandler *PartnerHandler) GetPartnerById(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePartner {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPartner))))
+	}
 
 	var existedPartner models.Partner
 	partnerRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
 	err = partnerRepo.GetPartnerByID(&existedPartner, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPartner, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPartner, err))
 	}
 
 	return responses.SearchResponse(c, existedPartner)
@@ -148,6 +157,9 @@ func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePartner {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPartner))))
+	}
 
 	var partner requests2.EditPartnerRequest
 	if err := c.Bind(&partner); err != nil {
@@ -162,10 +174,10 @@ func (partnerHandler *PartnerHandler) EditPartner(c echo.Context) error {
 	permRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
 	err = permRepo.GetPartnerByID(&existedPartner, id)
 	if err != nil {
-		panic(err)
-	}
-	if existedPartner.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblPartner, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPartner, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPartner, err))
 	}
 
 	drugstoreService := drugServices.NewDrugStoreService(partnerHandler.server.DB)
@@ -196,6 +208,19 @@ func (partnerHandler *PartnerHandler) DeletePartner(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypePartner {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblPartner))))
+	}
+
+	var existedPartner models.Partner
+	permRepo := repositories2.NewPartnerRepository(partnerHandler.server.DB)
+	err = permRepo.GetPartnerByID(&existedPartner, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblPartner, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblPartner, err))
+	}
 
 	drugstoreService := drugServices.NewDrugStoreService(partnerHandler.server.DB)
 	if err := drugstoreService.DeletePartner(id); err != nil {

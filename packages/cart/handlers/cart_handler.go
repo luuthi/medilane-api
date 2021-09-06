@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/authentication"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
@@ -167,15 +170,18 @@ func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeCart {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblCart))))
+	}
 
 	var existCart models2.Cart
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
 	err = cartRepo.GetCartById(&existCart, id)
 	if err != nil {
-		panic(err)
-	}
-	if existCart.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblCart, err))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblCart, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblCart, err))
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
@@ -206,15 +212,18 @@ func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeCartDetail {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblCartDetail))))
+	}
 
 	var existCart models2.CartDetail
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
 	err = cartRepo.GetCartItemById(&existCart, id)
 	if err != nil {
-		panic(err)
-	}
-	if existCart.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblCart, err))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblCartDetail, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblCartDetail, err))
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)

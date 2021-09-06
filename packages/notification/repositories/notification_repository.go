@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	requests2 "medilane-api/requests"
@@ -49,7 +50,14 @@ func (NotificationRepository *NotificationRepository) GetNotifications(count *in
 }
 
 func (NotificationRepository *NotificationRepository) GetNotificationByID(perm *models.Notification, id uint) error {
-	return NotificationRepository.DB.First(&perm, id).Error
+	err := NotificationRepository.DB.First(&perm, id).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (NotificationRepository *NotificationRepository) GetNotificationByUserID(perm *[]models.Notification, id uint) error {

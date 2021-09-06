@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -107,6 +110,9 @@ func (settingHandler *SettingHandler) EditAppSetting(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeSetting {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblSetting))))
+	}
 
 	var set requests2.SettingRequest
 	if err := c.Bind(&set); err != nil {
@@ -115,6 +121,18 @@ func (settingHandler *SettingHandler) EditAppSetting(c echo.Context) error {
 
 	if err := set.Validate(); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
+	}
+
+	var appSetting models.AppSetting
+	settingRepo := repositories2.NewSettingRepository(settingHandler.server.DB)
+	err = settingRepo.GetSetting(&appSetting, &requests2.SearchSettingRequest{
+		Key: set.Key,
+	})
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblSetting, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblSetting, err))
 	}
 
 	settingService := services.NewAppSettingService(settingHandler.server.DB)

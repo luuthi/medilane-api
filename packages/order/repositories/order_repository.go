@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	models2 "medilane-api/models"
 	repositories2 "medilane-api/packages/accounts/repositories"
@@ -127,13 +128,20 @@ func (OrderRepository *OrderRepository) GetOrder(orders *[]models2.Order, count 
 }
 
 func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, orderId uint) error {
-	return OrderRepository.DB.Table(utils.TblOrder).
+	err := OrderRepository.DB.Table(utils.TblOrder).
 		Preload(clause.Associations).
 		Preload("OrderDetails.Product").
 		Preload("OrderDetails.Variant").
 		Preload("OrderDetails.Product.Images").
 		Preload("Drugstore").
 		First(&orders, orderId).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return gorm.ErrRecordNotFound
+		}
+		return errorHandling.ErrDB(err)
+	}
+	return nil
 }
 
 func (OrderRepository *OrderRepository) GetOrderCodeByTime(orderCode *models2.OrderCode, time string) error {

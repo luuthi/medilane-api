@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
@@ -82,16 +85,20 @@ func (voucherHandler *VoucherHandler) GetVoucher(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeVoucher {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblVoucher))))
+	}
 
 	var voucher models.Voucher
 	voucherRepo := repositories2.NewVoucherRepository(voucherHandler.server.DB)
 	err = voucherRepo.GetVoucher(&voucher, id)
 	if err != nil {
-		panic(err)
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblVoucher, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblVoucher, err))
 	}
-	if voucher.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblVoucher, nil))
-	}
+
 	return responses.SearchResponse(c, voucher)
 }
 
@@ -151,6 +158,9 @@ func (voucherHandler *VoucherHandler) EditVoucher(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeVoucher {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblVoucher))))
+	}
 
 	var voucher requests2.VoucherRequest
 	if err := c.Bind(&voucher); err != nil {
@@ -159,6 +169,16 @@ func (voucherHandler *VoucherHandler) EditVoucher(c echo.Context) error {
 
 	if err := voucher.Validate(); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
+	}
+
+	var existedVoucher models.Voucher
+	voucherRepo := repositories2.NewVoucherRepository(voucherHandler.server.DB)
+	err = voucherRepo.GetVoucher(&existedVoucher, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblVoucher, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblVoucher, err))
 	}
 
 	voucherService := services.NewPromotionService(voucherHandler.server.DB)
@@ -190,16 +210,18 @@ func (voucherHandler *VoucherHandler) DeleteVoucher(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeVoucher {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblVoucher))))
+	}
 
 	var existedVoucher models.Voucher
 	promoRepo := repositories2.NewVoucherRepository(voucherHandler.server.DB)
 	err = promoRepo.GetVoucher(&existedVoucher, id)
 	if err != nil {
-		panic(err)
-	}
-
-	if existedVoucher.ID == 0 {
-		panic(errorHandling.ErrEntityNotFound(utils.TblVoucher, nil))
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblVoucher, err))
+		}
+		panic(errorHandling.ErrCannotGetEntity(utils.TblVoucher, err))
 	}
 
 	promoService := services.NewPromotionService(voucherHandler.server.DB)
