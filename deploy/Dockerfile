@@ -18,9 +18,9 @@ COPY . .
 RUN ls -l
 
 RUN git config --global http.sslVerify true &&\
-    go get -v github.com/swaggo/swag/cmd/swag &&\
-    $GOPATH/bin/swag init -g cmd/main.go &&\
-    go mod download
+    go get -v github.com/swaggo/swag/cmd/swag&&\
+    go mod download &&\
+    $GOPATH/bin/swag init -g cmd/main.go \
 
 RUN CGO_ENABLED=0 GOOS=linux go build cmd/main.go
 
