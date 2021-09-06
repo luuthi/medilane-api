@@ -4841,6 +4841,151 @@ var doc = `{
                 }
             }
         },
+        "/promotion/details/{d_id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform edit promotion",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Edit promotion detail in system",
+                "operationId": "edit-promotion-detail",
+                "parameters": [
+                    {
+                        "description": "body promotion",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.PromotionDetailRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion detail",
+                        "name": "d_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform delete promotion detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Promotion Management"
+                ],
+                "summary": "Delete promotion detail in system",
+                "operationId": "delete-promotion-detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id promotion",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id promotion detail",
+                        "name": "d_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Data"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    }
+                }
+            }
+        },
         "/promotion/find": {
             "post": {
                 "security": [
@@ -5333,151 +5478,6 @@ var doc = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.PromotionDetailSearch"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    }
-                }
-            }
-        },
-        "/promotion/{id}/details/{d_id}": {
-            "put": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform edit promotion",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Promotion Management"
-                ],
-                "summary": "Edit promotion detail in system",
-                "operationId": "edit-promotion-detail",
-                "parameters": [
-                    {
-                        "description": "body promotion",
-                        "name": "params",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.PromotionDetailRequest"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "id promotion",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "id promotion detail",
-                        "name": "d_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Data"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform delete promotion detail",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Promotion Management"
-                ],
-                "summary": "Delete promotion detail in system",
-                "operationId": "delete-promotion-detail",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id promotion",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "id promotion detail",
-                        "name": "d_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Data"
                         }
                     },
                     "400": {
@@ -7389,16 +7389,13 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "type": "string"
                 },
                 "Config": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "type": "string"
                 },
                 "Ios": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "type": "string"
                 },
                 "Key": {
                     "type": "string"
@@ -9062,13 +9059,10 @@ var doc = `{
             "type": "object",
             "required": [
                 "Address",
-                "AreaID",
                 "ContactName",
                 "Coordinates",
                 "Country",
                 "District",
-                "Id",
-                "IsDefault",
                 "Phone",
                 "State",
                 "Ward"
@@ -9101,10 +9095,6 @@ var doc = `{
                 "Id": {
                     "type": "object",
                     "$ref": "#/definitions/models.UID"
-                },
-                "IsDefault": {
-                    "type": "boolean",
-                    "example": true
                 },
                 "Phone": {
                     "type": "string",
@@ -10339,16 +10329,13 @@ var doc = `{
             "type": "object",
             "properties": {
                 "Android": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "type": "string"
                 },
                 "Config": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "type": "string"
                 },
                 "Ios": {
-                    "type": "object",
-                    "additionalProperties": true
+                    "type": "string"
                 },
                 "Key": {
                     "type": "string"

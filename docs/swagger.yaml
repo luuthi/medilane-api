@@ -47,14 +47,11 @@ definitions:
   models.AppSetting:
     properties:
       Android:
-        additionalProperties: true
-        type: object
+        type: string
       Config:
-        additionalProperties: true
-        type: object
+        type: string
       Ios:
-        additionalProperties: true
-        type: object
+        type: string
       Key:
         type: string
       created_at:
@@ -1220,9 +1217,6 @@ definitions:
       Id:
         $ref: '#/definitions/models.UID'
         type: object
-      IsDefault:
-        example: true
-        type: boolean
       Phone:
         example: "0345532343"
         type: string
@@ -1234,13 +1228,10 @@ definitions:
         type: string
     required:
     - Address
-    - AreaID
     - ContactName
     - Coordinates
     - Country
     - District
-    - Id
-    - IsDefault
     - Phone
     - State
     - Ward
@@ -2112,14 +2103,11 @@ definitions:
   requests.SettingRequest:
     properties:
       Android:
-        additionalProperties: true
-        type: object
+        type: string
       Config:
-        additionalProperties: true
-        type: object
+        type: string
       Ios:
-        additionalProperties: true
-        type: object
+        type: string
       Key:
         type: string
     type: object
@@ -5897,7 +5885,99 @@ paths:
       summary: Create multi promotion detail in system
       tags:
       - Promotion Management
-  /promotion/{id}/details/{d_id}:
+  /promotion/{id}/details/find:
+    post:
+      consumes:
+      - application/json
+      description: Perform search promotion detail
+      operationId: search-promotion-detail
+      parameters:
+      - description: Filter promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchPromotionDetail'
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.PromotionDetailSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+      security:
+      - BearerAuth: []
+      summary: Search promotion detail in system
+      tags:
+      - Promotion Management
+  /promotion/{id}/product:
+    post:
+      consumes:
+      - application/json
+      description: Perform search product by promotion
+      operationId: search-product-by-promotion
+      parameters:
+      - description: Filter promotion
+        in: body
+        name: params
+        required: true
+        schema:
+          $ref: '#/definitions/requests.SearchProductByPromotion'
+      - description: id promotion
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.ProductSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+      security:
+      - BearerAuth: []
+      summary: Search product by promotion in system
+      tags:
+      - Promotion Management
+  /promotion/details/{d_id}:
     delete:
       consumes:
       - application/json
@@ -5990,98 +6070,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Edit promotion detail in system
-      tags:
-      - Promotion Management
-  /promotion/{id}/details/find:
-    post:
-      consumes:
-      - application/json
-      description: Perform search promotion detail
-      operationId: search-promotion-detail
-      parameters:
-      - description: Filter promotion
-        in: body
-        name: params
-        required: true
-        schema:
-          $ref: '#/definitions/requests.SearchPromotionDetail'
-      - description: id promotion
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.PromotionDetailSearch'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-      security:
-      - BearerAuth: []
-      summary: Search promotion detail in system
-      tags:
-      - Promotion Management
-  /promotion/{id}/product:
-    post:
-      consumes:
-      - application/json
-      description: Perform search product by promotion
-      operationId: search-product-by-promotion
-      parameters:
-      - description: Filter promotion
-        in: body
-        name: params
-        required: true
-        schema:
-          $ref: '#/definitions/requests.SearchProductByPromotion'
-      - description: id promotion
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.ProductSearch'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-      security:
-      - BearerAuth: []
-      summary: Search product by promotion in system
       tags:
       - Promotion Management
   /promotion/find:
