@@ -33,34 +33,37 @@ func (s *Service) AddOrderCode(tx *gorm.DB, request models.OrderCode) error {
 	return tx.Table(utils.TblOrderCode).Create(&request).Error
 }
 
-func (s *Service) UpdateOrderCode(tx *gorm.DB, request models.OrderCode) error {
-	return tx.Table(utils.TblOrderCode).Updates(&request).Error
+func (s *Service) UpdateOrderCode(tx *gorm.DB) error {
+	return tx.Table(utils.TblOrderCode).UpdateColumn("number", gorm.Expr("number + ?", 1)).Error
 }
 
 func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error, *models.Order) {
+	// begin a transaction
+	tx := s.DB.Begin()
 	// gen code
 	now := time.Now()
 	var orderCode models.OrderCode
 	orderRepo := repositories.NewOrderRepository(s.DB)
 	var timeStr string
 	timeStr = fmt.Sprintf("%d%s%s", now.Year(), fmt.Sprintf("%02d", now.Month()), fmt.Sprintf("%02d", now.Day()))
-	orderRepo.GetOrderCodeByTime(&orderCode, timeStr)
-
-	// begin a transaction
-	tx := s.DB.Begin()
+	err := orderRepo.GetOrderCodeByTime(&orderCode, timeStr)
+	if err != nil {
+		tx.Rollback()
+		return err, nil
+	}
 
 	if orderCode.ID == 0 {
 		// not exist: insert new order code in table
 		orderCode.Time = timeStr
 		orderCode.Number = 1
-		err := s.AddOrderCode(tx, orderCode)
+		err = s.AddOrderCode(tx, orderCode)
 		if err != nil {
 			tx.Rollback()
 			return err, nil
 		}
 	} else {
 		orderCode.Number += 1
-		err := s.UpdateOrderCode(tx, orderCode)
+		err = s.UpdateOrderCode(tx)
 		if err != nil {
 			tx.Rollback()
 			return err, nil
