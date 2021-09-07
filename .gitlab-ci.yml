@@ -25,7 +25,6 @@ deploy staging:
   image: golang:1.13.3-alpine3.10
   environment:
     name: staging
-  when: manual
   only:
     - develop
   stage: deploy
