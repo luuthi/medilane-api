@@ -3,19 +3,53 @@ services:
   - docker:18.09-dind
   
 stages:
+  - test
   - build
+  - deploy
 
 variables:
-  IMAGE: registry.gitlab.com/medilane-group/medilane-api
+  IMAGE: registry.gitlab.com/medilane-group/medilane-api:test
+
+
+lint:
+  image: golangci/golangci-lint:v1.36.0
+  stage: test
+  before_script:
+    - go get -v github.com/swaggo/swag/cmd/swag
+    - $GOPATH/bin/swag init -g cmd/main.go
+  script:
+    - golangci-lint run -v
+  allow_failure: true
 
 build:
   stage: build
   tags: 
     - medilane
+  before_script:
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PWD $CI_REGISTRY
   script:
-    - ls -la
     - docker build -t $IMAGE -f deploy/Dockerfile .
-    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PWD registry.gitlab.com
     - docker push $IMAGE
   only:
       - develop
+
+deploy staging:
+  image: golang:1.13.3-alpine3.10
+  environment:
+    name: staging
+  when: manual
+  only:
+    - develop
+  stage: deploy
+  before_script:
+    - apk add --update openssh-client bash
+    - mkdir -p ~/.ssh
+    - echo "$STAGING_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan -H $STAGING_IP >> ~/.ssh/known_hosts
+  script:
+    - ssh root@$STAGING_IP "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
+      docker pull $IMAGE;
+      docker-compose -f ${PROJECT_PATH_TEST}/docker-compose.yml up -d"
