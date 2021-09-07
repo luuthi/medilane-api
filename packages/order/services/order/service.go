@@ -33,8 +33,8 @@ func (s *Service) AddOrderCode(tx *gorm.DB, request models.OrderCode) error {
 	return tx.Table(utils.TblOrderCode).Create(&request).Error
 }
 
-func (s *Service) UpdateOrderCode(tx *gorm.DB) error {
-	return tx.Table(utils.TblOrderCode).UpdateColumn("number", gorm.Expr("number + ?", 1)).Error
+func (s *Service) UpdateOrderCode(tx *gorm.DB, orderCode models.OrderCode) error {
+	return tx.Table(utils.TblOrderCode).Where("id = ?", orderCode.ID).UpdateColumn("number", gorm.Expr("number + ?", 1)).Error
 }
 
 func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error, *models.Order) {
@@ -63,7 +63,7 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 		}
 	} else {
 		orderCode.Number += 1
-		err = s.UpdateOrderCode(tx)
+		err = s.UpdateOrderCode(tx, orderCode)
 		if err != nil {
 			tx.Rollback()
 			return err, nil

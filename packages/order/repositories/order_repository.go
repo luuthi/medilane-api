@@ -146,7 +146,7 @@ func (OrderRepository *OrderRepository) GetOrderDetail(orders *models2.Order, or
 
 func (OrderRepository *OrderRepository) GetOrderCodeByTime(orderCode *models2.OrderCode, time string) error {
 	return OrderRepository.DB.Table(utils.TblOrderCode).Where("time = ?", time).
-		First(&orderCode).Error
+		FirstOrInit(&orderCode).Error
 }
 
 func (OrderRepository *OrderRepository) GetPaymentMethod(methods *[]models2.PaymentMethod) error {
