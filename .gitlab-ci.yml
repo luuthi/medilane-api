@@ -37,6 +37,7 @@ deploy staging:
     - ssh-add ~/.ssh/id_rsa
     - ssh-keyscan -H $STAGING_IP >> ~/.ssh/known_hosts
   script:
-    - ssh root@$STAGING_IP "docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
+    - ssh root@$STAGING_IP ;
+    - docker login -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD} ${CI_REGISTRY};
       docker pull $IMAGE;
       docker-compose -f ${PROJECT_PATH_TEST}/docker-compose.yml up -d"
