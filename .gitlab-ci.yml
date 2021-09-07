@@ -3,23 +3,11 @@ services:
   - docker:18.09-dind
   
 stages:
-  - test
   - build
   - deploy
 
 variables:
   IMAGE: registry.gitlab.com/medilane-group/medilane-api:test
-
-
-lint:
-  image: golangci/golangci-lint:v1.36.0
-  stage: test
-  before_script:
-    - go get -v github.com/swaggo/swag/cmd/swag
-    - $GOPATH/bin/swag init -g cmd/main.go
-  script:
-    - golangci-lint run -v
-  allow_failure: true
 
 build:
   stage: build
