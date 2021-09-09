@@ -4878,7 +4878,7 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion detail",
                         "name": "d_id",
                         "in": "path",
@@ -4945,7 +4945,7 @@ var doc = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
+                        "type": "string",
                         "description": "id promotion detail",
                         "name": "d_id",
                         "in": "path",

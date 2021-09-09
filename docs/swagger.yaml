@@ -5993,7 +5993,7 @@ paths:
         in: path
         name: d_id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -6043,7 +6043,7 @@ paths:
         in: path
         name: d_id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:

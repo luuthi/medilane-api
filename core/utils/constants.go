@@ -133,3 +133,16 @@ const (
 	Month IntervalStatistic = "month"
 	Day   IntervalStatistic = "day"
 )
+
+type ActionCart int
+
+const (
+	Add ActionCart = iota
+	Sub
+	Set
+)
+
+func (a ActionCart) String() string {
+	return [...]string{"add", "sub", "set"}[a]
+
+}

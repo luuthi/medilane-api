@@ -292,7 +292,7 @@ func (promoHandler *PromotionHandler) CreatePromotionPromotionDetails(c echo.Con
 // @Produce json
 // @Param params body requests.PromotionDetailRequest true "body promotion"
 // @Param id path string true "id promotion"
-// @Param d_id path uint true "id promotion detail"
+// @Param d_id path string true "id promotion detail"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
@@ -344,7 +344,7 @@ func (promoHandler *PromotionHandler) EditPromotionDetail(c echo.Context) error 
 // @Accept json
 // @Produce json
 // @Param id path string true "id promotion"
-// @Param d_id path uint true "id promotion detail"
+// @Param d_id path string true "id promotion detail"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
