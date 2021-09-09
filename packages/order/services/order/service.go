@@ -128,7 +128,7 @@ func (s *Service) AddOrder(request *requests2.OrderRequest, userId uint) (error,
 	// clear cart
 	var cart models.Cart
 	tx.Table(utils.TblCart).Where("user_id = ?", userId).First(&cart)
-	rs = tx.Exec("DELETE  FROM cart_detail WHERE cart_id = ?", cart.ID)
+	rs = tx.Exec("DELETE FROM cart_detail WHERE cart_id = ?", cart.ID)
 
 	//rollback if error
 	if rs.Error != nil {

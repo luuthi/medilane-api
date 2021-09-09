@@ -3,10 +3,10 @@ package cart
 import (
 	"errors"
 	"gorm.io/gorm"
+	"medilane-api/core/errorHandling"
 	"medilane-api/core/utils"
 	"medilane-api/models"
 	builders2 "medilane-api/packages/cart/builders"
-	"medilane-api/packages/cart/repositories"
 	"medilane-api/requests"
 )
 
@@ -25,14 +25,13 @@ func NewCartService(db *gorm.DB) *Service {
 	return &Service{DB: db}
 }
 
-func (s *Service) AddCart(request *requests.CartRequest, userId uint) error {
+func (s *Service) AddCartItem(request *requests.CartItemRequest, userId uint) error {
 	var cart models.Cart
-
+	var err error
 	// begin a transaction
 	tx := s.DB.Begin()
 
 	rs := tx.Where("user_id = ?", userId).FirstOrInit(&cart)
-
 	//rollback if error
 	if rs.Error != nil {
 		tx.Rollback()
@@ -50,84 +49,20 @@ func (s *Service) AddCart(request *requests.CartRequest, userId uint) error {
 		}
 	}
 
-	// if account is type user, check drugStoreId and assign for drugstore
-	for _, item := range request.CartDetails {
-		var existedCartDetail models.CartDetail
-		tx.Table(utils.TblCartDetail).
-			Where("product_id = ?", item.ProductID.GetLocalID()).
-			Where("variant_id = ?", item.VariantID.GetLocalID()).
-			Where("cart_id = ?", cart.ID).
-			First(&existedCartDetail)
-
-		if existedCartDetail.ID == 0 {
-			// not exist
-			existedCartDetail = builders2.NewCartDetailBuilder().
-				SetCost(item.Cost).
-				SetCartID(cart.ID).
-				SetQuantity(item.Quantity).
-				SetProductID(uint(item.ProductID.GetLocalID())).
-				SetVariantID(uint(item.VariantID.GetLocalID())).
-				SetDiscount(item.Discount).
-				Build()
-
-			rs = tx.Table(utils.TblCartDetail).Create(&existedCartDetail)
-			if rs.Error != nil {
-				tx.Rollback()
-				return rs.Error
-			}
-		} else {
-			if item.Action != utils.Set.String() {
-				rs = tx.Table(utils.TblCartDetail).
-					Where("id = ?", existedCartDetail.ID).
-					UpdateColumn("quantity", gorm.Expr("quantity + ", item.Quantity))
-				if rs.Error != nil {
-					tx.Rollback()
-					return rs.Error
-				}
-			} else {
-				rs = tx.Table(utils.TblCartDetail).
-					Where("id = ?", existedCartDetail.ID).
-					UpdateColumn("quantity", item.Quantity)
-				if rs.Error != nil {
-					tx.Rollback()
-					return rs.Error
-				}
-			}
-		}
-
-		//rollback if error
-		if rs.Error != nil {
-			tx.Rollback()
-			return rs.Error
-		}
-	}
-
-	return tx.Commit().Error
-}
-
-func (s *Service) AddCartItem(request *requests.CartItemRequest) error {
-	var cart models.Cart
-	var err error
-	cartRepo := repositories.NewCartRepository(s.DB)
-	err = cartRepo.GetCartById(&cart, uint(request.CartID.GetLocalID()))
-	if err != nil {
-		return err
-	}
-	if cart.ID == 0 {
-		return errors.New("không tìm thấy giỏ hàng")
-	}
 	var cartItem models.CartDetail
-	err = cartRepo.GetCartItemById(&cartItem, uint(request.ID.GetLocalID()))
+	tx.Table(utils.TblCartDetail).
+		Where("product_id = ?", request.ProductID.GetLocalID()).
+		Where("variant_id = ?", request.VariantID.GetLocalID()).
+		Where("cart_id = ?", cart.ID).
+		First(&cartItem)
 	if err != nil {
-		return err
+		return errorHandling.ErrDB(err)
 	}
 
-	// begin a transaction
-	tx := s.DB.Begin()
 	if cartItem.ID == 0 {
 		cartItem = builders2.NewCartDetailBuilder().
 			SetCost(request.Cost).
-			SetCartID(uint(request.CartID.GetLocalID())).
+			SetCartID(cart.ID).
 			SetQuantity(request.Quantity).
 			SetProductID(uint(request.ProductID.GetLocalID())).
 			SetVariantID(uint(request.VariantID.GetLocalID())).
@@ -137,41 +72,45 @@ func (s *Service) AddCartItem(request *requests.CartItemRequest) error {
 		err = s.DB.Table(utils.TblCartDetail).Create(&cartItem).Error
 		if err != nil {
 			tx.Rollback()
-			return err
+			return errorHandling.ErrDB(err)
 		}
 	} else {
 		// begin a transaction
-		tx := s.DB.Begin()
-		if request.Action != utils.Set.String() {
+		switch request.Action {
+		case utils.Add.String():
 			err = tx.Table(utils.TblCartDetail).
 				Where("id = ?", cartItem.ID).
-				UpdateColumn("quantity", gorm.Expr("quantity + ", request.Quantity)).Error
+				UpdateColumn("quantity", gorm.Expr("quantity + ?", request.Quantity)).Error
 			if err != nil {
 				tx.Rollback()
-				return err
+				return errorHandling.ErrDB(err)
 			}
-		} else {
+		case utils.Sub.String():
+			if cartItem.Quantity == 1 {
+				return errorHandling.ErrDB(errors.New("số lượng tối thiếu bằng 1"))
+			}
+			err = tx.Table(utils.TblCartDetail).
+				Where("id = ?", cartItem.ID).
+				UpdateColumn("quantity", gorm.Expr("quantity - ? ", request.Quantity)).Error
+			if err != nil {
+				tx.Rollback()
+				return errorHandling.ErrDB(err)
+			}
+		case utils.Set.String():
 			err = tx.Table(utils.TblCartDetail).
 				Where("id = ?", cartItem.ID).
 				UpdateColumn("quantity", request.Quantity).Error
 			if err != nil {
 				tx.Rollback()
-				return err
+				return errorHandling.ErrDB(err)
 			}
+
 		}
 	}
 
 	return tx.Commit().Error
 }
 
-func (s *Service) DeleteCartItem(cart models.CartDetail) error {
-	return s.DB.Table(utils.TblCartDetail).Delete(&cart).Error
-}
-
-func (s *Service) DeleteCart(cart models.Cart) error {
-	err := s.DB.Model(&cart).Association("CartDetails").Clear()
-	if err != nil {
-		return err
-	}
-	return s.DB.Table(utils.TblCartDetail).Delete(cart.ID).Error
+func (s *Service) DeleteCartItem(cart *models.CartDetail) error {
+	return s.DB.Table(utils.TblCartDetail).Delete(cart).Error
 }

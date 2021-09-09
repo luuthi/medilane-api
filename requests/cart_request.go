@@ -11,12 +11,10 @@ import (
 //}
 
 type CartItemRequest struct {
-	ID        *models.UID `json:"id"`
 	Cost      float32     `json:"Cost"`
 	Quantity  int         `json:"Quantity"`
 	Discount  float32     `json:"Discount"`
 	Action    string      `json:"action"`
-	CartID    *models.UID `json:"CartID"`
 	ProductID *models.UID `json:"ProductID"`
 	VariantID *models.UID `json:"VariantID"`
 }
@@ -26,10 +24,21 @@ func (rr CartItemRequest) Validate() error {
 		validation.Field(&rr.Cost, validation.Min(float32(0))),
 		validation.Field(&rr.Quantity, validation.Min(1)),
 		validation.Field(&rr.Discount, validation.Min(float32(0))),
-		validation.Field(&rr.CartID, validation.NotNil),
 		validation.Field(&rr.ProductID, validation.NotNil),
 		validation.Field(&rr.VariantID, validation.NotNil),
 		validation.Field(&rr.Action, validation.In(utils.Add.String(), utils.Sub.String(), utils.Set.String())),
+	)
+}
+
+type CartItemDeleteRequest struct {
+	ProductID *models.UID `json:"ProductID"`
+	VariantID *models.UID `json:"VariantID"`
+}
+
+func (rr CartItemDeleteRequest) Validate() error {
+	return validation.ValidateStruct(&rr,
+		validation.Field(&rr.ProductID, validation.NotNil),
+		validation.Field(&rr.VariantID, validation.NotNil),
 	)
 }
 

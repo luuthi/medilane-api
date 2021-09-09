@@ -974,11 +974,17 @@ definitions:
       Visible:
         type: boolean
     type: object
-  requests.CartItemRequest:
+  requests.CartItemDeleteRequest:
     properties:
-      CartID:
+      ProductID:
         $ref: '#/definitions/models.UID'
         type: object
+      VariantID:
+        $ref: '#/definitions/models.UID'
+        type: object
+    type: object
+  requests.CartItemRequest:
+    properties:
       Cost:
         type: number
       Discount:
@@ -993,16 +999,6 @@ definitions:
         type: object
       action:
         type: string
-      id:
-        $ref: '#/definitions/models.UID'
-        type: object
-    type: object
-  requests.CartRequest:
-    properties:
-      cart_details:
-        items:
-          $ref: '#/definitions/requests.CartItemRequest'
-        type: array
     type: object
   requests.CategoryRequest:
     properties:
@@ -2209,19 +2205,6 @@ definitions:
       data:
         items:
           $ref: '#/definitions/models.Category'
-        type: array
-      message:
-        type: string
-      total:
-        type: integer
-    type: object
-  responses.CreatedCart:
-    properties:
-      code:
-        type: integer
-      data:
-        items:
-          $ref: '#/definitions/models.CartDetail'
         type: array
       message:
         type: string
@@ -3615,59 +3598,19 @@ paths:
       summary: Get banner in system
       tags:
       - Banner Management
-  /cart:
+  /cart/delete:
     post:
-      consumes:
-      - application/json
-      description: Perform create cart
-      operationId: create-cart
-      parameters:
-      - description: Create cart
-        in: body
-        name: params
-        required: true
-        schema:
-          $ref: '#/definitions/requests.CartRequest'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/responses.CreatedCart'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-      security:
-      - BearerAuth: []
-      summary: Create cart in system
-      tags:
-      - Cart Management
-  /cart/{id}:
-    delete:
       consumes:
       - application/json
       description: Perform delete cart
       operationId: delete-cart
       parameters:
-      - description: id cart
-        in: path
-        name: id
+      - description: Create cart item
+        in: body
+        name: params
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/requests.CartItemDeleteRequest'
       produces:
       - application/json
       responses:
@@ -3696,25 +3639,19 @@ paths:
       summary: Delete cart in system
       tags:
       - Cart Management
-  /cart/{id}/details:
-    delete:
+  /cart/find:
+    post:
       consumes:
       - application/json
-      description: Perform delete cart item
-      operationId: delete-cart-item
-      parameters:
-      - description: id cart item
-        in: path
-        name: id
-        required: true
-        type: string
+      description: Perform search cart item by username
+      operationId: search-cart-user
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/responses.Data'
+            $ref: '#/definitions/responses.CartSearch'
         "400":
           description: Bad Request
           schema:
@@ -3733,10 +3670,10 @@ paths:
             $ref: '#/definitions/errorHandling.AppError'
       security:
       - BearerAuth: []
-      summary: Delete cart item in system
+      summary: Search cart item by username in system
       tags:
       - Cart Management
-  /cart/details:
+  /cart/item:
     post:
       consumes:
       - application/json
@@ -3775,40 +3712,6 @@ paths:
       security:
       - BearerAuth: []
       summary: Create cart in system
-      tags:
-      - Cart Management
-  /cart/find:
-    post:
-      consumes:
-      - application/json
-      description: Perform search cart item by username
-      operationId: search-cart-user
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.CartSearch'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errorHandling.AppError'
-      security:
-      - BearerAuth: []
-      summary: Search cart item by username in system
       tags:
       - Cart Management
   /category:

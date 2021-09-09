@@ -1639,14 +1639,14 @@ var doc = `{
                 }
             }
         },
-        "/cart": {
+        "/cart/delete": {
             "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Perform create cart",
+                "description": "Perform delete cart",
                 "consumes": [
                     "application/json"
                 ],
@@ -1656,72 +1656,8 @@ var doc = `{
                 "tags": [
                     "Cart Management"
                 ],
-                "summary": "Create cart in system",
-                "operationId": "create-cart",
-                "parameters": [
-                    {
-                        "description": "Create cart",
-                        "name": "params",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/requests.CartRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/responses.CreatedCart"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/details": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform create cart",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart Management"
-                ],
-                "summary": "Create cart in system",
-                "operationId": "create-cart-item",
+                "summary": "Delete cart in system",
+                "operationId": "delete-cart",
                 "parameters": [
                     {
                         "description": "Create cart item",
@@ -1729,13 +1665,13 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/requests.CartItemRequest"
+                            "$ref": "#/definitions/requests.CartItemDeleteRequest"
                         }
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
                         }
@@ -1820,14 +1756,14 @@ var doc = `{
                 }
             }
         },
-        "/cart/{id}": {
-            "delete": {
+        "/cart/item": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Perform delete cart",
+                "description": "Perform create cart",
                 "consumes": [
                     "application/json"
                 ],
@@ -1837,82 +1773,22 @@ var doc = `{
                 "tags": [
                     "Cart Management"
                 ],
-                "summary": "Delete cart in system",
-                "operationId": "delete-cart",
+                "summary": "Create cart in system",
+                "operationId": "create-cart-item",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "id cart",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Create cart item",
+                        "name": "params",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.CartItemRequest"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/responses.Data"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/errorHandling.AppError"
-                        }
-                    }
-                }
-            }
-        },
-        "/cart/{id}/details": {
-            "delete": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Perform delete cart item",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Cart Management"
-                ],
-                "summary": "Delete cart item in system",
-                "operationId": "delete-cart-item",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id cart item",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/responses.Data"
                         }
@@ -8732,13 +8608,22 @@ var doc = `{
                 }
             }
         },
-        "requests.CartItemRequest": {
+        "requests.CartItemDeleteRequest": {
             "type": "object",
             "properties": {
-                "CartID": {
+                "ProductID": {
                     "type": "object",
                     "$ref": "#/definitions/models.UID"
                 },
+                "VariantID": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
+                }
+            }
+        },
+        "requests.CartItemRequest": {
+            "type": "object",
+            "properties": {
                 "Cost": {
                     "type": "number"
                 },
@@ -8758,21 +8643,6 @@ var doc = `{
                 },
                 "action": {
                     "type": "string"
-                },
-                "id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
-                }
-            }
-        },
-        "requests.CartRequest": {
-            "type": "object",
-            "properties": {
-                "cart_details": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/requests.CartItemRequest"
-                    }
                 }
             }
         },
@@ -10476,26 +10346,6 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Category"
-                    }
-                },
-                "message": {
-                    "type": "string"
-                },
-                "total": {
-                    "type": "integer"
-                }
-            }
-        },
-        "responses.CreatedCart": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer"
-                },
-                "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.CartDetail"
                     }
                 },
                 "message": {

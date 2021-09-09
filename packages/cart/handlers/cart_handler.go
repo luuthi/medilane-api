@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"errors"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 	"medilane-api/core/authentication"
@@ -60,42 +58,6 @@ func (cartHandler *CartHandler) GetCartByUsername(c echo.Context) error {
 	})
 }
 
-// CreateCart Create cart godoc
-// @Summary Create cart in system
-// @Description Perform create cart
-// @ID create-cart
-// @Tags Cart Management
-// @Accept json
-// @Produce json
-// @Param params body requests.CartRequest true "Create cart"
-// @Success 201 {object} responses.CreatedCart
-// @Failure 400 {object} errorHandling.AppError
-// @Failure 500 {object} errorHandling.AppError
-// @Failure 401 {object} errorHandling.AppError
-// @Failure 403 {object} errorHandling.AppError
-// @Router /cart [post]
-// @Security BearerAuth
-func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
-	var newCart requests2.CartRequest
-	if err := c.Bind(&newCart); err != nil {
-		panic(errorHandling.ErrInvalidRequest(err))
-	}
-
-	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
-
-	if err := newCart.Validate(); err != nil {
-		panic(errorHandling.ErrInvalidRequest(err))
-	}
-
-	cartService := cart.NewCartService(cartHandler.server.DB)
-	rs := cartService.AddCart(&newCart, uint(claims.UserId.GetLocalID()))
-	if err := rs; err != nil {
-		panic(err)
-	}
-
-	return responses.CreateResponse(c, utils.TblCart)
-}
-
 // AddCartItem Create cart godoc
 // @Summary Create cart in system
 // @Description Perform create cart
@@ -109,9 +71,10 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 // @Failure 500 {object} errorHandling.AppError
 // @Failure 401 {object} errorHandling.AppError
 // @Failure 403 {object} errorHandling.AppError
-// @Router /cart/details [post]
+// @Router /cart/item [post]
 // @Security BearerAuth
 func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
 	var cartItem requests2.CartItemRequest
 	if err := c.Bind(&cartItem); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
@@ -121,7 +84,7 @@ func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	cartService := cart.NewCartService(cartHandler.server.DB)
-	rs := cartService.AddCartItem(&cartItem)
+	rs := cartService.AddCartItem(&cartItem, uint(claims.UserId.GetLocalID()))
 	if err := rs; err != nil {
 		panic(err)
 	}
@@ -137,69 +100,27 @@ func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 // @Tags Cart Management
 // @Accept json
 // @Produce json
-// @Param id path string true "id cart"
+// @Param params body requests.CartItemDeleteRequest true "Create cart item"
 // @Success 200 {object} responses.Data
 // @Failure 400 {object} errorHandling.AppError
 // @Failure 500 {object} errorHandling.AppError
 // @Failure 401 {object} errorHandling.AppError
 // @Failure 403 {object} errorHandling.AppError
-// @Router /cart/{id} [delete]
+// @Router /cart/delete [post]
 // @Security BearerAuth
 func (cartHandler *CartHandler) DeleteCart(c echo.Context) error {
-	uid, err := models2.FromBase58(c.Param("id"))
-	if err != nil {
+	claims := c.Get(utils.Metadata).(*authentication.JwtCustomClaims)
+	var request requests2.CartItemDeleteRequest
+	if err := c.Bind(&request); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(uid.GetLocalID())
-	if uid.GetObjectType() != utils.DBTypeCart {
-		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblCart))))
-	}
-
-	var existCart models2.Cart
-	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	err = cartRepo.GetCartById(&existCart, id)
-	if err != nil {
-		if err == gorm.ErrRecordNotFound {
-			panic(errorHandling.ErrEntityNotFound(utils.TblCart, err))
-		}
-		panic(errorHandling.ErrCannotGetEntity(utils.TblCart, err))
-	}
-
-	cartService := cart.NewCartService(cartHandler.server.DB)
-	if err := cartService.DeleteCart(existCart); err != nil {
-		panic(err)
-	}
-	return responses.DeleteResponse(c, utils.TblCart)
-}
-
-// DeleteItemCart Delete cart item godoc
-// @Summary Delete cart item in system
-// @Description Perform delete cart item
-// @ID delete-cart-item
-// @Tags Cart Management
-// @Accept json
-// @Produce json
-// @Param id path string true "id cart item"
-// @Success 200 {object} responses.Data
-// @Failure 400 {object} errorHandling.AppError
-// @Failure 500 {object} errorHandling.AppError
-// @Failure 401 {object} errorHandling.AppError
-// @Failure 403 {object} errorHandling.AppError
-// @Router /cart/{id}/details [delete]
-// @Security BearerAuth
-func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
-	uid, err := models2.FromBase58(c.Param("id"))
-	if err != nil {
+	if err := request.Validate(); err != nil {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
-	id := uint(uid.GetLocalID())
-	if uid.GetObjectType() != utils.DBTypeCartDetail {
-		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblCartDetail))))
-	}
 
-	var existCart models2.CartDetail
+	var existCart *models2.CartDetail
 	cartRepo := repositories2.NewCartRepository(cartHandler.server.DB)
-	err = cartRepo.GetCartItemById(&existCart, id)
+	existCart, err := cartRepo.GetCartItem(&request, uint(claims.UserId.GetLocalID()))
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			panic(errorHandling.ErrEntityNotFound(utils.TblCartDetail, err))
@@ -211,5 +132,5 @@ func (cartHandler *CartHandler) DeleteItemCart(c echo.Context) error {
 	if err := cartService.DeleteCartItem(existCart); err != nil {
 		panic(err)
 	}
-	return responses.DeleteResponse(c, utils.TblCartDetail)
+	return responses.DeleteResponse(c, utils.TblCart)
 }

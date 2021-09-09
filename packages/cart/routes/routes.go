@@ -13,8 +13,6 @@ func ConfigureCartRoutes(appRoute *echo.Group, server *s.Server) {
 
 	cart := appRoute.Group("/cart", authentication.CheckAuthentication(server), authentication.CheckUserType([]string{string(utils.USER)}))
 	cart.POST("/find", cartHandler.GetCartByUsername, authentication.CheckPermission(server, []string{"read:cart"}, false))
-	cart.POST("", cartHandler.CreateCart, authentication.CheckPermission(server, []string{"create:cart"}, false))
-	cart.POST("/details", cartHandler.AddCartItem, authentication.CheckPermission(server, []string{"create:cart"}, false))
-	cart.DELETE("/:id", cartHandler.DeleteCart, authentication.CheckPermission(server, []string{"delete:cart"}, false))
-	cart.DELETE("/:id/details", cartHandler.DeleteItemCart, authentication.CheckPermission(server, []string{"delete:cart"}, false))
+	cart.POST("/item", cartHandler.AddCartItem, authentication.CheckPermission(server, []string{"create:cart"}, false))
+	cart.POST("/delete", cartHandler.DeleteCart, authentication.CheckPermission(server, []string{"delete:cart"}, false))
 }

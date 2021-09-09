@@ -8,6 +8,7 @@ import (
 	"medilane-api/models"
 	repositories2 "medilane-api/packages/medicines/repositories"
 	repositories3 "medilane-api/packages/order/repositories"
+	"medilane-api/requests"
 	"strings"
 )
 
@@ -89,24 +90,28 @@ func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, u
 	return cart, nil
 }
 
-func (CartRepository *CartRepository) GetCartById(cart *models.Cart, id uint) error {
-	err := CartRepository.DB.Table(utils.TblCart).First(&cart, id).Error
+func (CartRepository *CartRepository) GetCartItem(request *requests.CartItemDeleteRequest, userId uint) (*models.CartDetail, error) {
+	var cart models.Cart
+	var err error
+	err = CartRepository.DB.Table(utils.TblCart).Where("user_id = ?", userId).First(&cart).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return gorm.ErrRecordNotFound
+			return nil, gorm.ErrRecordNotFound
 		}
-		return errorHandling.ErrDB(err)
+		return nil, errorHandling.ErrDB(err)
 	}
-	return nil
-}
 
-func (CartRepository *CartRepository) GetCartItemById(cart *models.CartDetail, id uint) error {
-	err := CartRepository.DB.Table(utils.TblCartDetail).First(&cart, id).Error
+	var cartItem models.CartDetail
+	CartRepository.DB.Table(utils.TblCartDetail).
+		Where("product_id = ?", request.ProductID.GetLocalID()).
+		Where("variant_id = ?", request.VariantID.GetLocalID()).
+		Where("cart_id = ?", cart.ID).
+		First(&cartItem)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return gorm.ErrRecordNotFound
+			return nil, gorm.ErrRecordNotFound
 		}
-		return errorHandling.ErrDB(err)
+		return nil, errorHandling.ErrDB(err)
 	}
-	return nil
+	return &cartItem, nil
 }
