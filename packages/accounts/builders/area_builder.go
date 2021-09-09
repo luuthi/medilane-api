@@ -44,6 +44,7 @@ type AreaConfigBuilder struct {
 	Province string
 	District string
 	id       uint
+	areaID   uint
 }
 
 func NewAreaConfigBuilder() *AreaConfigBuilder {
@@ -65,6 +66,11 @@ func (areaBuilder *AreaConfigBuilder) SetID(id uint) (z *AreaConfigBuilder) {
 	return areaBuilder
 }
 
+func (areaBuilder *AreaConfigBuilder) SetAreaID(areaID uint) (z *AreaConfigBuilder) {
+	areaBuilder.areaID = areaID
+	return areaBuilder
+}
+
 func (areaBuilder *AreaConfigBuilder) Build() models.AreaConfig {
 	common := models.CommonModelFields{
 		ID: areaBuilder.id,
@@ -73,6 +79,7 @@ func (areaBuilder *AreaConfigBuilder) Build() models.AreaConfig {
 		CommonModelFields: common,
 		Province:          areaBuilder.Province,
 		District:          areaBuilder.District,
+		AreaID:            areaBuilder.areaID,
 	}
 
 	return area

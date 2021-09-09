@@ -991,6 +991,11 @@ definitions:
       VariantID:
         $ref: '#/definitions/models.UID'
         type: object
+      action:
+        type: string
+      id:
+        $ref: '#/definitions/models.UID'
+        type: object
     type: object
   requests.CartRequest:
     properties:

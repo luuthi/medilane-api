@@ -46,6 +46,7 @@ func (areaCostService *Service) ConfigArea(areaId uint, request requests2.AreaCo
 			aConf := builders.NewAreaConfigBuilder().
 				SetDistrict(conf.District).
 				SetProvince(conf.Province).
+				SetAreaID(areaId).
 				Build()
 
 			err := tx.Table(utils2.TblAreaConfig).Create(&aConf).Error
@@ -59,6 +60,7 @@ func (areaCostService *Service) ConfigArea(areaId uint, request requests2.AreaCo
 				SetDistrict(conf.District).
 				SetProvince(conf.Province).
 				SetID(uint(conf.ID.GetLocalID())).
+				SetAreaID(areaId).
 				Build()
 
 			updatedItemID = append(updatedItemID, uint(conf.ID.GetLocalID()))

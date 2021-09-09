@@ -8769,6 +8769,13 @@ var doc = `{
                 "VariantID": {
                     "type": "object",
                     "$ref": "#/definitions/models.UID"
+                },
+                "action": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "object",
+                    "$ref": "#/definitions/models.UID"
                 }
             }
         },

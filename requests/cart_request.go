@@ -11,6 +11,7 @@ import (
 //}
 
 type CartItemRequest struct {
+	ID        *models.UID `json:"id"`
 	Cost      float32     `json:"Cost"`
 	Quantity  int         `json:"Quantity"`
 	Discount  float32     `json:"Discount"`

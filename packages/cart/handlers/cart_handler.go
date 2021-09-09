@@ -88,17 +88,12 @@ func (cartHandler *CartHandler) CreateCart(c echo.Context) error {
 	}
 
 	cartService := cart.NewCartService(cartHandler.server.DB)
-	rs, data := cartService.AddCart(&newCart, uint(claims.UserId.GetLocalID()))
+	rs := cartService.AddCart(&newCart, uint(claims.UserId.GetLocalID()))
 	if err := rs; err != nil {
 		panic(err)
 	}
 
-	return responses.SearchResponse(c, responses2.CreatedCart{
-		Code:    http.StatusOK,
-		Message: "",
-		Total:   int64(len(data.CartDetails)),
-		Data:    data.CartDetails,
-	})
+	return responses.CreateResponse(c, utils.TblCart)
 }
 
 // AddCartItem Create cart godoc
@@ -126,12 +121,12 @@ func (cartHandler *CartHandler) AddCartItem(c echo.Context) error {
 		panic(errorHandling.ErrInvalidRequest(err))
 	}
 	cartService := cart.NewCartService(cartHandler.server.DB)
-	rs, _ := cartService.AddCartItem(&cartItem)
+	rs := cartService.AddCartItem(&cartItem)
 	if err := rs; err != nil {
 		panic(err)
 	}
 
-	return responses.CreateResponse(c, utils.TblCart)
+	return responses.CreateResponse(c, utils.TblCartDetail)
 
 }
 
