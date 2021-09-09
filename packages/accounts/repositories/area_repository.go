@@ -55,3 +55,9 @@ func (areaRepo *AreaRepository) GetAreaByID(area *models2.Area, id uint) error {
 	}
 	return nil
 }
+
+func (areaRepo *AreaRepository) GetAreaConfig(area *[]models2.AreaConfig, id uint) error {
+	return areaRepo.DB.Table(utils2.TblAreaConfig).
+		Where("area_id = ?", id).
+		Find(area).Error
+}

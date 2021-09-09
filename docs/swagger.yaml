@@ -2162,6 +2162,19 @@ definitions:
       total:
         type: integer
     type: object
+  responses.AreaConfigSearch:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/models.AreaConfig'
+        type: array
+      message:
+        type: string
+      total:
+        type: integer
+    type: object
   responses.AreaSearch:
     properties:
       code:
@@ -3316,6 +3329,46 @@ paths:
       security:
       - BearerAuth: []
       summary: Get products of area in system
+      tags:
+      - Area Management
+  /area/{id}/get-config:
+    get:
+      consumes:
+      - application/json
+      description: Perform get config area contain which province and district area
+      operationId: config-area-get
+      parameters:
+      - description: id area
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.AreaConfigSearch'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errorHandling.AppError'
+      security:
+      - BearerAuth: []
+      summary: Get config area contain which province and district in system
       tags:
       - Area Management
   /area/cost:

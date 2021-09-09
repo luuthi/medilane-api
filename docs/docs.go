@@ -1330,6 +1330,68 @@ var doc = `{
                 }
             }
         },
+        "/area/{id}/get-config": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Perform get config area contain which province and district area",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Area Management"
+                ],
+                "summary": "Get config area contain which province and district in system",
+                "operationId": "config-area-get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id area",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.AreaConfigSearch"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/errorHandling.AppError"
+                        }
+                    }
+                }
+            }
+        },
         "/banner": {
             "post": {
                 "security": [
@@ -10271,6 +10333,26 @@ var doc = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.AreaConfigSearch": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.AreaConfig"
                     }
                 },
                 "message": {

@@ -453,3 +453,52 @@ func (areaHandler *AreaHandler) ConfigArea(c echo.Context) error {
 	return responses.UpdateResponse(c, utils.TblAreaConfig)
 
 }
+
+// GetConfigArea Get config area godoc
+// @Summary Get config area contain which province and district in system
+// @Description Perform get config area contain which province and district area
+// @ID config-area-get
+// @Tags Area Management
+// @Accept json
+// @Produce json
+// @Param id path string true "id area"
+// @Success 200 {object} responses.AreaConfigSearch
+// @Failure 400 {object} errorHandling.AppError
+// @Failure 500 {object} errorHandling.AppError
+// @Failure 401 {object} errorHandling.AppError
+// @Failure 403 {object} errorHandling.AppError
+// @Router /area/{id}/get-config [get]
+// @Security BearerAuth
+func (areaHandler *AreaHandler) GetConfigArea(c echo.Context) error {
+	uid, err := models2.FromBase58(c.Param("id"))
+	if err != nil {
+		panic(errorHandling.ErrInvalidRequest(err))
+	}
+	id := uint(uid.GetLocalID())
+	if uid.GetObjectType() != utils.DBTypeArea {
+		panic(errorHandling.ErrInvalidRequest(errors.New(fmt.Sprintf("không tìm thấy %s", utils.TblArea))))
+	}
+
+	var existedArea models2.Area
+	areaRepo := repositories.NewAreaRepository(areaHandler.server.DB)
+	err = areaRepo.GetAreaByID(&existedArea, id)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			panic(errorHandling.ErrEntityNotFound(utils.TblArea, err))
+		}
+
+		panic(errorHandling.ErrCannotGetEntity(utils.TblArea, err))
+	}
+	var areaConfigs []models2.AreaConfig
+	if err := areaRepo.GetAreaConfig(&areaConfigs, id); err != nil {
+		panic(err)
+	}
+
+	return responses.SearchResponse(c, responses2.AreaConfigSearch{
+		Code:    http.StatusOK,
+		Message: "",
+		Total:   int64(len(areaConfigs)),
+		Data:    areaConfigs,
+	})
+
+}

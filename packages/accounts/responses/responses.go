@@ -50,3 +50,10 @@ type DrugStoreUserSearch struct {
 	Total   int64                  `json:"total"`
 	Data    []models.DrugStoreUser `json:"data"`
 }
+
+type AreaConfigSearch struct {
+	Code    int                 `json:"code"`
+	Message string              `json:"message"`
+	Total   int64               `json:"total"`
+	Data    []models.AreaConfig `json:"data"`
+}
