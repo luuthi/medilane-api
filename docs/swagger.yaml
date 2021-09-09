@@ -5989,11 +5989,6 @@ paths:
       description: Perform delete promotion detail
       operationId: delete-promotion-detail
       parameters:
-      - description: id promotion
-        in: path
-        name: id
-        required: true
-        type: string
       - description: id promotion detail
         in: path
         name: d_id
@@ -6039,11 +6034,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/requests.PromotionDetailRequest'
-      - description: id promotion
-        in: path
-        name: id
-        required: true
-        type: string
       - description: id promotion detail
         in: path
         name: d_id

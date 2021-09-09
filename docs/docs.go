@@ -4872,13 +4872,6 @@ var doc = `{
                     },
                     {
                         "type": "string",
-                        "description": "id promotion",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "description": "id promotion detail",
                         "name": "d_id",
                         "in": "path",
@@ -4937,13 +4930,6 @@ var doc = `{
                 "summary": "Delete promotion detail in system",
                 "operationId": "delete-promotion-detail",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id promotion",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
                     {
                         "type": "string",
                         "description": "id promotion detail",
