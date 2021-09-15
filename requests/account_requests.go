@@ -120,7 +120,7 @@ type StaffRelationship struct {
 }
 
 type AssignStaffRequest struct {
-	DrugStoresIdLst []*models.UID `json:"DrugStoresIdLst" swaggertype:"array"`
+	DrugStoresIdLst []*models.UID `json:"DrugStoresIdLst" swaggertype:"array,string"`
 }
 
 func (rr AssignStaffRequest) Validate() error {

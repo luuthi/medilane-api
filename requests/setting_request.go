@@ -63,7 +63,7 @@ func (rr BannerRequest) Validate() error {
 }
 
 type DeleteBanner struct {
-	BannerListId []*models.UID `json:"BannerListId" swaggertype:"array"`
+	BannerListId []*models.UID `json:"BannerListId" swaggertype:"array,string"`
 }
 
 func (rr DeleteBanner) Validate() error {

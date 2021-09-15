@@ -954,7 +954,7 @@ definitions:
     properties:
       DrugStoresIdLst:
         items:
-          $ref: '#/definitions/models.UID'
+          type: string
         type: array
     type: object
   requests.BannerRequest:
@@ -1008,7 +1008,7 @@ definitions:
     properties:
       ProductsId:
         items:
-          $ref: '#/definitions/models.UID'
+          type: string
         type: array
       Status:
         example: show/hide/approve/cancel/outofstock
@@ -1110,7 +1110,7 @@ definitions:
     properties:
       BannerListId:
         items:
-          $ref: '#/definitions/models.UID'
+          type: string
         type: array
     type: object
   requests.DrugStoreRequest:
@@ -1411,7 +1411,7 @@ definitions:
         type: number
       Categories:
         items:
-          $ref: '#/definitions/models.UID'
+          type: string
         type: array
       Code:
         example: MD01
@@ -1460,14 +1460,14 @@ definitions:
         type: string
       Tags:
         items:
-          $ref: '#/definitions/models.UID'
+          type: string
         type: array
       Unit:
         example: example
         type: string
       Variants:
         items:
-          $ref: '#/definitions/models.UID'
+          type: string
         type: array
     type: object
   requests.ProductStatisticCountRequest:

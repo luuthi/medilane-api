@@ -8641,7 +8641,7 @@ var doc = `{
                 "DrugStoresIdLst": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 }
             }
@@ -8723,7 +8723,7 @@ var doc = `{
                 "ProductsId": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 },
                 "Status": {
@@ -8868,7 +8868,7 @@ var doc = `{
                 "BannerListId": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 }
             }
@@ -9293,7 +9293,7 @@ var doc = `{
                 "Categories": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 },
                 "Code": {
@@ -9359,7 +9359,7 @@ var doc = `{
                 "Tags": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 },
                 "Unit": {
@@ -9369,7 +9369,7 @@ var doc = `{
                 "Variants": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 }
             }

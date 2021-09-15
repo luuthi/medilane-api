@@ -62,14 +62,14 @@ type ProductRequest struct {
 	BasePrice            float64 `json:"BasePrice" example:"1"`
 	Manufacturer         string  `json:"Manufacturer" example:"abc"`
 
-	Categories []*models.UID `json:"Categories" swaggertype:"array"`
-	Variants   []*models.UID `json:"Variants" swaggertype:"array"`
-	Tags       []*models.UID `json:"Tags" swaggertype:"array"`
+	Categories []*models.UID `json:"Categories" swaggertype:"array,string"`
+	Variants   []*models.UID `json:"Variants" swaggertype:"array,string"`
+	Tags       []*models.UID `json:"Tags" swaggertype:"array,string"`
 }
 
 type ChangeStatusProductsRequest struct {
 	Status     string        `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	ProductsId []*models.UID `json:"ProductsId" swaggertype:"array"`
+	ProductsId []*models.UID `json:"ProductsId" swaggertype:"array,string"`
 }
 
 func (rr SearchProductRequest) Validate() error {

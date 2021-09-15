@@ -8626,7 +8626,7 @@
                 "DrugStoresIdLst": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 }
             }
@@ -8708,7 +8708,7 @@
                 "ProductsId": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 },
                 "Status": {
@@ -8853,7 +8853,7 @@
                 "BannerListId": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 }
             }
@@ -9278,7 +9278,7 @@
                 "Categories": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 },
                 "Code": {
@@ -9344,7 +9344,7 @@
                 "Tags": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 },
                 "Unit": {
@@ -9354,7 +9354,7 @@
                 "Variants": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.UID"
+                        "type": "string"
                     }
                 }
             }
