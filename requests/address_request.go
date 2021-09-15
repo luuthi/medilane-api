@@ -13,10 +13,10 @@ type AddressRequest struct {
 	Phone       string      `json:"Phone" validate:"required" example:"0345532343"`
 	ContactName string      `json:"ContactName" validate:"required" example:"Jackie"`
 	Coordinates string      `json:"Coordinates" validate:"required" example:"Jackie"`
-	AreaID      *models.UID `json:"AreaID" validate:"required"`
+	AreaID      *models.UID `json:"AreaID" validate:"required" swaggertype:"string"`
 	Country     string      `json:"Country" validate:"required" example:"Vietnam"`
 	IsDefault   *bool       `json:"IsDefault" validate:"required" example:"true"`
-	Id          *models.UID `json:"Id"`
+	Id          *models.UID `json:"Id" swaggertype:"string"`
 }
 
 func (rr AddressRequest) Validate() error {
@@ -36,9 +36,9 @@ type EditAddressRequest struct {
 	Phone       string      `json:"Phone" validate:"required" example:"0345532343"`
 	ContactName string      `json:"ContactName" validate:"required" example:"Jackie"`
 	Coordinates string      `json:"Coordinates" validate:"required" example:"Jackie"`
-	AreaID      *models.UID `json:"AreaID"`
+	AreaID      *models.UID `json:"AreaID" swaggertype:"string"`
 	Country     string      `json:"Country" validate:"required" example:"Vietnam"`
-	Id          *models.UID `json:"Id"`
+	Id          *models.UID `json:"Id" swaggertype:"string"`
 }
 
 func (rr EditAddressRequest) Validate() error {
@@ -60,7 +60,7 @@ type SearchAddressRequest struct {
 	Phone       string      `json:"Phone" example:"Hanoi"`
 	ContactName string      `json:"ContactName" example:"Hanoi"`
 	Coordinates string      `json:"Coordinates" example:"Hanoi"`
-	AreaID      *models.UID `json:"AreaID"`
+	AreaID      *models.UID `json:"AreaID" swaggertype:"string"`
 	Limit       int         `json:"limit" example:"10"`
 	Offset      int         `json:"offset" example:"0"`
 	Sort        SortOption  `json:"sort"`

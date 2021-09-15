@@ -6,7 +6,7 @@ import (
 )
 
 type SearchNotificationRequest struct {
-	UserId *models.UID `json:"UserId"`
+	UserId *models.UID `json:"UserId" swaggertype:"string"`
 	Limit  int         `json:"limit" example:"10"`
 	Offset int         `json:"offset" example:"0"`
 }
@@ -20,7 +20,7 @@ func (rr SearchNotificationRequest) Validate() error {
 
 type CreateFcmToken struct {
 	Token string      `json:"Token"`
-	User  *models.UID `json:"User"`
+	User  *models.UID `json:"User" swaggertype:"string"`
 }
 
 func (rr CreateFcmToken) Validate() error {

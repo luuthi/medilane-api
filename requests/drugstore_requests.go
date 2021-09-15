@@ -14,7 +14,7 @@ type SearchDrugStoreRequest struct {
 	Status      string      `json:"Status" example:"active"`
 	Type        string      `json:"Type" example:"parent"`
 	ApproveTime int64       `json:"ApproveTime" example:"1621866181"`
-	AddressID   *models.UID `json:"AddressID"`
+	AddressID   *models.UID `json:"AddressID" swaggertype:"string"`
 	Limit       int         `json:"limit" example:"10"`
 	Offset      int         `json:"offset" example:"0"`
 	Sort        SortOption  `json:"sort"`
@@ -38,8 +38,8 @@ type DrugStoreRequest struct {
 	TaxNumber   string         `json:"TaxNumber" validate:"required" example:"01293123233"`
 	LicenseFile string         `json:"LicenseFile" validate:"required" example:"asdasdasdasd"`
 	Type        string         `json:"Type" validate:"required" example:"drugstores"`
-	DrugStoreID *models.UID    `json:"DrugStoreID"`
-	AddressID   *models.UID    `json:"AddressID"`
+	DrugStoreID *models.UID    `json:"DrugStoreID" swaggertype:"string"`
+	AddressID   *models.UID    `json:"AddressID" swaggertype:"string"`
 	Address     AddressRequest `json:"Address" validate:"required"`
 }
 
@@ -55,7 +55,7 @@ type EditDrugStoreRequest struct {
 	PhoneNumber string              `json:"PhoneNumber"  example:"0988272123"`
 	TaxNumber   string              `json:"TaxNumber" example:"12341231"`
 	LicenseFile string              `json:"LicenseFile" example:"image.img"`
-	AddressID   *models.UID         `json:"AddressID"`
+	AddressID   *models.UID         `json:"AddressID" swaggertype:"string"`
 	Status      string              `json:"Status" example:"active"`
 	ApproveTime int64               `json:"ApproveTime" example:"1622128376"`
 	Address     *EditAddressRequest `json:"Address" validate:"required"`
@@ -69,8 +69,8 @@ func (rr EditDrugStoreRequest) Validate() error {
 }
 
 type ConnectiveDrugStoreRequest struct {
-	ParentStoreId *models.UID `json:"ParentStoreId"`
-	ChildStoreId  *models.UID `json:"ChildStoreId"`
+	ParentStoreId *models.UID `json:"ParentStoreId" swaggertype:"string"`
+	ChildStoreId  *models.UID `json:"ChildStoreId" swaggertype:"string"`
 }
 
 func (rr ConnectiveDrugStoreRequest) Validate() error {

@@ -884,8 +884,7 @@ definitions:
         example: Quan Hoa
         type: string
       AreaID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ContactName:
         example: Jackie
         type: string
@@ -899,8 +898,7 @@ definitions:
         example: Cầu giấy
         type: string
       Id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       IsDefault:
         example: true
         type: boolean
@@ -939,8 +937,7 @@ definitions:
       Province:
         type: string
       id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     type: object
   requests.AreaRequest:
     properties:
@@ -965,8 +962,7 @@ definitions:
       ExpireTime:
         type: integer
       Id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       StartTime:
         type: integer
       Url:
@@ -977,11 +973,9 @@ definitions:
   requests.CartItemDeleteRequest:
     properties:
       ProductID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       VariantID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     type: object
   requests.CartItemRequest:
     properties:
@@ -990,13 +984,11 @@ definitions:
       Discount:
         type: number
       ProductID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Quantity:
         type: integer
       VariantID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       action:
         type: string
     type: object
@@ -1025,25 +1017,21 @@ definitions:
   requests.ConnectiveDrugStoreRequest:
     properties:
       ChildStoreId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ParentStoreId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     type: object
   requests.CostProductOfArea:
     properties:
       Cost:
         type: number
       ProductId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     type: object
   requests.CreateAccountRequest:
     properties:
       DrugStoreID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       IsAdmin:
         example: true
         type: boolean
@@ -1051,8 +1039,7 @@ definitions:
         example: John Doe
         type: string
       PartnerID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Roles:
         items:
           type: string
@@ -1089,8 +1076,7 @@ definitions:
       Token:
         type: string
       User:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     type: object
   requests.CreatePartnerRequest:
     properties:
@@ -1133,11 +1119,9 @@ definitions:
         $ref: '#/definitions/requests.AddressRequest'
         type: object
       AddressID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       DrugStoreID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       LicenseFile:
         example: asdasdasdasd
         type: string
@@ -1164,8 +1148,7 @@ definitions:
   requests.DrugStoreStatisticRequest:
     properties:
       area_id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       interval:
         example: day/month
         type: string
@@ -1201,8 +1184,7 @@ definitions:
         example: Quan Hoa
         type: string
       AreaID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ContactName:
         example: Jackie
         type: string
@@ -1216,8 +1198,7 @@ definitions:
         example: Cầu giấy
         type: string
       Id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Phone:
         example: "0345532343"
         type: string
@@ -1250,8 +1231,7 @@ definitions:
         $ref: '#/definitions/requests.EditAddressRequest'
         type: object
       AddressID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ApproveTime:
         example: 1622128376
         type: integer
@@ -1278,13 +1258,11 @@ definitions:
       Note:
         type: string
       PaymentMethodID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Status:
         type: string
       UserApproveID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     type: object
   requests.EditPartnerRequest:
     properties:
@@ -1343,13 +1321,11 @@ definitions:
   requests.OrderRequest:
     properties:
       AddressID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Discount:
         type: number
       DrugStoreID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Note:
         type: string
       OrderCode:
@@ -1359,8 +1335,7 @@ definitions:
           $ref: '#/definitions/models.OrderDetail'
         type: array
       PaymentMethodID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ShippingFee:
         type: number
       Status:
@@ -1372,19 +1347,16 @@ definitions:
       Type:
         type: string
       UserApproveID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       UserOrderID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Vat:
         type: number
     type: object
   requests.OrderStatisticCountRequest:
     properties:
       area_id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       interval:
         example: day/month
         type: string
@@ -1398,8 +1370,7 @@ definitions:
   requests.OrderStoreStatisticCountRequest:
     properties:
       area_id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       interval:
         example: day/month
         type: string
@@ -1502,8 +1473,7 @@ definitions:
   requests.ProductStatisticCountRequest:
     properties:
       area_id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       interval:
         example: day/month
         type: string
@@ -1524,24 +1494,19 @@ definitions:
       Percent:
         type: number
       ProductID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       PromotionID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Type:
         type: string
       Value:
         type: number
       VariantID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       VoucherID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       id:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
     required:
     - Percent
     - ProductID
@@ -1560,8 +1525,7 @@ definitions:
   requests.PromotionWithDetailRequest:
     properties:
       AreaId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Avatar:
         type: string
       EndTime:
@@ -1598,8 +1562,7 @@ definitions:
   requests.RegisterAccountRequest:
     properties:
       DrugStoreID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       IsAdmin:
         example: true
         type: boolean
@@ -1607,8 +1570,7 @@ definitions:
         example: John Doe
         type: string
       PartnerID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Roles:
         items:
           type: string
@@ -1700,8 +1662,7 @@ definitions:
         example: Hanoi
         type: string
       AreaID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ContactName:
         example: Hanoi
         type: string
@@ -1768,8 +1729,7 @@ definitions:
   requests.SearchDrugStoreRequest:
     properties:
       AddressID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ApproveTime:
         example: 1621866181
         type: integer
@@ -1808,8 +1768,7 @@ definitions:
   requests.SearchNotificationRequest:
     properties:
       UserId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       limit:
         example: 10
         type: integer
@@ -1883,8 +1842,7 @@ definitions:
   requests.SearchProductByPromotion:
     properties:
       AreaId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       ProductName:
         type: string
       limit:
@@ -1900,22 +1858,19 @@ definitions:
   requests.SearchProductPromotion:
     properties:
       AreaId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       limit:
         type: integer
     type: object
   requests.SearchProductRequest:
     properties:
       AreaId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Barcode:
         example: example
         type: string
       Category:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Code:
         example: MD01
         type: string
@@ -1944,13 +1899,11 @@ definitions:
       Condition:
         type: string
       ProductID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Type:
         type: string
       VariantID:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       limit:
         example: 10
         type: integer
@@ -1961,8 +1914,7 @@ definitions:
   requests.SearchPromotionRequest:
     properties:
       AreaId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Name:
         type: string
       Status:
@@ -1991,8 +1943,7 @@ definitions:
         example: example
         type: string
       Category:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Code:
         example: MD01
         type: string
@@ -2094,8 +2045,7 @@ definitions:
   requests.SetCostProductsOfAreaRequest:
     properties:
       AreaId:
-        $ref: '#/definitions/models.UID'
-        type: object
+        type: string
       Products:
         items:
           $ref: '#/definitions/requests.CostProductOfArea'

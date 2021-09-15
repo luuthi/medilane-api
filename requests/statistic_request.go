@@ -9,7 +9,7 @@ import (
 type DrugStoreStatisticRequest struct {
 	TimeFrom int64       `json:"time_from" example:"1603012735651"`
 	TimeTo   int64       `json:"time_to" example:"1696192735651"`
-	AreaId   *models.UID `json:"area_id"`
+	AreaId   *models.UID `json:"area_id" swaggertype:"string"`
 	Interval string      `json:"interval" example:"day/month"`
 }
 
@@ -24,7 +24,7 @@ func (rr DrugStoreStatisticRequest) Validate() error {
 type ProductStatisticCountRequest struct {
 	TimeFrom int64       `json:"time_from" example:"1603012735651"`
 	TimeTo   int64       `json:"time_to" example:"1696192735651"`
-	AreaId   *models.UID `json:"area_id"`
+	AreaId   *models.UID `json:"area_id" swaggertype:"string"`
 	Interval string      `json:"interval" example:"day/month"`
 	Top      int64       `json:"top" example:"5"`
 }
@@ -41,7 +41,7 @@ func (rr ProductStatisticCountRequest) Validate() error {
 type OrderStatisticCountRequest struct {
 	TimeFrom int64       `json:"time_from" example:"1603012735651"`
 	TimeTo   int64       `json:"time_to" example:"1696192735651"`
-	AreaId   *models.UID `json:"area_id"`
+	AreaId   *models.UID `json:"area_id" swaggertype:"string"`
 	Interval string      `json:"interval" example:"day/month"`
 }
 
@@ -56,7 +56,7 @@ func (rr OrderStatisticCountRequest) Validate() error {
 type OrderStoreStatisticCountRequest struct {
 	TimeFrom int64       `json:"time_from" example:"1603012735651"`
 	TimeTo   int64       `json:"time_to" example:"1696192735651"`
-	AreaId   *models.UID `json:"area_id"`
+	AreaId   *models.UID `json:"area_id" swaggertype:"string"`
 	Interval string      `json:"interval" example:"day/month"`
 	Top      int64       `json:"top" example:"5"`
 }

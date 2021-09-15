@@ -8555,8 +8555,7 @@ var doc = `{
                     "example": "Quan Hoa"
                 },
                 "AreaID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ContactName": {
                     "type": "string",
@@ -8575,8 +8574,7 @@ var doc = `{
                     "example": "Cầu giấy"
                 },
                 "Id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "IsDefault": {
                     "type": "boolean",
@@ -8617,8 +8615,7 @@ var doc = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -8656,8 +8653,7 @@ var doc = `{
                     "type": "integer"
                 },
                 "Id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "StartTime": {
                     "type": "integer"
@@ -8674,12 +8670,10 @@ var doc = `{
             "type": "object",
             "properties": {
                 "ProductID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "VariantID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -8693,15 +8687,13 @@ var doc = `{
                     "type": "number"
                 },
                 "ProductID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Quantity": {
                     "type": "integer"
                 },
                 "VariantID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "action": {
                     "type": "string"
@@ -8744,12 +8736,10 @@ var doc = `{
             "type": "object",
             "properties": {
                 "ChildStoreId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ParentStoreId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -8760,8 +8750,7 @@ var doc = `{
                     "type": "number"
                 },
                 "ProductId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -8777,8 +8766,7 @@ var doc = `{
             ],
             "properties": {
                 "DrugStoreID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "IsAdmin": {
                     "type": "boolean",
@@ -8789,8 +8777,7 @@ var doc = `{
                     "example": "John Doe"
                 },
                 "PartnerID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Roles": {
                     "type": "array",
@@ -8834,8 +8821,7 @@ var doc = `{
                     "type": "string"
                 },
                 "User": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -8903,12 +8889,10 @@ var doc = `{
                     "$ref": "#/definitions/requests.AddressRequest"
                 },
                 "AddressID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "DrugStoreID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "LicenseFile": {
                     "type": "string",
@@ -8936,8 +8920,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "interval": {
                     "type": "string",
@@ -8998,8 +8981,7 @@ var doc = `{
                     "example": "Quan Hoa"
                 },
                 "AreaID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ContactName": {
                     "type": "string",
@@ -9018,8 +9000,7 @@ var doc = `{
                     "example": "Cầu giấy"
                 },
                 "Id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Phone": {
                     "type": "string",
@@ -9057,8 +9038,7 @@ var doc = `{
                     "$ref": "#/definitions/requests.EditAddressRequest"
                 },
                 "AddressID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ApproveTime": {
                     "type": "integer",
@@ -9093,15 +9073,13 @@ var doc = `{
                     "type": "string"
                 },
                 "PaymentMethodID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Status": {
                     "type": "string"
                 },
                 "UserApproveID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -9184,15 +9162,13 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AddressID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Discount": {
                     "type": "number"
                 },
                 "DrugStoreID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Note": {
                     "type": "string"
@@ -9207,8 +9183,7 @@ var doc = `{
                     }
                 },
                 "PaymentMethodID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ShippingFee": {
                     "type": "number"
@@ -9226,12 +9201,10 @@ var doc = `{
                     "type": "string"
                 },
                 "UserApproveID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "UserOrderID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Vat": {
                     "type": "number"
@@ -9242,8 +9215,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "interval": {
                     "type": "string",
@@ -9263,8 +9235,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "interval": {
                     "type": "string",
@@ -9407,8 +9378,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "area_id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "interval": {
                     "type": "string",
@@ -9446,12 +9416,10 @@ var doc = `{
                     "type": "number"
                 },
                 "ProductID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "PromotionID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Type": {
                     "type": "string"
@@ -9460,16 +9428,13 @@ var doc = `{
                     "type": "number"
                 },
                 "VariantID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "VoucherID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "id": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 }
             }
         },
@@ -9495,8 +9460,7 @@ var doc = `{
             ],
             "properties": {
                 "AreaId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Avatar": {
                     "type": "string"
@@ -9550,8 +9514,7 @@ var doc = `{
             ],
             "properties": {
                 "DrugStoreID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "IsAdmin": {
                     "type": "boolean",
@@ -9562,8 +9525,7 @@ var doc = `{
                     "example": "John Doe"
                 },
                 "PartnerID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Roles": {
                     "type": "array",
@@ -9684,8 +9646,7 @@ var doc = `{
                     "example": "Hanoi"
                 },
                 "AreaID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ContactName": {
                     "type": "string",
@@ -9779,8 +9740,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AddressID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ApproveTime": {
                     "type": "integer",
@@ -9834,8 +9794,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "UserId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "limit": {
                     "type": "integer",
@@ -9940,8 +9899,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "ProductName": {
                     "type": "string"
@@ -9964,8 +9922,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "limit": {
                     "type": "integer"
@@ -9976,16 +9933,14 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Barcode": {
                     "type": "string",
                     "example": "example"
                 },
                 "Category": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Code": {
                     "type": "string",
@@ -10026,15 +9981,13 @@ var doc = `{
                     "type": "string"
                 },
                 "ProductID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Type": {
                     "type": "string"
                 },
                 "VariantID": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "limit": {
                     "type": "integer",
@@ -10050,8 +10003,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Name": {
                     "type": "string"
@@ -10093,8 +10045,7 @@ var doc = `{
                     "example": "example"
                 },
                 "Category": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Code": {
                     "type": "string",
@@ -10239,8 +10190,7 @@ var doc = `{
             "type": "object",
             "properties": {
                 "AreaId": {
-                    "type": "object",
-                    "$ref": "#/definitions/models.UID"
+                    "type": "string"
                 },
                 "Products": {
                     "type": "array",

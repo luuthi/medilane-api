@@ -15,8 +15,8 @@ type CartItemRequest struct {
 	Quantity  int         `json:"Quantity"`
 	Discount  float32     `json:"Discount"`
 	Action    string      `json:"action"`
-	ProductID *models.UID `json:"ProductID"`
-	VariantID *models.UID `json:"VariantID"`
+	ProductID *models.UID `json:"ProductID" swaggertype:"string"`
+	VariantID *models.UID `json:"VariantID" swaggertype:"string"`
 }
 
 func (rr CartItemRequest) Validate() error {
@@ -31,8 +31,8 @@ func (rr CartItemRequest) Validate() error {
 }
 
 type CartItemDeleteRequest struct {
-	ProductID *models.UID `json:"ProductID"`
-	VariantID *models.UID `json:"VariantID"`
+	ProductID *models.UID `json:"ProductID" swaggertype:"string"`
+	VariantID *models.UID `json:"VariantID" swaggertype:"string"`
 }
 
 func (rr CartItemDeleteRequest) Validate() error {
@@ -51,9 +51,9 @@ func (rr CartRequest) Validate() error {
 }
 
 type CartItemDelete struct {
-	CartItemId *models.UID `json:"CartItemId"`
+	CartItemId *models.UID `json:"CartItemId" swaggertype:"string"`
 }
 
 type CartDelete struct {
-	CartId *models.UID `json:"CartId"`
+	CartId *models.UID `json:"CartId" swaggertype:"string"`
 }

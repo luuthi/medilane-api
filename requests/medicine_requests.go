@@ -15,8 +15,8 @@ type SearchProductRequest struct {
 	Name     string      `json:"Name" example:"name"`
 	Barcode  string      `json:"Barcode"  example:"example"`
 	Status   string      `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	Category *models.UID `json:"Category"`
-	AreaId   *models.UID `json:"AreaId"`
+	Category *models.UID `json:"Category" swaggertype:"string"`
+	AreaId   *models.UID `json:"AreaId" swaggertype:"string"`
 
 	Limit    int        `json:"limit" example:"10"`
 	Offset   int        `json:"offset" example:"0"`
@@ -30,7 +30,7 @@ type SearchPureProductRequest struct {
 	Name     string      `json:"Name" example:"name"`
 	Barcode  string      `json:"Barcode"  example:"example"`
 	Status   string      `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	Category *models.UID `json:"Category"`
+	Category *models.UID `json:"Category" swaggertype:"string"`
 
 	Limit    int        `json:"limit" example:"10"`
 	Offset   int        `json:"offset" example:"0"`
@@ -62,14 +62,14 @@ type ProductRequest struct {
 	BasePrice            float64 `json:"BasePrice" example:"1"`
 	Manufacturer         string  `json:"Manufacturer" example:"abc"`
 
-	Categories []*models.UID `json:"Categories"`
-	Variants   []*models.UID `json:"Variants"`
-	Tags       []*models.UID `json:"Tags"`
+	Categories []*models.UID `json:"Categories" swaggertype:"array"`
+	Variants   []*models.UID `json:"Variants" swaggertype:"array"`
+	Tags       []*models.UID `json:"Tags" swaggertype:"array"`
 }
 
 type ChangeStatusProductsRequest struct {
 	Status     string        `json:"Status"  example:"show/hide/approve/cancel/outofstock"`
-	ProductsId []*models.UID `json:"ProductsId"`
+	ProductsId []*models.UID `json:"ProductsId" swaggertype:"array"`
 }
 
 func (rr SearchProductRequest) Validate() error {

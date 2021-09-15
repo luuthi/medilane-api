@@ -8,7 +8,7 @@ import (
 )
 
 type PromotionRequest struct {
-	AreaId    *models.UID `json:"AreaId" validate:"required"`
+	AreaId    *models.UID `json:"AreaId" validate:"required" swaggertype:"string"`
 	Name      string      `json:"Name" validate:"required" example:"Khuyến mại hè"`
 	Note      string      `json:"Note" example:"Khuyến mại hè nè"`
 	StartTime int64       `json:"StartTime" validate:"required"`
@@ -43,7 +43,7 @@ func (rr PromotionRequest) Validate() error {
 
 type SearchPromotionRequest struct {
 	Name          string      `json:"Name"`
-	AreaId        *models.UID `json:"AreaId"`
+	AreaId        *models.UID `json:"AreaId" swaggertype:"string"`
 	Status        *bool       `json:"Status"`
 	TimeFromStart *int64      `json:"TimeFromStart"`
 	TimeToStart   *int64      `json:"TimeToStart"`
@@ -68,8 +68,8 @@ func (rr SearchPromotionRequest) Validate() error {
 type SearchPromotionDetail struct {
 	Limit     int         `json:"limit" example:"10"`
 	Offset    int         `json:"offset" example:"0"`
-	ProductID *models.UID `json:"ProductID"`
-	VariantID *models.UID `json:"VariantID"`
+	ProductID *models.UID `json:"ProductID" swaggertype:"string"`
+	VariantID *models.UID `json:"VariantID" swaggertype:"string"`
 	Type      string      `json:"Type"`
 	Condition string      `json:"Condition" `
 }
@@ -112,11 +112,11 @@ type PromotionDetailRequest struct {
 	Percent     *float32    `json:"Percent" validate:"required"`
 	Condition   string      `json:"Condition" `
 	Value       *float32    `json:"Value" validate:"required"`
-	PromotionID *models.UID `json:"PromotionID"`
-	ProductID   *models.UID `json:"ProductID" validate:"required"`
-	VariantID   *models.UID `json:"VariantID" validate:"required"`
-	VoucherID   *models.UID `json:"VoucherID" validate:"required"`
-	ID          *models.UID `json:"id"`
+	PromotionID *models.UID `json:"PromotionID" swaggertype:"string"`
+	ProductID   *models.UID `json:"ProductID" validate:"required" swaggertype:"string"`
+	VariantID   *models.UID `json:"VariantID" validate:"required" swaggertype:"string"`
+	VoucherID   *models.UID `json:"VoucherID" validate:"required" swaggertype:"string"`
+	ID          *models.UID `json:"id" swaggertype:"string"`
 }
 
 func (rr PromotionDetailRequest) Validate() error {
@@ -147,13 +147,13 @@ func validateByType(_type string, _percent float32, _value float32, _cond string
 
 type SearchProductPromotion struct {
 	Limit  int         `json:"limit"`
-	AreaId *models.UID `json:"AreaId"`
+	AreaId *models.UID `json:"AreaId" swaggertype:"string"`
 }
 
 type SearchProductByPromotion struct {
 	ProductName string      `json:"ProductName"`
 	Limit       int         `json:"limit" example:"10"`
 	Offset      int         `json:"offset" example:"0"`
-	AreaId      *models.UID `json:"AreaId"`
+	AreaId      *models.UID `json:"AreaId" swaggertype:"string"`
 	Sort        SortOption  `json:"sort"`
 }

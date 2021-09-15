@@ -60,8 +60,8 @@ type RegisterAccountRequest struct {
 	FullName    string       `json:"Name" validate:"required" example:"John Doe"`
 	IsAdmin     *bool        `json:"IsAdmin" validate:"required" example:"true" `
 	Type        string       `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
-	DrugStoreID *models.UID  `json:"DrugStoreID"`
-	PartnerID   **models.UID `json:"PartnerID"`
+	DrugStoreID *models.UID  `json:"DrugStoreID" swaggertype:"string"`
+	PartnerID   **models.UID `json:"PartnerID" swaggertype:"string"`
 	Roles       []string     `json:"Roles"`
 }
 
@@ -83,8 +83,8 @@ type CreateAccountRequest struct {
 	FullName    string      `json:"Name" validate:"required" example:"John Doe"`
 	IsAdmin     *bool       `json:"IsAdmin" validate:"required" example:"true" `
 	Type        string      `json:"Type"  validate:"required" example:"super_admin/staff/user/supplier/manufacturer"`
-	DrugStoreID *models.UID `json:"DrugStoreID"`
-	PartnerID   *models.UID `json:"PartnerID"`
+	DrugStoreID *models.UID `json:"DrugStoreID" swaggertype:"string"`
+	PartnerID   *models.UID `json:"PartnerID" swaggertype:"string"`
 	Roles       []string    `json:"Roles"`
 }
 
@@ -115,12 +115,12 @@ func checkRequireByType(_type string, DrugStoreID *models.UID, PartnerID *models
 }
 
 type StaffRelationship struct {
-	DrugStoreId  *models.UID `json:"DrugStoresId"`
+	DrugStoreId  *models.UID `json:"DrugStoresId" swaggertype:"string"`
 	Relationship string      `json:"Relationship"`
 }
 
 type AssignStaffRequest struct {
-	DrugStoresIdLst []*models.UID `json:"DrugStoresIdLst"`
+	DrugStoresIdLst []*models.UID `json:"DrugStoresIdLst" swaggertype:"array"`
 }
 
 func (rr AssignStaffRequest) Validate() error {

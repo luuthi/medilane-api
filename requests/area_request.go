@@ -31,12 +31,12 @@ func (rr SearchAreaRequest) Validate() error {
 
 type CostProductOfArea struct {
 	Cost      float64     `json:"Cost"`
-	ProductId *models.UID `json:"ProductId"`
+	ProductId *models.UID `json:"ProductId" swaggertype:"string"`
 }
 
 type SetCostProductsOfAreaRequest struct {
 	Products []CostProductOfArea `json:"Products"`
-	AreaId   *models.UID         `json:"AreaId"`
+	AreaId   *models.UID         `json:"AreaId" swaggertype:"string"`
 }
 
 func (rr CostProductOfArea) Validate() error {
@@ -52,7 +52,7 @@ type AreaConfigListRequest struct {
 type AreaConfigRequest struct {
 	Province string      `json:"Province"`
 	District string      `json:"District"`
-	ID       *models.UID `json:"id"`
+	ID       *models.UID `json:"id" swaggertype:"string"`
 }
 
 func (rr AreaConfigRequest) Validate() error {
