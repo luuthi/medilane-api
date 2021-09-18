@@ -166,6 +166,10 @@ definitions:
       VariantID:
         $ref: '#/definitions/models.UID'
         type: object
+      Variants:
+        items:
+          $ref: '#/definitions/models.Variant'
+        type: array
       created_at:
         type: integer
       id:
@@ -979,6 +983,8 @@ definitions:
     type: object
   requests.CartItemRequest:
     properties:
+      Action:
+        type: string
       Cost:
         type: number
       Discount:
@@ -988,8 +994,6 @@ definitions:
       Quantity:
         type: integer
       VariantID:
-        type: string
-      action:
         type: string
     type: object
   requests.CategoryRequest:

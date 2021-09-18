@@ -8,9 +8,9 @@ import (
 type Cart struct {
 	CommonModelFields
 
-	CartDetails []CartDetail `json:"CartDetails" gorm:"foreignKey:CartID"`
-	UserID      uint         `json:"-"`
-	FakeUserID  *UID         `json:"UserID" gorm:"-"`
+	CartDetails []*CartDetail `json:"CartDetails" gorm:"foreignKey:CartID"`
+	UserID      uint          `json:"-"`
+	FakeUserID  *UID          `json:"UserID" gorm:"-"`
 }
 
 func (r *Cart) AfterFind(tx *gorm.DB) (err error) {
@@ -31,17 +31,18 @@ func (r *Cart) Mask() {
 type CartDetail struct {
 	CommonModelFields
 
-	Cost          float32  `json:"Cost" gorm:"type:float(8)"`
-	Quantity      int      `json:"Quantity" gorm:"type:integer(8);not null"`
-	Discount      float32  `json:"Discount" gorm:"type:float(8)"`
-	CartID        uint     `json:"-"`
-	FakeCartID    *UID     `json:"CartID" gorm:"-"`
-	ProductID     uint     `json:"-"`
-	FakeProductID *UID     `json:"ProductID" gorm:"-"`
-	VariantID     uint     `json:"-"`
-	FakeVariantID *UID     `json:"VariantID" gorm:"-"`
-	Product       *Product `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Variant       *Variant `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Cost          float32    `json:"Cost" gorm:"type:float(8)"`
+	Quantity      int        `json:"Quantity" gorm:"type:integer(8);not null"`
+	Discount      float32    `json:"Discount" gorm:"type:float(8)"`
+	CartID        uint       `json:"-"`
+	FakeCartID    *UID       `json:"CartID" gorm:"-"`
+	ProductID     uint       `json:"-"`
+	FakeProductID *UID       `json:"ProductID" gorm:"-"`
+	VariantID     uint       `json:"-"`
+	FakeVariantID *UID       `json:"VariantID" gorm:"-"`
+	Product       *Product   `json:"Product" gorm:"foreignKey:ProductID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Variant       *Variant   `json:"Variant" gorm:"foreignKey:VariantID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Variants      []*Variant `json:"Variants" gorm:"-"`
 }
 
 func (r *CartDetail) AfterFind(tx *gorm.DB) (err error) {

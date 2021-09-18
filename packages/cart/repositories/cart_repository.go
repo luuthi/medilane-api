@@ -26,7 +26,7 @@ func NewCartRepository(db *gorm.DB) *CartRepository {
 
 func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, userType string) (*models.Cart, error) {
 	cart := &models.Cart{
-		CartDetails: make([]models.CartDetail, 0),
+		CartDetails: make([]*models.CartDetail, 0),
 	}
 	spec := make([]string, 0)
 	values := make([]interface{}, 0)
@@ -86,6 +86,7 @@ func (CartRepository *CartRepository) GetCartByUser(count *int64, userId uint, u
 		if cost, ok := costMap[item.ProductID]; ok {
 			item.Product.Cost = cost
 		}
+		item.Variants = []*models.Variant{item.Variant}
 	}
 	return cart, nil
 }

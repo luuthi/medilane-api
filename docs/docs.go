@@ -7488,6 +7488,12 @@ var doc = `{
                     "type": "object",
                     "$ref": "#/definitions/models.UID"
                 },
+                "Variants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Variant"
+                    }
+                },
                 "created_at": {
                     "type": "integer"
                 },
@@ -8680,6 +8686,9 @@ var doc = `{
         "requests.CartItemRequest": {
             "type": "object",
             "properties": {
+                "Action": {
+                    "type": "string"
+                },
                 "Cost": {
                     "type": "number"
                 },
@@ -8693,9 +8702,6 @@ var doc = `{
                     "type": "integer"
                 },
                 "VariantID": {
-                    "type": "string"
-                },
-                "action": {
                     "type": "string"
                 }
             }

@@ -14,7 +14,7 @@ type CartItemRequest struct {
 	Cost      float32     `json:"Cost"`
 	Quantity  int         `json:"Quantity"`
 	Discount  float32     `json:"Discount"`
-	Action    string      `json:"action"`
+	Action    string      `json:"Action"`
 	ProductID *models.UID `json:"ProductID" swaggertype:"string"`
 	VariantID *models.UID `json:"VariantID" swaggertype:"string"`
 }
